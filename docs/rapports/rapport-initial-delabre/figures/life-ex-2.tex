@@ -1,0 +1,23 @@
+\begin{tikzpicture}[scale=.5]
+    \begin{scope}
+        \draw (0,0) grid (5, 5);
+        \draw[thick, scale=5] (0, 0) grid (1, 1);
+
+        \fillcell{2}{1}{stillborn}
+        \fillcell{2}{2}{alive}
+        \fillcell{2}{3}{stillborn}
+
+        \node[anchor=center] at (2.5,-0.5) {$n=2k$};
+    \end{scope}
+
+    \begin{scope}[xshift=6cm]
+        \draw (0,0) grid (5, 5);
+        \draw[thick, scale=5] (0, 0) grid (1, 1);
+
+        \fillcell{1}{2}{stillborn}
+        \fillcell{2}{2}{alive}
+        \fillcell{3}{2}{stillborn}
+
+        \node[anchor=center] at (2.5,-0.5) {$n=2k+1$};
+    \end{scope}
+\end{tikzpicture}

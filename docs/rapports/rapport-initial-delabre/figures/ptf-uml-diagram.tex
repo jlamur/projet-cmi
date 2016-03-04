@@ -1,0 +1,30 @@
+\begin{tikzpicture}
+    \umlclass[x=-3]{Ball}{
+        position : vecteur\\
+        velocity : vecteur\\
+        mass : flottant\\
+        charge : entier signé
+    }{
+        draw() : vide\\
+        update(forces : vecteur, delta : flottant) : vide
+    }
+
+    \umlclass[x=3]{Block}{
+        position : vecteur\\
+        charge : entier signé
+    }{
+        draw() : vide
+    }
+
+    \umlclass[y=-4]{Engine}{
+        balls : tableau de \texttt{Ball}\\
+        blocks : tableau de tableaux de \texttt{Block}\\
+        clock : horloge
+    }{
+        draw() : vide\\
+        update(delta : flottant) : vide
+    }
+
+    \umldep{Engine}{Ball}
+    \umldep{Engine}{Block}
+\end{tikzpicture}

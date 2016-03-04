@@ -1,0 +1,80 @@
+\begin{thebibliography}{10}
+
+\bibitem{gof-wikipedia}
+Wikipédia.
+\newblock Jeu de la vie.
+\newblock \url{https://goo.gl/RLc7C7}.
+
+\bibitem{gof-automata}
+Wikipédia.
+\newblock Automate cellulaire.
+\newblock \url{https://goo.gl/FZ5S5L}.
+
+\bibitem{gof-conwaylife}
+LifeWiki.
+\newblock Conway's game of life.
+\newblock \url{http://goo.gl/JXXQxz}.
+
+\bibitem{gof-hashlife}
+Wikipédia.
+\newblock Hashlife.
+\newblock \url{https://goo.gl/nFW2oM}.
+
+\bibitem{ggo-aga}
+American~Go Association.
+\newblock A brief history of go.
+\newblock \url{http://goo.gl/1NY9Xt}.
+
+\bibitem{game-theory-wiki}
+Wikipédia.
+\newblock Classification des jeux.
+\newblock \url{https://goo.gl/guXBAO}.
+
+\bibitem{ggo-ai}
+SciencePost.
+\newblock Jeu de go : l’affrontement entre le meilleur joueur humain du monde
+  et la machine sera retransmis en direct.
+\newblock \url{http://goo.gl/pD8zKG}.
+
+\bibitem{ggo-compqueens}
+Jay Burmeister.
+\newblock An introduction to computer go.
+\newblock \url{http://goo.gl/WMPpHU}.
+
+\bibitem{ggo-ffg}
+Fédération~Française de~Go.
+\newblock Règle française du jeu de go.
+\newblock \url{http://goo.gl/sK15PL}.
+
+\bibitem{ggo-algofloodfill}
+Wikipedia.
+\newblock Flood fill.
+\newblock \url{https://goo.gl/ERbxi3}.
+
+\bibitem{ptf-euler}
+John~T. Foster.
+\newblock Brief explanation of integration schemes.
+\newblock \url{http://goo.gl/HRssYN}.
+
+\bibitem{ptf-collision-detection}
+StackExchange GameAlchemist.
+\newblock Collision between {AABB} and circle.
+\newblock \url{http://goo.gl/7E84Ef}.
+
+\bibitem{ptf-collision-response}
+Randy Gaul.
+\newblock How to create a custom 2d physics engine: The basics and impulse
+  resolution.
+\newblock \url{http://goo.gl/G0gdWU}.
+
+\bibitem{ptf-verlet}
+Wikipedia.
+\newblock Verlet integration.
+\newblock \url{https://goo.gl/Q6giDh}.
+
+\bibitem{ptf-rk4}
+Wikipedia.
+\newblock The runge-kutta method.
+\newblock \url{https://goo.gl/UHTD8S}.
+
+\end{thebibliography}

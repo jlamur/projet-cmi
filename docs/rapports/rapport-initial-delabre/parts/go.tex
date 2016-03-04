@@ -1,0 +1,219 @@
+%%%%%%%%%%
+% Macros %
+%%%%%%%%%%
+
+% Dessine une pierre en X, Y de la couleur donnée
+% (doit être utilisé dans un environnement TikZ)
+\newcommand{\fillstone}[3]{
+\draw [fill=#3] (#1,#2) circle (.4);
+}
+
+%%%%%%%%%%
+% Source %
+%%%%%%%%%%
+
+\chapter{Jeu de go}
+
+Joué en occident depuis le XIX siècle, le jeu de go est originaire
+d'Asie et vieux de plusieurs milliers d'années. La société étasunienne
+de Go le décrit comme \flqq~le plus ancien jeu toujours joué sous
+sa forme originale.~\frqq~\cite{ggo-aga}
+Comme les échecs, le jeu de go est déterminé, à information complète
+et parfaite~: à tout moment tous les joueurs ont la même information
+à disposition pour décider de leur coup et il n'y a pas de hasard.~\cite{game-theory-wiki}
+
+Malgré la simplicité apparente du jeu, le nombre de combinaisons possibles
+s'élève à plus de $10^{600},$ ce qui en fait l'un des objectifs non-atteints
+les plus anciens en matière de recherche en intelligence artificielle.
+Le programme \emph{AlphaGo} de \emph{Google} tentera en mars prochain de rivaliser
+avec le meilleur joueur de go au monde, Lee Sedol.~\cite{ggo-ai,ggo-compqueens}
+
+\section{Principes}
+
+\subsection{Matériel}
+
+Le jeu se joue sur un plateau de $18 \times 18$ cases (soit
+$19 \times 19$ intersections) appelé \emph{goban.} Deux joueurs
+s'affrontent en posant à tour de rôle des pierres blanches
+et noires.
+
+\subsection{Règles}
+
+Lorsqu'un joueur doit jouer, il peut soit poser une pierre
+de sa couleur sur une des intersections du \emph{goban,} soit passer son tour.
+Si les deux joueurs passent successivement, la partie est terminée.~\cite{ggo-ffg}
+
+\begin{wrapfigure}[12]{r}{0.35\linewidth}
+    \centering
+    \input{./figures/go-ex-1}
+    \caption{La chaîne blanche sera capturée par la pose d'une pierre noire en~(1)}
+    \label{fig:go-ex-1}
+\end{wrapfigure}
+
+On définit une chaîne comme étant une zone de pierres
+interconnectées horizontalement ou verticalement (mais pas
+diagonalement). Les \emph{libertés} d'une telle chaîne
+sont le nombre d'intersections vides autour d'elles (horizontalement,
+verticalement, mais pas diagonalement).
+
+Si, en plaçant une pierre, un joueur supprime la dernière
+liberté d'une chaîne adverse, la chaîne en question est capturée
+et retirée du plateau, comme montré en figure \ref{fig:go-ex-1}.
+Un joueur peut placer sa pierre n'importe où sur le
+\emph{goban,} pour peu que cela ne supprime pas toutes les libertés
+d'une de ses chaînes et que cela ne répète pas une position précédente du jeu.
+
+\subsection{Fin du jeu}
+
+À la fin de la partie, c'est-à-dire après que les deux joueurs
+ont passé leur tour, on décompte les points. Chaque pierre
+présente sur le \emph{goban} rapporte un point, ainsi que chaque
+intersection vide à l'intérieur du territoire d'un joueur.
+Un territoire d'un joueur est défini comme étant une zone inoccupée du plateau,
+séparée du reste uniquement par des pierres de la couleur attribuée à ce joueur.
+La figure \ref{fig:go-ex-2} montre des exemples de territoires.
+
+\begin{figure}[h!]
+    \centering
+    \input{./figures/go-ex-2}
+    \caption{Un territoire du joueur attribué aux blancs en~(1) et un territoire du joueur attribué aux noirs en~(2)}
+    \label{fig:go-ex-2}
+\end{figure}
+
+\section{Modélisation}
+
+Seules les $19 \times 19$ intersections de la grille sont utilisées,
+pas les cases. On pourra donc utiliser un tableau de tableaux de taille
+$19 \times 19.$ À tout moment, chaque case peut soit être vide, soit
+occupée par une pierre noire, soit occupée par une pierre blanche.
+On optera donc pour un tableau de tableaux d'entiers, en représentant
+par $0$ l'état vide, $1$ la présence d'une pierre noire et $2$ la
+présence d'une pierre blanche.
+
+On maintiendra en tout temps une liste des chaînes actives, avec une
+liste des intersections occupées par ces chaînes et le nombre de leurs libertés.
+Après chaque coup, la grille sera hachée et le résultat sera ajouté
+dans une liste appelée la liste des positions précédentes.
+
+\section{Algorithmes}
+
+\begin{description}
+    \item[Initialisation] Allocation d'une grille de taille
+    $19 \times 19,$ initialisée à $0$.
+    \item[Placement d'une pierre] Étant donnés une position et
+    la couleur de la pierre à placer.
+    \begin{enumerate}
+        \item Si la pierre se situe en dehors de la grille, le coup est invalide.
+        Terminer l'algorithme.
+        \item Faire une copie de la grille et de la liste des chaînes. Dans le
+        reste de l'algorithme, on opérera uniquement sur ces copies, sauf mention contraire.
+        \item À la position choisie dans la grille, affecter l'entier correspondant
+        à la couleur du joueur (1 ou 2).
+        \item Hacher la grille et comparer l'empreinte à la liste des positions
+        précédentes. S'il y a correspondance, le coup reproduit un état de jeu déjà
+        atteint, donc le coup est invalide. Terminer l'algorithme.
+        \item Identifier toutes les chaînes voisines horizontalement et
+        verticalement à la pierre placée. Mettre à jour les libertés et
+        les pierres composant ces chaînes.
+        \item Si une chaîne voisine de la couleur adverse n'a plus aucune
+        liberté, effacer toutes ses pierres dans la grille et supprimer la
+        chaîne de la liste des chaînes. Mettre à jour les libertés des
+        chaînes voisines.
+        \item Si une chaîne voisine de la couleur du joueur jouant le coup
+        n'a plus aucune liberté, le coup est invalide. Terminer
+        l'algorithme.
+        \item Appliquer les grilles copiées dans les grilles originales.
+        \item Ajouter l'empreinte de la grille à la liste des positions
+        précédentes.
+    \end{enumerate}
+    \item[Décompte des points] On initialise deux compteurs pour les points
+    du joueur attribué aux noirs et les points du joueur attribué aux blancs.
+    Pour parcourir les territoires des joueurs on utilise une variante de
+    l'algorithme de remplissage par diffusion.~\cite{ggo-algofloodfill}
+    \begin{enumerate}
+        \item Parcourir la grille et attribuer un point par pierre placée à chaque joueur.
+        \item Créer une grille $G$ de même taille que la grille de jeu, initialisée à 0.
+        \item Pour chaque case $C$ dans la grille de $(0,0)$ à $(18,18)$, si la case n'est
+        pas vide ou si $G[C] = 1,$ passer à la case suivante, sinon~:
+        \begin{enumerate}
+            \item initialiser une liste $L$ contenant uniquement $C$~;
+            \item initialiser un compteur $cases$ à 0~;
+            \item initialiser une variable $couleur$ vide~;
+            \item tant que la liste $L$ n'est pas vide, faire~:
+            \begin{enumerate}
+                \item prendre $D$ la première case de $L$~;
+                \item supprimer le premier élément de $L$~;
+                \item si la case $D$ est vide, passer $G[D]$ à 1,
+                ajouter les cases au nord, au sud, à l'est et à l'ouest de $D$ dans $L$ si
+                elles ne sont pas telles que $G[X] = 1,$ et incrémenter $cases$~;
+                \item sinon, si $couleur$ est vide, $couleur := couleur(D)$~;
+                \item sinon, si $couleur \neq couleur(D), couleur := mixte$~;
+            \end{enumerate}
+            \item si $couleur = noir,$ ajouter $cases$ points au joueur attribué
+            aux pierres noires. Si $couleur = blanc,$ ajouter $cases$ points
+            au joueur attribué aux pierres blanches.
+        \end{enumerate}
+    \end{enumerate}
+    \item[Affichage] La grille sera parcourue case par case. Chaque valeur
+    différente de 0 provoquera le placement d'un pion sur l'intersection
+    correspondante de la couleur correspondante. Le programme devra
+    être réceptif aux clics sur la grille et appeler l'algorithme de placement
+    d'un pion en conséquence.
+\end{description}
+
+\section{Spécifications}
+
+\subsection{Version initiale}
+
+On choisira le langage C++, qui possède les structures requises dans
+la section précédente, et est enseigné dans le cursus. Il n'y a pas de difficulté
+algorithmique particulière qui justifie le choix d'un langage différent,
+sachant que le choix d'un tel langage pourrait ralentir le développement.
+
+On préfèrera un affichage fenêtré au vu des nombreuses interactions
+qui seront facilitées par l'usage de la souris. On proposera une
+grille de taille fixe $19 \times 19.$
+Les deux joueurs utiliseront la même fenêtre, plaçant leur
+pierre à tour de rôle.
+
+Les types standards, comme
+\texttt{std::vector} ou \texttt{std::unordered\_map}, seront utilisés
+pour représenter les structures abordées dans la section traitant
+de la modélisation.
+
+\subsection{Améliorations possibles}
+
+Une interface plus travaillée pourra être proposée avec un
+choix parmi différentes tailles standard de grille telles que
+$9 \times 9$ et $13 \times 13.$
+Les joueurs pourront s'affronter en réseau.
+
+\section{Organisation}
+
+L'implémentation des algorithmes
+demandera de la documentation sur les hachages, les
+tableaux associatifs et autres structures abordées ci-avant.
+Il y a deux algorithmes principaux~: le décompte des points
+et le placement d'une pierre. On consacrera à la mise au point
+des algorithmes initiaux et à leur perfection 40 heures au total.
+
+Pendant le développement des algorithmes, le fenêtrage
+pourra être conçu avec l'interface de choix des grilles
+et de présentation des résultats. On pourra y consacrer
+10 heures.
+
+La mise en réseau du jeu se fera lorsque les algorithmes
+seront suffisamment robustes. Elle nécessitera de la
+documentation sur les \emph{sockets} avec la SFML. On
+pourra y consacrer 15 heures.
+
+La rédaction du rapport s'effectuera en continu pendant la création du jeu.
+La figure~\ref{fig:go-gantt} présente un diagramme de Gantt résumant
+la répartition du travail.
+
+\begin{figure}[h!]
+    \centering
+    \input{./figures/go-gantt}
+    \caption{Développement du jeu de go sur 40 heures}
+    \label{fig:go-gantt}
+\end{figure}

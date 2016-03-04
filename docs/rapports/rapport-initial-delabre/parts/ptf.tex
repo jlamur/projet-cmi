@@ -1,0 +1,308 @@
+\chapter{Jeu de plateformes coopératif}
+
+Les jeux de plateformes sont un des premiers genres
+à avoir émergé dans le monde du jeu vidéo. Ils consistent
+à faire progresser un personnage en le faisant aller
+de plateforme en plateforme, d'où leur nom.
+
+Le troisième jeu étudié a un principe original, inspiré
+des jeux de plateformes, de coopération et de réflexion. Il
+s'agira pour deux joueurs de faire traverser deux balles
+aimantées à travers un niveau, certains éléments du décor
+étant eux aussi aimantés.
+
+La conception du jeu s'appuiera sur cet élément
+physique pour proposer des niveaux sous forme de casse-têtes,
+dans lesquels les deux participants devront s'entraider et
+réfléchir pour parvenir à la fin.
+
+\section{Principes}
+
+Deux joueurs doivent s'entraider pour faire avancer leur balle à travers
+des niveaux. Les joueurs exploitent pour ce faire les mécanismes
+physiques définis dans la section \ref{section:ptf-joueurs}.
+
+Le jeu est constitué d'une suite de niveaux, chaque niveau
+étant une grille de blocs en deux dimensions. Ces grilles sont
+définies en avance par le programmeur. Les blocs interagissent
+avec les balles comme défini dans les sections \ref{section:ptf-joueurs}
+et \ref{section:ptf-blocs}.
+
+Les joueurs valident un niveau en faisant parvenir toutes les
+balles dans une zone d'arrivée prédéfinie. Ils passent
+ainsi au niveau suivant. Le but du jeu est de terminer tous
+les niveaux.
+
+\subsection{Joueurs}
+\label{section:ptf-joueurs}
+
+Les deux joueurs contrôlent chacun une balle. Ces balles ont pour
+propriétés leur position dans le plan, leur vitesse et leur charge
+électrique. Les balles évoluent par interactions
+avec le joueur et par interactions physiques.
+
+Un joueur peut interagir avec sa balle de trois manières~:
+il peut lui donner de la vitesse vers la gauche de la fenêtre,
+la droite de la fenêtre, ou inverser la polarité de la balle.
+Le joueur ne peut pas faire « sauter » sa balle.
+
+L'évolution des balles, en dehors du contrôle des joueurs, est
+conditionnée par les phénomènes physiques suivants~:
+
+\begin{itemize}
+    \item une force de gravité qui agit en tout point et attire
+    les balles vers le bas, le haut, la gauche ou la droite de la
+    fenêtre. L'orientation de cette force peut être modifiée par les
+    actions d'une balle en cours de jeu~;
+
+    \item une force de réaction qui agit de telle sorte
+    que les balles ne puissent pas traverser les blocs~;
+
+    \item des forces de frottements lorsque la balle se situe
+    au contact d'un bloc. L'intensité de cette force varie
+    en fonction des types de blocs~;
+
+    \item une force d'interaction coulombienne entre les éléments
+    du jeu qui sont polarisés (c'est-à-dire les balles et
+    certains blocs tels que définis en section \ref{section:ptf-blocs}).
+\end{itemize}
+
+\subsection{Caméra}
+
+À tout moment les deux balles peuvent se situer n'importe où dans le
+niveau. Il faut toutefois faire en sorte qu'elles soient toutes deux
+visibles à tout moment.
+
+Pour ce faire, la caméra est centrée sur la position moyenne
+des deux balles si celles-ci sont suffisament proches. Sinon,
+l'écran est divisé en deux et chaque partie est centrée sur chacune
+des balles.
+
+\subsection{Blocs}
+\label{section:ptf-blocs}
+
+Le niveau est une grille de blocs. Les blocs possèdent
+une position sur la grille déterminée par une paire d'entiers et
+une charge électrique qui peut être annulée pour que le bloc
+n'attire aucun objet. Certains blocs peuvent modifier le sens
+de la gravité lorsqu'une balle rentre en collision avec eux.
+Enfin, les blocs sont statiques et ne sont pas soumis
+à la physique du jeu.
+
+\section{Modélisation}
+
+Les balles sont modélisées par une classe \texttt{Ball}. Cette
+classe est dotée des propriétés \texttt{position},
+\texttt{velocity}, \texttt{mass} et \texttt{charge}.
+Le vecteur \texttt{position} représente la position de la balle
+dans le plan. Le vecteur \texttt{velocity} représente la
+vitesse de la balle. Le flottant \texttt{mass} représente la masse
+de la balle, qui sera utilisée dans le calcul de l'accélération.
+Enfin, le flottant \texttt{charge} représente sa charge électrique.
+
+Les blocs sont modélisés par une classe \texttt{Block} munie
+des propriétés \texttt{position} et \texttt{charge}
+qui représentent la position du bloc sur la grille de jeu et
+sa charge. La charge du bloc est nulle s'il n'est pas polarisé.
+La classe sera étendue pour représenter des types de
+blocs spécialisés.
+
+Enfin, une classe principale \texttt{Engine} est chargée de
+coordonner les éléments du jeu
+et d'organiser le dessin des \emph{frames}. Elle est
+dotée d'un tableau à deux dimensions d'instances de
+\texttt{Block} qui représente la grille de jeu,
+d'un tableau à une dimension d'instances de \texttt{Ball}
+qui stocke toutes les balles dans le niveau, et d'une
+horloge qui mesure le temps écoulé entre chaque \emph{frame}.
+
+La figure \ref{fig:ptf-uml-diagram} présente les classes
+utilisées pour la modélisation. Les méthodes de ces classes
+sont détaillées dans la section suivante.
+
+\begin{figure}[h!]
+    \centering
+    \input{./figures/ptf-uml-diagram}
+    \caption{Diagramme des classes utilisées}
+    \label{fig:ptf-uml-diagram}
+\end{figure}
+
+\section{Algorithmes}
+\label{section:ptf-algos}
+
+\subsection{Physique}
+
+Les balles sont équipées de propriétés représentant leur
+position, leur vitesse, leur masse et leur charge comme
+vu dans la section précédente. On utilise
+l'intégration explicite d'Euler pour calculer la nouvelle
+position de chaque balle à chaque \emph{frame}. \cite{ptf-euler}
+Cette méthode a l'avantage d'être simple à implémenter et rapide.
+
+\begin{description}
+    \item[\texttt{Engine::update(delta)}]
+    L'algorithme reçoit le temps écoulé depuis la dernière \emph{frame}. Il
+    calcule les forces à appliquer à chaque balle, puis appelle la procédure
+    \texttt{Ball::update(forces, delta)} en conséquence.
+    \begin{enumerate}
+        \item Pour chaque \texttt{ball} dans \texttt{balls}.
+        \item Initialiser un vecteur \texttt{forces} au vecteur nul.
+        \item Ajouter le vecteur $(0, g)$, $(0, -g)$, $(g, 0)$, $(-g, 0)$
+        selon la direction de la gravité au vecteur \texttt{forces}.
+        \item Si la touche pour faire aller la balle \texttt{ball}
+        à gauche est enfoncée, ajouter le vecteur $(-m, 0)$ au
+        vecteur \texttt{forces}.
+        \item Si la touche pour faire aller la balle \texttt{ball}
+        à droite est enfoncée, ajouter le vecteur $(m, 0)$ au
+        vecteur \texttt{forces}.
+        \item Pour chaque autre élément polarisé, appliquer une
+        force d'attraction portée par la droite passant par les
+        deux éléments et de norme $c \times \frac{\mathtt{charge}_1 \times \mathtt{charge}_2}{\mathtt{distance}^2}$.
+        \item Gérer les collisions et les frottements.
+        \item Appeler \texttt{Ball::update(forces, delta)} sur \texttt{ball}.
+    \end{enumerate}
+
+    \item[\texttt{Ball::update(forces, delta)}]
+    L'algorithme reçoit le vecteur somme de toutes les forces appliquées
+    à la balle et un flottant qui contient le temps écoulé depuis la
+    dernière \emph{frame}. Il calcule la position suivante de la balle.
+    \begin{enumerate}
+        \item $\mathtt{acceleration} := \frac{\mathtt{forces}}{\mathtt{mass}}$.
+        \item Ajouter $\mathtt{acceleration} \times \mathtt{delta}$ à \texttt{velocity}.
+        \item Ajouter $\mathtt{velocity} \times \mathtt{delta}$ à \texttt{position}.
+    \end{enumerate}
+\end{description}
+
+Les constantes $g$, $m$ et $c$ devront être définies et
+ajustées au cours de la conception du jeu pour que
+la simulation paraisse naturelle.
+
+\subsection{Dessin}
+
+La scène du jeu est composée de trois couches, l'une pour
+l'arrière-plan du jeu, une autre pour la grille de blocs,
+et la dernière pour les balles. Ces couches sont représentées
+sur les figures \ref{fig:ptf-layering-exploded} et \ref{fig:ptf-layering-merged}.
+Chaque objet susceptible d'être dessiné à l'écran possède
+une méthode \texttt{draw()}.
+
+\begin{description}
+    \item[\texttt{Ball::draw()}] Dessine la balle à sa position sur l'écran.
+    \item[\texttt{Block::draw()}] Dessine le bloc à sa position sur l'écran.
+    \item[\texttt{Engine::draw()}] Cet algorithme du moteur appelle les
+    différentes fonctions de dessin dans un ordre spécifique pour que
+    les trois couches de la scène du jeu soient correctement affichées.
+    \begin{enumerate}
+        \item Dessiner l'arrière-plan du jeu.
+        \item Dessiner la grille de blocs en appelant \texttt{Block::draw()}
+        sur les blocs de \texttt{blocks} qui sont visibles à l'écran.
+        \item Dessiner le premier-plan en appelant \texttt{Ball::draw()} sur
+        les balles de \texttt{balls} qui sont visibles à l'écran.
+    \end{enumerate}
+\end{description}
+
+\begin{figure}[p!]
+    \centering
+    \input{./figures/ptf-layering-exploded}
+    \caption{Vue explosée des trois couches de rendu du jeu}
+    \label{fig:ptf-layering-exploded}
+\end{figure}
+
+\begin{figure}[p!]
+    \centering
+    \input{./figures/ptf-layering-merged}
+    \caption{Une configuration similaire à celle de la figure \ref{fig:ptf-layering-exploded}, vue de face}
+    \label{fig:ptf-layering-merged}
+\end{figure}
+
+\subsection{Moteur}
+
+\begin{description}
+    \item[Initialisation du moteur \texttt{Engine}]\hfill
+    \begin{enumerate}
+        \item Créer et configurer la fenêtre d'affichage du jeu.
+        \item Initialiser \texttt{clock} à zéro.
+        \item Tant que la fenêtre est ouverte~:
+        \begin{enumerate}
+            \item traiter tous les événements relatifs à la fenêtre
+            (notamment l'appui sur une touche, la fermeture, le redimensionnement)~;
+            \item calculer le temps écoulé \texttt{delta} depuis la
+            dernière \emph{frame} et réinitialiser \texttt{clock} à zéro~;
+            \item appeler l'algorithme \texttt{Engine::update(delta)}~;
+            \item appeler l'algorithme \texttt{Engine::draw()}.
+        \end{enumerate}
+    \end{enumerate}
+\end{description}
+
+\section{Spécifications}
+
+\subsection{Version initiale}
+
+On choisira le langage C++, qui prend en charge le paradigme objet
+et dont la syntaxe est enseignée dans le cursus. On utilisera
+la librairie SFML pour son A.P.I. simple et puissante.
+
+Les deux joueurs partageront le clavier d'une même machine.
+
+On utilisera le type \texttt{sf::Vector2d} pour ce qui est
+vectoriel (position, vitesse, accélération, forces). Les tableaux
+utiliseront le type standard \texttt{std::vector}. Le type
+\texttt{sf::Clock} sera utilisé pour l'horloge du moteur. On choisira
+entre des flottants simple précision ou double précision en
+fonction des besoins.
+
+Des recherches supplémentaires sont nécessaires notamment
+concernant les algorithmes de détection et de réaction
+aux collisions. \cite{ptf-collision-detection, ptf-collision-response}
+
+\subsection{Améliorations possibles}
+
+L'algorithme physique utilise la méthode explicite d'Euler.
+Cette méthode engendre une erreur de simulation d'autant
+plus grande que l'espacement entre les \emph{frames} est
+élevé, ce qui signifie que la physique du jeu se comportera
+différemment selon les performances de la machine. On pourra
+opter pour des méthodes plus précises comme l'intégration
+de Verlet \cite{ptf-verlet} ou la méthode de Runge-Kutta classique.
+\cite{ptf-rk4}
+
+On pourra faire en sorte que le jeu s'exécute en réseau
+entre deux machines, une pour chaque joueur. Cela requièrera
+une synchronisation de la simulation physique et la mise au point d'un
+protocole de communication entre les deux machines.
+
+\section{Organisation}
+
+Dans un premier temps le moteur physique et graphique devra
+être conçu sur la base des algorithmes fournis dans le rapport
+(hormis l'algorithme de collision, qui devra faire l'objet
+de plus de recherches). Durant la mise au point de ce moteur,
+un niveau de test sera créé permettant l'appréciation
+et l'ajustement des variables physiques. On y consacrera 40 heures
+au total.
+
+Ce niveau de test permettra également l'essai de différents
+mécanismes de \emph{gameplay.} Ces éléments seront en parallèle
+intégrés dans les niveaux finaux. La conception et le
+test des niveaux se fera sur 80 heures.
+
+Dans le même temps, l'univers graphique, notamment les textures,
+la décoration de l'interface, ainsi que la musique et les bruitages
+du jeu seront réalisés. Après la réalisation des éléments
+graphiques, on pourra concevoir l'interface du jeu.
+On y consacrera 50 heures.
+
+Enfin, les tests finaux du jeu s'effecturont sur 5 heures.
+On pourra éventuellement demander l'aide de personnes extérieures
+pour ces essais.
+
+La rédaction du rapport s'effectuera en continu pendant la création du jeu.
+La figure~\ref{fig:ptf-gantt} présente un diagramme de Gantt résumant
+la répartition du travail.
+
+\begin{figure}[h!]
+    \centering
+    \input{./figures/ptf-gantt}
+    \caption{Développement du jeu sur 40 heures}
+    \label{fig:ptf-gantt}
+\end{figure}

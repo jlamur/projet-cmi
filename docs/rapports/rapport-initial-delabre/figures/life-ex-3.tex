@@ -1,0 +1,57 @@
+\begin{tikzpicture}[scale=.5]
+    \begin{scope}
+        \draw (0,0) grid (5, 5);
+        \draw[thick, scale=5] (0, 0) grid (1, 1);
+
+        \fillcell{2}{2}{alive}
+        \fillcell{3}{2}{alive}
+        \fillcell{4}{2}{dying}
+        \fillcell{2}{3}{alive}
+        \fillcell{2}{4}{dying}
+
+        \node[anchor=center] at (2.5,-0.5) {$n=0$};
+    \end{scope}
+
+    \begin{scope}[xshift=6cm]
+        \draw (0,0) grid (5, 5);
+        \draw[thick, scale=5] (0, 0) grid (1, 1);
+
+        \fillcell{2}{2}{dying}
+        \fillcell{3}{2}{alive}
+        \fillcell{2}{3}{alive}
+        \fillcell{1}{3}{nascent}
+        \fillcell{3}{1}{nascent}
+
+        \node[anchor=center] at (2.5,-0.5) {$n=1$};
+    \end{scope}
+
+    \begin{scope}[xshift=12cm]
+        \draw (0,0) grid (5, 5);
+        \draw[thick, scale=5] (0, 0) grid (1, 1);
+
+        \fillcell{3}{2}{dying}
+        \fillcell{2}{3}{dying}
+        \fillcell{1}{3}{alive}
+        \fillcell{3}{1}{alive}
+        \fillcell{1}{2}{nascent}
+        \fillcell{2}{1}{nascent}
+        \fillcell{3}{3}{nascent}
+
+        \node[anchor=center] at (2.5,-0.5) {$n=2$};
+    \end{scope}
+
+    \begin{scope}[xshift=18cm]
+        \draw (0,0) grid (5, 5);
+        \draw[thick, scale=5] (0, 0) grid (1, 1);
+
+        \fillcell{1}{3}{alive}
+        \fillcell{3}{1}{alive}
+        \fillcell{1}{2}{alive}
+        \fillcell{2}{1}{alive}
+        \fillcell{3}{3}{alive}
+        \fillcell{4}{2}{nascent}
+        \fillcell{2}{4}{nascent}
+
+        \node[anchor=center] at (2.5,-0.5) {$n\geq3$};
+    \end{scope}
+\end{tikzpicture}

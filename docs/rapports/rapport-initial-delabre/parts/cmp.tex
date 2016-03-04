@@ -1,0 +1,41 @@
+\chapter*{Étude comparative}
+\addcontentsline{toc}{chapter}{Étude comparative}
+
+Le jeu de la vie permet, avec des règles très simples, de produire
+des motifs extrêmement complexes. Ces motifs peuvent nécessiter de
+nombreuses générations sur de grandes surfaces, d'où la nécessité
+d'un algorithme évitant les calculs inutiles. En effet, on peut
+remarquer que beaucoup de motifs se répètent au cours des générations
+et qu'il n'est pas utile de calculer l'état de zones isolées
+des cellules vivantes. C'est l'objectif de l'algorithme \emph{Hashlife}.
+
+D'un point de vue algorithmique, le jeu de go est également
+intéressant. Le décompte des points demande de pouvoir identifier
+les territoires des joueurs, ce à quoi un algorithme de remplissage par
+diffusion se prête bien, comme montré au cours de l'étude algorithmique.
+Cependant, le décompte peut aussi demander (en fonction
+des règles que l'on applique) de retirer les pierres « mortes »
+c'est à dire celles qui n'auraient pas pu être sauvées
+de la prise même en contiuant de jouer. On ne peut pas imaginer pouvoir
+concevoir un algorithme qui détecte de telles pierres sans avoir
+une intelligence artificielle assez performante pour pouvoir simuler
+les coups suivants. Les intelligences artificielles en matière
+de jeu de go restent peu performantes, car les techniques
+classiques de recherche de solutions employées notamment avec
+les échecs ne sont pas envisageables, au vu du nombre de possibilités.
+
+Le jeu de plateformes présente un intérêt différent. D'une part,
+la quantité de travail à fournir est largement supérieure à celle des autres
+jeux présentés, et nécessite donc la coordination d'une équipe.
+D'autre part, les algorithmes à concevoir sont directement
+à mettre en relation avec l'enseignement de mécanique classique du
+premier semestre, ce qui permet de le valoriser. Enfin, un tel jeu
+a un résultat visuel plus à même d'être présenté en vidéo ou
+devant un public, puisqu'il est plus dynamique que le jeu de la
+vie ou le jeu de go.
+
+Chaque jeu présenté dans ce rapport demande une organisation différente car le
+volume de travail requis va en croissant. En effet, alors que le jeu de la vie
+peut être développé par une seule personne en 40 heures totales, le jeu de
+plateformes demande au moins 175 heures et donc la collaboration d'au moins
+3 personnes.

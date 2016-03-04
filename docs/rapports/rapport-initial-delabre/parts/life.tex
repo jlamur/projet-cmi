@@ -1,0 +1,205 @@
+%%%%%%%%%%
+% Macros %
+%%%%%%%%%%
+
+% Associe les couleurs en fonction de l'état d'une cellule
+\newcommand{\cellcolor}[1]{%
+\ifnum\pdfstrcmp{#1}{alive}=0 matblue\fi%
+\ifnum\pdfstrcmp{#1}{dying}=0 matred\fi%
+\ifnum\pdfstrcmp{#1}{nascent}=0 matgreen\fi}
+
+% Dessine une cellule en X, Y dans l'état donné (doit être
+% utilisé dans un environnement TikZ)
+\newcommand{\fillcell}[3]{
+\ifnum\pdfstrcmp{#3}{stillborn}=0
+\draw [fill=\cellcolor{dying}] (#1,#2) -- (#1+1,#2) -- (#1+1,#2+1) -- (#1,#2);
+\draw [fill=\cellcolor{nascent}] (#1,#2) -- (#1,#2+1) -- (#1+1,#2+1) -- (#1,#2);
+\else
+\draw [fill=\cellcolor{#3}] (#1,#2) rectangle (#1+1,#2+1);
+\fi
+}
+
+%%%%%%%%%%
+% Source %
+%%%%%%%%%%
+
+\chapter{Jeu de la vie}
+
+Le jeu de la vie, inventé par John Conway en 1970, est l'exemple le plus
+populaire d'automate cellulaire.
+\cite{gof-wikipedia}
+Un automate cellulaire est un ensemble
+de cellules pouvant être dans plusieurs états différents et dont l'état
+suivant est entièrement déterminé à partir de l'état actuel.
+\cite{gof-automata}
+
+Il présente un intérêt théorique car il a été démontré que le jeu de la vie
+est Turing-complet, c'est-à-dire que n'importe quel algorithme peut
+y être implémenté.
+
+\section{Principes}\label{sec:principes}
+
+Le jeu de la vie est composé d'une grille infinie de cellules pouvant
+être soit mortes soit vivantes. Le jeu est constitué d'états : un état du jeu
+est l'ensemble des états (vivante ou morte) de chacune de ses cellules à
+un moment précis. Seul l'état initial est fourni, les états suivants sont calculés
+de proche en proche selon les règles suivantes~:
+
+\begin{enumerate}
+    \item si une cellule a trois voisines à l'état $n$, elle est vivante à l'état $n+1$ ;
+    \item si une cellule a deux voisines à l'état $n$, elle persévère dans son état ;
+    \item si une cellule a moins de deux ou plus de trois voisines à l'état $n$, elle est morte à l'état $n+1$.
+    \cite{gof-conwaylife}
+\end{enumerate}
+
+Les figures~\ref{fig:life-ex-1}, \ref{fig:life-ex-2} et \ref{fig:life-ex-3} montrent
+trois situations typiques du jeu de la vie sur des portions de grilles.
+Dans ces figures, une case \tikz[scale=.2]{\fillcell{0}{0}{nascent}} représente
+une cellule qui vient de naître, une case \tikz[scale=.2]{\fillcell{0}{0}{dying}}
+représente une cellule qui va mourir à l'état suivant et une case
+\tikz[scale=.2]{\fillcell{0}{0}{alive}} représente une cellule vivante.
+
+\begin{figure}[p!]
+    \centering
+    \input{./figures/life-ex-1}
+    \caption{Mort par sous-population}
+    \label{fig:life-ex-1}
+\end{figure}
+
+\begin{figure}[p!]
+    \centering
+    \input{./figures/life-ex-2}
+    \caption{Un oscillateur, une configuration qui se répète indéfiniment}
+    \label{fig:life-ex-2}
+\end{figure}
+
+\begin{figure}[p!]
+    \centering
+    \input{./figures/life-ex-3}
+    \caption{Stabilisation de la configuration en quatre états}
+    \label{fig:life-ex-3}
+\end{figure}
+
+\section{Modélisation}
+
+Les cellules peuvent prendre uniquement deux états, vivante ou
+morte. Pour cette raison, il est naturel de représenter une
+cellule par un booléen, \texttt{true} pour une cellule
+vivante et \texttt{false} pour une cellule morte.
+Pour la représentation d'une grille de cellules, on utilisera donc
+un tableau de tableaux de booléens.
+
+Les tableaux seront de taille suffisamment grande pour éviter qu'une
+structure n'arrive à la bordure. En effet, le comportement à la bordure
+d'une grille n'est pas défini dans les règles du jeu de la vie puisqu'il
+est censé se dérouler sur une grille infinie.
+
+\section{Algorithmes}
+
+Quatre algorithmes doivent être définis pour gérer la grille.
+
+\begin{description}
+    \item[Initialisation de la grille] Allocation d'une grille de taille
+    donnée et initialisation de tous les booléens à \texttt{false}.
+    \item[Détermination du nombre de voisins vivants] Reçoit une grille $G$
+    et une position de cellule $(x, y)$.
+    \begin{enumerate}
+        \item Soit $total := 0$.
+        \item Pour $i$ allant de $x - 1$ à $x + 1$~:
+        \begin{enumerate}
+            \item pour $j$ allant de $y - 1$ à $y + 1$, si
+            $(i, j)$ est une position valide et
+            $(i, j)$ est une cellule vivante de $G$ et
+            $(i, j) \neq (x, y)$, alors $total := total + 1$.
+        \end{enumerate}
+        \item Renvoyer $total$.
+    \end{enumerate}
+    \item[Calcul de l'état suivant] Reçoit une grille $G$ et calcule
+    la grille représentant l'état suivant du jeu.
+    \begin{enumerate}
+        \item Soit $G^\prime$ une grille de même taille que $G$.
+        \item Pour $i$ allant de $0$ à la taille horizontale de $G$~:
+        \begin{enumerate}
+            \item pour $j$ allant de $0$ à la taille verticale de $G$~:
+            \begin{enumerate}
+                \item appeler l'algorithme \textbf{Détermination du nombre de voisins vivants}
+                sur la grille $G$ et la case $(i, j)$ et stocker le résultat dans $voisins$~;
+                \item si $voisins = 3$, $G^\prime(i, j) := \mathtt{true}$~;
+                \item sinon, si $voisins = 2$, $G^\prime(i, j) := G(i, j)$~;
+                \item sinon, $G^\prime(i, j) := \mathtt{false}$.
+            \end{enumerate}
+        \end{enumerate}
+        \item Renvoyer $G^\prime$.
+    \end{enumerate}
+    \item[Affichage de la grille] Doit parcourir chaque cellule
+    d'une grille donnée pour afficher à l'écran l'état de celle-ci. L'algorithme
+    dépendra principalement du type d'affichage choisi (terminal, fenêtré).
+\end{description}
+
+Le programme principal se charge d'appeler l'algorithme 1, puis
+d'appeler de manière répétée les algorithmes 3 et 4 pour afficher
+les états suivants.
+
+\section{Spécifications}
+
+\subsection{Version initiale}
+
+On choisira le langage C++, qui possède les structures requises dans
+la section précédente, et est enseigné dans le cursus. Il n'y a pas de difficulté
+algorithmique particulière qui justifie le choix d'un langage différent,
+sachant que le choix d'un tel langage pourrait ralentir le développement.
+
+L'affichage de la grille se fera dans le terminal. Un algorithme
+naïf sera choisi pour le calcul de l'état suivant, se contenant de parcourir
+chaque cellule et de calculer son état, sans recherche d'optimisation.
+
+L'état initial sera choisi par l'utilisateur parmi une série de
+préconfigurations codées \emph{en dur} dans le programme.
+
+Le type \texttt{std::vector<std::vector<bool>\null>} de la librairie
+standard C++ sera utilisé pour représenter les grilles car il permet
+une allocation dynamique automatiquement gérée.
+
+\subsection{Améliorations possibles}
+
+L'affichage peut s'effectuer en fenêtré. Les bibliothèques
+SDL~(en C) ou SFML~(en C++, orienté objet) peuvent être choisies
+et seront utilisées dans l'algorithme d'affichage pour le dessin
+des cellules, et dans le programme principal pour initialiser la fenêtre.
+
+On peut laisser l'utilisateur choisir l'état initial en cliquant
+sur les cellules. L'utilisateur pourra contrôler la génération grâce
+à un bouton marche/arrêt, pas à pas, ou remise à zéro. On peut
+également fournir une série de préconfigurations parmi lesquelles choisir
+dans l'interface.
+
+Enfin, un algorithme plus performant peut être utilisé, réduisant
+les calculs inutiles. Par exemple, l'algorithme \emph{Hashlife,}
+\cite{gof-hashlife}
+utilisant des \emph{quadtrees} et une table de hachage peut améliorer
+considérablement les performances (mais peut être difficile à implémenter).
+
+\section{Organisation}
+
+Pour la version initiale du programme, il y a quatre algorithmes à
+mettre en place. Ces algorithmes reprennent des concepts
+vus en cours. On pourra y consacrer 10 heures.
+
+Pour l'affichage fenêtré, il faudra se renseigner sur l'A.P.I. des
+bibliothèques utilisées, concevoir une interface (placement des boutons,
+de la grille) et l'implémenter. On pourra prévoir 10 heures.
+
+L'implémentation de l'algorithme \emph{Hashlife} requièrera des renseignements
+sur l'utilisation des \emph{quadtrees} et des tables de hachages ainsi
+que sur l'algorithme en lui-même. Prévoir 20 heures.
+
+La rédaction du rapport s'effectuera en continu pendant la création du jeu.
+La figure~\ref{fig:life-gantt} présente un diagramme de Gantt résumant
+la répartition du travail.
+
+\begin{figure}[h!]
+    \centering
+    \input{./figures/life-gantt}
+    \caption{Développement du jeu de la vie sur 40 heures}
+    \label{fig:life-gantt}
+\end{figure}
