@@ -2,8 +2,10 @@
 #define PTF_ENGINE_HPP
 
 #include <vector>
+#include <memory>
 #include <SFML/Graphics.hpp>
-#include "ball.hpp"
+#include "state.hpp"
+#include "object.hpp"
 
 /**
  * La classe principale Engine coordonne les éléments
@@ -17,17 +19,25 @@ private:
     bool goLeftKey;
     bool goRightKey;
 
+    std::vector<std::unique_ptr<Object>> objects;
+
 public:
     static constexpr float GRAVITY = 10;
     static constexpr float ATTRACTION = 10;
     static constexpr float MOVE = 10;
 
-    std::vector<Ball> balls;
-    std::vector<std::vector<Block>> blocks;
-
     Engine();
+
+    /**
+     * Dessine la scène du jeu couche par couche
+     */
     void draw();
-    void update(float delta);
+
+    /**
+     * Met à jour les objets du jeu pour
+     * qu'ils s'adaptent au nouvel état du moteur
+     */
+    void update(State state);
 };
 
 #endif
