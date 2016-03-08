@@ -69,7 +69,7 @@ Engine::Engine() {
 void Engine::update(State state) {
     // demande la mise à jour de tous les objets du jeu
     for (int i = 0; i < objects.size(); i++) {
-        objects[i]->update(state, delta);
+        objects[i]->update(state);
     }
 }
 
@@ -78,8 +78,7 @@ void Engine::draw() {
     window.clear(sf::Color(66, 165, 245));
 
     // chargement de la file d'affichage des objets
-    typedef std::unique_ptr<Object> ObjectPtr;
-    std::priority_queue<ObjectPtr, std::vector<ObjectPtr>, CompareObjectLayer> display_queue;
+    std::priority_queue<Object*, std::vector<Object*>, CompareObjectLayer> display_queue;
 
     for (int i = 0; i < objects.size(); i++) {
         display_queue.push(objects[i]);
@@ -89,6 +88,7 @@ void Engine::draw() {
     unsigned int layer = 0;
 
     while (!display_queue.empty()) {
-        display_queue.pop()->draw(window);
+        display_queue.top()->draw(window);
+        display_queue.pop();
     }
 }

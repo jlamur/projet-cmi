@@ -2,7 +2,6 @@
 #define PTF_ENGINE_HPP
 
 #include <vector>
-#include <memory>
 #include <SFML/Graphics.hpp>
 #include "state.hpp"
 #include "object.hpp"
@@ -19,7 +18,7 @@ private:
     bool goLeftKey;
     bool goRightKey;
 
-    std::vector<std::unique_ptr<Object>> objects;
+    std::vector<Object*> objects;
 
 public:
     Engine();

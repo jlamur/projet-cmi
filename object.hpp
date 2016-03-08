@@ -44,8 +44,8 @@ public:
  * qui doit être dessinée avant celle du second
  */
 struct CompareObjectLayer {
-    bool operator()(Object const &obj1, Object const &obj2) {
-        return obj1.getLayer() < obj2.getLayer();
+    bool operator()(Object* const &obj1, Object* const &obj2) {
+        return obj1->getLayer() < obj2->getLayer();
     }
 };
 
