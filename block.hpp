@@ -1,5 +1,5 @@
-#ifndef PTF_BALL_HPP
-#define PTF_BALL_HPP
+#ifndef PTF_BLOCK_HPP
+#define PTF_BLOCK_HPP
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
