@@ -1,5 +1,5 @@
-#ifndef PTF_ENGINE_HPP
-#define PTF_ENGINE_HPP
+#ifndef __PTF_ENGINE_HPP__
+#define __PTF_ENGINE_HPP__
 
 #include <vector>
 #include <SFML/Graphics.hpp>

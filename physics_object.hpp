@@ -1,5 +1,5 @@
-#ifndef PTF_OBJECT_HPP
-#define PTF_OBJECT_HPP
+#ifndef __PTF_PHYSICS_OBJECT_HPP__
+#define __PTF_PHYSICS_OBJECT_HPP__
 
 #include <SFML/Graphics.hpp>
 #include <iostream>

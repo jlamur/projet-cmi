@@ -1,5 +1,5 @@
-#ifndef PTF_STATE_HPP
-#define PTF_STATE_HPP
+#ifndef __PTF_STATE_HPP__
+#define __PTF_STATE_HPP__
 
 #include <vector>
 
