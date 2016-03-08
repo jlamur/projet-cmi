@@ -22,10 +22,6 @@ private:
     std::vector<std::unique_ptr<Object>> objects;
 
 public:
-    static constexpr float GRAVITY = 10;
-    static constexpr float ATTRACTION = 10;
-    static constexpr float MOVE = 10;
-
     Engine();
 
     /**
