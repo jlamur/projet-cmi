@@ -1,28 +1,32 @@
 #ifndef PTF_BALL_HPP
 #define PTF_BALL_HPP
 
-#include "object.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "state.hpp"
+#include "physics_object.hpp"
 
-class Ball : public Object {
+class Ball : public PhysicsObject {
 protected:
-    sf::Vector2f velocity;
-    float mass;
+    /**
+     * Calcule les forces appliquées à l'objet
+     */
+    void getForces(State state);
 
 public:
     Ball();
 
     /**
-     * Mise à jour de la position de la balle en fonction des forces
-     * qui lui sont appliquées
-     */
-    void update(sf::Vector2f forces, float delta);
-
-    /**
      * Dessine la balle dans la fenêtre donnée
      */
     void draw(sf::RenderWindow& window);
+
+    /**
+     * Détermine la couche d'affichage de l'objet
+     */
+    unsigned int getLayer() {
+        return 1;
+    }
 };
 
 #endif
