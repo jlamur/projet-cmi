@@ -67,10 +67,10 @@ void Engine::update(float delta) {
     for (int i = 0; i < balls.size(); i++) {
         sf::Vector2f forces(0, 0);
 
-        // ajout de la force de gravité
+        // force de gravité
         forces += sf::Vector2f(0, Engine::GRAVITY);
 
-        // déplacement de la balle
+        // déplacement de la balle après appui sur les touches de direction
         if (goLeftKey) {
             forces += sf::Vector2f(-Engine::MOVE, 0);
         }
@@ -79,14 +79,18 @@ void Engine::update(float delta) {
             forces += sf::Vector2f(Engine::MOVE, 0);
         }
 
-        // force d'attraction
+        // force d'attraction entre les balles et les blocs
         for (int j = 0; j < balls.size(); j++) {
-            if (i != j) {
+            if (i != j && balls[i].getCharge() && balls[j].getCharge()) {
                 sf::Vector2f attraction(balls[i].getPosition() - balls[j].getPosition());
                 float distanceSquared = attraction.x * attraction.x + attraction.y * attraction.y;
 
+                // normalisation du vecteur direction qui porte la force d'attraction
                 attraction /= std::sqrt(distanceSquared);
-                attraction *= Engine::ATTRACTION * ((balls[i].getCharge() * balls[j].getCharge()) / distanceSquared);
+                attraction *= Engine::ATTRACTION * (
+                    (balls[i].getCharge() * balls[j].getCharge()) /
+                    distanceSquared
+                );
 
                 forces += attraction;
             }
