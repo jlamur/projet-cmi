@@ -1,3 +1,9 @@
 #include "block.cpp"
 
-// TODO: implémenter les fonctions de Block
+Block::Block() {
+    // TODO: implémenter cette fonction
+}
+
+void Block::draw(sf::RenderWindow& window) {
+    // TODO: implémenter cette fonction
+}
