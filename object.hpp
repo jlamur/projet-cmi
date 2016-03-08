@@ -18,7 +18,7 @@ public:
 
     /**
      * Met à jour l'objet juste avant le dessin d'une frame
-     * Reçoit l'état du moteur et le temps écoulé depuis la dernière frame
+     * Reçoit l'état actuel du moteur
      */
     virtual void update(State state) = 0;
 

@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "object.hpp"
+#include "state.hpp"
 
 class Block : public Object {
 public:
@@ -16,7 +17,7 @@ public:
 
     /**
      * Met à jour l'objet juste avant le dessin d'une frame
-     * Reçoit l'état du moteur et le temps écoulé depuis la dernière frame
+     * Reçoit l'état actuel du moteur
      */
     void update(State state);
 
