@@ -2,7 +2,11 @@
 #define PTF_STATE_HPP
 
 #include <vector>
-#include <memory>
+
+// pré-déclaration de Object pour éviter
+// les erreurs de compilation. Object
+// est défini dans object.hpp
+class Object;
 
 /**
  * Structure qui retient l'état actuel du moteur
@@ -10,7 +14,7 @@
  * mettent à jour en fonction de cet état
  */
 struct State {
-    std::vector<std::unique_ptr<Object>> objects;
+    std::vector<Object*> objects;
     bool goLeftKey;
     bool goRightKey;
     float delta;
