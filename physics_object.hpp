@@ -16,12 +16,14 @@ protected:
      */
     sf::Vector2f getForces(State state);
 
+    static constexpr float GRAVITY = 10;
+
 public:
     /**
      * Met à jour la physique de l'objet juste avant le dessin d'une frame
-     * Reçoit l'état du moteur et le temps écoulé depuis la dernière frame
+     * Reçoit l'état actuel du moteur
      */
-    void update(State state, float delta);
+    void update(State state);
 };
 
 #endif
