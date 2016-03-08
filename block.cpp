@@ -1,4 +1,4 @@
-#include "block.cpp"
+#include "block.hpp"
 
 Block::Block() {
     // TODO: implémenter cette fonction
