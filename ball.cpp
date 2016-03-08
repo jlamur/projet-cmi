@@ -13,11 +13,11 @@ sf::Vector2f Ball::getForces(State state) {
 
     // déplacement de la balle après appui sur les touches de direction
     if (state.goLeftKey) {
-        forces += sf::Vector2f(-Engine::MOVE, 0);
+        forces += sf::Vector2f(-Ball::MOVE, 0);
     }
 
     if (state.goRightKey) {
-        forces += sf::Vector2f(Engine::MOVE, 0);
+        forces += sf::Vector2f(Ball::MOVE, 0);
     }
 
     // force d'attraction entre les balles et les blocs chargés
@@ -42,7 +42,7 @@ sf::Vector2f Ball::getForces(State state) {
             // normalisation du vecteur direction qui porte
             // la force d'attraction, puis application de la norme
             attraction /= std::sqrt(distanceSquared);
-            attraction *= Engine::ATTRACTION * (
+            attraction *= Ball::ATTRACTION * (
                 (objects[i].getCharge() * objects[j].getCharge()) /
                 distanceSquared
             );

@@ -13,6 +13,9 @@ protected:
      */
     void getForces(State state);
 
+    static constexpr float ATTRACTION = 10;
+    static constexpr float MOVE = 10;
+
 public:
     Ball();
 
