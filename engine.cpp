@@ -53,8 +53,8 @@ Engine::Engine() {
             }
         }
 
-        // réinitialise l'horloge à zéro
-        // et stocke la différence de temps dans delta
+        // réinitialise l'horloge à zéro et calcule la différence
+        // puis établit l'objet stockant l'état du moteur
         State state;
         state.delta = clock.restart().asSeconds();
         state.goLeftKey = goLeftKey;
