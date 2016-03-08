@@ -15,6 +15,12 @@ public:
     void draw(sf::RenderWindow& window);
 
     /**
+     * Met à jour l'objet juste avant le dessin d'une frame
+     * Reçoit l'état du moteur et le temps écoulé depuis la dernière frame
+     */
+    void update(State state);
+
+    /**
      * Détermine la couche d'affichage de l'objet
      */
     unsigned int getLayer() {
