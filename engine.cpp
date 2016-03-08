@@ -1,5 +1,6 @@
 #include "engine.hpp"
 #include <cmath>
+#include <queue>
 
 /**
  * Fonction d'initialisation de la classe Engine
@@ -54,68 +55,40 @@ Engine::Engine() {
 
         // réinitialise l'horloge à zéro
         // et stocke la différence de temps dans delta
-        float delta = clock.restart().asSeconds();
-        update(delta);
+        State state;
+        state.delta = clock.restart().asSeconds();
+        state.goLeftKey = goLeftKey;
+        state.goRightKey = goRightKey;
+        state.objects = objects;
+
+        update(state);
         draw();
     }
 }
 
-/**
- * Mise à jour de la physique du jeu
- */
-void Engine::update(float delta) {
-    for (int i = 0; i < balls.size(); i++) {
-        sf::Vector2f forces(0, 0);
-
-        // force de gravité
-        forces += sf::Vector2f(0, Engine::GRAVITY);
-
-        // déplacement de la balle après appui sur les touches de direction
-        if (goLeftKey) {
-            forces += sf::Vector2f(-Engine::MOVE, 0);
-        }
-
-        if (goRightKey) {
-            forces += sf::Vector2f(Engine::MOVE, 0);
-        }
-
-        // force d'attraction entre les balles et les blocs
-        for (int j = 0; j < balls.size(); j++) {
-            if (i != j && balls[i].getCharge() && balls[j].getCharge()) {
-                sf::Vector2f attraction(balls[i].getPosition() - balls[j].getPosition());
-                float distanceSquared = attraction.x * attraction.x + attraction.y * attraction.y;
-
-                // normalisation du vecteur direction qui porte la force d'attraction
-                attraction /= std::sqrt(distanceSquared);
-                attraction *= Engine::ATTRACTION * (
-                    (balls[i].getCharge() * balls[j].getCharge()) /
-                    distanceSquared
-                );
-
-                forces += attraction;
-            }
-        }
-
-        // TODO: COLLISIONS
-
-        balls[i].update(forces, delta);
+void Engine::update(State state) {
+    // demande la mise à jour de tous les objets du jeu
+    for (int i = 0; i < objects.size(); i++) {
+        objects[i]->update(state, delta);
     }
 }
 
-/**
- * Dessine la scène du jeu couche par couche
- */
 void Engine::draw() {
-    // couche de fond
+    // efface la scène précédente et dessine la couche de fond
     window.clear(sf::Color(66, 165, 245));
 
-    // grille de blocs
-    for (int i = 0; i < blocks.size(); i++) {
-        blocks[i].draw();
+    // chargement de la file d'affichage des objets
+    typedef std::unique_ptr<Object> ObjectPtr;
+    std::priority_queue<ObjectPtr, std::vector<ObjectPtr>, CompareObjectLayer> display_queue;
+
+    for (int i = 0; i < objects.size(); i++) {
+        display_queue.push(objects[i]);
     }
 
-    // dessin des balles
-    for (int i = 0; i < balls.size(); i++) {
-        balls[i].draw();
+    // dessin des objets de la file d'affichage couche par couche
+    unsigned int layer = 0;
+
+    while (!display_queue.empty()) {
+        display_queue.pop()->draw(window);
     }
 }
