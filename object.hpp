@@ -11,8 +11,8 @@ protected:
     int charge;
 
 public:
-    Object(sf::Vector2f init_position) :
-        position(init_position), charge(0) {}
+    Object(float x, float y) :
+        position(x, y), charge(0) {}
 
     /**
      * Dessine l'objet dans la fenêtre donnée

@@ -19,8 +19,8 @@ protected:
     static constexpr float GRAVITY = 10;
 
 public:
-    PhysicsObject(sf::Vector2f position) :
-        Object(position), mass(1) {}
+    PhysicsObject(float x, float y) :
+        Object(x, y), mass(1) {}
 
     /**
      * Met à jour la physique de l'objet juste avant le dessin d'une frame
