@@ -54,6 +54,10 @@ void Engine::start() {
     }
 }
 
+void Engine::addObject(Object* object) {
+    objects.push_back(object);
+}
+
 void Engine::update() {
     // calcul du temps écoulé depuis la dernière frame
     // et création de l'objet state stockant l'état du moteur

@@ -19,19 +19,29 @@ private:
 
     std::vector<Object*> objects;
 
-public:
-    Engine();
+    /**
+     * Met à jour les objets du jeu pour
+     * qu'ils s'adaptent au nouvel état du moteur
+     */
+    void update();
 
     /**
      * Dessine la scène du jeu couche par couche
      */
     void draw();
 
+public:
+    Engine();
+
     /**
-     * Met à jour les objets du jeu pour
-     * qu'ils s'adaptent au nouvel état du moteur
+     * Démarre la boucle principale du jeu
      */
-    void update();
+    void start();
+
+    /**
+     * Ajoute un nouvel objet à la liste des objets du jeu
+     */
+    void addObject(Object* object);
 };
 
 #endif
