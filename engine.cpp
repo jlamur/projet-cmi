@@ -68,7 +68,7 @@ void Engine::update() {
     state.objects = objects;
 
     // demande la mise à jour de tous les objets du jeu
-    for (int i = 0; i < objects.size(); i++) {
+    for (unsigned int i = 0; i < objects.size(); i++) {
         objects[i]->update(state);
     }
 }
@@ -80,7 +80,7 @@ void Engine::draw() {
     // chargement de la file d'affichage des objets
     std::priority_queue<Object*, std::vector<Object*>, CompareObjectLayer> display_queue;
 
-    for (int i = 0; i < objects.size(); i++) {
+    for (unsigned int i = 0; i < objects.size(); i++) {
         display_queue.push(objects[i]);
     }
 

@@ -22,18 +22,15 @@ sf::Vector2f Ball::getForces(State state) {
 
     // force d'attraction entre les balles et les blocs chargés
     if (getCharge() != 0) {
-        for (int j = 0; j < state.objects.size(); j++) {
-            Object attractiveObject = *objects[j];
+        for (unsigned int j = 0; j < state.objects.size(); j++) {
+            Object *attractive = state.objects[j];
 
-            if (i == j || attractiveObject.getCharge() == 0) {
+            if (attractive == this || attractive->getCharge() == 0) {
                 continue;
             }
 
             // vecteur allant de l'objet attirant vers l'objet considéré
-            sf::Vector2f attraction(
-                attractiveObject.getPosition() -
-                object.getPosition()
-            );
+            sf::Vector2f attraction(attractive->getPosition() - position);
 
             // la norme de ce vecteur est la distance entre les objets
             float distanceSquared = attraction.x * attraction.x +
@@ -43,7 +40,7 @@ sf::Vector2f Ball::getForces(State state) {
             // la force d'attraction, puis application de la norme
             attraction /= std::sqrt(distanceSquared);
             attraction *= Ball::ATTRACTION * (
-                (objects[i].getCharge() * objects[j].getCharge()) /
+                (charge * attractive->getCharge()) /
                 distanceSquared
             );
 

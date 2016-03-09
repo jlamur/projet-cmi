@@ -11,7 +11,7 @@ protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    void getForces(State state);
+    sf::Vector2f getForces(State state);
 
     static constexpr float ATTRACTION = 10;
     static constexpr float MOVE = 10;
