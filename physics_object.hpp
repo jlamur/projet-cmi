@@ -19,11 +19,35 @@ protected:
     static constexpr float GRAVITY = 10;
 
 public:
+    PhysicsObject(sf::Vector2f position) :
+        Object(position), mass(1) {}
+
     /**
      * Met à jour la physique de l'objet juste avant le dessin d'une frame
      * Reçoit l'état actuel du moteur
      */
     void update(State state);
+
+    /**
+     * Récupère la vitesse de l'objet
+     */
+    sf::Vector2f getVelocity();
+
+    /**
+     * Modifie la vitesse de l'objet
+     * (à utiliser avec précaution, préférer modifier les forces)
+     */
+    void setVelocity(sf::Vector2f set_velocity);
+
+    /**
+     * Récupère la masse de l'objet
+     */
+    int getMass();
+
+    /**
+     * Modifie la masse de l'objet
+     */
+    void setMass(int set_mass);
 };
 
 #endif

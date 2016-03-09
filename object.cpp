@@ -7,3 +7,7 @@ sf::Vector2f Object::getPosition() {
 int Object::getCharge() {
     return charge;
 }
+
+void Object::setCharge(int set_charge) {
+    charge = set_charge;
+}

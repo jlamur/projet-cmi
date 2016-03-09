@@ -11,6 +11,9 @@ protected:
     int charge;
 
 public:
+    Object(sf::Vector2f init_position) :
+        position(init_position), charge(0) {}
+
     /**
      * Dessine l'objet dans la fenêtre donnée
      */
@@ -36,6 +39,11 @@ public:
      * Récupère la charge de l'objet
      */
     int getCharge();
+
+    /**
+     * Modifie la charge de l'objet
+     */
+    void setCharge(int set_charge);
 };
 
 /**
