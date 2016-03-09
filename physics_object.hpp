@@ -3,10 +3,10 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "state.hpp"
 #include "object.hpp"
+#include "state.hpp"
 
-class PhysicsObject : class Object {
+class PhysicsObject : public Object {
 protected:
     sf::Vector2f velocity;
     float mass;
