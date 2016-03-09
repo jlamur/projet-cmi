@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "state.hpp"
 #include "object.hpp"
 
 /**
@@ -32,7 +31,7 @@ public:
      * Met à jour les objets du jeu pour
      * qu'ils s'adaptent au nouvel état du moteur
      */
-    void update(State state);
+    void update();
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include "state.hpp"
 #include <cmath>
 #include <queue>
 
@@ -53,20 +54,20 @@ Engine::Engine() {
             }
         }
 
-        // réinitialise l'horloge à zéro et calcule la différence
-        // puis établit l'objet stockant l'état du moteur
-        State state;
-        state.delta = clock.restart().asSeconds();
-        state.goLeftKey = goLeftKey;
-        state.goRightKey = goRightKey;
-        state.objects = objects;
-
-        update(state);
+        update();
         draw();
     }
 }
 
-void Engine::update(State state) {
+void Engine::update() {
+    // calcul du temps écoulé depuis la dernière frame
+    // et création de l'objet state stockant l'état du moteur
+    State state;
+    state.delta = clock.restart().asSeconds();
+    state.goLeftKey = goLeftKey;
+    state.goRightKey = goRightKey;
+    state.objects = objects;
+
     // demande la mise à jour de tous les objets du jeu
     for (int i = 0; i < objects.size(); i++) {
         objects[i]->update(state);
