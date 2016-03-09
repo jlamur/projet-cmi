@@ -17,8 +17,6 @@ protected:
     static constexpr float MOVE = 10;
 
 public:
-    Ball();
-
     /**
      * Dessine la balle dans la fenêtre donnée
      */

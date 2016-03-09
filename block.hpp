@@ -8,8 +8,6 @@
 
 class Block : public Object {
 public:
-    Block();
-
     /**
      * Dessin du bloc dans la fenêtre donnée
      */
