@@ -1,0 +1,65 @@
+\documentclass[tikz,border=30pt]{standalone}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\usepackage[french]{babel}
+
+\begin{document}
+\begin{tikzpicture}
+    \umlclass[y=.5]{Engine}{
+        objects : tableau de \texttt{Object}\\
+        goLeftKey: booléen\\
+        goRightKey : booléen\\
+        clock : horloge
+    }{
+        draw() : vide\\
+        update() : vide
+    }
+
+    \umlclass[x=6,y=-1]{State}{
+        objects : tableau de \texttt{Object}\\
+        goLeftKey: booléen\\
+        goRightKey : booléen\\
+        delta : flottant
+    }{}
+
+    \umlabstract[y=-4]{Object}{
+        position : vecteur\\
+        charge : entier signé
+    }{
+        \umlvirt{draw(fenêtre : Fenêtre) : vide}\\
+        \umlvirt{update(état : State) : vide}\\
+        \umlvirt{getLayer() : entier}\\
+        getPosition() : vecteur\\
+        getCharge() : entier signé
+    }
+
+    \umlabstract[y=-8,x=4]{PhysicsObject}{
+        velocity : vecteur\\
+        mass : flottant
+    }{
+        getForces(état : State) : vecteur\\
+        update(état : State) : vide
+    }
+
+    \umlclass[y=-11.5,x=4]{Ball}{}{
+        draw(fenêtre : Fenêtre) : vide\\
+        getForces(état : State) : vecteur\\
+        getLayer() : 1
+    }
+
+    \umlclass[y=-8,x=-4]{Block}{}{
+        draw(fenêtre : Fenêtre) : vide\\
+        update(état : State) : vide\\
+        getLayer() : 0
+    }
+
+    \umlcompo{Engine}{Object}
+    \umlinherit{Object}{Block}
+    \umlinherit{Object}{PhysicsObject}
+    \umlinherit{PhysicsObject}{Ball}
+\end{tikzpicture}
+\end{document}
