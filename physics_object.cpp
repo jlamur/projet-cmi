@@ -6,19 +6,19 @@ void PhysicsObject::update(State state) {
     // TODO: intégrer le vecteur force dans la vitesse puis la position
 }
 
-sf::Vector2f getVelocity() {
+sf::Vector2f PhysicsObject::getVelocity() {
     return velocity;
 }
 
-void setVelocity(sf::Vector2f set_velocity) {
+void PhysicsObject::setVelocity(sf::Vector2f set_velocity) {
     velocity = set_velocity;
 }
 
-int getMass() {
+int PhysicsObject::getMass() {
     return mass;
 }
 
-void setMass(int set_mass) {
+void PhysicsObject::setMass(int set_mass) {
     mass = set_mass;
 }
 

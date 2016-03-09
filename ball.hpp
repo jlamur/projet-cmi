@@ -17,6 +17,9 @@ protected:
     static constexpr float MOVE = 10;
 
 public:
+    // utilise le constructeur de PhysicsObject
+    using PhysicsObject::PhysicsObject;
+
     /**
      * Dessine la balle dans la fenêtre donnée
      */

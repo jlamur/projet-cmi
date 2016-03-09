@@ -8,6 +8,9 @@
 
 class Block : public Object {
 public:
+    // utilise le constructeur de Object
+    using Object::Object;
+
     /**
      * Dessin du bloc dans la fenêtre donnée
      */
