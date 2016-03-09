@@ -3,7 +3,7 @@
 
 int main() {
     Engine engine;
-    Ball ball;
+    Ball ball(0, 0);
 
     engine.addObject(&ball);
     engine.start();
