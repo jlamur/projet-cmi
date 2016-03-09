@@ -3,10 +3,7 @@
 #include <cmath>
 #include <queue>
 
-/**
- * Fonction d'initialisation de la classe Engine
- */
-Engine::Engine() {
+Engine::Engine() : goLeftKey(false), goRightKey(false) {
     // initialise et ouvre la fenêtre
     window.create(
         sf::VideoMode(300, 150), "La cage de Jacob",
@@ -15,11 +12,9 @@ Engine::Engine() {
     );
 
     window.setVerticalSyncEnabled(true);
+}
 
-    // au démarrage, aucune touche n'est enfoncée
-    goLeftKey = false;
-    goRightKey = false;
-
+void Engine::start() {
     // boucle d'événements sur la fenêtre
     while (window.isOpen()) {
         sf::Event event;
