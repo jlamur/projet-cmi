@@ -2,7 +2,6 @@
 #define __PTF_OBJECT_HPP__
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include "state.hpp"
 
 class Object {
@@ -51,10 +50,10 @@ public:
  * Renvoie "true" si le premier objet est sur une couche
  * qui doit être dessinée avant celle du second
  */
-struct CompareObjectLayer {
-    bool operator()(Object* const &obj1, Object* const &obj2) {
-        return obj1->getLayer() < obj2->getLayer();
-    }
+struct ObjectCompare {
+	bool operator()(Object* const &t1, Object* const &t2) {
+        return t1->getLayer() > t2->getLayer();
+	}
 };
 
 #endif

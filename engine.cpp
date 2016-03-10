@@ -75,7 +75,7 @@ void Engine::draw() {
     window.clear(sf::Color(66, 165, 245));
 
     // chargement de la file d'affichage des objets
-    std::priority_queue<Object*, std::vector<Object*>, CompareObjectLayer> display_queue;
+    std::priority_queue<Object*, std::vector<Object*>, ObjectCompare> display_queue;
 
     for (unsigned int i = 0; i < objects.size(); i++) {
         display_queue.push(objects[i]);
