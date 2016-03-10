@@ -86,4 +86,6 @@ void Engine::draw() {
         display_queue.top()->draw(window);
         display_queue.pop();
     }
+
+    window.display();
 }

@@ -2,7 +2,7 @@ CC=g++
 CFLAGS=-Wall -std=c++11
 TARGET=ptf
 
-$(TARGET): build/main.o build/object.o build/physics_object.o build/block.o build/ball.o build/engine.o 
+$(TARGET): build/main.o build/object.o build/physics_object.o build/block.o build/ball.o build/engine.o
 	$(CC) $(CFLAGS) -o build/$(TARGET) \
 	build/main.o build/object.o build/physics_object.o build/block.o \
 	build/ball.o build/engine.o \

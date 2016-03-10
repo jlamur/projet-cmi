@@ -1,9 +1,9 @@
 #include "physics_object.hpp"
 
 void PhysicsObject::update(State state) {
-    sf::Vector2f forces = getForces(state);
-
-    // TODO: intégrer le vecteur force dans la vitesse puis la position
+    sf::Vector2f acceleration = getForces(state) / mass;
+    velocity += acceleration * state.delta;
+    position += velocity * state.delta;
 }
 
 sf::Vector2f PhysicsObject::getVelocity() {
