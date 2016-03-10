@@ -8,11 +8,11 @@
 
 class Block : public Object {
 protected:
-    sf::CircleShape shape;
+    sf::RectangleShape shape;
 
 public:
-    Block(float x, float y) : Object(x,y), shape(80,4) {
-        shape.setFillColor(sf::Color(0,0,0));
+    Block(float x, float y) : Object(x,y), shape(sf::Vector2f(32, 32)) {
+        shape.setFillColor(sf::Color(0, 0, 0));
     }
 
     // utilise le constructeur de Object
