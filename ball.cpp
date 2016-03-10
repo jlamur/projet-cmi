@@ -1,7 +1,8 @@
 #include "ball.hpp"
 
 void Ball::draw(sf::RenderWindow& window) {
-    // TODO: implémenter cette fonction
+    shape.setPosition(position);
+    window.draw(shape);
 }
 
 sf::Vector2f Ball::getForces(State state) {

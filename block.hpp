@@ -7,7 +7,14 @@
 #include "state.hpp"
 
 class Block : public Object {
+protected:
+    sf::CircleShape shape;
+
 public:
+    Block(float x, float y) : Object(x,y), shape(80,4) {
+        shape.setFillColor(sf::Color(0,0,0));
+    }
+
     // utilise le constructeur de Object
     using Object::Object;
 

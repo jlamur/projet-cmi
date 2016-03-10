@@ -8,6 +8,8 @@
 
 class Ball : public PhysicsObject {
 protected:
+    sf::CircleShape shape;
+
     /**
      * Calcule les forces appliquées à l'objet
      */
@@ -17,8 +19,9 @@ protected:
     static constexpr float MOVE = 10;
 
 public:
-    // utilise le constructeur de PhysicsObject
-    using PhysicsObject::PhysicsObject;
+    Ball(float x, float y) : PhysicsObject(x, y), shape(10 * mass) {
+        shape.setFillColor(sf::Color(150,255,20));
+    }
 
     /**
      * Dessine la balle dans la fenêtre donnée
