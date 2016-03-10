@@ -3,14 +3,11 @@
 #include <cmath>
 #include <queue>
 
-Engine::Engine() : goLeftKey(false), goRightKey(false) {
-    // initialise et ouvre la fenêtre
-    window.create(
-        sf::VideoMode(300, 150), "La cage de Jacob",
-        sf::Style::Default & ~sf::Style::Resize,
-        sf::ContextSettings(0, 0, 2)
-    );
-
+Engine::Engine() : window(
+    sf::VideoMode(300, 150), "Projet CMI",
+    sf::Style::Default & ~sf::Style::Resize,
+    sf::ContextSettings(0, 0, 2)
+), goLeftKey(false), goRightKey(false) {
     window.setVerticalSyncEnabled(true);
 }
 
