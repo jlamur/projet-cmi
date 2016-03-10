@@ -7,17 +7,16 @@ int main() {
     Engine engine;
 
     Ball ball(0, 0);
-    std::vector<Block> blocks;
+    Block block1(0, 5);
+    Block block2(1, 5);
+    Block block3(2, 5);
+    Block block4(3, 5);
 
     engine.addObject(&ball);
-
-    for (int i = 0; i < 10; i++) {
-        Block block(i, 5);
-        std::cout << "Pos: " << block.getPosition().x << " x " << block.getPosition().y << std::endl;
-
-        blocks.push_back(block);
-        engine.addObject(&block);
-    }
+    engine.addObject(&block1);
+    engine.addObject(&block2);
+    engine.addObject(&block3);
+    engine.addObject(&block4);
 
     engine.start();
     return 0;
