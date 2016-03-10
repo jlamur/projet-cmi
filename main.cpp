@@ -7,10 +7,10 @@ int main() {
     Engine engine;
 
     Ball ball(0, 0);
-    Block block1(0, 5);
-    Block block2(1, 5);
-    Block block3(2, 5);
-    Block block4(3, 5);
+    Block block1(0, 3);
+    Block block2(1, 3);
+    Block block3(2, 3);
+    Block block4(3, 3);
 
     engine.addObject(&ball);
     engine.addObject(&block1);
