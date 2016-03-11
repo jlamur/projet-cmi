@@ -27,7 +27,7 @@ sf::Vector2f Ball::getForces(State state) {
             }
 
             // vecteur allant de l'objet attirant vers l'objet considéré
-            sf::Vector2f attraction(attractive->getPosition() - position);
+            sf::Vector2f attraction(position - attractive->getPosition());
 
             // la norme de ce vecteur est la distance entre les objets
             float distanceSquared = attraction.x * attraction.x +
