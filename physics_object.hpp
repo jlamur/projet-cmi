@@ -14,7 +14,7 @@ protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    sf::Vector2f getForces(State state);
+    virtual sf::Vector2f getForces(State state);
 
     static constexpr float GRAVITY = 10;
 
