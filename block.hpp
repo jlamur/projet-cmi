@@ -15,9 +15,6 @@ public:
         shape.setFillColor(sf::Color(0, 0, 0));
     }
 
-    // utilise le constructeur de Object
-    using Object::Object;
-
     /**
      * Dessin du bloc dans la fenêtre donnée
      */
