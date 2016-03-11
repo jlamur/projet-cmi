@@ -1,7 +1,7 @@
 #include "block.hpp"
 
 void Block::draw(sf::RenderWindow& window) {
-    shape.setPosition(position * 32.f);
+    shape.setPosition(position);
     window.draw(shape);
 }
 

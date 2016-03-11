@@ -11,7 +11,9 @@ protected:
     sf::RectangleShape shape;
 
 public:
-    Block(float x, float y) : Object(x,y), shape(sf::Vector2f(32, 32)) {
+    static constexpr float GRID = 32;
+
+    Block(float x, float y) : Object(x, y), shape(sf::Vector2f(Block::GRID, Block::GRID)) {
         shape.setFillColor(sf::Color(0, 0, 0));
     }
 
