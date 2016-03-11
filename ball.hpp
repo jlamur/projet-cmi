@@ -15,12 +15,13 @@ protected:
      */
     virtual sf::Vector2f getForces(State state);
 
-    static constexpr float ATTRACTION = 10;
-    static constexpr float MOVE = 10;
+    static constexpr float ATTRACTION = 25000;
+    static constexpr float MOVE = 100;
 
 public:
     Ball(float x, float y) : PhysicsObject(x, y), shape(10 * mass) {
-        shape.setFillColor(sf::Color(150,255,20));
+        shape.setOrigin(sf::Vector2f(10 * mass, 10 * mass));
+        shape.setFillColor(sf::Color(255, 245, 131));
     }
 
     /**
