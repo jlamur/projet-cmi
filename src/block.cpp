@@ -2,7 +2,7 @@
 
 void Block::draw(sf::RenderWindow& window) {
 	// chargement de la texture de test
-	if (!texture.loadFromFile("./Images/texture_test.jpeg")) {
+	if (!texture.loadFromFile("./res/texture_test.jpeg")) {
     	// erreur
 	}
 
