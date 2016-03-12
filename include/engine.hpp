@@ -41,7 +41,7 @@ public:
     /**
      * Ajoute un nouvel objet à la liste des objets du jeu
      */
-    void addObject(Object* object);
+    void addObject(Object& object);
 };
 
 #endif

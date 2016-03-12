@@ -51,8 +51,8 @@ void Engine::start() {
     }
 }
 
-void Engine::addObject(Object* object) {
-    objects.push_back(object);
+void Engine::addObject(Object& object) {
+    objects.push_back(&object);
 }
 
 void Engine::update() {

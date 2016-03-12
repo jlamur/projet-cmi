@@ -19,13 +19,13 @@ int main() {
     ball2.setCharge(-2);
     block3.setCharge(10);
 
-    engine.addObject(&ball1);
-    engine.addObject(&ball2);
-    engine.addObject(&block1);
-    engine.addObject(&block2);
-    engine.addObject(&block3);
-    engine.addObject(&block4);
-    engine.addObject(&block5);
+    engine.addObject(ball1);
+    engine.addObject(ball2);
+    engine.addObject(block1);
+    engine.addObject(block2);
+    engine.addObject(block3);
+    engine.addObject(block4);
+    engine.addObject(block5);
 
     engine.start();
     return 0;
