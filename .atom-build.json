@@ -1,0 +1,4 @@
+{
+  "cmd": "cd {PROJECT_PATH} && cmake {PROJECT_PATH} && make",
+  "name": "cmake"
+}
