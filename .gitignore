@@ -1,3 +1,6 @@
-build/*.o
-build/ptf
 *~
+CMakeFiles
+CMakeCache.txt
+Makefile
+ptf
+cmake_install.cmake
