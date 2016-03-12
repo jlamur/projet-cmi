@@ -8,6 +8,7 @@ void Block::draw(sf::RenderWindow& window) {
     	//erreur
 	}
 	shape.setTexture(&texture);	
+	shape.setTextureRect(sf::IntRect(5, 5, 10, 10));
 
     if (charge > 0) {
         shape.setFillColor(sf::Color(0, 0, 255));
