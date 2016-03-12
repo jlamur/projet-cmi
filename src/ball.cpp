@@ -39,6 +39,11 @@ sf::Vector2f Ball::getForces(State state) {
             // la norme de ce vecteur est la distance entre les objets
             float distanceSquared = attraction.x * attraction.x +
                 attraction.y * attraction.y;
+            
+            // éviter la division par zéro
+            if (distanceSquared == 0) {
+                continue;
+            }
 
             // normalisation du vecteur direction qui porte
             // la force d'attraction, puis application de la norme
