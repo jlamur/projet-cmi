@@ -8,7 +8,7 @@
 
 class Block : public Object {
 protected:
-	sf::Texture texture;
+    sf::Texture texture;
     sf::RectangleShape shape;
 
 public:

@@ -1,13 +1,12 @@
 #include "ball.hpp"
 
 void Ball::draw(sf::RenderWindow& window) {
-
-	//chargement de la texture de test
-	if (!texture.loadFromFile("./Images/texture_test.jpeg"))
-	{
-    	//erreur
+	// chargement de la texture de test
+	if (!texture.loadFromFile("./Images/texture_test.jpeg")) {
+    	// erreur
 	}
-	shape.setTexture(&texture);	
+
+	shape.setTexture(&texture);
 
     shape.setPosition(position);
     window.draw(shape);

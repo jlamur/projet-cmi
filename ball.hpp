@@ -8,7 +8,7 @@
 
 class Ball : public PhysicsObject {
 protected:
-	sf::Texture texture;
+    sf::Texture texture;
     sf::CircleShape shape;
 
     /**
