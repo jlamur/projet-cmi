@@ -16,7 +16,6 @@ public:
 
     Block(float x, float y) : Object(x, y), shape(sf::Vector2f(Block::GRID, Block::GRID)) {
         shape.setOrigin(sf::Vector2f(Block::GRID / 2, Block::GRID / 2));
-        shape.setFillColor(sf::Color(0, 0, 0));
     }
 
     /**

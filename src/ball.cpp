@@ -2,7 +2,7 @@
 
 void Ball::draw(sf::RenderWindow& window) {
 	// chargement de la texture de test
-	if (!texture.loadFromFile("./res/texture_test.jpeg")) {
+	if (!texture.loadFromFile("./res/ball.png")) {
     	// erreur
 	}
 
@@ -39,7 +39,7 @@ sf::Vector2f Ball::getForces(State state) {
             // la norme de ce vecteur est la distance entre les objets
             float distanceSquared = attraction.x * attraction.x +
                 attraction.y * attraction.y;
-            
+
             // éviter la division par zéro
             if (distanceSquared == 0) {
                 continue;

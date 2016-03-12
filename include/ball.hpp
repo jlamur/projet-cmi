@@ -22,7 +22,6 @@ protected:
 public:
     Ball(float x, float y) : PhysicsObject(x, y), shape(10 * mass) {
         shape.setOrigin(sf::Vector2f(10 * mass, 10 * mass));
-        shape.setFillColor(sf::Color(255, 245, 131));
     }
 
     /**
