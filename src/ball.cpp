@@ -1,6 +1,8 @@
 #include "ball.hpp"
 
 void Ball::draw(sf::RenderWindow& window) {
+    PhysicsObject::draw(window);
+
 	// chargement de la texture de test
 	if (!texture.loadFromFile("./res/ball.png")) {
     	// erreur

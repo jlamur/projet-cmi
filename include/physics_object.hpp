@@ -8,19 +8,28 @@
 
 class PhysicsObject : public Object {
 protected:
-    sf::Vector2f velocity;
     float mass;
+    sf::Vector2f acceleration;
+    sf::VertexArray accelLine;
+    sf::Vector2f velocity;
+    sf::VertexArray velLine;
 
     /**
      * Calcule les forces appliquées à l'objet
      */
     virtual sf::Vector2f getForces(State state);
 
-    static constexpr float GRAVITY = 275;
+    static constexpr float GRAVITY = 20;
 
 public:
     PhysicsObject(float x, float y) :
-        Object(x, y), mass(1) {}
+        Object(x, y), mass(1), accelLine(sf::LinesStrip, 2),
+        velLine(sf::LinesStrip, 2) {}
+
+    /**
+     * Dessine l'objet dans la fenêtre donnée
+     */
+    virtual void draw(sf::RenderWindow& window);
 
     /**
      * Met à jour la physique de l'objet juste avant le dessin d'une frame
