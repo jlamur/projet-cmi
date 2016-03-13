@@ -23,3 +23,11 @@ void Block::draw(sf::RenderWindow& window) {
 void Block::update(EngineState& state) {
     // rien à mettre à jour
 }
+
+std::unique_ptr<sf::FloatRect> Block::getAABB() {
+    return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
+        position.x - Block::GRID / 2,
+        position.y - Block::GRID / 2,
+        Block::GRID, Block::GRID
+    ));
+}

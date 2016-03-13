@@ -14,6 +14,14 @@ void Ball::draw(sf::RenderWindow& window) {
     window.draw(shape);
 }
 
+std::unique_ptr<sf::FloatRect> Ball::getAABB() {
+    return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
+        position.x - 10 * mass,
+        position.y - 10 * mass,
+        20 * mass, 20 * mass
+    ));
+}
+
 sf::Vector2f Ball::getForces(EngineState& state) {
     sf::Vector2f forces = PhysicsObject::getForces(state);
 

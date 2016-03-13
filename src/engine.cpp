@@ -48,6 +48,24 @@ void Engine::update() {
     for (unsigned int i = 0; i < state.objects.size(); i++) {
         state.objects[i]->update(state);
     }
+
+    // collisions entre objets
+    for (unsigned int i = 0; i < state.objects.size(); i++) {
+        Object* objA = state.objects[i];
+
+        for (unsigned int j = i + 1; j < state.objects.size(); j++) {
+            Object* objB = state.objects[j];
+
+            // vérifie si on a un risque de collision
+            if (objA->getAABB()->intersects(*objB->getAABB())) {
+                // TODO: gestion de la collision =>
+                // calcul de la normale
+                // calcul de la profondeur du choc
+                // si profondeur > 0 :
+                // résolution de la collision
+            }
+        }
+    }
 }
 
 void Engine::draw() {

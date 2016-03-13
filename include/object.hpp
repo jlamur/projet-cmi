@@ -2,6 +2,7 @@
 #define __PTF_OBJECT_HPP__
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "engine_state.hpp"
 
 class Object {
@@ -23,6 +24,11 @@ public:
      * Reçoit l'état actuel du moteur
      */
     virtual void update(EngineState& state) = 0;
+
+    /**
+     * Récupère la boîte englobante de l'objet
+     */
+    virtual std::unique_ptr<sf::FloatRect> getAABB() = 0;
 
     /**
      * Détermine la couche d'affichage de l'objet

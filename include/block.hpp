@@ -30,6 +30,11 @@ public:
     void update(EngineState& state);
 
     /**
+     * Récupère la boîte englobante de l'objet
+     */
+    std::unique_ptr<sf::FloatRect> getAABB();
+
+    /**
      * Détermine la couche d'affichage de l'objet
      */
     unsigned int getLayer() {
