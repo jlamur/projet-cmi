@@ -6,8 +6,8 @@
 int main() {
     Engine engine;
 
-    Ball ball1(3 * Block::GRID, 1 * Block::GRID);
-    Ball ball2(5 * Block::GRID, 1 * Block::GRID);
+    Ball ball1(5 * Block::GRID, 1 * Block::GRID);
+    Ball ball2(7 * Block::GRID, 1 * Block::GRID);
 
     Block block1(2 * Block::GRID, 7 * Block::GRID);
     Block block2(3 * Block::GRID, 7 * Block::GRID);
@@ -19,10 +19,9 @@ int main() {
     Block block8(9 * Block::GRID, 7 * Block::GRID);
     Block block9(10 * Block::GRID, 7 * Block::GRID);
 
-    ball1.setCharge(2);
+    ball1.setCharge(-2);
     ball2.setCharge(-2);
-    block3.setCharge(10);
-    block9.setCharge(-10);
+    block5.setCharge(16);
 
     engine.addObject(ball1);
     engine.addObject(ball2);
