@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "object.hpp"
-#include "state.hpp"
+#include "engine_state.hpp"
 
 class PhysicsObject : public Object {
 protected:
@@ -17,7 +17,7 @@ protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    virtual sf::Vector2f getForces(State state);
+    virtual sf::Vector2f getForces(EngineState& state);
 
     static constexpr float GRAVITY = 20;
 
@@ -35,7 +35,7 @@ public:
      * Met à jour la physique de l'objet juste avant le dessin d'une frame
      * Reçoit l'état actuel du moteur
      */
-    void update(State state);
+    void update(EngineState& state);
 
     /**
      * Récupère la vitesse de l'objet

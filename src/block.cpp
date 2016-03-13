@@ -20,6 +20,6 @@ void Block::draw(sf::RenderWindow& window) {
     window.draw(shape);
 }
 
-void Block::update(State state) {
+void Block::update(EngineState& state) {
     // rien à mettre à jour
 }

@@ -2,7 +2,7 @@
 #define __PTF_OBJECT_HPP__
 
 #include <SFML/Graphics.hpp>
-#include "state.hpp"
+#include "engine_state.hpp"
 
 class Object {
 protected:
@@ -22,7 +22,7 @@ public:
      * Met à jour l'objet juste avant le dessin d'une frame
      * Reçoit l'état actuel du moteur
      */
-    virtual void update(State state) = 0;
+    virtual void update(EngineState& state) = 0;
 
     /**
      * Détermine la couche d'affichage de l'objet

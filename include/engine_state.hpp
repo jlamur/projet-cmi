@@ -1,7 +1,8 @@
-#ifndef __PTF_STATE_HPP__
-#define __PTF_STATE_HPP__
+#ifndef __PTF_ENGINE_STATE_HPP__
+#define __PTF_ENGINE_STATE_HPP__
 
 #include <vector>
+#include <array>
 
 // pré-déclaration de Object pour éviter les erreurs de compilation
 // Object est définie dans object.hpp
@@ -12,11 +13,15 @@ class Object;
  * Cette structure est passée aux objets pour qu'ils se
  * mettent à jour en fonction de cet état
  */
-struct State {
+struct EngineState {
     std::vector<Object*> objects;
-    bool goLeftKey;
-    bool goRightKey;
+    std::array<bool, sf::Keyboard::KeyCount> keys;
     float delta;
+
+    EngineState() {
+        // aucune touche n'est enfoncée au démarrage
+        keys.fill(false);
+    }
 };
 
 #endif

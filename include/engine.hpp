@@ -1,9 +1,9 @@
 #ifndef __PTF_ENGINE_HPP__
 #define __PTF_ENGINE_HPP__
 
-#include <vector>
 #include <SFML/Graphics.hpp>
 #include "object.hpp"
+#include "engine_state.hpp"
 
 /**
  * La classe principale Engine coordonne les éléments
@@ -13,11 +13,7 @@ class Engine {
 private:
     sf::Clock clock;
     sf::RenderWindow window;
-
-    bool goLeftKey;
-    bool goRightKey;
-
-    std::vector<Object*> objects;
+    EngineState state;
 
     /**
      * Met à jour les objets du jeu pour

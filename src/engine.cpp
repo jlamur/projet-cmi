@@ -1,5 +1,4 @@
 #include "engine.hpp"
-#include "state.hpp"
 #include <cmath>
 #include <queue>
 
@@ -7,7 +6,7 @@ Engine::Engine() : window(
     sf::VideoMode(400, 300), "Projet CMI",
     sf::Style::Default & ~sf::Style::Resize,
     sf::ContextSettings(0, 0, 2)
-), goLeftKey(false), goRightKey(false) {
+) {
     window.setVerticalSyncEnabled(true);
 }
 
@@ -23,28 +22,17 @@ void Engine::start() {
                 window.close();
             }
 
-            // une touche a été enfoncée
+            // suivi de l'enfoncement et du relâchement des touches
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Left) {
-                    goLeftKey = true;
-                }
-
-                if (event.key.code == sf::Keyboard::Right) {
-                    goRightKey = true;
-                }
+                state.keys[event.key.code] = true;
             }
 
-            // une touche a été relâchée
             if (event.type == sf::Event::KeyReleased) {
-                if (event.key.code == sf::Keyboard::Left) {
-                    goLeftKey = false;
-                }
-
-                if (event.key.code == sf::Keyboard::Right) {
-                    goRightKey = false;
-                }
+                state.keys[event.key.code] = false;
             }
         }
+
+        state.delta = clock.restart().asSeconds();
 
         update();
         draw();
@@ -52,21 +40,13 @@ void Engine::start() {
 }
 
 void Engine::addObject(Object& object) {
-    objects.push_back(&object);
+    state.objects.push_back(&object);
 }
 
 void Engine::update() {
-    // calcul du temps écoulé depuis la dernière frame
-    // et création de l'objet state stockant l'état du moteur
-    State state;
-    state.delta = clock.restart().asSeconds();
-    state.goLeftKey = goLeftKey;
-    state.goRightKey = goRightKey;
-    state.objects = objects;
-
     // demande la mise à jour de tous les objets du jeu
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        objects[i]->update(state);
+    for (unsigned int i = 0; i < state.objects.size(); i++) {
+        state.objects[i]->update(state);
     }
 }
 
@@ -77,8 +57,8 @@ void Engine::draw() {
     // chargement de la file d'affichage des objets
     std::priority_queue<Object*, std::vector<Object*>, ObjectCompare> display_queue;
 
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        display_queue.push(objects[i]);
+    for (unsigned int i = 0; i < state.objects.size(); i++) {
+        display_queue.push(state.objects[i]);
     }
 
     // dessin des objets de la file d'affichage couche par couche

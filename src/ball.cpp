@@ -14,15 +14,15 @@ void Ball::draw(sf::RenderWindow& window) {
     window.draw(shape);
 }
 
-sf::Vector2f Ball::getForces(State state) {
+sf::Vector2f Ball::getForces(EngineState& state) {
     sf::Vector2f forces = PhysicsObject::getForces(state);
 
     // déplacement de la balle après appui sur les touches de direction
-    if (state.goLeftKey) {
+    if (state.keys[sf::Keyboard::Left]) {
         forces += sf::Vector2f(-Ball::MOVE, 0);
     }
 
-    if (state.goRightKey) {
+    if (state.keys[sf::Keyboard::Right]) {
         forces += sf::Vector2f(Ball::MOVE, 0);
     }
 

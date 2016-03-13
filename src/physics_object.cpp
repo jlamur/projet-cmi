@@ -15,13 +15,22 @@ void PhysicsObject::draw(sf::RenderWindow& window) {
     window.draw(accelLine);
 }
 
-void PhysicsObject::update(State state) {
+void PhysicsObject::update(EngineState& state) {
     // intégration de la vitesse dans la position
     position += velocity * state.delta;
 
     // intégration des forces appliquées sur l'objet dans la vitesse
     acceleration = getForces(state) / mass;
     velocity += acceleration * state.delta;
+}
+
+sf::Vector2f PhysicsObject::getForces(EngineState& state) {
+    sf::Vector2f forces(0, 0);
+
+    // force de gravité
+    forces += sf::Vector2f(0, PhysicsObject::GRAVITY);
+
+    return forces;
 }
 
 sf::Vector2f PhysicsObject::getVelocity() {
@@ -38,15 +47,4 @@ int PhysicsObject::getMass() {
 
 void PhysicsObject::setMass(int set_mass) {
     mass = set_mass;
-}
-
-sf::Vector2f PhysicsObject::getForces(State state) {
-    sf::Vector2f forces(0, 0);
-
-    // force de gravité
-    forces += sf::Vector2f(0, PhysicsObject::GRAVITY);
-
-    // TODO: collisions entre objets
-
-    return forces;
 }

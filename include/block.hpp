@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "object.hpp"
-#include "state.hpp"
+#include "engine_state.hpp"
 
 class Block : public Object {
 protected:
@@ -27,7 +27,7 @@ public:
      * Met à jour l'objet juste avant le dessin d'une frame
      * Reçoit l'état actuel du moteur
      */
-    void update(State state);
+    void update(EngineState& state);
 
     /**
      * Détermine la couche d'affichage de l'objet

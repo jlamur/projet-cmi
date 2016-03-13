@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "state.hpp"
+#include "engine_state.hpp"
 #include "physics_object.hpp"
 
 class Ball : public PhysicsObject {
@@ -14,7 +14,7 @@ protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    virtual sf::Vector2f getForces(State state);
+    virtual sf::Vector2f getForces(EngineState& state);
 
     static constexpr float ATTRACTION = 25000;
     static constexpr float MOVE = 100;
