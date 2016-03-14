@@ -12,8 +12,6 @@ protected:
     sf::RectangleShape shape;
 
 public:
-    static constexpr float GRID = 32;
-
     Block(float x, float y);
 
     /**

@@ -1,4 +1,5 @@
 #include "ball.hpp"
+#include "constants.hpp"
 
 Ball::Ball(float x, float y) : PhysicsObject(x, y), shape(10 * mass) {
     shape.setOrigin(sf::Vector2f(10 * mass, 10 * mass));
@@ -35,11 +36,11 @@ sf::Vector2f Ball::getForces(EngineState& state) {
 
     // déplacement de la balle après appui sur les touches de direction
     if (state.keys[sf::Keyboard::Left]) {
-        forces += sf::Vector2f(-Ball::MOVE, 0);
+        forces += sf::Vector2f(-Constants::MOVE, 0);
     }
 
     if (state.keys[sf::Keyboard::Right]) {
-        forces += sf::Vector2f(Ball::MOVE, 0);
+        forces += sf::Vector2f(Constants::MOVE, 0);
     }
 
     // force d'attraction entre les balles et les blocs chargés
@@ -66,7 +67,7 @@ sf::Vector2f Ball::getForces(EngineState& state) {
             // normalisation du vecteur direction qui porte
             // la force d'attraction, puis application de la norme
             attraction /= std::sqrt(distanceSquared);
-            attraction *= Ball::ATTRACTION * (
+            attraction *= Constants::ATTRACTION * (
                 (charge * attractive->getCharge()) /
                 distanceSquared
             );

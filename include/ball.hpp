@@ -16,9 +16,6 @@ protected:
      */
     virtual sf::Vector2f getForces(EngineState& state);
 
-    static constexpr float ATTRACTION = 25000;
-    static constexpr float MOVE = 100;
-
 public:
     Ball(float x, float y);
 

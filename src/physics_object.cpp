@@ -1,4 +1,5 @@
 #include "physics_object.hpp"
+#include "constants.hpp"
 
 PhysicsObject::PhysicsObject(float x, float y) :
     Object(x, y), mass(1), accelLine(sf::LinesStrip, 2),
@@ -32,7 +33,7 @@ sf::Vector2f PhysicsObject::getForces(EngineState& state) {
     sf::Vector2f forces(0, 0);
 
     // force de gravité
-    forces += sf::Vector2f(0, PhysicsObject::GRAVITY);
+    forces += sf::Vector2f(0, Constants::GRAVITY);
 
     return forces;
 }

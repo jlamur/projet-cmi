@@ -1,7 +1,8 @@
 #include "block.hpp"
+#include "constants.hpp"
 
-Block::Block(float x, float y) : Object(x, y), shape(sf::Vector2f(Block::GRID, Block::GRID)) {
-    shape.setOrigin(sf::Vector2f(Block::GRID / 2, Block::GRID / 2));
+Block::Block(float x, float y) : Object(x, y), shape(sf::Vector2f(Constants::GRID, Constants::GRID)) {
+    shape.setOrigin(sf::Vector2f(Constants::GRID / 2, Constants::GRID / 2));
 }
 
 void Block::draw(sf::RenderWindow& window) {
@@ -30,9 +31,9 @@ void Block::update(EngineState& state) {
 
 std::unique_ptr<sf::FloatRect> Block::getAABB() {
     return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
-        position.x - Block::GRID / 2,
-        position.y - Block::GRID / 2,
-        Block::GRID, Block::GRID
+        position.x - Constants::GRID / 2,
+        position.y - Constants::GRID / 2,
+        Constants::GRID, Constants::GRID
     ));
 }
 

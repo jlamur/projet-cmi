@@ -19,8 +19,6 @@ protected:
      */
     virtual sf::Vector2f getForces(EngineState& state);
 
-    static constexpr float GRAVITY = 20;
-
 public:
     PhysicsObject(float x, float y);
 

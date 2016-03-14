@@ -1,23 +1,24 @@
 #include "ball.hpp"
 #include "block.hpp"
 #include "engine.hpp"
+#include "constants.hpp"
 #include <iostream>
 
 int main() {
     Engine engine;
 
-    Ball ball1(5 * Block::GRID, 1 * Block::GRID);
-    Ball ball2(7 * Block::GRID, 1 * Block::GRID);
+    Ball ball1(5 * Constants::GRID, 1 * Constants::GRID);
+    Ball ball2(7 * Constants::GRID, 1 * Constants::GRID);
 
-    Block block1(2 * Block::GRID, 7 * Block::GRID);
-    Block block2(3 * Block::GRID, 7 * Block::GRID);
-    Block block3(4 * Block::GRID, 7 * Block::GRID);
-    Block block4(5 * Block::GRID, 7 * Block::GRID);
-    Block block5(6 * Block::GRID, 7 * Block::GRID);
-    Block block6(7 * Block::GRID, 7 * Block::GRID);
-    Block block7(8 * Block::GRID, 7 * Block::GRID);
-    Block block8(9 * Block::GRID, 7 * Block::GRID);
-    Block block9(10 * Block::GRID, 7 * Block::GRID);
+    Block block1(2 * Constants::GRID, 7 * Constants::GRID);
+    Block block2(3 * Constants::GRID, 7 * Constants::GRID);
+    Block block3(4 * Constants::GRID, 7 * Constants::GRID);
+    Block block4(5 * Constants::GRID, 7 * Constants::GRID);
+    Block block5(6 * Constants::GRID, 7 * Constants::GRID);
+    Block block6(7 * Constants::GRID, 7 * Constants::GRID);
+    Block block7(8 * Constants::GRID, 7 * Constants::GRID);
+    Block block8(9 * Constants::GRID, 7 * Constants::GRID);
+    Block block9(10 * Constants::GRID, 7 * Constants::GRID);
 
     ball1.setCharge(-2);
     ball2.setCharge(-2);
