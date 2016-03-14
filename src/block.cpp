@@ -38,5 +38,5 @@ std::unique_ptr<sf::FloatRect> Block::getAABB() {
 }
 
 unsigned int Block::getLayer() {
-    return 0;
+    return 10;
 }
