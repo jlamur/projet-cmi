@@ -14,9 +14,7 @@ protected:
 public:
     static constexpr float GRID = 32;
 
-    Block(float x, float y) : Object(x, y), shape(sf::Vector2f(Block::GRID, Block::GRID)) {
-        shape.setOrigin(sf::Vector2f(Block::GRID / 2, Block::GRID / 2));
-    }
+    Block(float x, float y);
 
     /**
      * Dessin du bloc dans la fenêtre donnée
@@ -37,9 +35,7 @@ public:
     /**
      * Détermine la couche d'affichage de l'objet
      */
-    unsigned int getLayer() {
-        return 0;
-    }
+    unsigned int getLayer();
 };
 
 #endif

@@ -18,7 +18,7 @@ struct EngineState {
     std::array<bool, sf::Keyboard::KeyCount> keys;
     float delta;
 
-    EngineState() {
+    EngineState() : delta(0.f) {
         // aucune touche n'est enfoncée au démarrage
         keys.fill(false);
     }

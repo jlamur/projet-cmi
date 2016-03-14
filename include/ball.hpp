@@ -20,9 +20,7 @@ protected:
     static constexpr float MOVE = 100;
 
 public:
-    Ball(float x, float y) : PhysicsObject(x, y), shape(10 * mass) {
-        shape.setOrigin(sf::Vector2f(10 * mass, 10 * mass));
-    }
+    Ball(float x, float y);
 
     /**
      * Dessine la balle dans la fenêtre donnée
@@ -37,9 +35,7 @@ public:
     /**
      * Détermine la couche d'affichage de l'objet
      */
-    unsigned int getLayer() {
-        return 1;
-    }
+    unsigned int getLayer();
 };
 
 #endif

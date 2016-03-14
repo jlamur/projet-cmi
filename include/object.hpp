@@ -11,8 +11,7 @@ protected:
     int charge;
 
 public:
-    Object(float x, float y) :
-        position(x, y), charge(0) {}
+    Object(float x, float y);
 
     /**
      * Dessine l'objet dans la fenêtre donnée
@@ -57,9 +56,7 @@ public:
  * qui doit être dessinée avant celle du second
  */
 struct ObjectCompare {
-	bool operator()(Object* const &t1, Object* const &t2) {
-        return t1->getLayer() > t2->getLayer();
-	}
+	bool operator()(Object* const &t1, Object* const &t2);
 };
 
 #endif

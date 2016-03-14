@@ -22,9 +22,7 @@ protected:
     static constexpr float GRAVITY = 20;
 
 public:
-    PhysicsObject(float x, float y) :
-        Object(x, y), mass(1), accelLine(sf::LinesStrip, 2),
-        velLine(sf::LinesStrip, 2) {}
+    PhysicsObject(float x, float y);
 
     /**
      * Dessine l'objet dans la fenêtre donnée

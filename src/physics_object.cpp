@@ -1,5 +1,9 @@
 #include "physics_object.hpp"
 
+PhysicsObject::PhysicsObject(float x, float y) :
+    Object(x, y), mass(1), accelLine(sf::LinesStrip, 2),
+    velLine(sf::LinesStrip, 2) {}
+
 void PhysicsObject::draw(sf::RenderWindow& window) {
     velLine[0].position = position;
     velLine[0].color = sf::Color::Green;

@@ -1,5 +1,9 @@
 #include "ball.hpp"
 
+Ball::Ball(float x, float y) : PhysicsObject(x, y), shape(10 * mass) {
+    shape.setOrigin(sf::Vector2f(10 * mass, 10 * mass));
+}
+
 void Ball::draw(sf::RenderWindow& window) {
     PhysicsObject::draw(window);
 
@@ -20,6 +24,10 @@ std::unique_ptr<sf::FloatRect> Ball::getAABB() {
         position.y - 10 * mass,
         20 * mass, 20 * mass
     ));
+}
+
+unsigned int Ball::getLayer() {
+    return 1;
 }
 
 sf::Vector2f Ball::getForces(EngineState& state) {

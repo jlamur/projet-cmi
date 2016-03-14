@@ -1,5 +1,9 @@
 #include "block.hpp"
 
+Block::Block(float x, float y) : Object(x, y), shape(sf::Vector2f(Block::GRID, Block::GRID)) {
+    shape.setOrigin(sf::Vector2f(Block::GRID / 2, Block::GRID / 2));
+}
+
 void Block::draw(sf::RenderWindow& window) {
 	// chargement de la texture de test
 	if (!texture.loadFromFile("./res/block.png")) {
@@ -30,4 +34,8 @@ std::unique_ptr<sf::FloatRect> Block::getAABB() {
         position.y - Block::GRID / 2,
         Block::GRID, Block::GRID
     ));
+}
+
+unsigned int Block::getLayer() {
+    return 0;
 }
