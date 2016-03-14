@@ -4,8 +4,8 @@
 #include <vector>
 #include <array>
 
-// pré-déclaration de Object pour éviter les erreurs de compilation
-// Object est définie dans object.hpp
+// pré-déclaration de Object pour éviter les erreurs
+// de compilation Object est définie dans object.hpp
 class Object;
 
 /**
