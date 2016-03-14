@@ -1,9 +1,17 @@
 #include "object.hpp"
 
-Object::Object(float x, float y) : position(x, y), charge(0) {}
+Object::Object(float x, float y) : position(x, y), charge(0), layer(10) {}
 
 sf::Vector2f Object::getPosition() {
     return position;
+}
+
+unsigned int Object::getLayer() {
+    return layer;
+}
+
+void Object::setLayer(unsigned int set_layer) {
+    layer = set_layer;
 }
 
 int Object::getCharge() {

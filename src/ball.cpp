@@ -27,10 +27,6 @@ std::unique_ptr<sf::FloatRect> Ball::getAABB() {
     ));
 }
 
-unsigned int Ball::getLayer() {
-    return 10;
-}
-
 sf::Vector2f Ball::getForces(EngineState& state) {
     sf::Vector2f forces = PhysicsObject::getForces(state);
 

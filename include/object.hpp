@@ -9,6 +9,7 @@ class Object {
 protected:
     sf::Vector2f position;
     int charge;
+    int layer;
 
 public:
     Object(float x, float y);
@@ -30,14 +31,19 @@ public:
     virtual std::unique_ptr<sf::FloatRect> getAABB() = 0;
 
     /**
-     * Détermine la couche d'affichage de l'objet
-     */
-    virtual unsigned int getLayer() = 0;
-
-    /**
      * Récupère la position de l'objet
      */
     sf::Vector2f getPosition();
+
+    /**
+     * Récupère la couche d'affichage de l'objet
+     */
+    unsigned int getLayer();
+
+    /**
+     * Modifie la couche d'affichage de l'objet
+     */
+    void setLayer(unsigned int set_layer);
 
     /**
      * Récupère la charge de l'objet

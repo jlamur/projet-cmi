@@ -36,7 +36,3 @@ std::unique_ptr<sf::FloatRect> Block::getAABB() {
         Constants::GRID, Constants::GRID
     ));
 }
-
-unsigned int Block::getLayer() {
-    return 10;
-}
