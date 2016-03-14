@@ -20,9 +20,9 @@ int main() {
     Block block8(9 * Constants::GRID, 7 * Constants::GRID);
     Block block9(10 * Constants::GRID, 7 * Constants::GRID);
 
-    ball1.setCharge(-2);
-    ball2.setCharge(-2);
-    block5.setCharge(16);
+    ball1.setCharge(-2.f);
+    ball2.setCharge(-2.f);
+    block5.setCharge(16.f);
 
     engine.addObject(ball1);
     engine.addObject(ball2);

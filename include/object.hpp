@@ -8,7 +8,7 @@
 class Object {
 protected:
     sf::Vector2f position;
-    int charge;
+    float charge;
     int layer;
 
 public:
@@ -48,12 +48,12 @@ public:
     /**
      * Récupère la charge de l'objet
      */
-    int getCharge();
+    float getCharge();
 
     /**
      * Modifie la charge de l'objet
      */
-    void setCharge(int set_charge);
+    void setCharge(float set_charge);
 };
 
 /**
