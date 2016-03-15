@@ -5,7 +5,7 @@ Object::Object(float x, float y) :
     acceleration(0, 0), velocity(0, 0), position(x, y),
     accelerationLine(sf::Lines, 2),
     velocityLine(sf::Lines, 2),
-    mass(1.f), charge(0.f), layer(10) {}
+    mass(1.f), charge(0.f), restitution(0.f), layer(10) {}
 
 sf::Vector2f Object::getForces(EngineState& state) {
     sf::Vector2f forces(0, 0);
@@ -48,6 +48,10 @@ void Object::update(EngineState& state) {
     velocity += acceleration * state.delta;
 }
 
+bool Object::getNormal(Object& obj, sf::Vector2f& normal) {
+    return obj.getNormal(*this, normal);
+}
+
 sf::Vector2f Object::getAcceleration() {
     return acceleration;
 }
@@ -78,6 +82,14 @@ float Object::getCharge() {
 
 void Object::setCharge(float set_charge) {
     charge = set_charge;
+}
+
+float Object::getRestitution() {
+    return restitution;
+}
+
+void Object::setRestitution(float set_restitution) {
+    restitution = set_restitution;
 }
 
 unsigned int Object::getLayer() {

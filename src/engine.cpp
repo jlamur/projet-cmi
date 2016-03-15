@@ -49,21 +49,62 @@ void Engine::update() {
         state.objects[i]->update(state);
     }
 
-    // collisions entre objets
+    // gère les collisions entre les objets
     for (unsigned int i = 0; i < state.objects.size(); i++) {
         Object* objA = state.objects[i];
 
         for (unsigned int j = i + 1; j < state.objects.size(); j++) {
             Object* objB = state.objects[j];
 
-            // vérifie si on a un risque de collision
-            if (objA->getAABB()->intersects(*objB->getAABB())) {
-                // TODO: gestion de la collision =>
-                // calcul de la normale
-                // calcul de la profondeur du choc
-                // si profondeur > 0 :
-                // résolution de la collision
+            // si les objets ne sont pas sur la même couche,
+            // ils ne peuvent pas entrer en collision
+            if (objA->getLayer() != objB->getLayer()) {
+                continue;
             }
+
+            // si les deux boîtes englobantes des deux objets,
+            // il ne risque pas d'y avoir de collision
+            if (!objA->getAABB()->intersects(*objB->getAABB())) {
+                continue;
+            }
+
+            sf::Vector2f normal;
+
+            // vérifie plus finement s'il y a collision et
+            // calcule la normale
+            if (!objA->getNormal(*objB, normal)) {
+                continue;
+            }
+
+            sf::Vector2f codir = objB->getVelocity() - objA->getVelocity();
+            float dotnormal = codir.x * normal.x + codir.y * normal.y;
+
+            // si les directions sont divergentes, pas besoin
+            // de résoudre la collision
+            if (dotnormal >= 0) {
+                continue;
+            }
+
+            float restitution = std::min(objA->getRestitution(), objB->getRestitution());
+
+            // calcul de l'inverse des masses de A et B. Pour rappel,
+            // une masse infinie est modélisée par 0, donc l'inverse
+            // d'une telle masse est nul
+            float invMassA = objA->getMass();
+            float invMassB = objB->getMass();
+
+            if (invMassA != 0) {
+                invMassA = 1.f / invMassA;
+            }
+
+            if (invMassB != 0) {
+                invMassB = 1.f / invMassB;
+            }
+
+            // calcule et applique l'impulsion de résolution de la collision
+            float impulse = (-(1 + restitution) * dotnormal) / (invMassA + invMassB);
+            objA->setVelocity(objA->getVelocity() - invMassA * impulse * normal);
+            objB->setVelocity(objB->getVelocity() + invMassB * impulse * normal);
         }
     }
 }

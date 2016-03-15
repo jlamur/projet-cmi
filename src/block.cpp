@@ -1,4 +1,5 @@
 #include "block.hpp"
+#include "ball.hpp"
 #include "constants.hpp"
 
 Block::Block(float x, float y) : Object(x, y),
@@ -38,4 +39,18 @@ std::unique_ptr<sf::FloatRect> Block::getAABB() {
         getPosition().y - Constants::GRID / 2,
         Constants::GRID, Constants::GRID
     ));
+}
+
+bool Block::getNormal(Object& obj, sf::Vector2f& normal) {
+    return obj.getNormal(*this, normal);
+}
+
+bool Block::getNormal(Ball& obj, sf::Vector2f& normal) {
+    // TODO: coder cette fonction
+    return false;
+}
+
+bool Block::getNormal(Block& obj, sf::Vector2f& normal) {
+    // TODO: coder cette fonction
+    return false;
 }

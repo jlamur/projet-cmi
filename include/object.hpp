@@ -5,6 +5,9 @@
 #include <memory>
 #include "engine_state.hpp"
 
+class Block;
+class Ball;
+
 class Object {
 private:
     sf::Vector2f acceleration;
@@ -16,6 +19,7 @@ private:
 
     float mass;
     float charge;
+    float restitution;
     int layer;
 
 protected:
@@ -42,6 +46,13 @@ public:
      * Récupère la boîte englobante de l'objet
      */
     virtual std::unique_ptr<sf::FloatRect> getAABB() = 0;
+
+    /**
+     * Calcule la normale de la collision de cet objet avec un autre
+     */
+    virtual bool getNormal(Object& obj, sf::Vector2f& normal);
+    virtual bool getNormal(Ball& obj, sf::Vector2f& normal) = 0;
+    virtual bool getNormal(Block& obj, sf::Vector2f& normal) = 0;
 
     /**
      * Récupère l'accélération de l'objet
@@ -83,6 +94,16 @@ public:
      * Modifie la charge de l'objet
      */
     void setCharge(float set_charge);
+
+    /**
+     * Récupère le coefficient de restitution de l'objet
+     */
+    float getRestitution();
+
+    /**
+     * Modifie le coefficient de restitution de l'objet
+     */
+    void setRestitution(float set_restitution);
 
     /**
      * Récupère la couche d'affichage de l'objet
