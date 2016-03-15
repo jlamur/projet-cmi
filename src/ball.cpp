@@ -165,7 +165,7 @@ bool Ball::getNormal(Block& obj, sf::Vector2f& normal) {
     // si la balle est à l'extérieur et que
     // la normale est plus longue que son rayon,
     // il n'y a pas collision
-    if (!isInside && squaredLength > 20 * 20) {
+    if (!isInside && squaredLength >= 20 * 20) {
         return false;
     }
 

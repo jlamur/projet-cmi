@@ -85,26 +85,13 @@ void Engine::update() {
                 continue;
             }
 
-            float restitution = std::min(objA->getRestitution(), objB->getRestitution());
-
-            // calcul de l'inverse des masses de A et B. Pour rappel,
-            // une masse infinie est modélisée par 0, donc l'inverse
-            // d'une telle masse est nul
-            float invMassA = objA->getMass();
-            float invMassB = objB->getMass();
-
-            if (invMassA != 0) {
-                invMassA = 1.f / invMassA;
-            }
-
-            if (invMassB != 0) {
-                invMassB = 1.f / invMassB;
-            }
-
             // calcule et applique l'impulsion de résolution de la collision
-            float impulse = (-(1 + restitution) * dotnormal) / (invMassA + invMassB);
-            objA->setVelocity(objA->getVelocity() - invMassA * impulse * normal);
-            objB->setVelocity(objB->getVelocity() + invMassB * impulse * normal);
+            float restitution = std::min(objA->getRestitution(), objB->getRestitution());
+            float impulse = (-(1 + restitution) * dotnormal) /
+                (objA->getMassInvert() + objB->getMassInvert());
+
+            objA->setVelocity(objA->getVelocity() - objA->getMassInvert() * impulse * normal);
+            objB->setVelocity(objB->getVelocity() + objB->getMassInvert() * impulse * normal);
         }
     }
 }
