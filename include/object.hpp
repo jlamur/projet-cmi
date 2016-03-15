@@ -18,6 +18,7 @@ private:
     sf::VertexArray velocityLine;
 
     float mass;
+    float inv_mass;
     float charge;
     float restitution;
     int layer;
@@ -79,6 +80,11 @@ public:
      * Récupère la masse de l'objet
      */
     float getMass();
+
+    /**
+     * Récupère l'inverse de la masse de l'objet (en cache)
+     */
+    float getMassInvert();
 
     /**
      * Modifie la masse de l'objet

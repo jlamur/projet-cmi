@@ -5,7 +5,7 @@ Object::Object(float x, float y) :
     acceleration(0, 0), velocity(0, 0), position(x, y),
     accelerationLine(sf::Lines, 2),
     velocityLine(sf::Lines, 2),
-    mass(1.f), charge(0.f), restitution(0.f), layer(10) {}
+    mass(1.f), inv_mass(1.f), charge(0.f), restitution(0.f), layer(10) {}
 
 sf::Vector2f Object::getForces(EngineState& state) {
     sf::Vector2f forces(0, 0);
@@ -72,8 +72,23 @@ float Object::getMass() {
     return mass;
 }
 
+float Object::getMassInvert() {
+    if (inv_mass >= 0) {
+        return inv_mass;
+    }
+
+    if (mass == 0) {
+        inv_mass = 0;
+        return inv_mass;
+    }
+
+    inv_mass = 1 / mass;
+    return inv_mass;
+}
+
 void Object::setMass(float set_mass) {
     mass = set_mass;
+    inv_mass = -1.f;
 }
 
 float Object::getCharge() {
