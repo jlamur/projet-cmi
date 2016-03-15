@@ -7,7 +7,7 @@ namespace Constants {
      * pour le calcul de l'attraction coulombienne entre
      * deux objets
      */
-    static constexpr float ATTRACTION = 25000;
+    static constexpr float ATTRACTION = 2000;
 
     /**
      * Constante de déplacement. Définit la quantité de
@@ -22,7 +22,7 @@ namespace Constants {
      * uniformément vers le bas de la fenêtre sur tous
      * les objets
      */
-    static constexpr float GRAVITY = 20;
+    static constexpr float GRAVITY = 200;
 
     /**
      * Taille de la grille des blocs en pixels
