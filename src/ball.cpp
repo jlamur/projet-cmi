@@ -1,12 +1,12 @@
 #include "ball.hpp"
 #include "constants.hpp"
 
-Ball::Ball(float x, float y) : PhysicsObject(x, y), shape(10 * mass) {
-    shape.setOrigin(sf::Vector2f(10 * mass, 10 * mass));
+Ball::Ball(float x, float y) : Object(x, y), shape(10) {
+    shape.setOrigin(sf::Vector2f(10, 10));
 }
 
 void Ball::draw(sf::RenderWindow& window) {
-    PhysicsObject::draw(window);
+    Object::draw(window);
 
 	// chargement de la texture de test
 	if (!texture.loadFromFile("./res/ball.png")) {
@@ -14,21 +14,20 @@ void Ball::draw(sf::RenderWindow& window) {
 	}
 
 	shape.setTexture(&texture);
-
-    shape.setPosition(position);
+    shape.setPosition(getPosition());
     window.draw(shape);
 }
 
 std::unique_ptr<sf::FloatRect> Ball::getAABB() {
     return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
-        position.x - 10 * mass,
-        position.y - 10 * mass,
-        20 * mass, 20 * mass
+        getPosition().x - 10,
+        getPosition().y - 10,
+        20, 20
     ));
 }
 
 sf::Vector2f Ball::getForces(EngineState& state) {
-    sf::Vector2f forces = PhysicsObject::getForces(state);
+    sf::Vector2f forces = Object::getForces(state);
 
     // déplacement de la balle après appui sur les touches de direction
     if (state.keys[sf::Keyboard::Left]) {
@@ -49,7 +48,7 @@ sf::Vector2f Ball::getForces(EngineState& state) {
             }
 
             // vecteur allant de l'objet attirant vers l'objet considéré
-            sf::Vector2f attraction(position - attractive->getPosition());
+            sf::Vector2f attraction(getPosition() - attractive->getPosition());
 
             // la norme de ce vecteur est la distance entre les objets
             float distanceSquared = attraction.x * attraction.x +
@@ -64,7 +63,7 @@ sf::Vector2f Ball::getForces(EngineState& state) {
             // la force d'attraction, puis application de la norme
             attraction /= std::sqrt(distanceSquared);
             attraction *= Constants::ATTRACTION * (
-                (charge * attractive->getCharge()) /
+                (getCharge() * attractive->getCharge()) /
                 distanceSquared
             );
 

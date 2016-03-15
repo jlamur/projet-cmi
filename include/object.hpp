@@ -6,10 +6,23 @@
 #include "engine_state.hpp"
 
 class Object {
-protected:
+private:
+    sf::Vector2f acceleration;
+    sf::Vector2f velocity;
     sf::Vector2f position;
+
+    sf::VertexArray accelerationLine;
+    sf::VertexArray velocityLine;
+
+    float mass;
     float charge;
     int layer;
+
+protected:
+    /**
+     * Calcule les forces appliquées à l'objet
+     */
+    virtual sf::Vector2f getForces(EngineState& state);
 
 public:
     Object(float x, float y);
@@ -17,13 +30,13 @@ public:
     /**
      * Dessine l'objet dans la fenêtre donnée
      */
-    virtual void draw(sf::RenderWindow& window) = 0;
+    virtual void draw(sf::RenderWindow& window);
 
     /**
      * Met à jour l'objet juste avant le dessin d'une frame
      * Reçoit l'état actuel du moteur
      */
-    virtual void update(EngineState& state) = 0;
+    virtual void update(EngineState& state);
 
     /**
      * Récupère la boîte englobante de l'objet
@@ -31,19 +44,35 @@ public:
     virtual std::unique_ptr<sf::FloatRect> getAABB() = 0;
 
     /**
+     * Récupère l'accélération de l'objet
+     */
+    sf::Vector2f getAcceleration();
+
+    /**
+     * Récupère la vitesse de l'objet
+     */
+    sf::Vector2f getVelocity();
+
+    /**
+     * Modifie la vitesse de l'objet
+     * (à utiliser avec précaution, préférer modifier les forces)
+     */
+    void setVelocity(sf::Vector2f set_velocity);
+
+    /**
      * Récupère la position de l'objet
      */
     sf::Vector2f getPosition();
 
     /**
-     * Récupère la couche d'affichage de l'objet
+     * Récupère la masse de l'objet
      */
-    unsigned int getLayer();
+    float getMass();
 
     /**
-     * Modifie la couche d'affichage de l'objet
+     * Modifie la masse de l'objet
      */
-    void setLayer(unsigned int set_layer);
+    void setMass(float set_mass);
 
     /**
      * Récupère la charge de l'objet
@@ -54,6 +83,16 @@ public:
      * Modifie la charge de l'objet
      */
     void setCharge(float set_charge);
+
+    /**
+     * Récupère la couche d'affichage de l'objet
+     */
+    unsigned int getLayer();
+
+    /**
+     * Modifie la couche d'affichage de l'objet
+     */
+    void setLayer(unsigned int set_layer);
 };
 
 /**

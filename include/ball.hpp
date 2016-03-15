@@ -4,13 +4,14 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "engine_state.hpp"
-#include "physics_object.hpp"
+#include "object.hpp"
 
-class Ball : public PhysicsObject {
-protected:
+class Ball : public Object {
+private:
     sf::Texture texture;
     sf::CircleShape shape;
 
+protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
@@ -22,7 +23,7 @@ public:
     /**
      * Dessine la balle dans la fenêtre donnée
      */
-    void draw(sf::RenderWindow& window);
+    virtual void draw(sf::RenderWindow& window);
 
     /**
      * Récupère la boîte englobante de l'objet

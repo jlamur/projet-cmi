@@ -7,7 +7,7 @@
 #include "engine_state.hpp"
 
 class Block : public Object {
-protected:
+private:
     sf::Texture texture;
     sf::RectangleShape shape;
 
@@ -17,13 +17,7 @@ public:
     /**
      * Dessin du bloc dans la fenêtre donnée
      */
-    void draw(sf::RenderWindow& window);
-
-    /**
-     * Met à jour l'objet juste avant le dessin d'une frame
-     * Reçoit l'état actuel du moteur
-     */
-    void update(EngineState& state);
+    virtual void draw(sf::RenderWindow& window);
 
     /**
      * Récupère la boîte englobante de l'objet
