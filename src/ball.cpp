@@ -76,11 +76,11 @@ std::unique_ptr<sf::FloatRect> Ball::getAABB() {
     ));
 }
 
-bool Ball::getNormal(Object& obj, sf::Vector2f& normal) {
-    return obj.getNormal(*this, normal);
+bool Ball::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
+    return obj.getCollisionInfo(*this, normal, depth);
 }
 
-bool Ball::getNormal(Ball& obj, sf::Vector2f& normal) {
+bool Ball::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
     sf::Vector2f dir = obj.getPosition() - getPosition();
     float squaredLength = dir.x * dir.x + dir.y * dir.y;
 
@@ -96,17 +96,21 @@ bool Ball::getNormal(Ball& obj, sf::Vector2f& normal) {
     // les balles sont sur la même position.
     // Renvoie une normale apte à séparer les deux balles
     if (length == 0) {
+        // TODO: supprimer les valeurs magiques
+        depth = 10;
         normal.x = 0;
         normal.y = -1;
         return true;
     }
 
+    // TODO: supprimer les valeurs magiques
     // il y a eu collision
+    depth = 10 - length;
     normal = dir / length;
     return true;
 }
 
-bool Ball::getNormal(Block& obj, sf::Vector2f& normal) {
+bool Ball::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
     // recherche du point le plus proche du centre de la
     // balle sur le bloc. On regarde la position relative
     // du cercle par rapport au bloc
@@ -165,11 +169,13 @@ bool Ball::getNormal(Block& obj, sf::Vector2f& normal) {
     // si la balle est à l'extérieur et que
     // la normale est plus longue que son rayon,
     // il n'y a pas collision
-    if (!isInside && squaredLength >= 20 * 20) {
+    if (!isInside && squaredLength >= 10 * 10) {
         return false;
     }
 
-    normal = prenormal / std::sqrt(squaredLength);
+    float length = std::sqrt(squaredLength);
+    depth = 10 - length;
+    normal = prenormal / length;
 
     if (isInside) {
         normal *= -1.f;

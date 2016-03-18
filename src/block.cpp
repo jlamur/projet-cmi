@@ -41,16 +41,16 @@ std::unique_ptr<sf::FloatRect> Block::getAABB() {
     ));
 }
 
-bool Block::getNormal(Object& obj, sf::Vector2f& normal) {
-    return obj.getNormal(*this, normal);
+bool Block::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
+    return obj.getCollisionInfo(*this, normal, depth);
 }
 
-bool Block::getNormal(Ball& obj, sf::Vector2f& normal) {
+bool Block::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
     // TODO: coder cette fonction
     return false;
 }
 
-bool Block::getNormal(Block& obj, sf::Vector2f& normal) {
+bool Block::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
     // TODO: coder cette fonction
     return false;
 }

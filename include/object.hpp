@@ -49,11 +49,19 @@ public:
     virtual std::unique_ptr<sf::FloatRect> getAABB() = 0;
 
     /**
-     * Calcule la normale de la collision de cet objet avec un autre
+     * Calcule les informations sur une éventuelle collision de
+     * cet objet avec un autre : la normale et la profondeur
      */
-    virtual bool getNormal(Object& obj, sf::Vector2f& normal);
-    virtual bool getNormal(Ball& obj, sf::Vector2f& normal) = 0;
-    virtual bool getNormal(Block& obj, sf::Vector2f& normal) = 0;
+    virtual bool getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth);
+    virtual bool getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) = 0;
+    virtual bool getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) = 0;
+
+    /**
+     * Détecte s'il y a collision entre cet objet
+     * et l'objet passé en paramètre et résoud la collision
+     * si elle a lieu
+     */
+    void collide(Object& obj);
 
     /**
      * Récupère l'accélération de l'objet
@@ -75,6 +83,12 @@ public:
      * Récupère la position de l'objet
      */
     sf::Vector2f getPosition();
+
+    /**
+     * Modifie la position de l'objet
+     * (à utiliser avec précaution, préférer modifier les forces)
+     */
+    void setPosition(sf::Vector2f set_position);
 
     /**
      * Récupère la masse de l'objet

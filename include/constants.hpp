@@ -28,6 +28,13 @@ namespace Constants {
      * Taille de la grille des blocs en pixels
      */
     static constexpr float GRID = 32;
+
+    /**
+     * Correction positionnelle : pourcentage de correction
+     * et seuil de correction
+     */
+    static constexpr float CORRECTION_PERCENTAGE = .2f;
+    static constexpr float CORRECTION_THRESHOLD = .01f;
 }
 
 #endif

@@ -55,43 +55,7 @@ void Engine::update() {
 
         for (unsigned int j = i + 1; j < state.objects.size(); j++) {
             Object* objB = state.objects[j];
-
-            // si les objets ne sont pas sur la même couche,
-            // ils ne peuvent pas entrer en collision
-            if (objA->getLayer() != objB->getLayer()) {
-                continue;
-            }
-
-            // si les deux boîtes englobantes des deux objets,
-            // il ne risque pas d'y avoir de collision
-            if (!objA->getAABB()->intersects(*objB->getAABB())) {
-                continue;
-            }
-
-            sf::Vector2f normal;
-
-            // vérifie plus finement s'il y a collision et
-            // calcule la normale
-            if (!objA->getNormal(*objB, normal)) {
-                continue;
-            }
-
-            sf::Vector2f codir = objB->getVelocity() - objA->getVelocity();
-            float dotnormal = codir.x * normal.x + codir.y * normal.y;
-
-            // si les directions sont divergentes, pas besoin
-            // de résoudre la collision
-            if (dotnormal >= 0) {
-                continue;
-            }
-
-            // calcule et applique l'impulsion de résolution de la collision
-            float restitution = std::min(objA->getRestitution(), objB->getRestitution());
-            float impulse = (-(1 + restitution) * dotnormal) /
-                (objA->getMassInvert() + objB->getMassInvert());
-
-            objA->setVelocity(objA->getVelocity() - objA->getMassInvert() * impulse * normal);
-            objB->setVelocity(objB->getVelocity() + objB->getMassInvert() * impulse * normal);
+            objA->collide(*objB);
         }
     }
 }
