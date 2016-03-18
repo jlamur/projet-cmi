@@ -21,6 +21,7 @@ int main() {
     ball.setCharge(-2.f);
     block5.setCharge(16.f);
 
+    engine.addObject(ball);
     engine.addObject(block1);
     engine.addObject(block2);
     engine.addObject(block3);
@@ -30,7 +31,6 @@ int main() {
     engine.addObject(block7);
     engine.addObject(block8);
     engine.addObject(block9);
-    engine.addObject(ball);
 
     engine.start();
     return 0;
