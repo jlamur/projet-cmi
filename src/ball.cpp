@@ -63,6 +63,7 @@ void Ball::draw(sf::RenderWindow& window) {
     	// erreur
 	}
 
+    shape.rotate(getVelocity().x * .1f);
 	shape.setTexture(&texture);
     shape.setPosition(getPosition());
     window.draw(shape);
