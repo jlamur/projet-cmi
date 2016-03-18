@@ -21,18 +21,20 @@ sf::Vector2f Object::getForces(EngineState& state) {
 }
 
 void Object::draw(sf::RenderWindow& window) {
-    velocityLine[0].position = position;
-    velocityLine[0].color = sf::Color::Green;
-    velocityLine[1].position = position + velocity * 1.f;
-    velocityLine[1].color = sf::Color::Green;
+    if (Constants::DEBUG_MODE) {
+        velocityLine[0].position = position;
+        velocityLine[0].color = sf::Color::Green;
+        velocityLine[1].position = position + velocity * 1.f;
+        velocityLine[1].color = sf::Color::Green;
 
-    accelerationLine[0].position = position;
-    accelerationLine[0].color = sf::Color::Red;
-    accelerationLine[1].position = position + acceleration * 1.f;
-    accelerationLine[1].color = sf::Color::Red;
+        accelerationLine[0].position = position;
+        accelerationLine[0].color = sf::Color::Red;
+        accelerationLine[1].position = position + acceleration * 1.f;
+        accelerationLine[1].color = sf::Color::Red;
 
-    window.draw(velocityLine);
-    window.draw(accelerationLine);
+        window.draw(velocityLine);
+        window.draw(accelerationLine);
+    }
 }
 
 void Object::update(EngineState& state) {

@@ -7,14 +7,14 @@ namespace Constants {
      * pour le calcul de l'attraction coulombienne entre
      * deux objets
      */
-    static constexpr float ATTRACTION = 2000;
+    static constexpr float ATTRACTION = 2000000;
 
     /**
      * Constante de déplacement. Définit la quantité de
      * mouvement qui est donnée à un objet lorsqu'il
      * est manipulé manuellement par le joueur
      */
-    static constexpr float MOVE = 100;
+    static constexpr float MOVE = 200;
 
     /**
      * Constante de gravité. Utilisée dans la formule
@@ -22,12 +22,17 @@ namespace Constants {
      * uniformément vers le bas de la fenêtre sur tous
      * les objets
      */
-    static constexpr float GRAVITY = 200;
+    static constexpr float GRAVITY = 235;
 
     /**
      * Taille de la grille des blocs en pixels
      */
     static constexpr float GRID = 32;
+
+    /**
+     * Activation du débogage (affichage des vecteurs)
+     */
+    static constexpr bool DEBUG_MODE = false;
 
     /**
      * Correction positionnelle : pourcentage de correction
