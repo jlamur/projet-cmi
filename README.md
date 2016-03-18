@@ -1,5 +1,6 @@
-<img src="https://cdn.rawgit.com/matteodelabre/projet-cmi/master/docs/screenshots/02.png"
-     align="center" alt="Capture d'écran du jeu" />
+<div style="text-align: center;">
+    <img src="https://cdn.rawgit.com/matteodelabre/projet-cmi/master/docs/screenshots/02.png" alt="Capture d'écran du jeu" />
+</div>
 
 # projet-cmi
 
