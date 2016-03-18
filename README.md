@@ -1,4 +1,8 @@
+<img src="https://cdn.rawgit.com/matteodelabre/projet-cmi/master/docs/screenshots/02.png"
+     align="center" alt="Capture d'écran du jeu" />
+
 # projet-cmi
+
 Projet CMI
 
 Arborescence :
