@@ -3,7 +3,7 @@
 #include <queue>
 
 Engine::Engine() : window(
-    sf::VideoMode(400, 300), "Projet CMI",
+    sf::VideoMode(800, 600), "Projet CMI",
     sf::Style::Default & ~sf::Style::Resize,
     sf::ContextSettings(0, 0, 2)
 ) {

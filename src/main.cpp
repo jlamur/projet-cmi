@@ -8,6 +8,7 @@ int main() {
     Engine engine;
 
     Ball ball(3 * Constants::GRID, 1 * Constants::GRID);
+    
     Block block1(3 * Constants::GRID, 6 * Constants::GRID);
     Block block2(3 * Constants::GRID, 7 * Constants::GRID);
     Block block3(4 * Constants::GRID, 7 * Constants::GRID);
