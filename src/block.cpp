@@ -46,8 +46,11 @@ bool Block::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
 }
 
 bool Block::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
-    // TODO: coder cette fonction
-    return false;
+    // la collision Block -> Ball est la collision Ball -> Block
+    // avec une normale de collision retournée
+    bool result = obj.getCollisionInfo(*this, normal, depth);
+    normal *= -1.f;
+    return result;
 }
 
 bool Block::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
