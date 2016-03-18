@@ -1,0 +1,16 @@
+# format-sauvegarde-fichier
+
+## En-tête du niveau (84 octets en moyenne)
+* Signature (3 octets : BRT)
+* Version (1 octet : départ à 0)
+* Titre du niveaux (n octets de texte + 1 octet nul).
+* (Numéro du niveau).
+* Position de départ (1 octet pour le nombre de balles + 8 octets par position).
+* Zone de mort (1 octet pour le nombre de points de contrôle + 8 octets par point).
+* Musique (n octets de texte + 1 octet nul).
+* Fond principal (n octets de texte + 1 octet nul).
+
+## Contenu
+* Boucle sur chaque bloc et donne le type et la position.
+* Adresse Fond principal.
+* Adresse position et couches des objets de décor.
