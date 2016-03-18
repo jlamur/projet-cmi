@@ -9,57 +9,58 @@
 
 \begin{document}
 \begin{tikzpicture}
-    \umlclass[y=.5]{Engine}{
-        objects : tableau de \texttt{Object}\\
-        goLeftKey: booléen\\
-        goRightKey : booléen\\
-        clock : horloge
+    \umlclass[x=6]{Engine}{
+        clock : horloge\\
+        state : \texttt{EngineState}
     }{
+        update() : vide\\
         draw() : vide\\
-        update() : vide
+        start() : vide\\
+        addObject(objet : \texttt{Object}) : vide
     }
 
-    \umlclass[x=6,y=-1]{State}{
-        objects : tableau de \texttt{Object}\\
-        goLeftKey: booléen\\
-        goRightKey : booléen\\
+    \umlclass{EngineState}{
+        objects : tableau d'\texttt{Object}\\
+        keys : tableau de booléens\\
         delta : flottant
     }{}
 
-    \umlabstract[y=-4]{Object}{
-        position : vecteur\\
-        charge : entier signé
-    }{
-        \umlvirt{draw(fenêtre : Fenêtre) : vide}\\
-        \umlvirt{update(état : State) : vide}\\
-        \umlvirt{getLayer() : entier}\\
-        getPosition() : vecteur\\
-        getCharge() : entier signé
-    }
-
-    \umlabstract[y=-8,x=4]{PhysicsObject}{
+    \umlabstract[y=-5.5]{Object}{
+        acceleration : vecteur\\
         velocity : vecteur\\
-        mass : flottant
+        position : vecteur\\
+        mass : flottant\\
+        charge : flottant\\
+        restitution : flottant\\
+        layer : entier
     }{
-        getForces(état : State) : vecteur\\
-        update(état : State) : vide
+        \umlvirt{draw() : vide}\\
+        \umlvirt{getForces(état : \texttt{EngineState}) : vecteur}\\
+        \umlvirt{update(état : \texttt{EngineState}) : vide}\\
+        \umlvirt{getAABB() : boîte}\\
+        \umlvirt{getCollisionInfo(balle : \texttt{Ball}) : vecteur, flottant}\\
+        \umlvirt{getCollisionInfo(bloc : \texttt{Block}) : vecteur, flottant}\\
+        collide(objet : \texttt{Object}) : vide
     }
 
-    \umlclass[y=-11.5,x=4]{Ball}{}{
-        draw(fenêtre : Fenêtre) : vide\\
-        getForces(état : State) : vecteur\\
-        getLayer() : 1
+    \umlclass[y=-11,x=4]{Ball}{}{
+        getForces(état : \texttt{EngineState}) : vecteur\\
+        draw() : vide\\
+        getAABB() : boîte\\
+        getCollisionInfo(balle : \texttt{Ball}) : vecteur, flottant\\
+        getCollisionInfo(bloc : \texttt{Block}) : vecteur, flottant
     }
 
-    \umlclass[y=-8,x=-4]{Block}{}{
-        draw(fenêtre : Fenêtre) : vide\\
-        update(état : State) : vide\\
-        getLayer() : 0
+    \umlclass[y=-11,x=-4]{Block}{}{
+        draw() : vide\\
+        getAABB() : boîte\\
+        getCollisionInfo(balle : \texttt{Ball}) : vecteur, flottant\\
+        getCollisionInfo(bloc : \texttt{Block}) : vecteur, flottant
     }
 
-    \umlcompo{Engine}{Object}
+    \umlunicompo{EngineState}{Object}
+    \umluniassoc{Engine}{EngineState}
     \umlinherit{Object}{Block}
-    \umlinherit{Object}{PhysicsObject}
-    \umlinherit{PhysicsObject}{Ball}
+    \umlinherit{Object}{Ball}
 \end{tikzpicture}
 \end{document}
