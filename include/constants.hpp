@@ -35,6 +35,27 @@ namespace Constants {
      */
     static constexpr float CORRECTION_PERCENTAGE = .2f;
     static constexpr float CORRECTION_THRESHOLD = .01f;
+
+    /**
+     * Masse par défaut d'un objet
+     */
+    static constexpr float DEFAULT_MASS = 1.f;
+
+    /**
+     * Charge par défaut d'un objet
+     */
+    static constexpr float DEFAULT_CHARGE = 0.f;
+
+    /**
+     * Coefficient de restitution par défaut
+     */
+    static constexpr float DEFAULT_RESTITUTION = 0.4f;
+
+    /**
+     * Couche par défaut d'affichage d'un objet
+     * (peut être modifié objet par objet)
+     */
+    static constexpr int DEFAULT_LAYER = 10;
 }
 
 #endif

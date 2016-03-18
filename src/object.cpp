@@ -5,7 +5,11 @@ Object::Object(float x, float y) :
     acceleration(0, 0), velocity(0, 0), position(x, y),
     accelerationLine(sf::Lines, 2),
     velocityLine(sf::Lines, 2),
-    mass(1.f), inv_mass(1.f), charge(0.f), restitution(0.5f), layer(10) {}
+    mass(Constants::DEFAULT_MASS),
+    inv_mass(1.f / Constants::DEFAULT_MASS),
+    charge(Constants::DEFAULT_CHARGE),
+    restitution(Constants::DEFAULT_RESTITUTION),
+    layer(Constants::DEFAULT_LAYER) {}
 
 sf::Vector2f Object::getForces(EngineState& state) {
     sf::Vector2f forces(0, 0);
