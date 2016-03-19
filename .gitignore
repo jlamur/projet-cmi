@@ -1,6 +1,17 @@
 *~
+
 CMakeFiles
 CMakeCache.txt
 Makefile
 ptf
 cmake_install.cmake
+
+*.aux
+*.bbl
+*.blg
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
