@@ -20,39 +20,6 @@ sf::Vector2f Ball::getForces(EngineState& state) {
         forces += sf::Vector2f(Constants::MOVE, 0);
     }
 
-    // force d'attraction entre les balles et les blocs chargés
-    if (getCharge() != 0) {
-        for (unsigned int j = 0; j < state.objects.size(); j++) {
-            Object *attractive = state.objects[j];
-
-            if (attractive == this || attractive->getCharge() == 0) {
-                continue;
-            }
-
-            // vecteur allant de l'objet attirant vers l'objet considéré
-            sf::Vector2f attraction(getPosition() - attractive->getPosition());
-
-            // la norme de ce vecteur est la distance entre les objets
-            float distanceSquared = attraction.x * attraction.x +
-                attraction.y * attraction.y;
-
-            // éviter la division par zéro
-            if (distanceSquared == 0) {
-                continue;
-            }
-
-            // normalisation du vecteur direction qui porte
-            // la force d'attraction, puis application de la norme
-            attraction /= std::sqrt(distanceSquared);
-            attraction *= Constants::ATTRACTION * (
-                (getCharge() * attractive->getCharge()) /
-                distanceSquared
-            );
-
-            forces += attraction;
-        }
-    }
-
     return forces;
 }
 
