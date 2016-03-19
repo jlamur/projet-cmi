@@ -8,7 +8,7 @@ int main() {
     Engine engine;
 
     Ball ball1(3.5f * Constants::GRID, 10 * Constants::GRID);
-    Ball ball2(4.5f * Constants::GRID, 10 * Constants::GRID);
+    Ball ball2(18.5f * Constants::GRID, 10 * Constants::GRID);
     Block block01(2 * Constants::GRID, 10 * Constants::GRID);
     Block block02(2 * Constants::GRID, 11 * Constants::GRID);
     Block block03(3 * Constants::GRID, 11 * Constants::GRID);
@@ -30,7 +30,7 @@ int main() {
     Block block19(19 * Constants::GRID, 11 * Constants::GRID);
     Block block20(20 * Constants::GRID, 10 * Constants::GRID);
     Block block21(20 * Constants::GRID, 11 * Constants::GRID);
-    Block block22(19 * Constants::GRID, 10 * Constants::GRID);
+    Block block22(11 * Constants::GRID, 10 * Constants::GRID);
 
     ball1.setCharge(-.01f);
     ball2.setCharge(-.01f);
