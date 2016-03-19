@@ -7,7 +7,8 @@
 int main() {
     Engine engine;
 
-    Ball ball(3.5f * Constants::GRID, 10 * Constants::GRID);
+    Ball ball1(3.5f * Constants::GRID, 10 * Constants::GRID);
+    Ball ball2(4.5f * Constants::GRID, 10 * Constants::GRID);
     Block block01(2 * Constants::GRID, 10 * Constants::GRID);
     Block block02(2 * Constants::GRID, 11 * Constants::GRID);
     Block block03(3 * Constants::GRID, 11 * Constants::GRID);
@@ -17,28 +18,27 @@ int main() {
     Block block07(7 * Constants::GRID, 11 * Constants::GRID);
     Block block08(8 * Constants::GRID, 11 * Constants::GRID);
     Block block09(9 * Constants::GRID, 11 * Constants::GRID);
-    Block block10(13 * Constants::GRID, 11 * Constants::GRID);
-    Block block11(14 * Constants::GRID, 11 * Constants::GRID);
-    Block block12(15 * Constants::GRID, 11 * Constants::GRID);
-    Block block13(16 * Constants::GRID, 11 * Constants::GRID);
-    Block block14(17 * Constants::GRID, 11 * Constants::GRID);
-    Block block15(18 * Constants::GRID, 11 * Constants::GRID);
-    Block block16(19 * Constants::GRID, 11 * Constants::GRID);
-    Block block17(20 * Constants::GRID, 10 * Constants::GRID);
-    Block block18(20 * Constants::GRID, 11 * Constants::GRID);
-    Block block19(14 * Constants::GRID, 6 * Constants::GRID);
-    Block block20(13 * Constants::GRID, 6 * Constants::GRID);
-    Block block21(12 * Constants::GRID, 6 * Constants::GRID);
-    Block block22(11 * Constants::GRID, 6 * Constants::GRID);
-    Block block23(10 * Constants::GRID, 6 * Constants::GRID);
-    Block block24(9 * Constants::GRID, 6 * Constants::GRID);
-    Block block25(8 * Constants::GRID, 6 * Constants::GRID);
+    Block block10(10 * Constants::GRID, 11 * Constants::GRID);
+    Block block11(11 * Constants::GRID, 11 * Constants::GRID);
+    Block block12(12 * Constants::GRID, 11 * Constants::GRID);
+    Block block13(13 * Constants::GRID, 11 * Constants::GRID);
+    Block block14(14 * Constants::GRID, 11 * Constants::GRID);
+    Block block15(15 * Constants::GRID, 11 * Constants::GRID);
+    Block block16(16 * Constants::GRID, 11 * Constants::GRID);
+    Block block17(17 * Constants::GRID, 11 * Constants::GRID);
+    Block block18(18 * Constants::GRID, 11 * Constants::GRID);
+    Block block19(19 * Constants::GRID, 11 * Constants::GRID);
+    Block block20(20 * Constants::GRID, 10 * Constants::GRID);
+    Block block21(20 * Constants::GRID, 11 * Constants::GRID);
+    Block block22(19 * Constants::GRID, 10 * Constants::GRID);
 
-    ball.setCharge(-1.f);
-    block23.setCharge(1.f);
-    block21.setCharge(1.f);
+    ball1.setCharge(-.01f);
+    ball2.setCharge(-.01f);
+    block22.setCharge(1.f);
+    block22.setMass(2);
 
-    engine.addObject(ball);
+    engine.addObject(ball1);
+    engine.addObject(ball2);
     engine.addObject(block01);
     engine.addObject(block02);
     engine.addObject(block03);
@@ -61,9 +61,6 @@ int main() {
     engine.addObject(block20);
     engine.addObject(block21);
     engine.addObject(block22);
-    engine.addObject(block23);
-    engine.addObject(block24);
-    engine.addObject(block25);
 
     engine.start();
     return 0;
