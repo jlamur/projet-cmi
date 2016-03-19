@@ -4,8 +4,9 @@
 #include <array>
 #include <iostream>
 
-Ball::Ball(float x, float y) : Object(x, y), shape(10) {
-    shape.setOrigin(sf::Vector2f(10, 10));
+Ball::Ball(float x, float y) : Object(x, y),
+    shape(sf::Vector2f(2 * getRadius(), 2 * getRadius())) {
+    shape.setOrigin(sf::Vector2f(getRadius(), getRadius()));
 }
 
 sf::Vector2f Ball::getForces(EngineState& state) {
@@ -26,10 +27,10 @@ sf::Vector2f Ball::getForces(EngineState& state) {
 void Ball::draw(sf::RenderWindow& window) {
     Object::draw(window);
 
-	// chargement de la texture de test
-	if (!texture.loadFromFile("./res/ball.png")) {
+    // chargement de la texture de test
+    if (!texture.loadFromFile("./res/ball.png")) {
     	// erreur
-	}
+    }
 
     shape.rotate(getVelocity().x * .1f);
 	shape.setTexture(&texture);
@@ -39,9 +40,9 @@ void Ball::draw(sf::RenderWindow& window) {
 
 std::unique_ptr<sf::FloatRect> Ball::getAABB() {
     return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
-        getPosition().x - 10,
-        getPosition().y - 10,
-        20, 20
+        getPosition().x - getRadius(),
+        getPosition().y - getRadius(),
+        2 * getRadius(), 2 * getRadius()
     ));
 }
 
@@ -52,11 +53,11 @@ bool Ball::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
 bool Ball::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
     sf::Vector2f dir = getPosition() - obj.getPosition();
     float squaredLength = dir.x * dir.x + dir.y * dir.y;
+    float totalRadius = getRadius() + obj.getRadius();
 
-    // TODO: supprimer les valeurs magiques
     // si les deux balles sont à une distance supérieure
     // à la somme de leurs deux rayons, il n'y a pas eu collision
-    if (squaredLength > 20 * 20) {
+    if (squaredLength > totalRadius * totalRadius) {
         return false;
     }
 
@@ -65,16 +66,14 @@ bool Ball::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
     // les balles sont sur la même position.
     // Renvoie une normale apte à séparer les deux balles
     if (length == 0) {
-        // TODO: supprimer les valeurs magiques
-        depth = 20;
+        depth = totalRadius;
         normal.x = 0;
         normal.y = -1;
         return true;
     }
 
-    // TODO: supprimer les valeurs magiques
     // il y a eu collision
-    depth = 20 - length;
+    depth = totalRadius - length;
     normal = dir / length;
     return true;
 }
@@ -134,21 +133,27 @@ bool Ball::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
     sf::Vector2f prenormal = relpos - closest;
     float squaredLength = prenormal.x * prenormal.x + prenormal.y * prenormal.y;
 
-    // TODO: supprimer les valeurs magiques
     // si la balle est à l'extérieur et que
     // la normale est plus longue que son rayon,
     // il n'y a pas collision
-    if (!isInside && squaredLength >= 10 * 10) {
+    if (!isInside && squaredLength >= getRadius() * getRadius()) {
         return false;
     }
 
     float length = std::sqrt(squaredLength);
-    depth = 10 - length;
-    normal = prenormal / length;
+    depth = getRadius() - length;
+
+    if (length != 0) {
+        normal = prenormal / length;
+    }
 
     if (isInside) {
         normal *= -1.f;
     }
 
     return true;
+}
+
+float Ball::getRadius() {
+    return 10 * getMass();
 }

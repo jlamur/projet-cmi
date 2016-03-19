@@ -9,7 +9,7 @@
 class Ball : public Object {
 private:
     sf::Texture texture;
-    sf::CircleShape shape;
+    sf::RectangleShape shape;
 
 protected:
     /**
@@ -37,6 +37,11 @@ public:
     virtual bool getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth);
     virtual bool getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth);
     virtual bool getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth);
+
+    /**
+     * Renvoie le rayon de la balle
+     */
+    float getRadius();
 };
 
 #endif
