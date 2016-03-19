@@ -54,6 +54,38 @@ bool Block::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
 }
 
 bool Block::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
-    // TODO: coder cette fonction
-    return false;
+    std::unique_ptr<sf::FloatRect> aabb = getAABB();
+    std::unique_ptr<sf::FloatRect> obj_aabb = obj.getAABB();
+    sf::Vector2f relpos = getPosition() - obj.getPosition();
+
+    float overlap_x = aabb->width / 2 + obj_aabb->width / 2 - std::abs(relpos.x);
+    float overlap_y = aabb->height / 2 + obj_aabb->height / 2 - std::abs(relpos.y);
+
+    // si il n'y a pas de chauvauchement sur l'axe X et Y, pas de collision
+    if (overlap_x <= 0 || overlap_y <= 0) {
+        return false;
+    }
+
+    // on choisit l'axe de pénétration maximale pour calculer la normale
+    if (overlap_x < overlap_y) {
+        if (relpos.x < 0) {
+            normal.x = -1;
+        } else {
+            normal.x = 1;
+        }
+
+        normal.y = 0;
+        depth = overlap_x;
+    } else {
+        if (relpos.y < 0) {
+            normal.y = -1;
+        } else {
+            normal.y = 1;
+        }
+
+        normal.x = 0;
+        depth = overlap_y;
+    }
+
+    return true;
 }
