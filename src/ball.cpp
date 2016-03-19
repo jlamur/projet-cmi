@@ -2,6 +2,7 @@
 #include "block.hpp"
 #include "constants.hpp"
 #include <array>
+#include <iostream>
 
 Ball::Ball(float x, float y) : Object(x, y), shape(10) {
     shape.setOrigin(sf::Vector2f(10, 10));
@@ -82,7 +83,7 @@ bool Ball::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
 }
 
 bool Ball::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
-    sf::Vector2f dir = obj.getPosition() - getPosition();
+    sf::Vector2f dir = getPosition() - obj.getPosition();
     float squaredLength = dir.x * dir.x + dir.y * dir.y;
 
     // TODO: supprimer les valeurs magiques
@@ -106,7 +107,7 @@ bool Ball::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
 
     // TODO: supprimer les valeurs magiques
     // il y a eu collision
-    depth = 10 - length;
+    depth = 20 - length;
     normal = dir / length;
     return true;
 }
