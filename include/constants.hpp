@@ -35,6 +35,11 @@ namespace Constants {
     static constexpr bool DEBUG_MODE = false;
 
     /**
+     * Durée fixe d'une étape de simulation physique
+     */
+    static constexpr float PHYSICS_TIME = 1.f / 60;
+
+    /**
      * Correction positionnelle : pourcentage de correction
      * et seuil de correction
      */

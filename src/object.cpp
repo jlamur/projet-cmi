@@ -80,11 +80,11 @@ void Object::update(EngineState& state) {
     }
 
     // intégration de la vitesse dans la position
-    position += velocity * state.delta;
+    position += velocity * Constants::PHYSICS_TIME;
 
     // intégration des forces appliquées sur l'objet dans la vitesse
     acceleration = getForces(state) / mass;
-    velocity += acceleration * state.delta;
+    velocity += acceleration * Constants::PHYSICS_TIME;
 }
 
 bool Object::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {

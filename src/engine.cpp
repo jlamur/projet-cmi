@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include "constants.hpp"
 #include <cmath>
 #include <queue>
 
@@ -11,6 +12,8 @@ Engine::Engine() : window(
 }
 
 void Engine::start() {
+    float accumulator = 0;
+
     // boucle d'événements sur la fenêtre
     while (window.isOpen()) {
         sf::Event event;
@@ -32,9 +35,16 @@ void Engine::start() {
             }
         }
 
-        state.delta = clock.restart().asSeconds();
+        float frame = clock.restart().asSeconds();
+        accumulator += frame;
 
-        update();
+        // tant qu'il reste du temps à passer,
+        // effectuer la simulation physique étape par étape
+        while (accumulator >= Constants::PHYSICS_TIME) {
+            accumulator -= Constants::PHYSICS_TIME;
+            update();
+        }
+
         draw();
     }
 }
