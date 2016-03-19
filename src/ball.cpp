@@ -66,7 +66,7 @@ bool Ball::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
     // Renvoie une normale apte à séparer les deux balles
     if (length == 0) {
         // TODO: supprimer les valeurs magiques
-        depth = 10;
+        depth = 20;
         normal.x = 0;
         normal.y = -1;
         return true;
