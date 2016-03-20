@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include "constants.hpp"
 #include <cmath>
 #include <queue>
 
@@ -15,6 +16,8 @@ Engine::Engine() : window(
 }
 
 void Engine::start() {
+    float accumulator = 0;
+
     // boucle d'événements sur la fenêtre
     while (window.isOpen()) {
         sf::Event event;
