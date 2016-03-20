@@ -7,11 +7,11 @@ Engine::Engine() : window(
     sf::VideoMode(704, 480), "Projet CMI",
     sf::Style::Default & ~sf::Style::Resize,
     sf::ContextSettings(0, 0, 2)
-), view(sf::FloatRect(200, 200, 300, 200)){
+), view(sf::FloatRect(0, 0, 704, 480)){
     window.setVerticalSyncEnabled(true);
 
     // mise en place de la caméra
-    view.setSize(800, 600);
+    view.setSize(704, 480);
     window.setView(view);
 }
 
