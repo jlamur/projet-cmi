@@ -9,7 +9,7 @@
 class Ball : public Object {
 private:
     sf::Texture texture;
-    sf::CircleShape shape;
+    sf::RectangleShape shape;
 
 protected:
     /**
@@ -31,11 +31,17 @@ public:
     std::unique_ptr<sf::FloatRect> getAABB();
 
     /**
-     * Calcule la normale de la collision de cet objet avec un autre
+     * Calcule les informations sur une éventuelle collision de
+     * cet objet avec un autre : la normale et la profondeur
      */
-    virtual bool getNormal(Object& obj, sf::Vector2f& normal);
-    virtual bool getNormal(Ball& obj, sf::Vector2f& normal);
-    virtual bool getNormal(Block& obj, sf::Vector2f& normal);
+    virtual bool getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth);
+    virtual bool getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth);
+    virtual bool getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth);
+
+    /**
+     * Renvoie le rayon de la balle
+     */
+    float getRadius();
 };
 
 #endif

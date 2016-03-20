@@ -5,7 +5,11 @@ Object::Object(float x, float y) :
     acceleration(0, 0), velocity(0, 0), position(x, y),
     accelerationLine(sf::Lines, 2),
     velocityLine(sf::Lines, 2),
-    mass(1.f), inv_mass(1.f), charge(0.f), restitution(0.f), layer(10) {}
+    mass(Constants::DEFAULT_MASS),
+    inv_mass(1.f / Constants::DEFAULT_MASS),
+    charge(Constants::DEFAULT_CHARGE),
+    restitution(Constants::DEFAULT_RESTITUTION),
+    layer(Constants::DEFAULT_LAYER) {}
 
 sf::Vector2f Object::getForces(EngineState& state) {
     sf::Vector2f forces(0, 0);
@@ -13,22 +17,57 @@ sf::Vector2f Object::getForces(EngineState& state) {
     // force de gravité
     forces += sf::Vector2f(0, Constants::GRAVITY);
 
+    // force d'attraction entre objets chargés
+    if (getCharge() != 0) {
+        for (unsigned int j = 0; j < state.objects.size(); j++) {
+            Object *attractive = state.objects[j];
+
+            if (attractive == this || attractive->getCharge() == 0) {
+                continue;
+            }
+
+            // vecteur allant de l'objet attracteur vers l'objet actuel
+            sf::Vector2f attraction(getPosition() - attractive->getPosition());
+
+            // la norme de ce vecteur est la distance entre les objets
+            float distanceSquared = attraction.x * attraction.x +
+                attraction.y * attraction.y;
+
+            // éviter la division par zéro
+            if (distanceSquared == 0) {
+                continue;
+            }
+
+            // normalisation du vecteur direction qui porte
+            // la force d'attraction, puis application de la norme
+            attraction /= std::sqrt(distanceSquared);
+            attraction *= Constants::ATTRACTION * (
+                (getCharge() * attractive->getCharge()) /
+                distanceSquared
+            );
+
+            forces += attraction;
+        }
+    }
+
     return forces;
 }
 
 void Object::draw(sf::RenderWindow& window) {
-    velocityLine[0].position = position;
-    velocityLine[0].color = sf::Color::Green;
-    velocityLine[1].position = position + velocity * 1.f;
-    velocityLine[1].color = sf::Color::Green;
+    if (Constants::DEBUG_MODE) {
+        velocityLine[0].position = position;
+        velocityLine[0].color = sf::Color::Green;
+        velocityLine[1].position = position + velocity * 1.f;
+        velocityLine[1].color = sf::Color::Green;
 
-    accelerationLine[0].position = position;
-    accelerationLine[0].color = sf::Color::Red;
-    accelerationLine[1].position = position + acceleration * 1.f;
-    accelerationLine[1].color = sf::Color::Red;
+        accelerationLine[0].position = position;
+        accelerationLine[0].color = sf::Color::Red;
+        accelerationLine[1].position = position + acceleration * 1.f;
+        accelerationLine[1].color = sf::Color::Red;
 
-    window.draw(velocityLine);
-    window.draw(accelerationLine);
+        window.draw(velocityLine);
+        window.draw(accelerationLine);
+    }
 }
 
 void Object::update(EngineState& state) {
@@ -41,15 +80,68 @@ void Object::update(EngineState& state) {
     }
 
     // intégration de la vitesse dans la position
-    position += velocity * state.delta;
+    position += velocity * Constants::PHYSICS_TIME;
 
     // intégration des forces appliquées sur l'objet dans la vitesse
     acceleration = getForces(state) / mass;
-    velocity += acceleration * state.delta;
+    velocity += acceleration * Constants::PHYSICS_TIME;
 }
 
-bool Object::getNormal(Object& obj, sf::Vector2f& normal) {
-    return obj.getNormal(*this, normal);
+bool Object::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
+    return obj.getCollisionInfo(*this, normal, depth);
+}
+
+void Object::collide(Object& obj) {
+    // si les objets ne sont pas sur la même couche,
+    // ils ne peuvent pas entrer en collision
+    if (getLayer() != obj.getLayer()) {
+        return;
+    }
+
+    // si les deux boîtes englobantes des deux objets, ne
+    // s'intersectent pas, il ne risque pas d'y avoir de collision
+    if (!getAABB()->intersects(*obj.getAABB())) {
+        return;
+    }
+
+    sf::Vector2f normal;
+    float depth;
+
+    // vérifie plus finement s'il y a collision et récupère
+    // les informations sur la collision (normale et profondeur)
+    if (!getCollisionInfo(obj, normal, depth)) {
+        return;
+    }
+
+    sf::Vector2f codir = obj.getVelocity() - getVelocity();
+    float dotnormal = codir.x * normal.x + codir.y * normal.y;
+
+    // si les directions sont divergentes, pas besoin
+    // de résoudre la collision
+    if (dotnormal >= 0) {
+        return;
+    }
+
+    // calcule et applique l'impulsion de résolution de la collision
+    float restitution = std::min(getRestitution(), obj.getRestitution());
+    float impulse = (-(1 + restitution) * dotnormal) /
+        (getMassInvert() + obj.getMassInvert());
+
+    setVelocity(getVelocity() - getMassInvert() * impulse * normal);
+    obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * impulse * normal);
+
+    // correction de la position des objets. En raison de l'imprécision
+    // des flottants sur la machine, les objets peuvent accumuler une
+    // erreur de positionnement qui les fait "plonger" les un dans les autres.
+    if (depth <= Constants::CORRECTION_THRESHOLD) {
+        return;
+    }
+
+    sf::Vector2f positionCorrection = depth / (getMassInvert() +
+        obj.getMassInvert()) * Constants::CORRECTION_PERCENTAGE * normal;
+
+    setPosition(getPosition() - getMassInvert() * positionCorrection);
+    obj.setPosition(obj.getPosition() + obj.getMassInvert() * positionCorrection);
 }
 
 sf::Vector2f Object::getAcceleration() {
@@ -66,6 +158,10 @@ void Object::setVelocity(sf::Vector2f set_velocity) {
 
 sf::Vector2f Object::getPosition() {
     return position;
+}
+
+void Object::setPosition(sf::Vector2f set_position) {
+    position = set_position;
 }
 
 float Object::getMass() {

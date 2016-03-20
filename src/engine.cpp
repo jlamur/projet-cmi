@@ -1,9 +1,10 @@
 #include "engine.hpp"
+#include "constants.hpp"
 #include <cmath>
 #include <queue>
 
 Engine::Engine() : window(
-    sf::VideoMode(400, 300), "Projet CMI",
+    sf::VideoMode(704, 480), "Projet CMI",
     sf::Style::Default & ~sf::Style::Resize,
     sf::ContextSettings(0, 0, 2)
 ) {
@@ -11,6 +12,8 @@ Engine::Engine() : window(
 }
 
 void Engine::start() {
+    float accumulator = 0;
+
     // boucle d'événements sur la fenêtre
     while (window.isOpen()) {
         sf::Event event;
@@ -32,9 +35,16 @@ void Engine::start() {
             }
         }
 
-        state.delta = clock.restart().asSeconds();
+        float frame = clock.restart().asSeconds();
+        accumulator += frame;
 
-        update();
+        // tant qu'il reste du temps à passer,
+        // effectuer la simulation physique étape par étape
+        while (accumulator >= Constants::PHYSICS_TIME) {
+            accumulator -= Constants::PHYSICS_TIME;
+            update();
+        }
+
         draw();
     }
 }
@@ -55,56 +65,7 @@ void Engine::update() {
 
         for (unsigned int j = i + 1; j < state.objects.size(); j++) {
             Object* objB = state.objects[j];
-
-            // si les objets ne sont pas sur la même couche,
-            // ils ne peuvent pas entrer en collision
-            if (objA->getLayer() != objB->getLayer()) {
-                continue;
-            }
-
-            // si les deux boîtes englobantes des deux objets,
-            // il ne risque pas d'y avoir de collision
-            if (!objA->getAABB()->intersects(*objB->getAABB())) {
-                continue;
-            }
-
-            sf::Vector2f normal;
-
-            // vérifie plus finement s'il y a collision et
-            // calcule la normale
-            if (!objA->getNormal(*objB, normal)) {
-                continue;
-            }
-
-            sf::Vector2f codir = objB->getVelocity() - objA->getVelocity();
-            float dotnormal = codir.x * normal.x + codir.y * normal.y;
-
-            // si les directions sont divergentes, pas besoin
-            // de résoudre la collision
-            if (dotnormal >= 0) {
-                continue;
-            }
-
-            float restitution = std::min(objA->getRestitution(), objB->getRestitution());
-
-            // calcul de l'inverse des masses de A et B. Pour rappel,
-            // une masse infinie est modélisée par 0, donc l'inverse
-            // d'une telle masse est nul
-            float invMassA = objA->getMass();
-            float invMassB = objB->getMass();
-
-            if (invMassA != 0) {
-                invMassA = 1.f / invMassA;
-            }
-
-            if (invMassB != 0) {
-                invMassB = 1.f / invMassB;
-            }
-
-            // calcule et applique l'impulsion de résolution de la collision
-            float impulse = (-(1 + restitution) * dotnormal) / (invMassA + invMassB);
-            objA->setVelocity(objA->getVelocity() - invMassA * impulse * normal);
-            objB->setVelocity(objB->getVelocity() + invMassB * impulse * normal);
+            objA->collide(*objB);
         }
     }
 }

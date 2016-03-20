@@ -1,0 +1,57 @@
+\documentclass[tikz,border=30pt]{standalone}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{tikz}
+\usepackage{gantt}
+\usepackage[french]{babel}
+
+\begin{document}
+\begin{gantt}{21}{20}
+    \begin{ganttitle}
+        \titleelement{Semaine 1 : 04/03 - 10/03}{4}
+        \titleelement{Semaine 2 : 11/03 - 17/03}{4}
+        \titleelement{Semaine 3 : 18/03 - 24/03}{4}
+        \titleelement{Semaine 4 : 25/03 - 31/03}{4}
+        \titleelement{Semaine 5 : 01/04 - 08/04}{4}
+    \end{ganttitle}
+
+    \ganttgroup{Moteur physique}{0}{12}
+    \ganttbar[color=red,pattern=north east lines]{Organisation des classes}{0}{6}
+    \ganttbar[color=green,pattern=north east lines]{Gestion de l'affichage}{0}{8}
+    \ganttbar[color=red,pattern=north east lines]{Implémentation des forces}{0}{8}
+    \ganttbar[color=red,pattern=north east lines]{Gestion des collisions}{4}{6}
+    \ganttbar[color=cyan,pattern=north east lines]{Tests du moteur}{4}{8}
+
+    \ganttgroup{Niveaux du jeu}{6}{14}
+    \ganttbar[color=cyan,pattern=north east lines]{Définition du format de fichier}{6}{2}
+    \ganttbar[color=red,pattern=north east lines]{Lecture et écriture du format}{8}{4}
+    \ganttbar[color=red,pattern=north east lines]{Création de l'éditeur}{8}{4}
+    \ganttbar{Niveau de test}{10}{2}
+    \ganttbar{Conception des niveaux}{12}{4}
+    \ganttbar{Tests des niveaux}{16}{4}
+
+    \ganttgroup{Univers graphique}{8}{12}
+    \ganttbar[color=cyan,pattern=north east lines]{Recherche des musiques}{8}{8}
+    \ganttbar[color=green,pattern=north east lines]{Conception des textures}{8}{12}
+    \ganttbar{Menus et interface du jeu}{12}{4}
+
+    \ganttmilestone{Figeage des fonctionnalités}{16}
+    \ganttbarcon{Tests finaux}{16}{4}
+    \ganttbar{Rapport}{16}{4}
+\end{gantt}
+
+\hfill\\
+\hfill\\
+
+Légende du document~:
+\begin{itemize}
+    \item Vert~: tâches affectées à Maëlle~;
+    \item Cyan~: tâches affectées à Rémi~;
+    \item Rouge~: tâches affectées à Mattéo~;
+    \item Hachures nord-est~: tâches affectées~;
+    \item Hachures nord-ouest~: tâches non-affectées.
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,66 @@
+\documentclass[tikz,border=30pt]{standalone}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\usepackage[french]{babel}
+
+\begin{document}
+\begin{tikzpicture}
+    \umlclass[x=6]{Engine}{
+        clock : horloge\\
+        state : \texttt{EngineState}
+    }{
+        update() : vide\\
+        draw() : vide\\
+        start() : vide\\
+        addObject(objet : \texttt{Object}) : vide
+    }
+
+    \umlclass{EngineState}{
+        objects : tableau d'\texttt{Object}\\
+        keys : tableau de booléens\\
+        delta : flottant
+    }{}
+
+    \umlabstract[y=-5.5]{Object}{
+        acceleration : vecteur\\
+        velocity : vecteur\\
+        position : vecteur\\
+        mass : flottant\\
+        charge : flottant\\
+        restitution : flottant\\
+        layer : entier
+    }{
+        \umlvirt{draw() : vide}\\
+        \umlvirt{getForces(état : \texttt{EngineState}) : vecteur}\\
+        \umlvirt{update(état : \texttt{EngineState}) : vide}\\
+        \umlvirt{getAABB() : boîte}\\
+        \umlvirt{getCollisionInfo(balle : \texttt{Ball}) : vecteur, flottant}\\
+        \umlvirt{getCollisionInfo(bloc : \texttt{Block}) : vecteur, flottant}\\
+        collide(objet : \texttt{Object}) : vide
+    }
+
+    \umlclass[y=-11,x=4]{Ball}{}{
+        getForces(état : \texttt{EngineState}) : vecteur\\
+        draw() : vide\\
+        getAABB() : boîte\\
+        getCollisionInfo(balle : \texttt{Ball}) : vecteur, flottant\\
+        getCollisionInfo(bloc : \texttt{Block}) : vecteur, flottant
+    }
+
+    \umlclass[y=-11,x=-4]{Block}{}{
+        draw() : vide\\
+        getAABB() : boîte\\
+        getCollisionInfo(balle : \texttt{Ball}) : vecteur, flottant\\
+        getCollisionInfo(bloc : \texttt{Block}) : vecteur, flottant
+    }
+
+    \umlunicompo{EngineState}{Object}
+    \umluniassoc{Engine}{EngineState}
+    \umlinherit{Object}{Block}
+    \umlinherit{Object}{Ball}
+\end{tikzpicture}
+\end{document}

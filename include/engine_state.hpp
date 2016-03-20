@@ -16,9 +16,8 @@ class Object;
 struct EngineState {
     std::vector<Object*> objects;
     std::array<bool, sf::Keyboard::KeyCount> keys;
-    float delta;
 
-    EngineState() : delta(0.f) {
+    EngineState() {
         // aucune touche n'est enfoncée au démarrage
         keys.fill(false);
     }
