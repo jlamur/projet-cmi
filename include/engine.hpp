@@ -14,7 +14,7 @@ private:
     sf::Clock clock;
     sf::RenderWindow window;
     EngineState state;
-	sf::View view; 
+    sf::View view; 
 
     /**
      * Met à jour les objets du jeu pour

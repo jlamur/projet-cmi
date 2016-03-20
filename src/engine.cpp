@@ -3,17 +3,15 @@
 #include <queue>
 
 Engine::Engine() : window(
-    sf::VideoMode(800, 600), "Projet CMI",
+    sf::VideoMode(704, 480), "Projet CMI",
     sf::Style::Default & ~sf::Style::Resize,
     sf::ContextSettings(0, 0, 2)
 ), view(sf::FloatRect(200, 200, 300, 200)){
     window.setVerticalSyncEnabled(true);
 
-	//mise en place de la caméra
-	view.setSize(800, 600);
-	window.setView(view);
-
-
+    // mise en place de la caméra
+    view.setSize(800, 600);
+    window.setView(view);
 }
 
 void Engine::start() {
@@ -38,9 +36,16 @@ void Engine::start() {
             }
         }
 
-        state.delta = clock.restart().asSeconds();
+        float frame = clock.restart().asSeconds();
+        accumulator += frame;
 
-        update();
+        // tant qu'il reste du temps à passer,
+        // effectuer la simulation physique étape par étape
+        while (accumulator >= Constants::PHYSICS_TIME) {
+            accumulator -= Constants::PHYSICS_TIME;
+            update();
+        }
+
         draw();
     }
 }
