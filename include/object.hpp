@@ -14,13 +14,15 @@ private:
     sf::Vector2f velocity;
     sf::Vector2f position;
 
-    sf::VertexArray accelerationLine;
-    sf::VertexArray velocityLine;
+    sf::VertexArray acceleration_line;
+    sf::VertexArray velocity_line;
 
     float mass;
     float inv_mass;
     float charge;
     float restitution;
+    float static_friction;
+    float dynamic_friction;
     int layer;
 
 protected:
@@ -124,6 +126,26 @@ public:
      * Modifie le coefficient de restitution de l'objet
      */
     void setRestitution(float set_restitution);
+
+    /**
+     * Récupère le coefficient de frottement dynamique de l'objet
+     */
+    float getStaticFriction();
+
+    /**
+     * Modifie le coefficient de frottement dynamique de l'objet
+     */
+    void setStaticFriction(float set_static_friction);
+
+    /**
+     * Récupère le coefficient de frottement dynamique de l'objet
+     */
+    float getDynamicFriction();
+
+    /**
+     * Modifie le coefficient de frottement dynamique de l'objet
+     */
+    void setDynamicFriction(float set_dynamic_friction);
 
     /**
      * Récupère la couche d'affichage de l'objet

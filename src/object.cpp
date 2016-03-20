@@ -3,12 +3,14 @@
 
 Object::Object(float x, float y) :
     acceleration(0, 0), velocity(0, 0), position(x, y),
-    accelerationLine(sf::Lines, 2),
-    velocityLine(sf::Lines, 2),
+    acceleration_line(sf::Lines, 2),
+    velocity_line(sf::Lines, 2),
     mass(Constants::DEFAULT_MASS),
     inv_mass(1.f / Constants::DEFAULT_MASS),
     charge(Constants::DEFAULT_CHARGE),
     restitution(Constants::DEFAULT_RESTITUTION),
+    static_friction(0.4f),
+    dynamic_friction(0.2f),
     layer(Constants::DEFAULT_LAYER) {}
 
 sf::Vector2f Object::getForces(EngineState& state) {
@@ -30,20 +32,20 @@ sf::Vector2f Object::getForces(EngineState& state) {
             sf::Vector2f attraction(getPosition() - attractive->getPosition());
 
             // la norme de ce vecteur est la distance entre les objets
-            float distanceSquared = attraction.x * attraction.x +
+            float distance_squared = attraction.x * attraction.x +
                 attraction.y * attraction.y;
 
             // éviter la division par zéro
-            if (distanceSquared == 0) {
+            if (distance_squared == 0) {
                 continue;
             }
 
             // normalisation du vecteur direction qui porte
             // la force d'attraction, puis application de la norme
-            attraction /= std::sqrt(distanceSquared);
+            attraction /= std::sqrt(distance_squared);
             attraction *= Constants::ATTRACTION * (
                 (getCharge() * attractive->getCharge()) /
-                distanceSquared
+                distance_squared
             );
 
             forces += attraction;
@@ -55,35 +57,27 @@ sf::Vector2f Object::getForces(EngineState& state) {
 
 void Object::draw(sf::RenderWindow& window) {
     if (Constants::DEBUG_MODE) {
-        velocityLine[0].position = position;
-        velocityLine[0].color = sf::Color::Green;
-        velocityLine[1].position = position + velocity * 1.f;
-        velocityLine[1].color = sf::Color::Green;
+        velocity_line[0].position = position;
+        velocity_line[0].color = sf::Color::Green;
+        velocity_line[1].position = position + velocity * 1.f;
+        velocity_line[1].color = sf::Color::Green;
 
-        accelerationLine[0].position = position;
-        accelerationLine[0].color = sf::Color::Red;
-        accelerationLine[1].position = position + acceleration * 1.f;
-        accelerationLine[1].color = sf::Color::Red;
+        acceleration_line[0].position = position;
+        acceleration_line[0].color = sf::Color::Red;
+        acceleration_line[1].position = position + acceleration * 1.f;
+        acceleration_line[1].color = sf::Color::Red;
 
-        window.draw(velocityLine);
-        window.draw(accelerationLine);
+        window.draw(velocity_line);
+        window.draw(acceleration_line);
     }
 }
 
 void Object::update(EngineState& state) {
-    // on représente les objets de masse infinie avec une
-    // masse nulle. Ces objets ne sont pas déplaçables
-    if (mass == 0) {
-        acceleration.x = acceleration.y = 0;
-        velocity.x = velocity.y = 0;
-        return;
-    }
-
     // intégration de la vitesse dans la position
     position += velocity * Constants::PHYSICS_TIME;
 
     // intégration des forces appliquées sur l'objet dans la vitesse
-    acceleration = getForces(state) / mass;
+    acceleration = getForces(state) * getMassInvert();
     velocity += acceleration * Constants::PHYSICS_TIME;
 }
 
@@ -113,22 +107,49 @@ void Object::collide(Object& obj) {
         return;
     }
 
-    sf::Vector2f codir = obj.getVelocity() - getVelocity();
-    float dotnormal = codir.x * normal.x + codir.y * normal.y;
+    sf::Vector2f rel_velo = obj.getVelocity() - getVelocity();
+    float dot_normal = rel_velo.x * normal.x + rel_velo.y * normal.y;
 
     // si les directions sont divergentes, pas besoin
     // de résoudre la collision
-    if (dotnormal >= 0) {
+    if (dot_normal >= 0) {
         return;
     }
 
     // calcule et applique l'impulsion de résolution de la collision
     float restitution = std::min(getRestitution(), obj.getRestitution());
-    float impulse = (-(1 + restitution) * dotnormal) /
+    float collision_impulse = (-(1 + restitution) * dot_normal) /
         (getMassInvert() + obj.getMassInvert());
 
-    setVelocity(getVelocity() - getMassInvert() * impulse * normal);
-    obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * impulse * normal);
+    setVelocity(getVelocity() - getMassInvert() * collision_impulse * normal);
+    obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * collision_impulse * normal);
+
+    // application des forces de frottement entre les deux objets
+    // on calcule le vecteur tangent qui porte la force de frottement.
+    // les coefficients de friction utilisés sont les moyennes de ceux des deux objets
+    rel_velo = obj.getVelocity() - getVelocity();
+    dot_normal = rel_velo.x * normal.x + rel_velo.y * normal.y;
+
+    sf::Vector2f tangent = rel_velo - dot_normal * normal;
+    float tangent_length = std::sqrt(tangent.x * tangent.x + tangent.y * tangent.y);
+    tangent /= tangent_length;
+
+    float magnitude = -(rel_velo.x * tangent.x + rel_velo.y * tangent.y) /
+        (getMassInvert() + obj.getMassInvert());
+    float static_friction = (getStaticFriction() + obj.getStaticFriction()) / 2.f;
+    float dynamic_friction = (getDynamicFriction() + obj.getDynamicFriction()) / 2.f;
+    float friction_impulse;
+
+    // utilisation de la loi de Coulomb sur les frottements dynamiques/statiques
+    // cf https://fr.wikipedia.org/wiki/Loi_de_Coulomb_(m%C3%A9canique)
+    if (std::abs(magnitude) < collision_impulse * static_friction) {
+        friction_impulse = magnitude;
+    } else {
+        friction_impulse = -collision_impulse * dynamic_friction;
+    }
+
+    setVelocity(getVelocity() - getMassInvert() * friction_impulse * tangent);
+    obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * friction_impulse * tangent);
 
     // correction de la position des objets. En raison de l'imprécision
     // des flottants sur la machine, les objets peuvent accumuler une
@@ -137,11 +158,11 @@ void Object::collide(Object& obj) {
         return;
     }
 
-    sf::Vector2f positionCorrection = depth / (getMassInvert() +
-        obj.getMassInvert()) * Constants::CORRECTION_PERCENTAGE * normal;
+    float position_correction = depth / (getMassInvert() + obj.getMassInvert()) *
+        Constants::CORRECTION_PERCENTAGE;
 
-    setPosition(getPosition() - getMassInvert() * positionCorrection);
-    obj.setPosition(obj.getPosition() + obj.getMassInvert() * positionCorrection);
+    setPosition(getPosition() - getMassInvert() * position_correction * normal);
+    obj.setPosition(obj.getPosition() + obj.getMassInvert() * position_correction * normal);
 }
 
 sf::Vector2f Object::getAcceleration() {
@@ -201,6 +222,22 @@ float Object::getRestitution() {
 
 void Object::setRestitution(float set_restitution) {
     restitution = set_restitution;
+}
+
+float Object::getStaticFriction() {
+    return static_friction;
+}
+
+void Object::setStaticFriction(float set_static_friction) {
+    static_friction = set_static_friction;
+}
+
+float Object::getDynamicFriction() {
+    return dynamic_friction;
+}
+
+void Object::setDynamicFriction(float set_dynamic_friction) {
+    dynamic_friction = set_dynamic_friction;
 }
 
 unsigned int Object::getLayer() {
