@@ -4,9 +4,9 @@
 #include <array>
 #include <iostream>
 
-Ball::Ball(float x, float y) : Object(x, y),
-    shape(sf::Vector2f(2 * getRadius(), 2 * getRadius())) {
-    shape.setOrigin(sf::Vector2f(getRadius(), getRadius()));
+Ball::Ball(float x, float y) : Object(x, y) {
+    // déplacement de l'origine au centre de la balle
+    sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
 }
 
 sf::Vector2f Ball::getForces(EngineState& state) {
@@ -24,18 +24,16 @@ sf::Vector2f Ball::getForces(EngineState& state) {
     return forces;
 }
 
-void Ball::draw(sf::RenderWindow& window) {
-    Object::draw(window);
+void Ball::draw(sf::RenderWindow& window, ResourceManager& resources) {
+    Object::draw(window, resources);
 
-    // chargement de la texture de test
-    if (!texture.loadFromFile("./res/ball.png")) {
-    	// erreur
-    }
+    // utilisation de la texture
+	sprite.setTexture(resources.getTexture("ball.png"));
 
-    shape.rotate(getVelocity().x * .1f);
-	shape.setTexture(&texture);
-    shape.setPosition(getPosition());
-    window.draw(shape);
+    // déplacement du sprite à la position de la balle
+    sprite.rotate(getVelocity().x * .1f);
+    sprite.setPosition(getPosition());
+    window.draw(sprite);
 }
 
 std::unique_ptr<sf::FloatRect> Ball::getAABB() {

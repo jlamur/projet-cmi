@@ -1,36 +1,34 @@
 #include "block.hpp"
 #include "ball.hpp"
 #include "constants.hpp"
+#include "resource_manager.hpp"
 
-Block::Block(float x, float y) : Object(x, y),
-    shape(sf::Vector2f(Constants::GRID, Constants::GRID)) {
-    // par défaut, les blocs ne sont pas déplaçables
-    // et ont donc une masse infinie
+Block::Block(float x, float y) : Object(x, y) {
+    // par défaut, les blocs ne sont pas déplaçables et ont
+    // donc une masse infinie, représentée par 0
     setMass(0.f);
 
-    shape.setOrigin(sf::Vector2f(Constants::GRID / 2, Constants::GRID / 2));
+    // déplacement de l'origine au centre du bloc
+    sprite.setOrigin(sf::Vector2f(Constants::GRID / 2, Constants::GRID / 2));
 }
 
-void Block::draw(sf::RenderWindow& window) {
-    Object::draw(window);
+void Block::draw(sf::RenderWindow& window, ResourceManager& resources) {
+    Object::draw(window, resources);
 
-	// chargement de la texture de test
-	if (!texture.loadFromFile("./res/block.png")) {
-    	// erreur
-	}
+    // utilisation de la texture
+	sprite.setTexture(resources.getTexture("block.png"));
 
-	shape.setTexture(&texture);
-
+    // coloration du bloc en fonction de sa charge
     if (getCharge() > 0) {
-        shape.setFillColor(sf::Color(180, 180, 255));
+        sprite.setColor(sf::Color(180, 180, 255));
     } else if (getCharge() < 0) {
-        shape.setFillColor(sf::Color(255, 180, 180));
+        sprite.setColor(sf::Color(255, 180, 180));
     } else {
-        shape.setFillColor(sf::Color::White);
+        sprite.setColor(sf::Color::White);
     }
 
-    shape.setPosition(getPosition());
-    window.draw(shape);
+    sprite.setPosition(getPosition());
+    window.draw(sprite);
 }
 
 std::unique_ptr<sf::FloatRect> Block::getAABB() {

@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "object.hpp"
 #include "engine_state.hpp"
+#include "resource_manager.hpp"
 
 /**
  * La classe principale Engine coordonne les éléments
@@ -13,8 +14,10 @@ class Engine {
 private:
     sf::Clock clock;
     sf::RenderWindow window;
+    sf::View view;
+
     EngineState state;
-    sf::View view; 
+    ResourceManager resources;
 
     /**
      * Met à jour les objets du jeu pour

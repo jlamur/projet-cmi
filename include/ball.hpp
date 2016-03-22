@@ -3,13 +3,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "engine_state.hpp"
 #include "object.hpp"
+#include "engine_state.hpp"
 
 class Ball : public Object {
 private:
-    sf::Texture texture;
-    sf::RectangleShape shape;
+    sf::Sprite sprite;
 
 protected:
     /**
@@ -23,7 +22,7 @@ public:
     /**
      * Dessine la balle dans la fenêtre donnée
      */
-    virtual void draw(sf::RenderWindow& window);
+    virtual void draw(sf::RenderWindow& window, ResourceManager& resources);
 
     /**
      * Récupère la boîte englobante de l'objet

@@ -55,7 +55,7 @@ sf::Vector2f Object::getForces(EngineState& state) {
     return forces;
 }
 
-void Object::draw(sf::RenderWindow& window) {
+void Object::draw(sf::RenderWindow& window, ResourceManager& resources) {
     if (Constants::DEBUG_MODE) {
         velocity_line[0].position = position;
         velocity_line[0].color = sf::Color::Green;

@@ -8,8 +8,7 @@
 
 class Block : public Object {
 private:
-    sf::Texture texture;
-    sf::RectangleShape shape;
+    sf::Sprite sprite;
 
 public:
     Block(float x, float y);
@@ -17,7 +16,7 @@ public:
     /**
      * Dessin du bloc dans la fenêtre donnée
      */
-    virtual void draw(sf::RenderWindow& window);
+    virtual void draw(sf::RenderWindow& window, ResourceManager& resources);
 
     /**
      * Récupère la boîte englobante de l'objet

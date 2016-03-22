@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "engine_state.hpp"
+#include "resource_manager.hpp"
 
 class Block;
 class Ball;
@@ -37,7 +38,7 @@ public:
     /**
      * Dessine l'objet dans la fenêtre donnée
      */
-    virtual void draw(sf::RenderWindow& window);
+    virtual void draw(sf::RenderWindow& window, ResourceManager& resources);
 
     /**
      * Met à jour l'objet juste avant le dessin d'une frame

@@ -87,7 +87,7 @@ void Engine::draw() {
 
     // dessin des objets de la file d'affichage couche par couche
     while (!display_queue.empty()) {
-        display_queue.top()->draw(window);
+        display_queue.top()->draw(window, resources);
         display_queue.pop();
     }
 
