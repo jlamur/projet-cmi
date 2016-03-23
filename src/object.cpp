@@ -1,5 +1,6 @@
 #include "object.hpp"
 #include "constants.hpp"
+#include <iostream>
 
 Object::Object(float x, float y) :
     acceleration(0, 0), velocity(0, 0), position(x, y),
@@ -132,24 +133,29 @@ void Object::collide(Object& obj) {
 
     sf::Vector2f tangent = rel_velo - dot_normal * normal;
     float tangent_length = std::sqrt(tangent.x * tangent.x + tangent.y * tangent.y);
-    tangent /= tangent_length;
 
-    float magnitude = -(rel_velo.x * tangent.x + rel_velo.y * tangent.y) /
-        (getMassInvert() + obj.getMassInvert());
-    float static_friction = (getStaticFriction() + obj.getStaticFriction()) / 2.f;
-    float dynamic_friction = (getDynamicFriction() + obj.getDynamicFriction()) / 2.f;
-    float friction_impulse;
+    // la tangente est nulle : pas de frottement à générer
+    // on évite ainsi une division par zéro
+    if (tangent_length != 0) {
+        tangent /= tangent_length;
 
-    // utilisation de la loi de Coulomb sur les frottements dynamiques/statiques
-    // cf https://fr.wikipedia.org/wiki/Loi_de_Coulomb_(m%C3%A9canique)
-    if (std::abs(magnitude) < collision_impulse * static_friction) {
-        friction_impulse = magnitude;
-    } else {
-        friction_impulse = -collision_impulse * dynamic_friction;
+        float magnitude = -(rel_velo.x * tangent.x + rel_velo.y * tangent.y) /
+            (getMassInvert() + obj.getMassInvert());
+        float static_friction = (getStaticFriction() + obj.getStaticFriction()) / 2.f;
+        float dynamic_friction = (getDynamicFriction() + obj.getDynamicFriction()) / 2.f;
+        float friction_impulse;
+
+        // utilisation de la loi de Coulomb sur les frottements dynamiques/statiques
+        // cf https://fr.wikipedia.org/wiki/Loi_de_Coulomb_(m%C3%A9canique)
+        if (std::abs(magnitude) < collision_impulse * static_friction) {
+            friction_impulse = magnitude;
+        } else {
+            friction_impulse = -collision_impulse * dynamic_friction;
+        }
+
+        setVelocity(getVelocity() - getMassInvert() * friction_impulse * tangent);
+        obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * friction_impulse * tangent);
     }
-
-    setVelocity(getVelocity() - getMassInvert() * friction_impulse * tangent);
-    obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * friction_impulse * tangent);
 
     // correction de la position des objets. En raison de l'imprécision
     // des flottants sur la machine, les objets peuvent accumuler une
