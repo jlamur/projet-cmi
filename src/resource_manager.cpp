@@ -18,15 +18,15 @@ ResourceManager::~ResourceManager() {
  */
 std::string getCurrentDirectory() {
     int length = wai_getExecutablePath(NULL, 0, NULL), dirname_length;
-    char* buffer = new char[length + 1];
-    wai_getExecutablePath(buffer, length, &dirname_length);
+    std::unique_ptr<char> buffer = std::unique_ptr<char>(new char[length + 1]);
+    wai_getExecutablePath(buffer.get(), length, &dirname_length);
 
     if (dirname_length == 0) {
         throw std::runtime_error("Impossible de déterminer le chemin actuel");
     }
 
-    buffer[length] = '\0';
-    return std::string(buffer).substr(0, dirname_length);
+    buffer.get()[length] = '\0';
+    return std::string(buffer.get()).substr(0, dirname_length);
 }
 
 sf::Texture& ResourceManager::getTexture(std::string name) {
