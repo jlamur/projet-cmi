@@ -1,15 +1,10 @@
 #include "resource_manager.hpp"
+#include "whereami.h"
 #include <iostream>
 
-// fonctionnalités cross-platform pour les fichiers
-// source: http://stackoverflow.com/a/145309/3452708
-#include <stdio.h>
 #ifdef _WIN32
-    #include <direct.h>
-    #define getcwd _getcwd
     #define FILE_SEP '\\'
 #else
-    #include <unistd.h>
     #define FILE_SEP '/'
 #endif
 
@@ -18,17 +13,20 @@ ResourceManager::~ResourceManager() {
 }
 
 /**
- * Récupère le chemin actuel de l'exécutable
- * sous la forme d'une chaîne de caractères
+ * Récupère le chemin actuel de l'exécutable sous la forme
+ * d'une chaîne de caractères grâce à la librairie whereami
  */
 std::string getCurrentDirectory() {
-    char buffer[FILENAME_MAX];
+    int length = wai_getExecutablePath(NULL, 0, NULL), dirname_length;
+    char* buffer = new char[length + 1];
+    wai_getExecutablePath(buffer, length, &dirname_length);
 
-    if (getcwd(buffer, sizeof(buffer)) != NULL) {
-        return std::string(buffer);
+    if (dirname_length == 0) {
+        throw std::runtime_error("Impossible de déterminer le chemin actuel");
     }
 
-    throw std::runtime_error("Impossible de déterminer le chemin actuel");
+    buffer[length] = '\0';
+    return std::string(buffer).substr(0, dirname_length);
 }
 
 sf::Texture& ResourceManager::getTexture(std::string name) {

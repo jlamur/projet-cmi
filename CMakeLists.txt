@@ -3,7 +3,7 @@ project(ptf)
 
 # Inclusion des fichiers d'en-tête et de source
 include_directories(include)
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "src/*.c")
 
 # Affichage de tous les avertisements
 if(MSVC)
