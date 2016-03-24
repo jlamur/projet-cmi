@@ -41,7 +41,7 @@ sf::Texture& ResourceManager::getTexture(std::string name) {
 
     // tente de charger la texture dans le chemin "CWD/res/name"
     if (!texture.loadFromFile(path)) {
-        throw std::runtime_error("Impossible de charger l'image: " + name);
+        throw std::runtime_error("Impossible de charger l'image : " + name);
     }
 
     textures[name] = texture;

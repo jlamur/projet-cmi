@@ -2,6 +2,7 @@
 #include "block.hpp"
 #include "engine.hpp"
 #include "constants.hpp"
+#include <cstdlib>
 #include <iostream>
 
 int main() {
@@ -62,6 +63,14 @@ int main() {
     engine.addObject(block21);
     engine.addObject(block22);
 
-    engine.start();
-    return 0;
+    try {
+        engine.start();
+    } catch (const std::exception& exception) {
+        std::cerr << std::endl;
+        std::cerr << "Le programme a quitté après une erreur d'exécution." << std::endl;
+        std::cerr << exception.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
