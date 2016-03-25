@@ -11,9 +11,9 @@ namespace Collision {
     typedef std::map<std::pair<unsigned int, unsigned int>, collision_data> collision_dispatcher;
     extern collision_dispatcher dispatch;
 
-    bool ballToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
-    bool blockToBall(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
-    bool ballToBall(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
+    bool playerToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
+    bool blockToPlayer(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
+    bool playerToPlayer(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
     bool blockToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
 }
 

@@ -1,5 +1,5 @@
 #include "block.hpp"
-#include "ball.hpp"
+#include "player.hpp"
 #include "constants.hpp"
 #include "resource_manager.hpp"
 
@@ -16,7 +16,7 @@ void Block::draw(sf::RenderWindow& window, ResourceManager& resources) {
     Object::draw(window, resources);
 
     // utilisation de la texture
-	sprite.setTexture(resources.getTexture("block.png"));
+	sprite.setTexture(resources.getTexture("block.bmp"));
 
     // coloration du bloc en fonction de sa charge
     if (getCharge() > 0) {

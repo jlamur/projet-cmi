@@ -1,14 +1,15 @@
-#ifndef __PTF_BALL_HPP__
-#define __PTF_BALL_HPP__
+#ifndef __PTF_PLAYER_HPP__
+#define __PTF_PLAYER_HPP__
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "object.hpp"
 #include "engine_state.hpp"
 
-class Ball : public Object {
+class Player : public Object {
 private:
     sf::Sprite sprite;
+    unsigned int player_number;
 
 protected:
     /**
@@ -17,7 +18,7 @@ protected:
     virtual sf::Vector2f getForces(EngineState& state);
 
 public:
-    Ball(float x, float y);
+    Player(float x, float y);
 
     /**
      * Dessine la balle dans la fenêtre donnée
@@ -39,6 +40,16 @@ public:
      * Renvoie le rayon de la balle
      */
     float getRadius();
+
+    /**
+     * Renvoie le numéro du joueur
+     */
+    unsigned int getPlayerNumber();
+
+    /**
+     * Modifie le numéro du joueur
+     */
+    void setPlayerNumber(unsigned int set_number);
 };
 
 #endif

@@ -1,5 +1,5 @@
 #include "collision.hpp"
-#include "ball.hpp"
+#include "player.hpp"
 #include "block.hpp"
 #include "object.hpp"
 #include <utility>
@@ -9,21 +9,21 @@ namespace Collision {
     // initialisation du dictionnaire associant les types
     // impliqués dans une collision à leur fonction de résolution
     collision_dispatcher dispatch = {
-        {std::make_pair(Ball::TYPE_ID, Block::TYPE_ID), &ballToBlock},
-        {std::make_pair(Block::TYPE_ID, Ball::TYPE_ID), &blockToBall},
-        {std::make_pair(Ball::TYPE_ID, Ball::TYPE_ID), &ballToBall},
+        {std::make_pair(Player::TYPE_ID, Block::TYPE_ID), &ballToBlock},
+        {std::make_pair(Block::TYPE_ID, Player::TYPE_ID), &blockToBall},
+        {std::make_pair(Player::TYPE_ID, Player::TYPE_ID), &ballToBall},
         {std::make_pair(Block::TYPE_ID, Block::TYPE_ID), &blockToBlock}
     };
 
     bool ballToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
-        Ball ball = dynamic_cast<Ball&>(objA);
+        Player player = dynamic_cast<Player&>(objA);
         Block block = dynamic_cast<Block&>(objB);
 
         // recherche du point le plus proche du centre de la
         // balle sur le bloc. On regarde la position relative
         // du cercle par rapport au bloc
         std::unique_ptr<sf::FloatRect> aabb = block.getAABB();
-        sf::Vector2f relpos = block.getPosition() - ball.getPosition();
+        sf::Vector2f relpos = block.getPosition() - player.getPosition();
         sf::Vector2f closest = relpos;
 
         // on restreint la position relative pour rester

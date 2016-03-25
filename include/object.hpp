@@ -7,7 +7,7 @@
 #include "resource_manager.hpp"
 
 class Block;
-class Ball;
+class Player;
 
 class Object {
 private:
