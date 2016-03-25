@@ -9,13 +9,13 @@ namespace Collision {
     // initialisation du dictionnaire associant les types
     // impliqués dans une collision à leur fonction de résolution
     collision_dispatcher dispatch = {
-        {std::make_pair(Player::TYPE_ID, Block::TYPE_ID), &ballToBlock},
-        {std::make_pair(Block::TYPE_ID, Player::TYPE_ID), &blockToBall},
-        {std::make_pair(Player::TYPE_ID, Player::TYPE_ID), &ballToBall},
+        {std::make_pair(Player::TYPE_ID, Block::TYPE_ID), &playerToBlock},
+        {std::make_pair(Block::TYPE_ID, Player::TYPE_ID), &blockToPlayer},
+        {std::make_pair(Player::TYPE_ID, Player::TYPE_ID), &playerToPlayer},
         {std::make_pair(Block::TYPE_ID, Block::TYPE_ID), &blockToBlock}
     };
 
-    bool ballToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
+    bool playerToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
         Player player = dynamic_cast<Player&>(objA);
         Block block = dynamic_cast<Block&>(objB);
 
@@ -76,12 +76,12 @@ namespace Collision {
         // si la balle est à l'extérieur et que
         // la normale est plus longue que son rayon,
         // il n'y a pas collision
-        if (!isInside && squaredLength >= ball.getRadius() * ball.getRadius()) {
+        if (!isInside && squaredLength >= player.getRadius() * player.getRadius()) {
             return false;
         }
 
         float length = std::sqrt(squaredLength);
-        depth = ball.getRadius() - length;
+        depth = player.getRadius() - length;
 
         if (length != 0) {
             normal = prenormal / length;
@@ -94,21 +94,21 @@ namespace Collision {
         return true;
     }
 
-    bool blockToBall(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
-        // la collision Block -> Ball est la collision Ball -> Block
+    bool blockToPlayer(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
+        // la collision Block -> Player est la collision Player -> Block
         // avec une normale de collision retournée
-        bool result = ballToBlock(objB, objA, normal, depth);
+        bool result = playerToBlock(objB, objA, normal, depth);
         normal *= -1.f;
         return result;
     }
 
-    bool ballToBall(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
-        Ball ballA = dynamic_cast<Ball&>(objA);
-        Ball ballB = dynamic_cast<Ball&>(objB);
+    bool playerToPlayer(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
+        Player playerA = dynamic_cast<Player&>(objA);
+        Player playerB = dynamic_cast<Player&>(objB);
 
-        sf::Vector2f dir = ballB.getPosition() - ballA.getPosition();
+        sf::Vector2f dir = playerB.getPosition() - playerA.getPosition();
         float squaredLength = dir.x * dir.x + dir.y * dir.y;
-        float totalRadius = ballB.getRadius() + ballA.getRadius();
+        float totalRadius = playerB.getRadius() + playerA.getRadius();
 
         // si les deux balles sont à une distance supérieure
         // à la somme de leurs deux rayons, il n'y a pas eu collision
@@ -139,7 +139,7 @@ namespace Collision {
 
         std::unique_ptr<sf::FloatRect> aabb = blockA.getAABB();
         std::unique_ptr<sf::FloatRect> obj_aabb = blockB.getAABB();
-        sf::Vector2f relpos = blockA.getPosition() - blockB.getPosition();
+        sf::Vector2f relpos = blockB.getPosition() - blockA.getPosition();
 
         float overlap_x = aabb->width / 2 + obj_aabb->width / 2 - std::abs(relpos.x);
         float overlap_y = aabb->height / 2 + obj_aabb->height / 2 - std::abs(relpos.y);
