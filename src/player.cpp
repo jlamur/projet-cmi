@@ -1,34 +1,54 @@
-#include "ball.hpp"
+#include "player.hpp"
 #include "block.hpp"
 #include "constants.hpp"
 #include <array>
 #include <iostream>
 
-Ball::Ball(float x, float y) : Object(x, y) {
+Player::Player(float x, float y) : Object(x, y) {
     // déplacement de l'origine au centre de la balle
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
 }
 
-sf::Vector2f Ball::getForces(EngineState& state) {
+unsigned int Player::getPlayerNumber(){
+    return player_number;
+}
+
+void Player::setPlayerNumber(unsigned int set_number){
+    player_number = set_number;
+}
+
+sf::Vector2f Player::getForces(EngineState& state) {
     sf::Vector2f forces = Object::getForces(state);
+    
+    //commandes du joueur 1
+    if(player_number==1){
+        // déplacement de la balle après appui sur les touches de direction
+        if (state.keys[sf::Keyboard::Left]) {
+            forces += sf::Vector2f(-Constants::MOVE, 0);
+        }
 
-    // déplacement de la balle après appui sur les touches de direction
-    if (state.keys[sf::Keyboard::Left]) {
-        forces += sf::Vector2f(-Constants::MOVE, 0);
+        if (state.keys[sf::Keyboard::Right]) {
+            forces += sf::Vector2f(Constants::MOVE, 0);
+        }
     }
-
-    if (state.keys[sf::Keyboard::Right]) {
-        forces += sf::Vector2f(Constants::MOVE, 0);
+    else{
+        if(state.keys[sf::Keyboard::Q]){
+            forces += sf::Vector2f(-Constants::MOVE, 0);
+        }
+        
+        if(state.keys[sf::Keyboard::D]){
+            forces += sf::Vector2f(Constants::MOVE, 0);
+        }
     }
 
     return forces;
 }
 
-void Ball::draw(sf::RenderWindow& window, ResourceManager& resources) {
+void Player::draw(sf::RenderWindow& window, ResourceManager& resources) {
     Object::draw(window, resources);
 
     // utilisation de la texture
-	sprite.setTexture(resources.getTexture("ball.png"));
+	sprite.setTexture(resources.getTexture("ball.bmp"));
 
     // déplacement du sprite à la position de la balle
     sprite.rotate(getVelocity().x * .1f);
@@ -36,7 +56,7 @@ void Ball::draw(sf::RenderWindow& window, ResourceManager& resources) {
     window.draw(sprite);
 }
 
-std::unique_ptr<sf::FloatRect> Ball::getAABB() {
+std::unique_ptr<sf::FloatRect> Player::getAABB() {
     return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
         getPosition().x - getRadius(),
         getPosition().y - getRadius(),
@@ -44,11 +64,11 @@ std::unique_ptr<sf::FloatRect> Ball::getAABB() {
     ));
 }
 
-bool Ball::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
+bool Player::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
     return obj.getCollisionInfo(*this, normal, depth);
 }
 
-bool Ball::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
+bool Player::getCollisionInfo(Player& obj, sf::Vector2f& normal, float& depth) {
     sf::Vector2f dir = getPosition() - obj.getPosition();
     float squaredLength = dir.x * dir.x + dir.y * dir.y;
     float totalRadius = getRadius() + obj.getRadius();
@@ -76,7 +96,7 @@ bool Ball::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
     return true;
 }
 
-bool Ball::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
+bool Player::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
     // recherche du point le plus proche du centre de la
     // balle sur le bloc. On regarde la position relative
     // du cercle par rapport au bloc
@@ -152,6 +172,6 @@ bool Ball::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
     return true;
 }
 
-float Ball::getRadius() {
+float Player::getRadius() {
     return 10 * getMass();
 }

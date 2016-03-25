@@ -7,7 +7,7 @@
 #include "resource_manager.hpp"
 
 class Block;
-class Ball;
+class Player;
 
 class Object {
 private:
@@ -56,7 +56,7 @@ public:
      * cet objet avec un autre : la normale et la profondeur
      */
     virtual bool getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth);
-    virtual bool getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) = 0;
+    virtual bool getCollisionInfo(Player& obj, sf::Vector2f& normal, float& depth) = 0;
     virtual bool getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) = 0;
 
     /**
@@ -169,3 +169,4 @@ struct ObjectCompare {
 };
 
 #endif
+

@@ -28,8 +28,9 @@ public:
      * cet objet avec un autre : la normale et la profondeur
      */
     virtual bool getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth);
-    virtual bool getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth);
+    virtual bool getCollisionInfo(Player& obj, sf::Vector2f& normal, float& depth);
     virtual bool getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth);
 };
 
 #endif
+

@@ -1,14 +1,17 @@
-#include "ball.hpp"
+#include "player.hpp"
 #include "block.hpp"
 #include "engine.hpp"
 #include "constants.hpp"
+#include <cstdlib>
 #include <iostream>
 
 int main() {
     Engine engine;
 
-    Ball ball1(3.5f * Constants::GRID, 10 * Constants::GRID);
-    Ball ball2(18.5f * Constants::GRID, 10 * Constants::GRID);
+    Player player1(3.5f * Constants::GRID, 10 * Constants::GRID);
+    player1.setPlayerNumber(1);
+    Player player2(18.5f * Constants::GRID, 10 * Constants::GRID);
+    player2.setPlayerNumber(2);
     Block block01(2 * Constants::GRID, 10 * Constants::GRID);
     Block block02(2 * Constants::GRID, 11 * Constants::GRID);
     Block block03(3 * Constants::GRID, 11 * Constants::GRID);
@@ -32,13 +35,13 @@ int main() {
     Block block21(20 * Constants::GRID, 11 * Constants::GRID);
     Block block22(11 * Constants::GRID, 10 * Constants::GRID);
 
-    ball1.setCharge(-.01f);
-    ball2.setCharge(-.01f);
+    player1.setCharge(-.01f);
+    player2.setCharge(-.01f);
     block22.setCharge(1.f);
     block22.setMass(2);
 
-    engine.addObject(ball1);
-    engine.addObject(ball2);
+    engine.addObject(player1);
+    engine.addObject(player2);
     engine.addObject(block01);
     engine.addObject(block02);
     engine.addObject(block03);
@@ -62,6 +65,15 @@ int main() {
     engine.addObject(block21);
     engine.addObject(block22);
 
-    engine.start();
-    return 0;
+    try {
+        engine.start();
+    } catch (const std::exception& exception) {
+        std::cerr << std::endl;
+        std::cerr << "Le programme a quitté après une erreur d'exécution." << std::endl;
+        std::cerr << exception.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
+

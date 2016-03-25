@@ -1,5 +1,5 @@
 #include "block.hpp"
-#include "ball.hpp"
+#include "player.hpp"
 #include "constants.hpp"
 #include "resource_manager.hpp"
 
@@ -16,7 +16,7 @@ void Block::draw(sf::RenderWindow& window, ResourceManager& resources) {
     Object::draw(window, resources);
 
     // utilisation de la texture
-	sprite.setTexture(resources.getTexture("block.png"));
+	sprite.setTexture(resources.getTexture("block.bmp"));
 
     // coloration du bloc en fonction de sa charge
     if (getCharge() > 0) {
@@ -43,8 +43,8 @@ bool Block::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
     return obj.getCollisionInfo(*this, normal, depth);
 }
 
-bool Block::getCollisionInfo(Ball& obj, sf::Vector2f& normal, float& depth) {
-    // la collision Block -> Ball est la collision Ball -> Block
+bool Block::getCollisionInfo(Player& obj, sf::Vector2f& normal, float& depth) {
+    // la collision Block -> Player est la collision Player -> Block
     // avec une normale de collision retournée
     bool result = obj.getCollisionInfo(*this, normal, depth);
     normal *= -1.f;
@@ -87,3 +87,4 @@ bool Block::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
 
     return true;
 }
+
