@@ -40,7 +40,7 @@ void Player::draw(sf::RenderWindow& window, ResourceManager& resources) {
     Object::draw(window, resources);
 
     // utilisation de la texture
-	sprite.setTexture(resources.getTexture("ball.bmp"));
+	sprite.setTexture(resources.getTexture("ball.png"));
 
     // déplacement du sprite à la position de la balle
     sprite.rotate(getVelocity().x * .1f);
