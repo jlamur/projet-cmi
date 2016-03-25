@@ -12,9 +12,8 @@ Player::Player(float x, float y) : Object(x, y) {
 sf::Vector2f Player::getForces(EngineState& state) {
     sf::Vector2f forces = Object::getForces(state);
 
-    //commandes du joueur 1
-    if(player_number==1){
-        // déplacement de la balle après appui sur les touches de direction
+    // déplacement de la balle après appui sur les touches de direction
+    if (getPlayerNumber() == 1) {
         if (state.keys[sf::Keyboard::Left]) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
@@ -23,12 +22,13 @@ sf::Vector2f Player::getForces(EngineState& state) {
             forces += sf::Vector2f(Constants::MOVE, 0);
         }
     }
-    else{
-        if(state.keys[sf::Keyboard::Q]){
+
+    if (getPlayerNumber() == 2) {
+        if (state.keys[sf::Keyboard::Q]) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
 
-        if(state.keys[sf::Keyboard::D]){
+        if (state.keys[sf::Keyboard::D]) {
             forces += sf::Vector2f(Constants::MOVE, 0);
         }
     }
