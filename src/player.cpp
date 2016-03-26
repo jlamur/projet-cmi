@@ -9,20 +9,11 @@ Player::Player(float x, float y) : Object(x, y) {
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
 }
 
-unsigned int Player::getPlayerNumber(){
-    return player_number;
-}
-
-void Player::setPlayerNumber(unsigned int set_number){
-    player_number = set_number;
-}
-
 sf::Vector2f Player::getForces(EngineState& state) {
     sf::Vector2f forces = Object::getForces(state);
-    
-    //commandes du joueur 1
-    if(player_number==1){
-        // déplacement de la balle après appui sur les touches de direction
+
+    // déplacement de la balle après appui sur les touches de direction
+    if (getPlayerNumber() == 1) {
         if (state.keys[sf::Keyboard::Left]) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
@@ -31,12 +22,13 @@ sf::Vector2f Player::getForces(EngineState& state) {
             forces += sf::Vector2f(Constants::MOVE, 0);
         }
     }
-    else{
-        if(state.keys[sf::Keyboard::Q]){
+
+    if (getPlayerNumber() == 2) {
+        if (state.keys[sf::Keyboard::Q]) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
-        
-        if(state.keys[sf::Keyboard::D]){
+
+        if (state.keys[sf::Keyboard::D]) {
             forces += sf::Vector2f(Constants::MOVE, 0);
         }
     }
@@ -48,7 +40,7 @@ void Player::draw(sf::RenderWindow& window, ResourceManager& resources) {
     Object::draw(window, resources);
 
     // utilisation de la texture
-	sprite.setTexture(resources.getTexture("ball.bmp"));
+	sprite.setTexture(resources.getTexture("ball.png"));
 
     // déplacement du sprite à la position de la balle
     sprite.rotate(getVelocity().x * .1f);
@@ -64,114 +56,18 @@ std::unique_ptr<sf::FloatRect> Player::getAABB() {
     ));
 }
 
-bool Player::getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth) {
-    return obj.getCollisionInfo(*this, normal, depth);
-}
-
-bool Player::getCollisionInfo(Player& obj, sf::Vector2f& normal, float& depth) {
-    sf::Vector2f dir = getPosition() - obj.getPosition();
-    float squaredLength = dir.x * dir.x + dir.y * dir.y;
-    float totalRadius = getRadius() + obj.getRadius();
-
-    // si les deux balles sont à une distance supérieure
-    // à la somme de leurs deux rayons, il n'y a pas eu collision
-    if (squaredLength > totalRadius * totalRadius) {
-        return false;
-    }
-
-    float length = std::sqrt(squaredLength);
-
-    // les balles sont sur la même position.
-    // Renvoie une normale apte à séparer les deux balles
-    if (length == 0) {
-        depth = totalRadius;
-        normal.x = 0;
-        normal.y = -1;
-        return true;
-    }
-
-    // il y a eu collision
-    depth = totalRadius - length;
-    normal = dir / length;
-    return true;
-}
-
-bool Player::getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth) {
-    // recherche du point le plus proche du centre de la
-    // balle sur le bloc. On regarde la position relative
-    // du cercle par rapport au bloc
-    std::unique_ptr<sf::FloatRect> aabb = obj.getAABB();
-    sf::Vector2f relpos = getPosition() - obj.getPosition();
-    sf::Vector2f closest = relpos;
-
-    // on restreint la position relative pour rester
-    // à l'intérieur du bloc
-    if (closest.x < -aabb->width / 2) {
-        closest.x = -aabb->width / 2;
-    }
-
-    if (closest.x > aabb->width / 2) {
-        closest.x = aabb->width / 2;
-    }
-
-    if (closest.y < -aabb->height / 2) {
-        closest.y = -aabb->height / 2;
-    }
-
-    if (closest.y > aabb->height / 2) {
-        closest.y = aabb->height / 2;
-    }
-
-    // si la position n'a pas été changée, elle
-    // était déjà à l'intérieur du cercle : le cercle
-    // est dans le bloc
-    float isInside = false;
-
-    if (relpos == closest) {
-        isInside = true;
-
-        // on se colle au bord le plus proche du bloc
-        if (std::abs(relpos.x) > std::abs(relpos.y)) {
-            if (closest.x > 0) {
-                closest.x = aabb->width / 2;
-            } else {
-                closest.x = -aabb->width / 2;
-            }
-        } else {
-            if (closest.y > 0) {
-                closest.y = aabb->height / 2;
-            } else {
-                closest.y = -aabb->height / 2;
-            }
-        }
-    }
-
-    // la normale est portée par la direction
-    // du point le plus proche au centre de la balle
-    sf::Vector2f prenormal = relpos - closest;
-    float squaredLength = prenormal.x * prenormal.x + prenormal.y * prenormal.y;
-
-    // si la balle est à l'extérieur et que
-    // la normale est plus longue que son rayon,
-    // il n'y a pas collision
-    if (!isInside && squaredLength >= getRadius() * getRadius()) {
-        return false;
-    }
-
-    float length = std::sqrt(squaredLength);
-    depth = getRadius() - length;
-
-    if (length != 0) {
-        normal = prenormal / length;
-    }
-
-    if (isInside) {
-        normal *= -1.f;
-    }
-
-    return true;
+unsigned int Player::getTypeId() {
+    return Player::TYPE_ID;
 }
 
 float Player::getRadius() {
     return 10 * getMass();
+}
+
+unsigned int Player::getPlayerNumber() {
+    return player_number;
+}
+
+void Player::setPlayerNumber(unsigned int set_number) {
+    player_number = set_number;
 }

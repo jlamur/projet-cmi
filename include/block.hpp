@@ -2,7 +2,6 @@
 #define __PTF_BLOCK_HPP__
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include "object.hpp"
 #include "engine_state.hpp"
 
@@ -24,13 +23,10 @@ public:
     std::unique_ptr<sf::FloatRect> getAABB();
 
     /**
-     * Calcule les informations sur une éventuelle collision de
-     * cet objet avec un autre : la normale et la profondeur
+     * Récupère l'identifiant de type de cet objet
      */
-    virtual bool getCollisionInfo(Object& obj, sf::Vector2f& normal, float& depth);
-    virtual bool getCollisionInfo(Player& obj, sf::Vector2f& normal, float& depth);
-    virtual bool getCollisionInfo(Block& obj, sf::Vector2f& normal, float& depth);
+    static constexpr unsigned int TYPE_ID = 1;
+    unsigned int getTypeId();
 };
 
 #endif
-
