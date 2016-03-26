@@ -16,6 +16,13 @@ Engine::Engine() : window(
 
 void Engine::start() {
     float accumulator = 0;
+    if (!music.openFromFile("./res/music_lvl1.wav"))
+    {
+        // erreur
+    }
+    music.play();
+    music.setVolume(15);
+    music.setLoop(true);
 
     // boucle d'événements sur la fenêtre
     while (window.isOpen()) {
