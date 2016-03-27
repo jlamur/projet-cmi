@@ -64,12 +64,7 @@ void Engine::addObject(Object& object) {
 }
 
 void Engine::update() {
-    // demande la mise à jour de tous les objets du jeu
-    for (unsigned int i = 0; i < state.objects.size(); i++) {
-        state.objects[i]->update(state);
-    }
-
-    // gère les collisions entre les objets
+    // gestion des collisions entre les objets
     for (unsigned int i = 0; i < state.objects.size(); i++) {
         Object* objA = state.objects[i];
 
@@ -77,6 +72,21 @@ void Engine::update() {
             Object* objB = state.objects[j];
             objA->collide(*objB);
         }
+    }
+
+    // intégration des forces dans la vitesse (première moitié)
+    for (unsigned int i = 0; i < state.objects.size(); i++) {
+        state.objects[i]->updateVelocity(state, Constants::PHYSICS_TIME / 2);
+    }
+
+    // intégration de la vitesse dans la position
+    for (unsigned int i = 0; i < state.objects.size(); i++) {
+        state.objects[i]->updatePosition(state, Constants::PHYSICS_TIME);
+    }
+
+    // intégration des forces dans la vitesse (seconde moitié)
+    for (unsigned int i = 0; i < state.objects.size(); i++) {
+        state.objects[i]->updateVelocity(state, Constants::PHYSICS_TIME / 2);
     }
 }
 

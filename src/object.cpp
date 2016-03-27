@@ -1,7 +1,6 @@
 #include "object.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
-#include <iostream>
 
 Object::Object(float x, float y) :
     acceleration(0, 0), velocity(0, 0), position(x, y),
@@ -74,13 +73,13 @@ void Object::draw(sf::RenderWindow& window, ResourceManager& resources) {
     }
 }
 
-void Object::update(EngineState& state) {
-    // intégration des forces appliquées sur l'objet dans la vitesse
+void Object::updateVelocity(EngineState& state, float delta) {
     acceleration = getForces(state) * getMassInvert();
-    velocity += acceleration * Constants::PHYSICS_TIME;
+    velocity += acceleration * delta;
+}
 
-    // intégration de la vitesse dans la position
-    position += velocity * Constants::PHYSICS_TIME;
+void Object::updatePosition(EngineState& state, float delta) {
+    position += velocity * delta;
 }
 
 void Object::collide(Object& obj) {
@@ -102,6 +101,14 @@ void Object::collide(Object& obj) {
     // vérifie plus finement s'il y a collision et récupère
     // les informations sur la collision (normale et profondeur)
     if (!Collision::dispatch[std::make_pair(getTypeId(), obj.getTypeId())](*this, obj, normal, depth)) {
+        return;
+    }
+
+    // si les deux objets sont de masse infinie, réinitialisation
+    // des vitesses en tant que collision
+    if (getMassInvert() == 0 && obj.getMassInvert() == 0) {
+        setVelocity(sf::Vector2f(0, 0));
+        obj.setVelocity(sf::Vector2f(0, 0));
         return;
     }
 

@@ -41,10 +41,23 @@ public:
     virtual void draw(sf::RenderWindow& window, ResourceManager& resources);
 
     /**
-     * Met à jour l'objet juste avant le dessin d'une frame
-     * Reçoit l'état actuel du moteur
+     * Met à jour la vitesse de l'objet selon les
+     * forces qui lui sont appliquées
      */
-    virtual void update(EngineState& state);
+    void updateVelocity(EngineState& state, float delta);
+
+    /**
+     * Met à jour la position de l'objet selon sa
+     * vitesse actuelle
+     */
+    void updatePosition(EngineState& state, float delta);
+
+    /**
+     * Détecte s'il y a collision entre cet objet
+     * et l'objet passé en paramètre et résoud la collision
+     * si elle a lieu
+     */
+    void collide(Object& obj);
 
     /**
      * Récupère la boîte englobante de l'objet
@@ -55,13 +68,6 @@ public:
      * Récupère l'identifiant de type de cet objet
      */
     virtual unsigned int getTypeId() = 0;
-
-    /**
-     * Détecte s'il y a collision entre cet objet
-     * et l'objet passé en paramètre et résoud la collision
-     * si elle a lieu
-     */
-    void collide(Object& obj);
 
     /**
      * Récupère l'accélération de l'objet

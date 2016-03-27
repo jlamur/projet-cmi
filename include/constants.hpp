@@ -43,8 +43,8 @@ namespace Constants {
      * Correction positionnelle : pourcentage de correction
      * et seuil de correction
      */
-    static constexpr float CORRECTION_PERCENTAGE = .5f;
-    static constexpr float CORRECTION_THRESHOLD = .05f;
+    static constexpr float CORRECTION_PERCENTAGE = .8f;
+    static constexpr float CORRECTION_THRESHOLD = .01f;
 
     /**
      * Masse par défaut d'un objet
