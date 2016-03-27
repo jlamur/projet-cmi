@@ -2,9 +2,11 @@
 #define __PTF_ENGINE_HPP__
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "object.hpp"
 #include "engine_state.hpp"
 #include "resource_manager.hpp"
+
 
 /**
  * La classe principale Engine coordonne les éléments
@@ -15,6 +17,7 @@ private:
     sf::Clock clock;
     sf::RenderWindow window;
     sf::View view;
+    sf::Music music;
 
     EngineState state;
     ResourceManager resources;

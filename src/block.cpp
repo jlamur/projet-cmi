@@ -16,7 +16,7 @@ void Block::draw(sf::RenderWindow& window, ResourceManager& resources) {
     Object::draw(window, resources);
 
     // utilisation de la texture
-    sprite.setTexture(resources.getTexture("block.bmp"));
+    sprite.setTexture(resources.getTexture("block.png"));
 
     // coloration du bloc en fonction de sa charge
     if (getCharge() > 0) {
