@@ -2,7 +2,6 @@
 #define __PTF_PLAYER_HPP__
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include "object.hpp"
 #include "engine_state.hpp"
 

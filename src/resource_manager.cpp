@@ -1,6 +1,5 @@
 #include "resource_manager.hpp"
 #include "whereami.h"
-#include <iostream>
 #include <memory>
 
 #ifdef _WIN32

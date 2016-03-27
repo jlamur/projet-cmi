@@ -3,7 +3,6 @@
 #include "block.hpp"
 #include "object.hpp"
 #include <utility>
-#include <iostream>
 
 namespace Collision {
     // initialisation du dictionnaire associant les types
