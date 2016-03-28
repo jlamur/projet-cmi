@@ -12,9 +12,7 @@ Block::Block(float x, float y) : Object(x, y) {
     sprite.setOrigin(sf::Vector2f(Constants::GRID / 2, Constants::GRID / 2));
 }
 
-Block::~Block() {
-    Object::~Object();
-}
+Block::~Block() {}
 
 void Block::draw(Manager& manager) {
     Object::draw(manager);

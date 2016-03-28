@@ -17,7 +17,6 @@ Game::Game() : accumulator(0.f) {
 }
 
 Game::~Game() {
-    View::~View();
     clear();
 }
 

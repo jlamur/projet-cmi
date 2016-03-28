@@ -9,9 +9,7 @@ Player::Player(float x, float y) : Object(x, y) {
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
 }
 
-Player::~Player() {
-    Object::~Object();
-}
+Player::~Player() {}
 
 sf::Vector2f Player::getForces(const Manager& manager, const std::vector<Object*>& objects) const {
     sf::Vector2f forces = Object::getForces(manager, objects);
