@@ -19,7 +19,7 @@ sf::Vector2f Object::getForces(EngineState& state) {
     sf::Vector2f forces(0, 0);
 
     // force de gravité
-    forces += sf::Vector2f(0, Constants::GRAVITY);
+    forces += sf::Vector2f(0, getMass() * Constants::GRAVITY);
 
     // force d'attraction entre objets chargés
     if (getCharge() != 0) {
