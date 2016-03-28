@@ -8,7 +8,7 @@
 \usepackage[french]{babel}
 
 \begin{document}
-\begin{gantt}{21}{20}
+\begin{gantt}{24}{20}
     \begin{ganttitle}
         \titleelement{Semaine 1 : 04/03 - 10/03}{4}
         \titleelement{Semaine 2 : 11/03 - 17/03}{4}
@@ -17,29 +17,33 @@
         \titleelement{Semaine 5 : 01/04 - 08/04}{4}
     \end{ganttitle}
 
-    \ganttgroup{Moteur physique}{0}{12}
+    \ganttgroup{Moteur physique}{0}{14}
     \ganttbar[color=red,pattern=north east lines]{Organisation des classes}{0}{6}
     \ganttbar[color=green,pattern=north east lines]{Gestion de l'affichage}{0}{8}
     \ganttbar[color=red,pattern=north east lines]{Implémentation des forces}{0}{8}
-    \ganttbar[color=red,pattern=north east lines]{Gestion des collisions}{4}{6}
-    \ganttbar[color=cyan,pattern=north east lines]{Tests du moteur}{4}{8}
+    \ganttbar[color=red,pattern=north east lines]{Gestion des collisions}{4}{10}
+    \ganttbar[color=cyan,pattern=north east lines]{Tests du moteur}{4}{10}
 
-    \ganttgroup{Niveaux du jeu}{6}{14}
+    \ganttgroup{Niveaux du jeu}{6}{12}
     \ganttbar[color=cyan,pattern=north east lines]{Définition du format de fichier}{6}{2}
-    \ganttbar[color=red,pattern=north east lines]{Lecture et écriture du format}{8}{4}
-    \ganttbar[color=red,pattern=north east lines]{Création de l'éditeur}{8}{4}
-    \ganttbar{Niveau de test}{10}{2}
-    \ganttbar{Conception des niveaux}{12}{4}
-    \ganttbar{Tests des niveaux}{16}{4}
+    \ganttbar[color=red,pattern=north east lines]{Blocs spécialisés}{11}{2}
+    \ganttbar[color=red,pattern=north east lines]{Lecture et écriture du format}{12}{4}
+    \ganttbar[color=red,pattern=north east lines]{Création de l'éditeur}{12}{4}
+    \ganttbar[color=cyan,pattern=north east lines]{Niveau de test}{14}{2}
+    \ganttbar[color=cyan,pattern=north east lines]{Conception des niveaux}{14}{4}
+    \ganttbar[color=green,pattern=north east lines]{Tests des niveaux}{14}{4}
 
-    \ganttgroup{Univers graphique}{8}{12}
+    \ganttgroup{Interfaçage du jeu}{11}{7}
+    \ganttbar[color=red,pattern=north east lines]{Classe de gestion des interfaces}{11}{3}
+    \ganttbar[color=green,pattern=north east lines]{Menus et interface du jeu}{14}{4}
+
+    \ganttgroup{Univers graphique}{8}{10}
     \ganttbar[color=cyan,pattern=north east lines]{Recherche des musiques}{8}{8}
-    \ganttbar[color=green,pattern=north east lines]{Conception des textures}{8}{12}
-    \ganttbar{Menus et interface du jeu}{12}{4}
+    \ganttbar[color=green,pattern=north east lines]{Conception des textures}{8}{8}
 
-    \ganttmilestone{Figeage des fonctionnalités}{16}
-    \ganttbarcon{Tests finaux}{16}{4}
-    \ganttbar{Rapport}{16}{4}
+    \ganttmilestone{Figeage des fonctionnalités}{18}
+    \ganttbar{Tests finaux}{18}{2}
+    \ganttbar{Rapport}{18}{2}
 \end{gantt}
 
 \hfill\\
