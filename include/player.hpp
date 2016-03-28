@@ -3,18 +3,17 @@
 
 #include <SFML/Graphics.hpp>
 #include "object.hpp"
-#include "engine_state.hpp"
 
 class Player : public Object {
 private:
-    sf::Sprite sprite;
+    mutable sf::Sprite sprite;
     unsigned int player_number;
 
 protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    virtual sf::Vector2f getForces(EngineState& state);
+    virtual sf::Vector2f getForces(const Manager& manager, const std::vector<Object*>& objects) const;
 
 public:
     Player(float x, float y);
@@ -22,28 +21,28 @@ public:
     /**
      * Dessine la balle dans la fenêtre donnée
      */
-    virtual void draw(sf::RenderWindow& window, ResourceManager& resources);
+    virtual void draw(Manager& manager);
 
     /**
      * Récupère la boîte englobante de l'objet
      */
-    std::unique_ptr<sf::FloatRect> getAABB();
+    virtual std::unique_ptr<sf::FloatRect> getAABB() const;
 
     /**
      * Récupère l'identifiant de type de cet objet
      */
     static constexpr unsigned int TYPE_ID = 0;
-    unsigned int getTypeId();
+    virtual unsigned int getTypeId() const;
 
     /**
      * Renvoie le rayon de la balle
      */
-    float getRadius();
+    float getRadius() const;
 
     /**
      * Renvoie le numéro du joueur
      */
-    unsigned int getPlayerNumber();
+    unsigned int getPlayerNumber() const;
 
     /**
      * Modifie le numéro du joueur

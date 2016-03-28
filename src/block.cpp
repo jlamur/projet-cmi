@@ -12,11 +12,13 @@ Block::Block(float x, float y) : Object(x, y) {
     sprite.setOrigin(sf::Vector2f(Constants::GRID / 2, Constants::GRID / 2));
 }
 
-void Block::draw(sf::RenderWindow& window, ResourceManager& resources) {
-    Object::draw(window, resources);
+void Block::draw(Manager& manager) {
+    Object::draw(manager);
 
     // utilisation de la texture
-    sprite.setTexture(resources.getTexture("block.png"));
+    sprite.setTexture(
+        manager.getResourceManager().getTexture("block.png")
+    );
 
     // coloration du bloc en fonction de sa charge
     if (getCharge() > 0) {
@@ -28,10 +30,10 @@ void Block::draw(sf::RenderWindow& window, ResourceManager& resources) {
     }
 
     sprite.setPosition(getPosition());
-    window.draw(sprite);
+    manager.getWindow().draw(sprite);
 }
 
-std::unique_ptr<sf::FloatRect> Block::getAABB() {
+std::unique_ptr<sf::FloatRect> Block::getAABB() const {
     return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
         getPosition().x - Constants::GRID / 2,
         getPosition().y - Constants::GRID / 2,
@@ -39,6 +41,6 @@ std::unique_ptr<sf::FloatRect> Block::getAABB() {
     ));
 }
 
-unsigned int Block::getTypeId() {
+unsigned int Block::getTypeId() const {
     return Block::TYPE_ID;
 }

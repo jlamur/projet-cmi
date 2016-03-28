@@ -9,26 +9,26 @@ Player::Player(float x, float y) : Object(x, y) {
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
 }
 
-sf::Vector2f Player::getForces(EngineState& state) {
-    sf::Vector2f forces = Object::getForces(state);
+sf::Vector2f Player::getForces(const Manager& manager, const std::vector<Object*>& objects) const {
+    sf::Vector2f forces = Object::getForces(manager, objects);
 
     // déplacement de la balle après appui sur les touches de direction
     if (getPlayerNumber() == 1) {
-        if (state.keys[sf::Keyboard::Left]) {
+        if (manager.isKeyPressed(sf::Keyboard::Left)) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
 
-        if (state.keys[sf::Keyboard::Right]) {
+        if (manager.isKeyPressed(sf::Keyboard::Right)) {
             forces += sf::Vector2f(Constants::MOVE, 0);
         }
     }
 
     if (getPlayerNumber() == 2) {
-        if (state.keys[sf::Keyboard::Q]) {
+        if (manager.isKeyPressed(sf::Keyboard::Q)) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
 
-        if (state.keys[sf::Keyboard::D]) {
+        if (manager.isKeyPressed(sf::Keyboard::D)) {
             forces += sf::Vector2f(Constants::MOVE, 0);
         }
     }
@@ -36,19 +36,21 @@ sf::Vector2f Player::getForces(EngineState& state) {
     return forces;
 }
 
-void Player::draw(sf::RenderWindow& window, ResourceManager& resources) {
-    Object::draw(window, resources);
+void Player::draw(Manager& manager) {
+    Object::draw(manager);
 
     // utilisation de la texture
-	sprite.setTexture(resources.getTexture("ball.png"));
+	sprite.setTexture(
+        manager.getResourceManager().getTexture("ball.png")
+    );
 
     // déplacement du sprite à la position de la balle
-    sprite.rotate(getVelocity().x * .1f);
+    sprite.rotate(getVelocity().x * Constants::PHYSICS_TIME * .5f);
     sprite.setPosition(getPosition());
-    window.draw(sprite);
+    manager.getWindow().draw(sprite);
 }
 
-std::unique_ptr<sf::FloatRect> Player::getAABB() {
+std::unique_ptr<sf::FloatRect> Player::getAABB() const {
     return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
         getPosition().x - getRadius(),
         getPosition().y - getRadius(),
@@ -56,15 +58,15 @@ std::unique_ptr<sf::FloatRect> Player::getAABB() {
     ));
 }
 
-unsigned int Player::getTypeId() {
+unsigned int Player::getTypeId() const {
     return Player::TYPE_ID;
 }
 
-float Player::getRadius() {
+float Player::getRadius() const {
     return 10 * getMass();
 }
 
-unsigned int Player::getPlayerNumber() {
+unsigned int Player::getPlayerNumber() const {
     return player_number;
 }
 

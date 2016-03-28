@@ -1,12 +1,13 @@
 #include "player.hpp"
 #include "block.hpp"
+#include "manager.hpp"
 #include "game.hpp"
 #include "constants.hpp"
 #include <cstdlib>
 #include <iostream>
 
 int main() {
-    Game game;
+    Manager manager;
 
     Player player1(3.5f * Constants::GRID, 10 * Constants::GRID);
     player1.setPlayerNumber(1);
@@ -40,33 +41,36 @@ int main() {
     block22.setCharge(1.f);
     block22.setMass(2);
 
-    game.addObject(player1);
-    game.addObject(player2);
-    game.addObject(block01);
-    game.addObject(block02);
-    game.addObject(block03);
-    game.addObject(block04);
-    game.addObject(block05);
-    game.addObject(block06);
-    game.addObject(block07);
-    game.addObject(block08);
-    game.addObject(block09);
-    game.addObject(block10);
-    game.addObject(block11);
-    game.addObject(block12);
-    game.addObject(block13);
-    game.addObject(block14);
-    game.addObject(block15);
-    game.addObject(block16);
-    game.addObject(block17);
-    game.addObject(block18);
-    game.addObject(block19);
-    game.addObject(block20);
-    game.addObject(block21);
-    game.addObject(block22);
+    Game game_view;
+    manager.view = &game_view;
+
+    manager.view->addObject(player1);
+    manager.view->addObject(player2);
+    manager.view->addObject(block01);
+    manager.view->addObject(block02);
+    manager.view->addObject(block03);
+    manager.view->addObject(block04);
+    manager.view->addObject(block05);
+    manager.view->addObject(block06);
+    manager.view->addObject(block07);
+    manager.view->addObject(block08);
+    manager.view->addObject(block09);
+    manager.view->addObject(block10);
+    manager.view->addObject(block11);
+    manager.view->addObject(block12);
+    manager.view->addObject(block13);
+    manager.view->addObject(block14);
+    manager.view->addObject(block15);
+    manager.view->addObject(block16);
+    manager.view->addObject(block17);
+    manager.view->addObject(block18);
+    manager.view->addObject(block19);
+    manager.view->addObject(block20);
+    manager.view->addObject(block21);
+    manager.view->addObject(block22);
 
     try {
-        game.start();
+        manager.start();
     } catch (const std::exception& exception) {
         std::cerr << std::endl;
         std::cerr << "Le programme a quitté après une erreur d'exécution." << std::endl;

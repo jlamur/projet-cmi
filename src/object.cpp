@@ -15,7 +15,9 @@ Object::Object(float x, float y) :
     dynamic_friction(0.2f),
     layer(Constants::DEFAULT_LAYER) {}
 
-sf::Vector2f Object::getForces(EngineState& state) {
+sf::Vector2f Object::getForces(
+    const Manager& manager, const std::vector<Object*>& objects
+) const {
     sf::Vector2f forces(0, 0);
 
     // force de gravité
@@ -23,8 +25,8 @@ sf::Vector2f Object::getForces(EngineState& state) {
 
     // force d'attraction entre objets chargés
     if (getCharge() != 0) {
-        for (unsigned int j = 0; j < state.objects.size(); j++) {
-            Object *attractive = state.objects[j];
+        for (unsigned int j = 0; j < objects.size(); j++) {
+            Object *attractive = objects[j];
 
             if (attractive == this || attractive->getCharge() == 0) {
                 continue;
@@ -57,7 +59,7 @@ sf::Vector2f Object::getForces(EngineState& state) {
     return forces;
 }
 
-void Object::draw(sf::RenderWindow& window, ResourceManager& resources) {
+void Object::draw(Manager& manager) {
     if (Constants::DEBUG_MODE) {
         velocity_line[0].position = position;
         velocity_line[0].color = sf::Color::Green;
@@ -69,21 +71,23 @@ void Object::draw(sf::RenderWindow& window, ResourceManager& resources) {
         acceleration_line[1].position = position + acceleration * 1.f;
         acceleration_line[1].color = sf::Color::Red;
 
-        window.draw(velocity_line);
-        window.draw(acceleration_line);
+        manager.getWindow().draw(velocity_line);
+        manager.getWindow().draw(acceleration_line);
     }
 }
 
-void Object::updateVelocity(EngineState& state, float delta) {
-    acceleration = getForces(state) * getMassInvert();
+void Object::updateVelocity(
+    const Manager& manager, const std::vector<Object*>& objects, float delta
+) {
+    acceleration = getForces(manager, objects) * getMassInvert();
     velocity += acceleration * delta;
 }
 
-void Object::updatePosition(EngineState& state, float delta) {
+void Object::updatePosition(float delta) {
     position += velocity * delta;
 }
 
-bool Object::detectCollision(Object& obj, CollisionData& data) {
+bool Object::detectCollision(const Object& obj, CollisionData& data) const {
     // si les objets ne sont pas sur la même couche,
     // ils ne peuvent pas entrer en collision
     if (getLayer() != obj.getLayer()) {
@@ -103,7 +107,7 @@ bool Object::detectCollision(Object& obj, CollisionData& data) {
     ](data);
 }
 
-void Object::solveCollision(Object& obj, sf::Vector2f normal) {
+void Object::solveCollision(Object& obj, const sf::Vector2f& normal) {
     // si les deux objets sont de masse infinie, réinitialisation
     // des vitesses en tant que collision
     if (getMassInvert() == 0 && obj.getMassInvert() == 0) {
@@ -164,7 +168,7 @@ void Object::solveCollision(Object& obj, sf::Vector2f normal) {
     obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * friction_impulse * tangent);
 }
 
-void Object::positionalCorrection(Object& obj, sf::Vector2f normal, float depth) {
+void Object::positionalCorrection(Object& obj, const sf::Vector2f& normal, float depth) {
     // ne pas corriger les petites erreurs de position
     // pour éviter l'instabilité du moteur
     if (depth <= Constants::CORRECTION_THRESHOLD) {
@@ -178,11 +182,11 @@ void Object::positionalCorrection(Object& obj, sf::Vector2f normal, float depth)
     obj.setPosition(obj.getPosition() + obj.getMassInvert() * position_correction * normal);
 }
 
-sf::Vector2f Object::getAcceleration() {
+sf::Vector2f Object::getAcceleration() const {
     return acceleration;
 }
 
-sf::Vector2f Object::getVelocity() {
+sf::Vector2f Object::getVelocity() const {
     return velocity;
 }
 
@@ -190,7 +194,7 @@ void Object::setVelocity(sf::Vector2f set_velocity) {
     velocity = set_velocity;
 }
 
-sf::Vector2f Object::getPosition() {
+sf::Vector2f Object::getPosition() const {
     return position;
 }
 
@@ -198,11 +202,11 @@ void Object::setPosition(sf::Vector2f set_position) {
     position = set_position;
 }
 
-float Object::getMass() {
+float Object::getMass() const {
     return mass;
 }
 
-float Object::getMassInvert() {
+float Object::getMassInvert() const {
     if (inv_mass >= 0) {
         return inv_mass;
     }
@@ -221,7 +225,7 @@ void Object::setMass(float set_mass) {
     inv_mass = -1.f;
 }
 
-float Object::getCharge() {
+float Object::getCharge() const {
     return charge;
 }
 
@@ -229,7 +233,7 @@ void Object::setCharge(float set_charge) {
     charge = set_charge;
 }
 
-float Object::getRestitution() {
+float Object::getRestitution() const {
     return restitution;
 }
 
@@ -237,7 +241,7 @@ void Object::setRestitution(float set_restitution) {
     restitution = set_restitution;
 }
 
-float Object::getStaticFriction() {
+float Object::getStaticFriction() const {
     return static_friction;
 }
 
@@ -245,7 +249,7 @@ void Object::setStaticFriction(float set_static_friction) {
     static_friction = set_static_friction;
 }
 
-float Object::getDynamicFriction() {
+float Object::getDynamicFriction() const {
     return dynamic_friction;
 }
 
@@ -253,14 +257,14 @@ void Object::setDynamicFriction(float set_dynamic_friction) {
     dynamic_friction = set_dynamic_friction;
 }
 
-unsigned int Object::getLayer() {
+int Object::getLayer() const {
     return layer;
 }
 
-void Object::setLayer(unsigned int set_layer) {
+void Object::setLayer(int set_layer) {
     layer = set_layer;
 }
 
-bool ObjectCompare::operator()(Object* const &t1, Object* const &t2) {
+bool ObjectCompare::operator()(Object* const &t1, Object* const &t2) const {
     return t1->getLayer() > t2->getLayer();
 }

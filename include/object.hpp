@@ -3,12 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "engine_state.hpp"
 #include "collision_data.hpp"
+#include "manager.hpp"
 #include "resource_manager.hpp"
-
-class Block;
-class Player;
 
 class Object {
 private:
@@ -20,7 +17,7 @@ private:
     sf::VertexArray velocity_line;
 
     float mass;
-    float inv_mass;
+    mutable float inv_mass;
     float charge;
     float restitution;
     float static_friction;
@@ -31,7 +28,7 @@ protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    virtual sf::Vector2f getForces(EngineState& state);
+    virtual sf::Vector2f getForces(const Manager& manager, const std::vector<Object*>& objects) const;
 
 public:
     Object(float x, float y);
@@ -39,32 +36,32 @@ public:
     /**
      * Dessine l'objet dans la fenêtre donnée
      */
-    virtual void draw(sf::RenderWindow& window, ResourceManager& resources);
+    virtual void draw(Manager& manager);
 
     /**
      * Met à jour la vitesse de l'objet selon les
      * forces qui lui sont appliquées
      */
-    void updateVelocity(EngineState& state, float delta);
+    void updateVelocity(const Manager& manager, const std::vector<Object*>& objects, float delta);
 
     /**
      * Met à jour la position de l'objet selon sa
      * vitesse actuelle
      */
-    void updatePosition(EngineState& state, float delta);
+    void updatePosition(float delta);
 
     /**
      * Détecte s'il y a collision entre cet objet
      * et l'objet passé en paramètre
      */
-    bool detectCollision(Object& obj, CollisionData& data);
+    bool detectCollision(const Object& obj, CollisionData& data) const;
 
     /**
      * Résolution de la collision entre cet objet
      * et l'objet passé en paramètre selon la normale
      * donnée
      */
-    void solveCollision(Object& obj, sf::Vector2f normal);
+    void solveCollision(Object& obj, const sf::Vector2f& normal);
 
     /**
      * Application de la correction positionnelle sur
@@ -74,27 +71,27 @@ public:
      * les objets peuvent accumuler une erreur de positionnement
      * qui les fait "plonger" les uns dans les autres
      */
-    void positionalCorrection(Object& obj, sf::Vector2f normal, float depth);
+    void positionalCorrection(Object& obj, const sf::Vector2f& normal, float depth);
 
     /**
      * Récupère la boîte englobante de l'objet
      */
-    virtual std::unique_ptr<sf::FloatRect> getAABB() = 0;
+    virtual std::unique_ptr<sf::FloatRect> getAABB() const = 0;
 
     /**
      * Récupère l'identifiant de type de cet objet
      */
-    virtual unsigned int getTypeId() = 0;
+    virtual unsigned int getTypeId() const = 0;
 
     /**
      * Récupère l'accélération de l'objet
      */
-    sf::Vector2f getAcceleration();
+    sf::Vector2f getAcceleration() const;
 
     /**
      * Récupère la vitesse de l'objet
      */
-    sf::Vector2f getVelocity();
+    sf::Vector2f getVelocity() const;
 
     /**
      * Modifie la vitesse de l'objet
@@ -105,7 +102,7 @@ public:
     /**
      * Récupère la position de l'objet
      */
-    sf::Vector2f getPosition();
+    sf::Vector2f getPosition() const;
 
     /**
      * Modifie la position de l'objet
@@ -116,12 +113,12 @@ public:
     /**
      * Récupère la masse de l'objet
      */
-    float getMass();
+    float getMass() const;
 
     /**
      * Récupère l'inverse de la masse de l'objet (en cache)
      */
-    float getMassInvert();
+    float getMassInvert() const;
 
     /**
      * Modifie la masse de l'objet
@@ -131,7 +128,7 @@ public:
     /**
      * Récupère la charge de l'objet
      */
-    float getCharge();
+    float getCharge() const;
 
     /**
      * Modifie la charge de l'objet
@@ -141,7 +138,7 @@ public:
     /**
      * Récupère le coefficient de restitution de l'objet
      */
-    float getRestitution();
+    float getRestitution() const;
 
     /**
      * Modifie le coefficient de restitution de l'objet
@@ -151,7 +148,7 @@ public:
     /**
      * Récupère le coefficient de frottement dynamique de l'objet
      */
-    float getStaticFriction();
+    float getStaticFriction() const;
 
     /**
      * Modifie le coefficient de frottement dynamique de l'objet
@@ -161,7 +158,7 @@ public:
     /**
      * Récupère le coefficient de frottement dynamique de l'objet
      */
-    float getDynamicFriction();
+    float getDynamicFriction() const;
 
     /**
      * Modifie le coefficient de frottement dynamique de l'objet
@@ -171,12 +168,12 @@ public:
     /**
      * Récupère la couche d'affichage de l'objet
      */
-    unsigned int getLayer();
+    int getLayer() const;
 
     /**
      * Modifie la couche d'affichage de l'objet
      */
-    void setLayer(unsigned int set_layer);
+    void setLayer(int set_layer);
 };
 
 /**
@@ -185,7 +182,7 @@ public:
  * qui doit être dessinée avant celle du second
  */
 struct ObjectCompare {
-	bool operator()(Object* const &t1, Object* const &t2);
+	bool operator()(Object* const &t1, Object* const &t2) const;
 };
 
 #endif

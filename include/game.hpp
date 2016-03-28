@@ -1,44 +1,43 @@
 #ifndef __PTF_GAME_HPP__
 #define __PTF_GAME_HPP__
 
-#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "view.hpp"
 #include "object.hpp"
-#include "engine_state.hpp"
+#include "manager.hpp"
 #include "resource_manager.hpp"
 
 /**
  * La classe Game gère l'affichage et les objets
  * d'une partie de jeu
  */
-class Game {
+class Game : public View {
 private:
-    sf::Clock clock;
-    sf::RenderWindow window;
     sf::View view;
     sf::Music music;
 
-    EngineState state;
-    ResourceManager resources;
+    float accumulator;
+    std::vector<Object*> objects;
 
     /**
      * Met à jour les objets du jeu pour
      * qu'ils s'adaptent au nouvel état
      */
-    void update();
+    void update(const Manager& manager);
 
     /**
      * Dessine la scène du jeu couche par couche
      */
-    void draw();
+    void draw(Manager& manager);
 
 public:
     Game();
 
     /**
-     * Démarre la boucle principale du jeu
+     * Demande le passage à la frame suivante sur
+     * cette vue
      */
-    void start();
+    void frame(Manager& manager);
 
     /**
      * Ajoute un nouvel objet à la liste des objets du jeu
