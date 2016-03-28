@@ -1,4 +1,5 @@
 #include "collision.hpp"
+#include "collision_data.hpp"
 #include "player.hpp"
 #include "block.hpp"
 #include "object.hpp"
@@ -14,9 +15,9 @@ namespace Collision {
         {std::make_pair(Block::TYPE_ID, Block::TYPE_ID), &blockToBlock}
     };
 
-    bool playerToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
-        Player player = dynamic_cast<Player&>(objA);
-        Block block = dynamic_cast<Block&>(objB);
+    bool playerToBlock(CollisionData& data) {
+        Player player = dynamic_cast<Player&>(data.objA);
+        Block block = dynamic_cast<Block&>(data.objB);
 
         // recherche du point le plus proche du centre de la
         // balle sur le bloc. On regarde la position relative
@@ -80,30 +81,31 @@ namespace Collision {
         }
 
         float length = std::sqrt(squaredLength);
-        depth = player.getRadius() - length;
+        data.depth = player.getRadius() - length;
 
         if (length != 0) {
-            normal = prenormal / length;
+            data.normal = prenormal / length;
         }
 
         if (isInside) {
-            normal *= -1.f;
+            data.normal *= -1.f;
         }
 
         return true;
     }
 
-    bool blockToPlayer(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
+    bool blockToPlayer(CollisionData& data) {
         // la collision Block -> Player est la collision Player -> Block
-        // avec une normale de collision retournée
-        bool result = playerToBlock(objB, objA, normal, depth);
-        normal *= -1.f;
-        return result;
+        Object& objT = data.objB;
+        data.objB = data.objA;
+        data.objA = objT;
+
+        return playerToBlock(data);
     }
 
-    bool playerToPlayer(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
-        Player playerA = dynamic_cast<Player&>(objA);
-        Player playerB = dynamic_cast<Player&>(objB);
+    bool playerToPlayer(CollisionData& data) {
+        Player playerA = dynamic_cast<Player&>(data.objA);
+        Player playerB = dynamic_cast<Player&>(data.objB);
 
         sf::Vector2f dir = playerB.getPosition() - playerA.getPosition();
         float squaredLength = dir.x * dir.x + dir.y * dir.y;
@@ -120,21 +122,21 @@ namespace Collision {
         // les balles sont sur la même position.
         // Renvoie une normale apte à séparer les deux balles
         if (length == 0) {
-            depth = totalRadius;
-            normal.x = 0;
-            normal.y = -1;
+            data.depth = totalRadius;
+            data.normal.x = 0;
+            data.normal.y = -1;
             return true;
         }
 
         // il y a eu collision
-        depth = totalRadius - length;
-        normal = dir / length;
+        data.depth = totalRadius - length;
+        data.normal = dir / length;
         return true;
     }
 
-    bool blockToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth) {
-        Block blockA = dynamic_cast<Block&>(objA);
-        Block blockB = dynamic_cast<Block&>(objB);
+    bool blockToBlock(CollisionData& data) {
+        Block blockA = dynamic_cast<Block&>(data.objA);
+        Block blockB = dynamic_cast<Block&>(data.objB);
 
         std::unique_ptr<sf::FloatRect> aabb = blockA.getAABB();
         std::unique_ptr<sf::FloatRect> obj_aabb = blockB.getAABB();
@@ -151,22 +153,22 @@ namespace Collision {
         // on choisit l'axe de pénétration maximale pour calculer la normale
         if (overlap_x < overlap_y) {
             if (relpos.x < 0) {
-                normal.x = -1;
+                data.normal.x = -1;
             } else {
-                normal.x = 1;
+                data.normal.x = 1;
             }
 
-            normal.y = 0;
-            depth = overlap_x;
+            data.normal.y = 0;
+            data.depth = overlap_x;
         } else {
             if (relpos.y < 0) {
-                normal.y = -1;
+                data.normal.y = -1;
             } else {
-                normal.y = 1;
+                data.normal.y = 1;
             }
 
-            normal.x = 0;
-            depth = overlap_y;
+            data.normal.x = 0;
+            data.depth = overlap_y;
         }
 
         return true;

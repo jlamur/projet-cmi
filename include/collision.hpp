@@ -2,19 +2,19 @@
 #define __PTF_COLLISION_HPP__
 
 #include "object.hpp"
+#include "collision_data.hpp"
 #include <SFML/Graphics.hpp>
 #include <utility>
-#include <string>
 
 namespace Collision {
-    typedef bool (*collision_data)(Object&, Object&, sf::Vector2f&, float&);
-    typedef std::map<std::pair<unsigned int, unsigned int>, collision_data> collision_dispatcher;
+    typedef bool (*collision_detect)(CollisionData&);
+    typedef std::map<std::pair<unsigned int, unsigned int>, collision_detect> collision_dispatcher;
     extern collision_dispatcher dispatch;
 
-    bool playerToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
-    bool blockToPlayer(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
-    bool playerToPlayer(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
-    bool blockToBlock(Object& objA, Object& objB, sf::Vector2f& normal, float& depth);
+    bool playerToBlock(CollisionData& data);
+    bool blockToPlayer(CollisionData& data);
+    bool playerToPlayer(CollisionData& data);
+    bool blockToBlock(CollisionData& data);
 }
 
 #endif

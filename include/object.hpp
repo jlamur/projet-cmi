@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "engine_state.hpp"
+#include "collision_data.hpp"
 #include "resource_manager.hpp"
 
 class Block;
@@ -54,10 +55,26 @@ public:
 
     /**
      * Détecte s'il y a collision entre cet objet
-     * et l'objet passé en paramètre et résoud la collision
-     * si elle a lieu
+     * et l'objet passé en paramètre
      */
-    void collide(Object& obj);
+    bool detectCollision(Object& obj, CollisionData& data);
+
+    /**
+     * Résolution de la collision entre cet objet
+     * et l'objet passé en paramètre selon la normale
+     * donnée
+     */
+    void solveCollision(Object& obj, sf::Vector2f normal);
+
+    /**
+     * Application de la correction positionnelle sur
+     * cet objet et l'objet passé en paramètre après
+     * une résolution de collision de profondeur donnée.
+     * En raison de l'imprécision des flottants sur la machine,
+     * les objets peuvent accumuler une erreur de positionnement
+     * qui les fait "plonger" les uns dans les autres
+     */
+    void positionalCorrection(Object& obj, sf::Vector2f normal, float depth);
 
     /**
      * Récupère la boîte englobante de l'objet

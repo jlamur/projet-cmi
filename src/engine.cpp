@@ -71,13 +71,19 @@ void Engine::addObject(Object& object) {
 }
 
 void Engine::update() {
-    // gestion des collisions entre les objets
+    std::vector<CollisionData> colliding;
+
+    // détection des objets en collision
     for (unsigned int i = 0; i < state.objects.size(); i++) {
         Object* objA = state.objects[i];
 
         for (unsigned int j = i + 1; j < state.objects.size(); j++) {
             Object* objB = state.objects[j];
-            objA->collide(*objB);
+            CollisionData data(*objA, *objB);
+
+            if (objA->detectCollision(*objB, data)) {
+                colliding.push_back(data);
+            }
         }
     }
 
@@ -86,9 +92,23 @@ void Engine::update() {
         state.objects[i]->updateVelocity(state, Constants::PHYSICS_TIME / 2);
     }
 
+    // résolution des collisions détectées
+    for (unsigned int i = 0; i < colliding.size(); i++) {
+        CollisionData& collided = colliding[i];
+        collided.objA.solveCollision(collided.objB, collided.normal);
+    }
+
     // intégration de la vitesse dans la position
     for (unsigned int i = 0; i < state.objects.size(); i++) {
         state.objects[i]->updatePosition(state, Constants::PHYSICS_TIME);
+    }
+
+    // application de la correction positionnelle
+    for (unsigned int i = 0; i < colliding.size(); i++) {
+        CollisionData& collided = colliding[i];
+        collided.objA.positionalCorrection(
+            collided.objB, collided.normal, collided.depth
+        );
     }
 
     // intégration des forces dans la vitesse (seconde moitié)

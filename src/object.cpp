@@ -1,6 +1,7 @@
 #include "object.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
+#include "collision_data.hpp"
 
 Object::Object(float x, float y) :
     acceleration(0, 0), velocity(0, 0), position(x, y),
@@ -82,28 +83,27 @@ void Object::updatePosition(EngineState& state, float delta) {
     position += velocity * delta;
 }
 
-void Object::collide(Object& obj) {
+bool Object::detectCollision(Object& obj, CollisionData& data) {
     // si les objets ne sont pas sur la même couche,
     // ils ne peuvent pas entrer en collision
     if (getLayer() != obj.getLayer()) {
-        return;
+        return false;
     }
 
-    // si les deux boîtes englobantes des deux objets, ne
+    // si les deux boîtes englobantes des deux objets ne
     // s'intersectent pas, il ne risque pas d'y avoir de collision
     if (!getAABB()->intersects(*obj.getAABB())) {
-        return;
+        return false;
     }
 
-    sf::Vector2f normal;
-    float depth;
+    return Collision::dispatch[
+        // la fonction de détection fine de collision est choisie
+        // en fonction des types des deux objets en question
+        std::make_pair(getTypeId(), obj.getTypeId())
+    ](data);
+}
 
-    // vérifie plus finement s'il y a collision et récupère
-    // les informations sur la collision (normale et profondeur)
-    if (!Collision::dispatch[std::make_pair(getTypeId(), obj.getTypeId())](*this, obj, normal, depth)) {
-        return;
-    }
-
+void Object::solveCollision(Object& obj, sf::Vector2f normal) {
     // si les deux objets sont de masse infinie, réinitialisation
     // des vitesses en tant que collision
     if (getMassInvert() == 0 && obj.getMassInvert() == 0) {
@@ -140,30 +140,33 @@ void Object::collide(Object& obj) {
 
     // la tangente est nulle : pas de frottement à générer
     // on évite ainsi une division par zéro
-    if (tangent_length != 0) {
-        tangent /= tangent_length;
-
-        float magnitude = -(rel_velo.x * tangent.x + rel_velo.y * tangent.y) /
-            (getMassInvert() + obj.getMassInvert());
-        float static_friction = (getStaticFriction() + obj.getStaticFriction()) / 2.f;
-        float dynamic_friction = (getDynamicFriction() + obj.getDynamicFriction()) / 2.f;
-        float friction_impulse;
-
-        // utilisation de la loi de Coulomb sur les frottements dynamiques/statiques
-        // cf https://fr.wikipedia.org/wiki/Loi_de_Coulomb_(m%C3%A9canique)
-        if (std::abs(magnitude) < collision_impulse * static_friction) {
-            friction_impulse = magnitude;
-        } else {
-            friction_impulse = -collision_impulse * dynamic_friction;
-        }
-
-        setVelocity(getVelocity() - getMassInvert() * friction_impulse * tangent);
-        obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * friction_impulse * tangent);
+    if (tangent_length == 0) {
+        return;
     }
 
-    // correction de la position des objets. En raison de l'imprécision
-    // des flottants sur la machine, les objets peuvent accumuler une
-    // erreur de positionnement qui les fait "plonger" les un dans les autres.
+    tangent /= tangent_length;
+
+    float magnitude = -(rel_velo.x * tangent.x + rel_velo.y * tangent.y) /
+        (getMassInvert() + obj.getMassInvert());
+    float static_friction = (getStaticFriction() + obj.getStaticFriction()) / 2.f;
+    float dynamic_friction = (getDynamicFriction() + obj.getDynamicFriction()) / 2.f;
+    float friction_impulse;
+
+    // utilisation de la loi de Coulomb sur les frottements dynamiques/statiques
+    // cf https://fr.wikipedia.org/wiki/Loi_de_Coulomb_(m%C3%A9canique)
+    if (std::abs(magnitude) < collision_impulse * static_friction) {
+        friction_impulse = magnitude;
+    } else {
+        friction_impulse = -collision_impulse * dynamic_friction;
+    }
+
+    setVelocity(getVelocity() - getMassInvert() * friction_impulse * tangent);
+    obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * friction_impulse * tangent);
+}
+
+void Object::positionalCorrection(Object& obj, sf::Vector2f normal, float depth) {
+    // ne pas corriger les petites erreurs de position
+    // pour éviter l'instabilité du moteur
     if (depth <= Constants::CORRECTION_THRESHOLD) {
         return;
     }
