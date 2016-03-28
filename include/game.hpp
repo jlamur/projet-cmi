@@ -1,5 +1,5 @@
-#ifndef __PTF_ENGINE_HPP__
-#define __PTF_ENGINE_HPP__
+#ifndef __PTF_GAME_HPP__
+#define __PTF_GAME_HPP__
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -7,12 +7,11 @@
 #include "engine_state.hpp"
 #include "resource_manager.hpp"
 
-
 /**
- * La classe principale Engine coordonne les éléments
- * du jeu et organise le dessin des frames
+ * La classe Game gère l'affichage et les objets
+ * d'une partie de jeu
  */
-class Engine {
+class Game {
 private:
     sf::Clock clock;
     sf::RenderWindow window;
@@ -24,7 +23,7 @@ private:
 
     /**
      * Met à jour les objets du jeu pour
-     * qu'ils s'adaptent au nouvel état du moteur
+     * qu'ils s'adaptent au nouvel état
      */
     void update();
 
@@ -34,7 +33,7 @@ private:
     void draw();
 
 public:
-    Engine();
+    Game();
 
     /**
      * Démarre la boucle principale du jeu
@@ -48,4 +47,3 @@ public:
 };
 
 #endif
-

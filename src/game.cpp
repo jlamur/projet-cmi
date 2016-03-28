@@ -1,12 +1,12 @@
-#include "engine.hpp"
+#include "game.hpp"
 #include "constants.hpp"
 #include <cmath>
 #include <queue>
 
-Engine::Engine() : window(
+Game::Game() : window(
     sf::VideoMode(704, 480), "Projet CMI", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)
-), view(sf::FloatRect(0, 0, 704, 480)){
+), view(sf::FloatRect(0, 0, 704, 480)) {
     window.setVerticalSyncEnabled(true);
 
     // mise en place de la caméra
@@ -14,7 +14,7 @@ Engine::Engine() : window(
     window.setView(view);
 }
 
-void Engine::start() {
+void Game::start() {
     float accumulator = 0;
     if (!music.openFromFile("./res/music_lvl1.wav"))
     {
@@ -66,11 +66,11 @@ void Engine::start() {
     }
 }
 
-void Engine::addObject(Object& object) {
+void Game::addObject(Object& object) {
     state.objects.push_back(&object);
 }
 
-void Engine::update() {
+void Game::update() {
     std::vector<CollisionData> colliding;
 
     // détection des objets en collision
@@ -117,7 +117,7 @@ void Engine::update() {
     }
 }
 
-void Engine::draw() {
+void Game::draw() {
     // efface la scène précédente et dessine la couche de fond
     window.clear(sf::Color(66, 165, 245));
 

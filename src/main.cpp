@@ -1,12 +1,12 @@
 #include "player.hpp"
 #include "block.hpp"
-#include "engine.hpp"
+#include "game.hpp"
 #include "constants.hpp"
 #include <cstdlib>
 #include <iostream>
 
 int main() {
-    Engine engine;
+    Game game;
 
     Player player1(3.5f * Constants::GRID, 10 * Constants::GRID);
     player1.setPlayerNumber(1);
@@ -40,33 +40,33 @@ int main() {
     block22.setCharge(1.f);
     block22.setMass(2);
 
-    engine.addObject(player1);
-    engine.addObject(player2);
-    engine.addObject(block01);
-    engine.addObject(block02);
-    engine.addObject(block03);
-    engine.addObject(block04);
-    engine.addObject(block05);
-    engine.addObject(block06);
-    engine.addObject(block07);
-    engine.addObject(block08);
-    engine.addObject(block09);
-    engine.addObject(block10);
-    engine.addObject(block11);
-    engine.addObject(block12);
-    engine.addObject(block13);
-    engine.addObject(block14);
-    engine.addObject(block15);
-    engine.addObject(block16);
-    engine.addObject(block17);
-    engine.addObject(block18);
-    engine.addObject(block19);
-    engine.addObject(block20);
-    engine.addObject(block21);
-    engine.addObject(block22);
+    game.addObject(player1);
+    game.addObject(player2);
+    game.addObject(block01);
+    game.addObject(block02);
+    game.addObject(block03);
+    game.addObject(block04);
+    game.addObject(block05);
+    game.addObject(block06);
+    game.addObject(block07);
+    game.addObject(block08);
+    game.addObject(block09);
+    game.addObject(block10);
+    game.addObject(block11);
+    game.addObject(block12);
+    game.addObject(block13);
+    game.addObject(block14);
+    game.addObject(block15);
+    game.addObject(block16);
+    game.addObject(block17);
+    game.addObject(block18);
+    game.addObject(block19);
+    game.addObject(block20);
+    game.addObject(block21);
+    game.addObject(block22);
 
     try {
-        engine.start();
+        game.start();
     } catch (const std::exception& exception) {
         std::cerr << std::endl;
         std::cerr << "Le programme a quitté après une erreur d'exécution." << std::endl;
@@ -76,4 +76,3 @@ int main() {
 
     return EXIT_SUCCESS;
 }
-
