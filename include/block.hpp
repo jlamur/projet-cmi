@@ -10,6 +10,7 @@ private:
 
 public:
     Block(float x, float y);
+    virtual ~Block();
 
     /**
      * Dessin du bloc dans la fenêtre donnée

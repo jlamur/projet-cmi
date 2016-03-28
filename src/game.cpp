@@ -1,9 +1,8 @@
 #include "game.hpp"
 #include "constants.hpp"
+#include "player.hpp"
 #include <cmath>
 #include <queue>
-
-#include "player.hpp"
 
 Game::Game() : accumulator(0.f) {
     if (!music.openFromFile("./res/music_lvl1.wav")) {
@@ -18,6 +17,7 @@ Game::Game() : accumulator(0.f) {
 }
 
 Game::~Game() {
+    View::~View();
     clear();
 }
 

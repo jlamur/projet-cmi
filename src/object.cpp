@@ -15,6 +15,8 @@ Object::Object(float x, float y) :
     dynamic_friction(0.2f),
     layer(Constants::DEFAULT_LAYER) {}
 
+Object::~Object() {}
+
 sf::Vector2f Object::getForces(
     const Manager& manager, const std::vector<Object*>& objects
 ) const {

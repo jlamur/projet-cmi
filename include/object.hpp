@@ -32,6 +32,7 @@ protected:
 
 public:
     Object(float x, float y);
+    virtual ~Object();
 
     /**
      * Dessine l'objet dans la fenêtre donnée

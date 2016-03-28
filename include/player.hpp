@@ -17,6 +17,7 @@ protected:
 
 public:
     Player(float x, float y);
+    virtual ~Player();
 
     /**
      * Dessine la balle dans la fenêtre donnée
