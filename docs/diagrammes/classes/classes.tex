@@ -9,58 +9,80 @@
 
 \begin{document}
 \begin{tikzpicture}
-    \umlclass[x=6]{Engine}{
+    \umlclass{Manager}{
+        window : fenêtre\\
         clock : horloge\\
-        state : \texttt{EngineState}
+        elapsed\_time : flottant\\
+        resource\_manager : \texttt{ResourceManager}\\
+        keys : \texttt{[booléen]}\\
+        view : \texttt{View}
     }{
-        update() : vide\\
-        draw() : vide\\
         start() : vide\\
-        addObject(objet : \texttt{Object}) : vide
+        getWindow() : fenêtre\\
+        getElapsedTime() : flottant\\
+        getResourceManager() : \texttt{ResourceManager}\\
+        isKeyPressed(key : touche) : booléen
     }
 
-    \umlclass{EngineState}{
-        objects : tableau d'\texttt{Object}\\
-        keys : tableau de booléens\\
-        delta : flottant
-    }{}
+    \umlabstract[x=-4,y=-4.5]{View}{}{
+        \umlvirt{frame(manager : \texttt{Manager}) : vide}
+    }
+    \umluniassoc{Manager}{View}
 
-    \umlabstract[y=-5.5]{Object}{
+    \umlclass[x=4,y=-4.5]{ResourceManager}{
+        textures : dictionnaire \texttt{string -> texture}
+    }{
+        getTexture(name : string) : texture
+    }
+    \umluniassoc{Manager}{ResourceManager}
+
+    \umlclass[x=-4,y=-8]{Game}{
+        accumulator : flottant\\
+        objects : \texttt{[Object]}
+    }{
+        frame(manager : \texttt{Manager}) : vide\\
+        update(manager : \texttt{Manager}) : vide\\
+        draw(manager : \texttt{Manager}) : vide
+    }
+    \umlinherit{View}{Game}
+
+    \umlabstract[x=-4,y=-15]{Object}{
         acceleration : vecteur\\
         velocity : vecteur\\
         position : vecteur\\
         mass : flottant\\
         charge : flottant\\
         restitution : flottant\\
+        static\_friction : flottant\\
+        dynamic\_friction : flottant\\
         layer : entier
     }{
         \umlvirt{draw() : vide}\\
-        \umlvirt{getForces(état : \texttt{EngineState}) : vecteur}\\
-        \umlvirt{update(état : \texttt{EngineState}) : vide}\\
+        \umlvirt{getForces(manager : \texttt{Manager}, objects : \texttt{[Object]}) : vecteur}\\
+        \umlvirt{draw(manager : \texttt{Manager}) : vide}\\
         \umlvirt{getAABB() : boîte}\\
-        \umlvirt{getCollisionInfo(balle : \texttt{Ball}) : vecteur, flottant}\\
-        \umlvirt{getCollisionInfo(bloc : \texttt{Block}) : vecteur, flottant}\\
-        collide(objet : \texttt{Object}) : vide
+        \hfill\\
+        updateVelocity(manager : \texttt{Manager}, objects : \texttt{[Object]}, delta : flottant) : vide\\
+        updatePosition(manager : \texttt{Manager}, objects : \texttt{[Object]}, delta : flottant) : vide\\
+        detectCollision(object : \texttt{Object}) : \texttt{CollisionData}\\
+        solveCollision(object : \texttt{Object}, normal : vecteur) : vide\\
+        positionalCorrection(object : \texttt{Object}, normal : vecteur, depth : flottant) : vide\\
     }
+    \umlunicompo{Game}{Object}
 
-    \umlclass[y=-11,x=4]{Ball}{}{
-        getForces(état : \texttt{EngineState}) : vecteur\\
-        draw() : vide\\
-        getAABB() : boîte\\
-        getCollisionInfo(balle : \texttt{Ball}) : vecteur, flottant\\
-        getCollisionInfo(bloc : \texttt{Block}) : vecteur, flottant
+    \umlclass[x=-8,y=-22]{Player}{
+        player\_number : entier non-signé
+    }{
+        getForces(manager : \texttt{Manager}, objects : \texttt{[Object]}) : vecteur\\
+        draw(manager : \texttt{Manager}) : vide\\
+        getAABB() : boîte
     }
+    \umlinherit{Object}{Player}
 
-    \umlclass[y=-11,x=-4]{Block}{}{
-        draw() : vide\\
-        getAABB() : boîte\\
-        getCollisionInfo(balle : \texttt{Ball}) : vecteur, flottant\\
-        getCollisionInfo(bloc : \texttt{Block}) : vecteur, flottant
+    \umlclass[y=-22]{Block}{}{
+        draw(manager : \texttt{Manager}) : vide\\
+        getAABB() : boîte
     }
-
-    \umlunicompo{EngineState}{Object}
-    \umluniassoc{Engine}{EngineState}
     \umlinherit{Object}{Block}
-    \umlinherit{Object}{Ball}
 \end{tikzpicture}
 \end{document}
