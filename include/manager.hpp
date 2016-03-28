@@ -3,6 +3,7 @@
 
 #include "resource_manager.hpp"
 #include "view.hpp"
+#include <memory>
 
 /**
  * Gestionnaire principal de toutes les vues et
@@ -17,16 +18,20 @@ private:
     ResourceManager resource_manager;
     std::array<bool, sf::Keyboard::KeyCount> keys;
 
-public:
-    // FIXME: devrait être privé
-    View* view;
+    std::shared_ptr<View> view;
 
+public:
     Manager();
 
     /**
      * Démarre la boucle principale du jeu
      */
     void start();
+
+    /**
+     * Charge la vue donnée dans le jeu
+     */
+    void setView(std::shared_ptr<View> set_view);
 
     /**
      * Renvoie la fenêtre actuellement utilisée pour le dessin

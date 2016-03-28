@@ -3,6 +3,8 @@
 #include <cmath>
 #include <queue>
 
+#include "player.hpp"
+
 Game::Game() : accumulator(0.f) {
     if (!music.openFromFile("./res/music_lvl1.wav")) {
         // erreur
@@ -11,10 +13,36 @@ Game::Game() : accumulator(0.f) {
     music.play();
     music.setVolume(15);
     music.setLoop(true);
+
+    load();
 }
 
-void Game::addObject(Object& object) {
-    objects.push_back(&object);
+Game::~Game() {
+    clear();
+}
+
+void Game::load() {
+    // vide le niveau précédent s'il y a lieu
+    if (objects.size()) {
+        clear();
+    }
+
+    // TODO: faire une vraie fonction de chargement
+    Player* player1 = new Player(3.5f * Constants::GRID, 10 * Constants::GRID);
+    objects.push_back(player1);
+}
+
+void Game::save() {
+    // TODO: faire une fonction d'enregistrement
+    // TODO: migrer sur une classe commune Game <-> Editor
+}
+
+void Game::clear() {
+    for (unsigned int i = 0; i < objects.size(); i++) {
+        delete objects[i];
+    }
+
+    objects.clear();
 }
 
 void Game::frame(Manager& manager) {

@@ -40,6 +40,10 @@ void Manager::start() {
     }
 }
 
+void Manager::setView(std::shared_ptr<View> set_view) {
+    view = set_view;
+}
+
 sf::RenderWindow& Manager::getWindow() {
     return window;
 }

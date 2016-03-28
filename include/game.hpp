@@ -32,6 +32,22 @@ private:
 
 public:
     Game();
+    virtual ~Game();
+
+    /**
+     * Charge un niveau de jeu depuis le fichier donné
+     */
+    void load();
+
+    /**
+     * Sauvegarde la configuration actuelle comme un niveau
+     */
+    void save();
+
+    /**
+     * Libère les ressources du niveau
+     */
+    void clear();
 
     /**
      * Demande le passage à la frame suivante sur
