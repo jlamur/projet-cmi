@@ -11,7 +11,7 @@ class Object;
  */
 class View {
 public:
-    virtual ~View() {}
+    virtual ~View();
 
     /**
      * Demande le passage à la frame suivante sur
