@@ -15,7 +15,7 @@ sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectP
     sf::Vector2f forces = Object::getForces(manager, objects);
 
     // déplacement de la balle après appui sur les touches de direction
-    if (getPlayerNumber() == 1) {
+    if (getPlayerNumber() == 0) {
         if (manager.isKeyPressed(sf::Keyboard::Left)) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
@@ -25,7 +25,7 @@ sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectP
         }
     }
 
-    if (getPlayerNumber() == 2) {
+    if (getPlayerNumber() == 1) {
         if (manager.isKeyPressed(sf::Keyboard::Q)) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
