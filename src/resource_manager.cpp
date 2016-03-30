@@ -1,13 +1,6 @@
 #include "resource_manager.hpp"
 #include "whereami.h"
 #include <memory>
-#define RESOURCE_PATH
-
-#ifdef _WIN32
-    #define FILE_SEP '\\'
-#else
-    #define FILE_SEP '/'
-#endif
 
 ResourceManager::~ResourceManager() {
     textures.clear();
@@ -35,7 +28,11 @@ std::string getCurrentDirectory() {
  * le nom est passé en argument
  */
 inline std::string getResourcePath(std::string name) {
-    return getCurrentDirectory() + FILE_SEP + "res" + FILE_SEP + name;
+#ifdef _WIN32
+    return getCurrentDirectory() + "\\res\\" + name;
+#else
+    return getCurrentDirectory() + "/res/" + name;
+#endif
 }
 
 sf::Texture& ResourceManager::getTexture(std::string name) {
