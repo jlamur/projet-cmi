@@ -60,8 +60,9 @@ std::unique_ptr<sf::FloatRect> Player::getAABB() const {
     );
 }
 
+const unsigned int Player::TYPE_ID = 0;
 unsigned int Player::getTypeId() const {
-    return Player::TYPE_ID;
+    return TYPE_ID;
 }
 
 float Player::getRadius() const {

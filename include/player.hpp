@@ -32,7 +32,7 @@ public:
     /**
      * Récupère l'identifiant de type de cet objet
      */
-    static constexpr unsigned int TYPE_ID = 0;
+    static const unsigned int TYPE_ID;
     virtual unsigned int getTypeId() const;
 
     /**

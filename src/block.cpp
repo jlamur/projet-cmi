@@ -43,6 +43,7 @@ std::unique_ptr<sf::FloatRect> Block::getAABB() const {
     );
 }
 
+const unsigned int Block::TYPE_ID = 1;
 unsigned int Block::getTypeId() const {
-    return Block::TYPE_ID;
+    return TYPE_ID;
 }
