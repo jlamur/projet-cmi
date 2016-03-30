@@ -3,21 +3,14 @@
 #include "player.hpp"
 #include "block.hpp"
 #include "object.hpp"
+#include <functional>
 #include <utility>
 
-// initialisation du dictionnaire associant les types
-// impliqués dans une collision à leur fonction de résolution
-std::map<
-    std::pair<unsigned int, unsigned int>,
-    std::function<bool(CollisionData&)>
-> Collision::dispatch = {
-    {std::make_pair(Player::TYPE_ID, Block::TYPE_ID), Collision::playerToBlock},
-    {std::make_pair(Block::TYPE_ID, Player::TYPE_ID), Collision::blockToPlayer},
-    {std::make_pair(Player::TYPE_ID, Player::TYPE_ID), Collision::playerToPlayer},
-    {std::make_pair(Block::TYPE_ID, Block::TYPE_ID), Collision::blockToBlock}
-};
-
-bool Collision::playerToBlock(CollisionData& data) {
+/**
+ * Détermination des informations sur une collision entre
+ * un joueur et un bloc (normale et profondeur de collision)
+ */
+bool playerToBlock(CollisionData& data) {
     Player player = dynamic_cast<Player&>(data.objA);
     Block block = dynamic_cast<Block&>(data.objB);
 
@@ -96,7 +89,11 @@ bool Collision::playerToBlock(CollisionData& data) {
     return true;
 }
 
-bool Collision::blockToPlayer(CollisionData& data) {
+/**
+ * Détermination des informations sur une collision entre
+ * un bloc et un joueur (normale et profondeur de collision)
+ */
+bool blockToPlayer(CollisionData& data) {
     // la collision Block -> Player est la collision Player -> Block
     Object& objT = data.objB;
     data.objB = data.objA;
@@ -105,7 +102,11 @@ bool Collision::blockToPlayer(CollisionData& data) {
     return playerToBlock(data);
 }
 
-bool Collision::playerToPlayer(CollisionData& data) {
+/**
+ * Détermination des informations sur une collision entre
+ * deux joueurs (normale et profondeur de collision)
+ */
+bool playerToPlayer(CollisionData& data) {
     Player playerA = dynamic_cast<Player&>(data.objA);
     Player playerB = dynamic_cast<Player&>(data.objB);
 
@@ -136,7 +137,11 @@ bool Collision::playerToPlayer(CollisionData& data) {
     return true;
 }
 
-bool Collision::blockToBlock(CollisionData& data) {
+/**
+ * Détermination des informations sur une collision entre
+ * deux blocs (normale et profondeur de collision)
+ */
+bool blockToBlock(CollisionData& data) {
     Block blockA = dynamic_cast<Block&>(data.objA);
     Block blockB = dynamic_cast<Block&>(data.objB);
 
@@ -174,4 +179,25 @@ bool Collision::blockToBlock(CollisionData& data) {
     }
 
     return true;
+}
+
+/**
+ * Dictionnaire associant les types impliqués
+ * dans une collision à leur fonction de résolution
+ */
+std::map<
+    std::pair<unsigned int, unsigned int>,
+    std::function<bool(CollisionData&)>
+> collision_map = {
+    {std::make_pair(Player::TYPE_ID, Block::TYPE_ID), playerToBlock},
+    {std::make_pair(Block::TYPE_ID, Player::TYPE_ID), blockToPlayer},
+    {std::make_pair(Player::TYPE_ID, Player::TYPE_ID), playerToPlayer},
+    {std::make_pair(Block::TYPE_ID, Block::TYPE_ID), blockToBlock}
+};
+
+bool getCollisionData(CollisionData& data) {
+    return collision_map[std::make_pair(
+        data.objA.getTypeId(),
+        data.objB.getTypeId()
+    )](data);
 }

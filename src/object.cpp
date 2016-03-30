@@ -102,11 +102,7 @@ bool Object::detectCollision(const Object& obj, CollisionData& data) const {
         return false;
     }
 
-    return Collision::dispatch[
-        // la fonction de détection fine de collision est choisie
-        // en fonction des types des deux objets en question
-        std::make_pair(getTypeId(), obj.getTypeId())
-    ](data);
+    return getCollisionData(data);
 }
 
 void Object::solveCollision(Object& obj, const sf::Vector2f& normal) {
