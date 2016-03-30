@@ -1,6 +1,7 @@
 #include "resource_manager.hpp"
 #include "whereami.h"
 #include <memory>
+#define RESOURCE_PATH
 
 #ifdef _WIN32
     #define FILE_SEP '\\'
@@ -29,6 +30,14 @@ std::string getCurrentDirectory() {
     return std::string(buffer.get()).substr(0, dirname_length);
 }
 
+/**
+ * Récupère le chemin absolu vers la ressource dont
+ * le nom est passé en argument
+ */
+inline std::string getResourcePath(std::string name) {
+    return getCurrentDirectory() + FILE_SEP + "res" + FILE_SEP + name;
+}
+
 sf::Texture& ResourceManager::getTexture(std::string name) {
     // si la texture est déjà chargée, on l'utilise directement
     if (textures.count(name) > 0) {
@@ -36,13 +45,32 @@ sf::Texture& ResourceManager::getTexture(std::string name) {
     }
 
     sf::Texture texture;
-    std::string path = getCurrentDirectory() + FILE_SEP + "res" + FILE_SEP + name;
 
     // tente de charger la texture dans le chemin "CWD/res/name"
-    if (!texture.loadFromFile(path)) {
+    if (!texture.loadFromFile(getResourcePath(name))) {
         throw std::runtime_error("Impossible de charger l'image : " + name);
     }
 
     textures[name] = texture;
     return textures[name];
+}
+
+void ResourceManager::setMusic(std::string name) {
+    std::string path = getCurrentDirectory()
+
+    if (!music.openFromFile(getResourcePath(name))) {
+        throw std::runtime_error("Impossible de charger la musique : " + name);
+    }
+}
+
+void ResourceManager::playMusic() {
+    music.play();
+}
+
+void ResourceManager::pauseMusic() {
+    music.pause();
+}
+
+void ResourceManager::stopMusic() {
+    music.stop();
 }
