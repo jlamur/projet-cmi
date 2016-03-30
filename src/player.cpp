@@ -11,7 +11,7 @@ Player::Player(float x, float y) : Object(x, y) {
 
 Player::~Player() {}
 
-sf::Vector2f Player::getForces(const Manager& manager, const std::vector<Object*>& objects) const {
+sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const {
     sf::Vector2f forces = Object::getForces(manager, objects);
 
     // déplacement de la balle après appui sur les touches de direction
@@ -53,11 +53,11 @@ void Player::draw(Manager& manager) {
 }
 
 std::unique_ptr<sf::FloatRect> Player::getAABB() const {
-    return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
+    return std::make_unique<sf::FloatRect>(
         getPosition().x - getRadius(),
         getPosition().y - getRadius(),
         2 * getRadius(), 2 * getRadius()
-    ));
+    );
 }
 
 unsigned int Player::getTypeId() const {

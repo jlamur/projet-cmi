@@ -13,7 +13,7 @@ protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    virtual sf::Vector2f getForces(const Manager& manager, const std::vector<Object*>& objects) const;
+    virtual sf::Vector2f getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const;
 
 public:
     Player(float x, float y);
