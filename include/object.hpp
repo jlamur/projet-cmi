@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "collision_data.hpp"
+#include "collision.hpp"
 #include "manager.hpp"
 #include "resource_manager.hpp"
 

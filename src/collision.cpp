@@ -1,5 +1,4 @@
 #include "collision.hpp"
-#include "collision_data.hpp"
 #include "player.hpp"
 #include "block.hpp"
 #include "object.hpp"
@@ -194,6 +193,9 @@ std::map<
     {std::make_pair(Player::TYPE_ID, Player::TYPE_ID), playerToPlayer},
     {std::make_pair(Block::TYPE_ID, Block::TYPE_ID), blockToBlock}
 };
+
+CollisionData::CollisionData(Object& objA, Object& objB) :
+    objA(objA), objB(objB) {}
 
 bool getCollisionData(CollisionData& data) {
     return collision_map[std::make_pair(

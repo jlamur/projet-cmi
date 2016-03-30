@@ -1,7 +1,6 @@
 #include "object.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
-#include "collision_data.hpp"
 
 Object::Object(float x, float y) :
     acceleration(0, 0), velocity(0, 0), position(x, y),
