@@ -5,11 +5,13 @@
 #include "collision_data.hpp"
 #include <SFML/Graphics.hpp>
 #include <utility>
+#include <functional>
 
 namespace Collision {
-    typedef bool (*collision_detect)(CollisionData&);
-    typedef std::map<std::pair<unsigned int, unsigned int>, collision_detect> collision_dispatcher;
-    extern collision_dispatcher dispatch;
+    extern std::map<
+        std::pair<unsigned int, unsigned int>,
+        std::function<bool(CollisionData&)>
+    > dispatch;
 
     bool playerToBlock(CollisionData& data);
     bool blockToPlayer(CollisionData& data);
