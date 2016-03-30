@@ -7,6 +7,8 @@
 #include "manager.hpp"
 #include "resource_manager.hpp"
 
+typedef std::shared_ptr<Object> ObjectPtr;
+
 class Object {
 private:
     sf::Vector2f acceleration;
@@ -28,7 +30,7 @@ protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    virtual sf::Vector2f getForces(const Manager& manager, const std::vector<Object*>& objects) const;
+    virtual sf::Vector2f getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const;
 
 public:
     Object(float x, float y);
@@ -43,7 +45,7 @@ public:
      * Met à jour la vitesse de l'objet selon les
      * forces qui lui sont appliquées
      */
-    void updateVelocity(const Manager& manager, const std::vector<Object*>& objects, float delta);
+    void updateVelocity(const Manager& manager, const std::vector<ObjectPtr>& objects, float delta);
 
     /**
      * Met à jour la position de l'objet selon sa
@@ -183,7 +185,7 @@ public:
  * qui doit être dessinée avant celle du second
  */
 struct ObjectCompare {
-	bool operator()(Object* const &t1, Object* const &t2) const;
+	bool operator()(ObjectPtr const &t1, ObjectPtr const &t2) const;
 };
 
 #endif

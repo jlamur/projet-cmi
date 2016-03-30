@@ -18,7 +18,7 @@ Object::Object(float x, float y) :
 Object::~Object() {}
 
 sf::Vector2f Object::getForces(
-    const Manager& manager, const std::vector<Object*>& objects
+    const Manager& manager, const std::vector<ObjectPtr>& objects
 ) const {
     sf::Vector2f forces(0, 0);
 
@@ -28,9 +28,9 @@ sf::Vector2f Object::getForces(
     // force d'attraction entre objets chargés
     if (getCharge() != 0) {
         for (unsigned int j = 0; j < objects.size(); j++) {
-            Object *attractive = objects[j];
+            ObjectPtr attractive = objects[j];
 
-            if (attractive == this || attractive->getCharge() == 0) {
+            if (attractive.get() == this || attractive->getCharge() == 0) {
                 continue;
             }
 
@@ -79,7 +79,7 @@ void Object::draw(Manager& manager) {
 }
 
 void Object::updateVelocity(
-    const Manager& manager, const std::vector<Object*>& objects, float delta
+    const Manager& manager, const std::vector<ObjectPtr>& objects, float delta
 ) {
     acceleration = getForces(manager, objects) * getMassInvert();
     velocity += acceleration * delta;
@@ -267,6 +267,6 @@ void Object::setLayer(int set_layer) {
     layer = set_layer;
 }
 
-bool ObjectCompare::operator()(Object* const &t1, Object* const &t2) const {
+bool ObjectCompare::operator()(ObjectPtr const &t1, ObjectPtr const &t2) const {
     return t1->getLayer() > t2->getLayer();
 }
