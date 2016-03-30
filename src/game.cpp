@@ -1,34 +1,87 @@
 #include "game.hpp"
 #include "constants.hpp"
 #include "player.hpp"
-#include <cmath>
+#include <cstring>
 #include <queue>
+#include <utility>
+#include <iostream>
 
-Game::Game() : accumulator(0.f) {
-    if (!music.openFromFile("./res/music_lvl1.wav")) {
-        // erreur
-    }
-
-    music.play();
-    music.setVolume(15);
-    music.setLoop(true);
-
-    load();
-}
-
+Game::Game(Manager& manager) : View(manager), accumulator(0.f) {}
 Game::~Game() {
     clear();
 }
 
-void Game::load() {
+void Game::load(std::ifstream& file) {
     // vide le niveau précédent s'il y a lieu
     if (objects.size()) {
         clear();
     }
 
-    // TODO: faire une vraie fonction de chargement
-    Player* player1 = new Player(3.5f * Constants::GRID, 10 * Constants::GRID);
-    objects.push_back(player1);
+    // lecture de la signture du fichier ("BAR")
+    char signature[3];
+    file.read(signature, sizeof(signature));
+
+    if (strncmp(signature, "BAR", 3) != 0) {
+        throw std::runtime_error(
+            "Impossible de lire le fichier : en-tête invalide"
+        );
+    }
+
+    // lecture de la version du fichier
+    char file_version;
+    file.read(&file_version, 1);
+
+    if (file_version != 0) {
+        throw std::runtime_error(
+            "Impossible de lire le fichier : version non prise en charge"
+        );
+    }
+
+    // lecture du nom du niveau
+    std::getline(file, level_name, '\0');
+
+    // lecture des positions initiales
+    char player_amount;
+    file.read(&player_amount, 1);
+
+    for (int i = 0; i < player_amount; i++) {
+        float pos_x, pos_y;
+
+        file.read((char*) &pos_x, sizeof(pos_x));
+        file.read((char*) &pos_y, sizeof(pos_y));
+
+        pos_x *= Constants::GRID;
+        pos_y *= Constants::GRID;
+
+        std::shared_ptr<Player> player = std::make_shared<Player>(pos_x, pos_y);
+        player->setPlayerNumber(i);
+
+        objects.push_back(std::dynamic_pointer_cast<Object>(player));
+    }
+
+    // lecture de la zone de vie
+    char control_points;
+    file.read(&control_points, 1);
+    level_zone.clear();
+
+    for (int i = 0; i < control_points; i++) {
+        float pos_x, pos_y;
+
+        file.read((char*) &pos_x, sizeof(pos_x));
+        file.read((char*) &pos_y, sizeof(pos_y));
+
+        pos_x *= Constants::GRID;
+        pos_y *= Constants::GRID;
+
+        level_zone.push_back(std::make_pair(pos_x, pos_y));
+    }
+
+    // lecture des chemins de la musique et du fond
+    std::getline(file, music_path, '\0');
+    std::getline(file, background_path, '\0');
+
+    manager.getResourceManager().setMusic(music_path);
+    manager.getResourceManager().playMusic();
 }
 
 void Game::save() {
@@ -37,35 +90,31 @@ void Game::save() {
 }
 
 void Game::clear() {
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        delete objects[i];
-    }
-
     objects.clear();
 }
 
-void Game::frame(Manager& manager) {
+void Game::frame() {
     accumulator += manager.getElapsedTime();
 
     // tant qu'il reste du temps à passer,
     // effectuer la simulation physique étape par étape
     while (accumulator >= Constants::PHYSICS_TIME) {
         accumulator -= Constants::PHYSICS_TIME;
-        update(manager);
+        update();
     }
 
-    draw(manager);
+    draw();
 }
 
-void Game::update(const Manager& manager) {
+void Game::update() {
     std::vector<CollisionData> colliding;
 
     // détection des objets en collision
     for (unsigned int i = 0; i < objects.size(); i++) {
-        Object* objA = objects[i];
+        ObjectPtr objA = objects[i];
 
         for (unsigned int j = i + 1; j < objects.size(); j++) {
-            Object* objB = objects[j];
+            ObjectPtr objB = objects[j];
             CollisionData data(*objA, *objB);
 
             if (objA->detectCollision(*objB, data)) {
@@ -104,12 +153,12 @@ void Game::update(const Manager& manager) {
     }
 }
 
-void Game::draw(Manager& manager) {
+void Game::draw() {
     // efface la scène précédente et dessine la couche de fond
     manager.getWindow().clear(sf::Color(66, 165, 245));
 
     // chargement de la file d'affichage des objets
-    std::priority_queue<Object*, std::vector<Object*>, ObjectCompare> display_queue;
+    std::priority_queue<ObjectPtr, std::vector<ObjectPtr>, ObjectCompare> display_queue;
 
     for (unsigned int i = 0; i < objects.size(); i++) {
         display_queue.push(objects[i]);

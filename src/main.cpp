@@ -6,10 +6,17 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <fstream>
 
 int main() {
     Manager manager;
-    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game);
+    std::shared_ptr<Game> game = std::make_shared<Game>(manager);
+
+    // ouverture du niveau
+    std::ifstream file;
+    file.open("./levels/level1.dat", std::ios::binary | std::ios::in);
+    game->load(file);
+    file.close();
 
     manager.setView(game);
 

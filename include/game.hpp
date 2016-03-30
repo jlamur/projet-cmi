@@ -2,6 +2,8 @@
 #define __PTF_GAME_HPP__
 
 #include <SFML/Audio.hpp>
+#include <fstream>
+#include <vector>
 #include "view.hpp"
 #include "object.hpp"
 #include "manager.hpp"
@@ -13,31 +15,37 @@
  */
 class Game : public View {
 private:
-    sf::View view;
+    std::string level_name;
+    std::string music_path;
+    std::string background_path;
+
+    sf::Sprite sprite;
     sf::Music music;
 
     float accumulator;
-    std::vector<Object*> objects;
+
+    std::vector<ObjectPtr> objects;
+    std::vector<std::pair<float, float>> level_zone;
 
     /**
      * Met à jour les objets du jeu pour
      * qu'ils s'adaptent au nouvel état
      */
-    void update(const Manager& manager);
+    void update();
 
     /**
      * Dessine la scène du jeu couche par couche
      */
-    void draw(Manager& manager);
+    void draw();
 
 public:
-    Game();
+    Game(Manager& manager);
     virtual ~Game();
 
     /**
      * Charge un niveau de jeu depuis le fichier donné
      */
-    void load();
+    void load(std::ifstream& file);
 
     /**
      * Sauvegarde la configuration actuelle comme un niveau
@@ -53,12 +61,7 @@ public:
      * Demande le passage à la frame suivante sur
      * cette vue
      */
-    void frame(Manager& manager);
-
-    /**
-     * Ajoute un nouvel objet à la liste des objets du jeu
-     */
-    void addObject(Object& object);
+    void frame();
 };
 
 #endif
