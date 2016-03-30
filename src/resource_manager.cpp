@@ -19,7 +19,7 @@ ResourceManager::~ResourceManager() {
  */
 std::string getCurrentDirectory() {
     int length = wai_getExecutablePath(NULL, 0, NULL), dirname_length;
-    std::unique_ptr<char> buffer = std::unique_ptr<char>(new char[length + 1]);
+    std::unique_ptr<char[]> buffer = std::make_unique<char[]>(length + 1);
     wai_getExecutablePath(buffer.get(), length, &dirname_length);
 
     if (dirname_length == 0) {
@@ -56,8 +56,6 @@ sf::Texture& ResourceManager::getTexture(std::string name) {
 }
 
 void ResourceManager::setMusic(std::string name) {
-    std::string path = getCurrentDirectory()
-
     if (!music.openFromFile(getResourcePath(name))) {
         throw std::runtime_error("Impossible de charger la musique : " + name);
     }
