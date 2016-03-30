@@ -16,11 +16,7 @@
 class Game : public View {
 private:
     std::string level_name;
-    std::string music_path;
-    std::string background_path;
-
-    sf::Sprite sprite;
-    sf::Music music;
+    sf::Sprite background;
 
     float accumulator;
 

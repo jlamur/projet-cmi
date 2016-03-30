@@ -59,7 +59,7 @@ void Game::load(std::ifstream& file) {
         objects.push_back(std::dynamic_pointer_cast<Object>(player));
     }
 
-    // lecture de la zone de vie
+    // lecture de la zone de jeu
     char control_points;
     file.read(&control_points, 1);
     level_zone.clear();
@@ -77,11 +77,15 @@ void Game::load(std::ifstream& file) {
     }
 
     // lecture des chemins de la musique et du fond
-    std::getline(file, music_path, '\0');
-    std::getline(file, background_path, '\0');
+    std::string music_name, background_name;
+    ResourceManager& resource_manager = manager.getResourceManager();
 
-    manager.getResourceManager().setMusic(music_path);
-    manager.getResourceManager().playMusic();
+    std::getline(file, music_name, '\0');
+    resource_manager.setMusic(music_name);
+    resource_manager.playMusic();
+
+    std::getline(file, background_name, '\0');
+    background.setTexture(resource_manager.getTexture(background_name));
 }
 
 void Game::save() {
@@ -155,7 +159,9 @@ void Game::update() {
 
 void Game::draw() {
     // efface la scène précédente et dessine la couche de fond
-    manager.getWindow().clear(sf::Color(66, 165, 245));
+    sf::RenderWindow& window = manager.getWindow();
+    window.clear(sf::Color(66, 165, 245));
+    window.draw(background);
 
     // chargement de la file d'affichage des objets
     std::priority_queue<ObjectPtr, std::vector<ObjectPtr>, ObjectCompare> display_queue;
@@ -170,5 +176,5 @@ void Game::draw() {
         display_queue.pop();
     }
 
-    manager.getWindow().display();
+    window.display();
 }
