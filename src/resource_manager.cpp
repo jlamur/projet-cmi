@@ -2,6 +2,10 @@
 #include "whereami.h"
 #include <memory>
 
+ResourceManager::ResourceManager() {
+    music.setLoop(true);
+}
+
 ResourceManager::~ResourceManager() {
     textures.clear();
 }

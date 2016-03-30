@@ -12,6 +12,7 @@ private:
     sf::Music music;
 
 public:
+    ResourceManager();
     ~ResourceManager();
 
     /**
