@@ -16,18 +16,14 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
 endif()
 
-# Standard C++11
+# Standard C++14
 include(CheckCXXCompilerFlag)
-
-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX14)
 
 if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-elseif(COMPILER_SUPPORTS_CXX0X)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 else()
-    message(STATUS "Le compilateur actuel (${CMAKE_CXX_COMPILER}) ne supporte pas C++11. Merci d'utiliser un autre compilateur.")
+    message(STATUS "Le compilateur actuel (${CMAKE_CXX_COMPILER}) ne supporte pas C++14. Merci d'utiliser un autre compilateur.")
 endif()
 
 # Recherche des librairies
