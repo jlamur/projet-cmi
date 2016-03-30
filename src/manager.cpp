@@ -36,7 +36,7 @@ void Manager::start() {
         }
 
         elapsed_time = clock.restart().asSeconds();
-        view->frame(*this);
+        view->frame();
     }
 }
 
