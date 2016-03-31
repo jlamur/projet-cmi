@@ -9,6 +9,11 @@ private:
     mutable sf::Sprite sprite;
 
 public:
+    /**
+     * Identifiant unique du type d'objet
+     */
+    static const unsigned int TYPE_ID;
+
     Block(float x, float y);
     virtual ~Block();
 
@@ -25,7 +30,6 @@ public:
     /**
      * Récupère l'identifiant de type de cet objet
      */
-    static const unsigned int TYPE_ID;
     virtual unsigned int getTypeId() const;
 };
 

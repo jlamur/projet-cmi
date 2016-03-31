@@ -3,6 +3,8 @@
 #include "constants.hpp"
 #include "resource_manager.hpp"
 
+const unsigned int Block::TYPE_ID = 1;
+
 Block::Block(float x, float y) : Object(x, y) {
     // par défaut, les blocs ne sont pas déplaçables et ont
     // donc une masse infinie, représentée par 0
@@ -43,7 +45,6 @@ std::unique_ptr<sf::FloatRect> Block::getAABB() const {
     ));
 }
 
-const unsigned int Block::TYPE_ID = 1;
 unsigned int Block::getTypeId() const {
     return TYPE_ID;
 }

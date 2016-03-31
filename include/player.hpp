@@ -16,6 +16,11 @@ protected:
     virtual sf::Vector2f getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const;
 
 public:
+    /**
+     * Identifiant unique du type d'objet
+     */
+    static const unsigned int TYPE_ID;
+    
     Player(float x, float y);
     virtual ~Player();
 
@@ -32,7 +37,6 @@ public:
     /**
      * Récupère l'identifiant de type de cet objet
      */
-    static const unsigned int TYPE_ID;
     virtual unsigned int getTypeId() const;
 
     /**
