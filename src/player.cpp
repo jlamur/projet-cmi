@@ -53,11 +53,11 @@ void Player::draw(Manager& manager) {
 }
 
 std::unique_ptr<sf::FloatRect> Player::getAABB() const {
-    return std::make_unique<sf::FloatRect>(
+    return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
         getPosition().x - getRadius(),
         getPosition().y - getRadius(),
         2 * getRadius(), 2 * getRadius()
-    );
+    ));
 }
 
 const unsigned int Player::TYPE_ID = 0;

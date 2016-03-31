@@ -36,11 +36,11 @@ void Block::draw(Manager& manager) {
 }
 
 std::unique_ptr<sf::FloatRect> Block::getAABB() const {
-    return std::make_unique<sf::FloatRect>(
+    return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
         getPosition().x - Constants::GRID / 2,
         getPosition().y - Constants::GRID / 2,
         Constants::GRID, Constants::GRID
-    );
+    ));
 }
 
 const unsigned int Block::TYPE_ID = 1;

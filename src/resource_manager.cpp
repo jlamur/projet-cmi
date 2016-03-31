@@ -16,7 +16,7 @@ ResourceManager::~ResourceManager() {
  */
 std::string getCurrentDirectory() {
     int length = wai_getExecutablePath(NULL, 0, NULL), dirname_length;
-    std::unique_ptr<char[]> buffer = std::make_unique<char[]>(length + 1);
+    std::unique_ptr<char[]> buffer = std::unique_ptr<char[]>(new char[length + 1]);
     wai_getExecutablePath(buffer.get(), length, &dirname_length);
 
     if (dirname_length == 0) {

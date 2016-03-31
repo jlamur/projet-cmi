@@ -53,7 +53,8 @@ void Game::load(std::ifstream& file) {
         pos_x *= Constants::GRID;
         pos_y *= Constants::GRID;
 
-        std::shared_ptr<Player> player = std::make_shared<Player>(pos_x, pos_y);
+        std::shared_ptr<Player> player =
+            std::shared_ptr<Player>(new Player(pos_x, pos_y));
         player->setPlayerNumber(i);
 
         objects.push_back(std::dynamic_pointer_cast<Object>(player));

@@ -10,7 +10,7 @@
 
 int main() {
     Manager manager;
-    std::shared_ptr<Game> game = std::make_shared<Game>(manager);
+    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(manager));
 
     // ouverture du niveau
     std::ifstream file;
