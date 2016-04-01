@@ -19,7 +19,7 @@ std::string getCurrentDirectory() {
     std::unique_ptr<char[]> buffer = std::unique_ptr<char[]>(new char[length + 1]);
     wai_getExecutablePath(buffer.get(), length, &dirname_length);
 
-    if (dirname_length == 0) {
+    if (length == 0) {
         throw std::runtime_error("Impossible de déterminer le chemin actuel");
     }
 
