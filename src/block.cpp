@@ -16,6 +16,10 @@ Block::Block(float x, float y) : Object(x, y) {
 
 Block::~Block() {}
 
+std::shared_ptr<Object> Block::load(std::ifstream& file) {
+    return std::shared_ptr<Object>(new Block(10, 10));
+}
+
 void Block::draw(Manager& manager) {
     Object::draw(manager);
 

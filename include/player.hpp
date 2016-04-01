@@ -2,6 +2,7 @@
 #define __PTF_PLAYER_HPP__
 
 #include <SFML/Graphics.hpp>
+#include <fstream>
 #include "object.hpp"
 
 class Player : public Object {
@@ -20,9 +21,14 @@ public:
      * Identifiant unique du type d'objet
      */
     static const unsigned int TYPE_ID;
-    
+
     Player(float x, float y);
     virtual ~Player();
+
+    /**
+     * Chargement de l'objet depuis le fichier donné
+     */
+    static std::shared_ptr<Object> load(std::ifstream& file);
 
     /**
      * Dessine la balle dans la fenêtre donnée

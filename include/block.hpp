@@ -2,6 +2,7 @@
 #define __PTF_BLOCK_HPP__
 
 #include <SFML/Graphics.hpp>
+#include <fstream>
 #include "object.hpp"
 
 class Block : public Object {
@@ -16,6 +17,11 @@ public:
 
     Block(float x, float y);
     virtual ~Block();
+
+    /**
+     * Chargement de l'objet depuis le fichier donné
+     */
+    static std::shared_ptr<Object> load(std::ifstream& file);
 
     /**
      * Dessin du bloc dans la fenêtre donnée

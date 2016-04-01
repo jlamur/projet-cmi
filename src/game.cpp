@@ -1,10 +1,23 @@
 #include "game.hpp"
 #include "constants.hpp"
+#include "object.hpp"
+#include "block.hpp"
 #include "player.hpp"
+#include <arpa/inet.h>
 #include <cstring>
 #include <queue>
 #include <utility>
 #include <iostream>
+
+/**
+ * Dictionnaire associant les types d'objets
+ * à des instances qui seront utilisées pour la
+ * construction d'autres objets de ces types
+ */
+std::map<unsigned int, std::function<std::shared_ptr<Object>(std::ifstream&)>> object_type_map = {
+    {Player::TYPE_ID, Player::load},
+    {Block::TYPE_ID, Block::load}
+};
 
 Game::Game(Manager& manager) : View(manager), accumulator(0.f) {}
 Game::~Game() {
@@ -40,26 +53,6 @@ void Game::load(std::ifstream& file) {
     // lecture du nom du niveau
     std::getline(file, level_name, '\0');
 
-    // lecture des positions initiales
-    char player_amount;
-    file.read(&player_amount, 1);
-
-    for (int i = 0; i < player_amount; i++) {
-        float pos_x, pos_y;
-
-        file.read((char*) &pos_x, sizeof(pos_x));
-        file.read((char*) &pos_y, sizeof(pos_y));
-
-        pos_x *= Constants::GRID;
-        pos_y *= Constants::GRID;
-
-        std::shared_ptr<Player> player =
-            std::shared_ptr<Player>(new Player(pos_x, pos_y));
-        player->setPlayerNumber(i);
-
-        objects.push_back(std::dynamic_pointer_cast<Object>(player));
-    }
-
     // lecture de la zone de jeu
     char control_points;
     file.read(&control_points, 1);
@@ -68,8 +61,8 @@ void Game::load(std::ifstream& file) {
     for (int i = 0; i < control_points; i++) {
         float pos_x, pos_y;
 
-        file.read((char*) &pos_x, sizeof(pos_x));
-        file.read((char*) &pos_y, sizeof(pos_y));
+        file.read(reinterpret_cast<char*>(&pos_x), sizeof(pos_x));
+        file.read(reinterpret_cast<char*>(&pos_y), sizeof(pos_y));
 
         pos_x *= Constants::GRID;
         pos_y *= Constants::GRID;
@@ -87,6 +80,18 @@ void Game::load(std::ifstream& file) {
 
     std::getline(file, background_name, '\0');
     background.setTexture(resource_manager.getTexture(background_name));
+
+    // lecture du nombre de blocs
+    int block_count;
+
+    file.read(reinterpret_cast<char*>(&block_count), sizeof(block_count));
+    block_count = ntohl(block_count);
+
+    for (int i = 0; i < block_count; i++) {
+        char block_type;
+        file.read(&block_type, 1);
+        objects.push_back(object_type_map[block_type](file));
+    }
 }
 
 void Game::save() {

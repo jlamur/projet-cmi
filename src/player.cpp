@@ -13,6 +13,22 @@ Player::Player(float x, float y) : Object(x, y) {
 
 Player::~Player() {}
 
+std::shared_ptr<Object> Player::load(std::ifstream& file) {
+    float pos_x, pos_y;
+
+    file.read(reinterpret_cast<char*>(&pos_x), sizeof(pos_x));
+    file.read(reinterpret_cast<char*>(&pos_y), sizeof(pos_y));
+
+    pos_x *= Constants::GRID;
+    pos_y *= Constants::GRID;
+
+    std::shared_ptr<Player> player =
+        std::shared_ptr<Player>(new Player(pos_x, pos_y));
+    // player->setPlayerNumber(i);
+
+    return std::dynamic_pointer_cast<Object>(player);
+}
+
 sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const {
     sf::Vector2f forces = Object::getForces(manager, objects);
 
