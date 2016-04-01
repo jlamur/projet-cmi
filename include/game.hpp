@@ -49,11 +49,6 @@ public:
     void save();
 
     /**
-     * Libère les ressources du niveau
-     */
-    void clear();
-
-    /**
      * Demande le passage à la frame suivante sur
      * cette vue
      */

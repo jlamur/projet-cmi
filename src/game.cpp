@@ -8,20 +8,20 @@
 
 Game::Game(Manager& manager) : View(manager), accumulator(0.f) {}
 Game::~Game() {
-    clear();
+    objects.clear();
 }
 
 void Game::load(std::ifstream& file) {
     // vide le niveau précédent s'il y a lieu
-    if (objects.size()) {
-        clear();
+    if (objects.size() != 0) {
+        objects.clear();
     }
 
     // lecture de la signture du fichier ("BAR")
     char signature[3];
     file.read(signature, sizeof(signature));
 
-    if (strncmp(signature, "BAR", 3) != 0) {
+    if (strncmp(signature, "BAR", sizeof(signature)) != 0) {
         throw std::runtime_error(
             "Impossible de lire le fichier : en-tête invalide"
         );
@@ -92,10 +92,6 @@ void Game::load(std::ifstream& file) {
 void Game::save() {
     // TODO: faire une fonction d'enregistrement
     // TODO: migrer sur une classe commune Game <-> Editor
-}
-
-void Game::clear() {
-    objects.clear();
 }
 
 void Game::frame() {
