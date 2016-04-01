@@ -4,6 +4,8 @@
 #include <array>
 #include <iostream>
 
+const unsigned int Player::TYPE_ID = 0;
+
 Player::Player(float x, float y) : Object(x, y) {
     // déplacement de l'origine au centre de la balle
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
@@ -60,7 +62,6 @@ std::unique_ptr<sf::FloatRect> Player::getAABB() const {
     ));
 }
 
-const unsigned int Player::TYPE_ID = 0;
 unsigned int Player::getTypeId() const {
     return TYPE_ID;
 }
