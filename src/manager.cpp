@@ -27,6 +27,13 @@ void Manager::start() {
             if (event.type == sf::Event::KeyReleased) {
                 keys[event.key.code] = false;
             }
+
+            // lorsque la fenêtre est redimensionnée par l'utilisateur
+            if (event.type == sf::Event::Resized){
+                // mise à jour de la caméra en fonction de la taille de la fenêtre
+                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+      			window.setView(sf::View(visibleArea));
+  		  	}
         }
 
         // demande à la vue de se mettre à jour sur
