@@ -37,27 +37,6 @@ namespace Constants {
     static const float CORRECTION_THRESHOLD = .05f;
 
     /**
-     * Masse par défaut d'un objet
-     */
-    static const float DEFAULT_MASS = 1.f;
-
-    /**
-     * Charge par défaut d'un objet
-     */
-    static const float DEFAULT_CHARGE = 0.f;
-
-    /**
-     * Coefficient de restitution par défaut
-     */
-    static const float DEFAULT_RESTITUTION = 0.4f;
-
-    /**
-     * Couche par défaut d'affichage d'un objet
-     * (peut être modifié objet par objet)
-     */
-    static const int DEFAULT_LAYER = 0;
-
-    /**
      * Taille de la grille des blocs en pixels
      */
     static const float GRID = 32;
