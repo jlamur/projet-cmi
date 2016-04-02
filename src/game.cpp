@@ -90,6 +90,15 @@ void Game::load(std::ifstream& file) {
     for (int i = 0; i < block_count; i++) {
         char block_type;
         file.read(&block_type, 1);
+
+        // vérifie que le type est pris en charge
+        // pour éviter une erreur de segmentation
+        if (object_type_map.count(block_type) == 0) {
+            throw std::runtime_error(
+                "Impossible de lire le fichier : type d'objet inconnu"
+            );
+        }
+
         objects.push_back(object_type_map[block_type](file));
     }
 }
