@@ -55,7 +55,7 @@ namespace Constants {
      * Couche par défaut d'affichage d'un objet
      * (peut être modifié objet par objet)
      */
-    static const int DEFAULT_LAYER = 10;
+    static const int DEFAULT_LAYER = 0;
 
     /**
      * Taille de la grille des blocs en pixels
