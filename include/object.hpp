@@ -2,6 +2,7 @@
 #define __PTF_OBJECT_HPP__
 
 #include <SFML/Graphics.hpp>
+#include <fstream>
 #include <memory>
 #include "collision.hpp"
 #include "manager.hpp"
@@ -17,9 +18,9 @@ private:
 
     sf::VertexArray acceleration_line;
     sf::VertexArray velocity_line;
+    mutable float inv_mass;
 
     float mass;
-    mutable float inv_mass;
     float charge;
     float restitution;
     float static_friction;
@@ -33,8 +34,24 @@ protected:
     virtual sf::Vector2f getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const;
 
 public:
-    Object(float x, float y);
+    /**
+     * Identifiants uniques des propriétés communes modifiables
+     */
+    static const unsigned int PROP_MASS;
+    static const unsigned int PROP_CHARGE;
+    static const unsigned int PROP_RESTITUTION;
+    static const unsigned int PROP_STATIC_FRICTION;
+    static const unsigned int PROP_DYNAMIC_FRICTION;
+    static const unsigned int PROP_LAYER;
+
+    Object();
     virtual ~Object();
+
+    /**
+     * Charge les propriétés communes à tous les objets
+     * depuis le fichier donné dans l'objet donné
+     */
+    static void load(std::ifstream& file, std::shared_ptr<Object> object);
 
     /**
      * Dessine l'objet dans la fenêtre donnée

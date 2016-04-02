@@ -3,9 +3,9 @@
 #include "constants.hpp"
 #include "resource_manager.hpp"
 
-const unsigned int Block::TYPE_ID = 1;
+const unsigned int Block::TYPE_ID = 2;
 
-Block::Block(float x, float y) : Object(x, y) {
+Block::Block() : Object() {
     // par défaut, les blocs ne sont pas déplaçables et ont
     // donc une masse infinie, représentée par 0
     setMass(0.f);
@@ -17,7 +17,13 @@ Block::Block(float x, float y) : Object(x, y) {
 Block::~Block() {}
 
 std::shared_ptr<Object> Block::load(std::ifstream& file) {
-    return std::shared_ptr<Object>(new Block(10, 10));
+    std::shared_ptr<Object> object = std::shared_ptr<Object>(new Block);
+
+    // lecture des propriétés communes des objets
+    Object::load(file, object);
+    file.seekg(1, file.cur);
+
+    return object;
 }
 
 void Block::draw(Manager& manager) {

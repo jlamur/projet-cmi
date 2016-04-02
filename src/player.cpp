@@ -4,9 +4,9 @@
 #include <array>
 #include <iostream>
 
-const unsigned int Player::TYPE_ID = 0;
+const unsigned int Player::TYPE_ID = 1;
 
-Player::Player(float x, float y) : Object(x, y) {
+Player::Player() : Object() {
     // déplacement de l'origine au centre de la balle
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
 }
@@ -14,19 +14,19 @@ Player::Player(float x, float y) : Object(x, y) {
 Player::~Player() {}
 
 std::shared_ptr<Object> Player::load(std::ifstream& file) {
-    float pos_x, pos_y;
+    std::shared_ptr<Object> object = std::shared_ptr<Object>(new Player);
+    std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(object);
 
-    file.read(reinterpret_cast<char*>(&pos_x), sizeof(pos_x));
-    file.read(reinterpret_cast<char*>(&pos_y), sizeof(pos_y));
+    // lecture du numéro de joueur
+    char player_number;
+    file.read(&player_number, 1);
+    player->setPlayerNumber(player_number);
 
-    pos_x *= Constants::GRID;
-    pos_y *= Constants::GRID;
+    // lecture des propriétés communes des objets
+    Object::load(file, object);
+    file.seekg(1, file.cur);
 
-    std::shared_ptr<Player> player =
-        std::shared_ptr<Player>(new Player(pos_x, pos_y));
-    // player->setPlayerNumber(i);
-
-    return std::dynamic_pointer_cast<Object>(player);
+    return object;
 }
 
 sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const {

@@ -2,7 +2,6 @@
 #define __PTF_BLOCK_HPP__
 
 #include <SFML/Graphics.hpp>
-#include <fstream>
 #include "object.hpp"
 
 class Block : public Object {
@@ -15,7 +14,7 @@ public:
      */
     static const unsigned int TYPE_ID;
 
-    Block(float x, float y);
+    Block();
     virtual ~Block();
 
     /**

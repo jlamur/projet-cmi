@@ -2,7 +2,6 @@
 #define __PTF_PLAYER_HPP__
 
 #include <SFML/Graphics.hpp>
-#include <fstream>
 #include "object.hpp"
 
 class Player : public Object {
@@ -22,7 +21,7 @@ public:
      */
     static const unsigned int TYPE_ID;
 
-    Player(float x, float y);
+    Player();
     virtual ~Player();
 
     /**
