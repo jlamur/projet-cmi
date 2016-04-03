@@ -3,7 +3,7 @@
 Manager::Manager() : window(
     sf::VideoMode(704, 480), "Projet CMI", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)
-), elapsed_time(sf::Time::Zero), view(NULL) {
+), view(NULL) {
     keys.fill(false);
 }
 
@@ -42,7 +42,6 @@ void Manager::start() {
             throw std::runtime_error("Aucune vue à afficher pour le jeu");
         }
 
-        elapsed_time = clock.restart();
         view->frame();
     }
 }
@@ -55,8 +54,8 @@ sf::RenderWindow& Manager::getWindow() {
     return window;
 }
 
-sf::Time Manager::getElapsedTime() const {
-    return elapsed_time;
+sf::Time Manager::getCurrentTime() const {
+    return clock.getElapsedTime();
 }
 
 ResourceManager& Manager::getResourceManager() {

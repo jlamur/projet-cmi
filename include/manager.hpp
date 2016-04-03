@@ -14,7 +14,6 @@ private:
     sf::RenderWindow window;
     sf::Clock clock;
 
-    sf::Time elapsed_time;
     ResourceManager resource_manager;
     std::array<bool, sf::Keyboard::KeyCount> keys;
 
@@ -39,10 +38,9 @@ public:
     sf::RenderWindow& getWindow();
 
     /**
-     * Renvoie le temps écoulé entre la frame précédente
-     * et la frame actuelle
+     * Renvoie le temps actuel du jeu
      */
-    sf::Time getElapsedTime() const;
+    sf::Time getCurrentTime() const;
 
     /**
      * Renvoie le gestionnaire de ressources

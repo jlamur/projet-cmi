@@ -19,7 +19,9 @@ std::map<unsigned int, std::function<std::shared_ptr<Object>(std::ifstream&)>> o
     {Block::TYPE_ID, Block::load}
 };
 
-Game::Game(Manager& manager) : View(manager), accumulator(sf::Time::Zero) {}
+Game::Game(Manager& manager) : View(manager),
+    next_frame_time(manager.getCurrentTime()) {}
+
 Game::~Game() {
     objects.clear();
 }
@@ -109,15 +111,25 @@ void Game::save() {
 }
 
 void Game::frame() {
-    // tant qu'il reste du temps à passer,
-    // effectuer la simulation physique étape par étape
-    while (accumulator > Constants::PHYSICS_TIME) {
-        accumulator -= Constants::PHYSICS_TIME;
-        update();
-    }
+    sf::Time current_time = manager.getCurrentTime();
 
-    draw();
-    accumulator += manager.getElapsedTime();
+    if (current_time >= next_frame_time) {
+        // si nous sommes en retard ou dans les temps
+        // on replanifie la prochaine frame
+        next_frame_time += Constants::PHYSICS_TIME;
+
+        // on met à jour la physique d'un cran temporel
+        update();
+
+        // si on a encore suffisamment de temps, on dessine
+        if (current_time < next_frame_time) {
+            draw();
+        }
+    } else {
+        // si nous sommes en avance, on endort le processus
+        // le temps nécessaire pour revenir dans les temps
+        sf::sleep(next_frame_time - current_time);
+    }
 }
 
 void Game::update() {
