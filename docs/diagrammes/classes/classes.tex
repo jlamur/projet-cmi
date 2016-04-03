@@ -24,8 +24,10 @@
         isKeyPressed(key : touche) : booléen
     }
 
-    \umlabstract[x=-4,y=-4.5]{View}{}{
-        \umlvirt{frame(manager : \texttt{Manager}) : vide}
+    \umlabstract[x=-4,y=-4.5]{View}{
+        manager : \texttt{Manager}
+    }{
+        \umlvirt{frame() : vide}
     }
     \umluniassoc{Manager}{View}
 
@@ -36,17 +38,31 @@
     }
     \umluniassoc{Manager}{ResourceManager}
 
-    \umlclass[x=-4,y=-8]{Game}{
-        accumulator : flottant\\
-        objects : \texttt{[Object]}
+    \umlabstract[x=-4,y=-8.5]{Level}{
+        name : chaîne de caractères\\
+        background : sprite\\
+        objects : \texttt{[Object]}\\
+        zone : \texttt{[[flottant, flottant]]}
     }{
-        frame(manager : \texttt{Manager}) : vide\\
-        update(manager : \texttt{Manager}) : vide\\
-        draw(manager : \texttt{Manager}) : vide
+        \umlvirt{frame() : vide}\\
+        draw() : vide\\
+        load(file : fichier en lecture) : vide\\
+        save(file : fichier en écriture) : vide
     }
-    \umlinherit{View}{Game}
+    \umlinherit{View}{Level}
 
-    \umlabstract[x=-4,y=-15]{Object}{
+    \umlclass[x=-7,y=-12.5]{Editor}{}{
+        frame() : vide
+    }
+    \umlinherit{Level}{Editor}
+
+    \umlclass[x=-1,y=-12.5]{Game}{}{
+        frame() : vide\\
+        update() : vide
+    }
+    \umlinherit{Level}{Game}
+
+    \umlabstract[x=-4,y=-19]{Object}{
         acceleration : vecteur\\
         velocity : vecteur\\
         position : vecteur\\
@@ -69,8 +85,9 @@
         positionalCorrection(object : \texttt{Object}, normal : vecteur, depth : flottant) : vide\\
     }
     \umlunicompo{Game}{Object}
+    \umlunicompo{Editor}{Object}
 
-    \umlclass[x=-8,y=-22]{Player}{
+    \umlclass[x=-8,y=-26]{Player}{
         player\_number : entier non-signé
     }{
         getForces(manager : \texttt{Manager}, objects : \texttt{[Object]}) : vecteur\\
@@ -79,7 +96,7 @@
     }
     \umlinherit{Object}{Player}
 
-    \umlclass[y=-22]{Block}{}{
+    \umlclass[y=-26]{Block}{}{
         draw(manager : \texttt{Manager}) : vide\\
         getAABB() : boîte
     }
