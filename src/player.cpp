@@ -65,9 +65,16 @@ void Player::draw(Manager& manager) {
     );
 
     // déplacement du sprite à la position de la balle
-    sprite.rotate(getVelocity().x * Constants::PHYSICS_TIME.asSeconds() * .5f);
     sprite.setPosition(getPosition());
     manager.getWindow().draw(sprite);
+}
+
+void Player::updatePosition(float delta) {
+    // calcul de la différence de position pour connaître
+    // (approximativement) la rotation de la balle
+    sf::Vector2f last_position = getPosition();
+    Object::updatePosition(delta);
+    sprite.rotate((getPosition() - last_position).x * 3.f);
 }
 
 std::unique_ptr<sf::FloatRect> Player::getAABB() const {

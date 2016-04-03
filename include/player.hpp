@@ -33,6 +33,12 @@ public:
      * Dessine la balle dans la fenêtre donnée
      */
     virtual void draw(Manager& manager);
+    
+    /**
+     * Met à jour la position de l'objet selon sa
+     * vitesse actuelle
+     */
+    virtual void updatePosition(float delta);
 
     /**
      * Récupère la boîte englobante de l'objet

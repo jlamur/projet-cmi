@@ -62,26 +62,26 @@ public:
      * Met à jour la vitesse de l'objet selon les
      * forces qui lui sont appliquées
      */
-    void updateVelocity(const Manager& manager, const std::vector<ObjectPtr>& objects, float delta);
+    virtual void updateVelocity(const Manager& manager, const std::vector<ObjectPtr>& objects, float delta);
 
     /**
      * Met à jour la position de l'objet selon sa
      * vitesse actuelle
      */
-    void updatePosition(float delta);
+    virtual void updatePosition(float delta);
 
     /**
      * Détecte s'il y a collision entre cet objet
      * et l'objet passé en paramètre
      */
-    bool detectCollision(const Object& obj, CollisionData& data) const;
+    virtual bool detectCollision(const Object& obj, CollisionData& data) const;
 
     /**
      * Résolution de la collision entre cet objet
      * et l'objet passé en paramètre selon la normale
      * donnée
      */
-    void solveCollision(Object& obj, const sf::Vector2f& normal);
+    virtual void solveCollision(Object& obj, const sf::Vector2f& normal);
 
     /**
      * Application de la correction positionnelle sur
@@ -91,7 +91,7 @@ public:
      * les objets peuvent accumuler une erreur de positionnement
      * qui les fait "plonger" les uns dans les autres
      */
-    void positionalCorrection(Object& obj, const sf::Vector2f& normal, float depth);
+    virtual void positionalCorrection(Object& obj, const sf::Vector2f& normal, float depth);
 
     /**
      * Récupère la boîte englobante de l'objet
