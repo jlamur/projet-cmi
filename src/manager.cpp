@@ -3,7 +3,7 @@
 Manager::Manager() : window(
     sf::VideoMode(704, 480), "Projet CMI", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)
-), elapsed_time(0.f), view(NULL) {
+), elapsed_time(sf::Time::Zero), view(NULL) {
     keys.fill(false);
 }
 
@@ -29,11 +29,11 @@ void Manager::start() {
             }
 
             // lorsque la fenêtre est redimensionnée par l'utilisateur
-            if (event.type == sf::Event::Resized){
+            if (event.type == sf::Event::Resized) {
                 // mise à jour de la caméra en fonction de la taille de la fenêtre
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-      			window.setView(sf::View(visibleArea));
-  		  	}
+                window.setView(sf::View(visibleArea));
+            }
         }
 
         // demande à la vue de se mettre à jour sur
@@ -42,7 +42,7 @@ void Manager::start() {
             throw std::runtime_error("Aucune vue à afficher pour le jeu");
         }
 
-        elapsed_time = clock.restart().asSeconds();
+        elapsed_time = clock.restart();
         view->frame();
     }
 }
@@ -55,7 +55,7 @@ sf::RenderWindow& Manager::getWindow() {
     return window;
 }
 
-float Manager::getElapsedTime() const {
+sf::Time Manager::getElapsedTime() const {
     return elapsed_time;
 }
 

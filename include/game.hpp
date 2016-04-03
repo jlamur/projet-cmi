@@ -18,7 +18,7 @@ private:
     std::string level_name;
     sf::Sprite background;
 
-    float accumulator;
+    sf::Time accumulator;
 
     std::vector<ObjectPtr> objects;
     std::vector<std::pair<float, float>> level_zone;

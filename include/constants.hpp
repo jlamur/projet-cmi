@@ -27,7 +27,7 @@ namespace Constants {
     /**
      * Durée fixe d'une étape de simulation physique
      */
-    static const float PHYSICS_TIME = 1.f / 60;
+    static const sf::Time PHYSICS_TIME = sf::seconds(1.f / 60);
 
     /**
      * Correction positionnelle : pourcentage de correction

@@ -65,7 +65,7 @@ void Player::draw(Manager& manager) {
     );
 
     // déplacement du sprite à la position de la balle
-    sprite.rotate(getVelocity().x * Constants::PHYSICS_TIME * .5f);
+    sprite.rotate(getVelocity().x * Constants::PHYSICS_TIME.asSeconds() * .5f);
     sprite.setPosition(getPosition());
     manager.getWindow().draw(sprite);
 }

@@ -19,7 +19,7 @@ std::map<unsigned int, std::function<std::shared_ptr<Object>(std::ifstream&)>> o
     {Block::TYPE_ID, Block::load}
 };
 
-Game::Game(Manager& manager) : View(manager), accumulator(0.f) {}
+Game::Game(Manager& manager) : View(manager), accumulator(sf::Time::Zero) {}
 Game::~Game() {
     objects.clear();
 }
@@ -109,16 +109,15 @@ void Game::save() {
 }
 
 void Game::frame() {
-    accumulator += manager.getElapsedTime();
-
     // tant qu'il reste du temps à passer,
     // effectuer la simulation physique étape par étape
-    while (accumulator >= Constants::PHYSICS_TIME) {
+    while (accumulator > Constants::PHYSICS_TIME) {
         accumulator -= Constants::PHYSICS_TIME;
         update();
     }
 
     draw();
+    accumulator += manager.getElapsedTime();
 }
 
 void Game::update() {
@@ -140,7 +139,7 @@ void Game::update() {
 
     // intégration des forces dans la vitesse (première moitié)
     for (unsigned int i = 0; i < objects.size(); i++) {
-        objects[i]->updateVelocity(manager, objects, Constants::PHYSICS_TIME / 2);
+        objects[i]->updateVelocity(manager, objects, Constants::PHYSICS_TIME.asSeconds() / 2);
     }
 
     // résolution des collisions détectées
@@ -151,7 +150,7 @@ void Game::update() {
 
     // intégration de la vitesse dans la position
     for (unsigned int i = 0; i < objects.size(); i++) {
-        objects[i]->updatePosition(Constants::PHYSICS_TIME);
+        objects[i]->updatePosition(Constants::PHYSICS_TIME.asSeconds());
     }
 
     // application de la correction positionnelle
@@ -164,7 +163,7 @@ void Game::update() {
 
     // intégration des forces dans la vitesse (seconde moitié)
     for (unsigned int i = 0; i < objects.size(); i++) {
-        objects[i]->updateVelocity(manager, objects, Constants::PHYSICS_TIME / 2);
+        objects[i]->updateVelocity(manager, objects, Constants::PHYSICS_TIME.asSeconds() / 2);
     }
 }
 
