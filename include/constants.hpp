@@ -1,6 +1,8 @@
 #ifndef __PTF_CONSTANTS_HPP__
 #define __PTF_CONSTANTS_HPP__
 
+#include <SFML/System.hpp>
+
 namespace Constants {
     /**
      * Constante d'attraction. Utilisée dans la formule
