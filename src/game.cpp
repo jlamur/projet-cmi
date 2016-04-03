@@ -1,8 +1,14 @@
 #include "game.hpp"
 #include "constants.hpp"
 
-Game::Game(Manager& manager) : Level(manager),
-    next_frame_time(manager.getCurrentTime()) {}
+Game::Game(Manager& manager) : Level(manager), next_frame_time(manager.getCurrentTime()) {
+    // on s'assure que la synchronisation verticale soit
+    // bien désactivée : on s'occupe de la limitation du
+    // framerate manuellement dans la fonction frame pour mettre
+    // une mise à jour fluide de la physique du jeu
+    manager.getWindow().setVerticalSyncEnabled(false);
+}
+
 Game::~Game() {}
 
 void Game::frame() {
