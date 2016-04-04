@@ -43,7 +43,20 @@ void Editor::frame() {
 
                 std::shared_ptr<Object> object = std::shared_ptr<Object>(new Block);
                 object->setPosition(position);
-                objects.push_back(object);
+
+                // avant d'ajouter l'objet, on vérifie qu'il ne soit
+                // pas superposé à un autre
+                float overlaps = false;
+
+                for (unsigned int i = 0; i < objects.size(); i++) {
+                    if (objects[i]->getAABB()->intersects(*object->getAABB())) {
+                        overlaps = true;
+                    }
+                }
+
+                if (!overlaps) {
+                    objects.push_back(object);
+                }
             }
         }
     }
