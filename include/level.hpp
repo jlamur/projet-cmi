@@ -49,12 +49,12 @@ public:
     /**
      * Récupère la liste des objets
      */
-    std::vector<ObjectPtr> getObjects();
+    std::vector<ObjectPtr>& getObjects();
 
     /**
      * Récupère la zone du niveau
      */
-    std::vector<std::pair<float, float>> getZone();
+    const std::vector<std::pair<float, float>>& getZone();
 };
 
 #endif

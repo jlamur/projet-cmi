@@ -131,10 +131,10 @@ std::string Level::getName() {
     return name;
 }
 
-std::vector<ObjectPtr> Level::getObjects() {
+std::vector<ObjectPtr>& Level::getObjects() {
     return objects;
 }
 
-std::vector<std::pair<float, float>> Level::getZone() {
+const std::vector<std::pair<float, float>>& Level::getZone() {
     return zone;
 }
