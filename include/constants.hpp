@@ -42,11 +42,6 @@ namespace Constants {
      * Taille de la grille des blocs en pixels
      */
     static const float GRID = 32;
-
-    /**
-     * Activation du débogage (affichage des vecteurs)
-     */
-    static const bool DEBUG_MODE = false;
 }
 
 #endif

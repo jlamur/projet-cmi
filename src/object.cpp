@@ -11,8 +11,6 @@ const unsigned int Object::PROP_LAYER = 6;
 
 Object::Object() :
     acceleration(0, 0), velocity(0, 0), position(0, 0),
-    acceleration_line(sf::Lines, 2),
-    velocity_line(sf::Lines, 2),
     inv_mass(-1.f),
 
     // valeurs par défaut pour les propriétés
@@ -131,20 +129,7 @@ sf::Vector2f Object::getForces(
 }
 
 void Object::draw(Manager& manager) {
-    if (Constants::DEBUG_MODE) {
-        velocity_line[0].position = position;
-        velocity_line[0].color = sf::Color::Green;
-        velocity_line[1].position = position + velocity * 1.f;
-        velocity_line[1].color = sf::Color::Green;
 
-        acceleration_line[0].position = position;
-        acceleration_line[0].color = sf::Color::Red;
-        acceleration_line[1].position = position + acceleration * 1.f;
-        acceleration_line[1].color = sf::Color::Red;
-
-        manager.getWindow().draw(velocity_line);
-        manager.getWindow().draw(acceleration_line);
-    }
 }
 
 void Object::updateVelocity(

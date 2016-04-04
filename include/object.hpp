@@ -16,8 +16,6 @@ private:
     sf::Vector2f velocity;
     sf::Vector2f position;
 
-    sf::VertexArray acceleration_line;
-    sf::VertexArray velocity_line;
     mutable float inv_mass;
 
     float mass;
