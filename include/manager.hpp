@@ -15,7 +15,7 @@ private:
     sf::Clock clock;
 
     ResourceManager resource_manager;
-    std::array<bool, sf::Keyboard::KeyCount> keys;
+    std::vector<sf::Event> events;
 
     std::shared_ptr<View> view;
 
@@ -46,6 +46,12 @@ public:
      * Renvoie le gestionnaire de ressources
      */
     ResourceManager& getResourceManager();
+
+    /**
+     * Renvoie la liste des événements reçus pour la
+     * précédente frame
+     */
+    const std::vector<sf::Event>& getEvents();
 
     /**
      * Renvoie un booléen attestant de l'appui sur la
