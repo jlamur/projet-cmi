@@ -42,6 +42,11 @@ public:
     virtual ~Editor();
 
     /**
+     * Charge un niveau de jeu depuis le fichier donné
+     */
+    virtual void load(std::ifstream& file);
+
+    /**
      * Demande le passage à la frame suivante sur
      * cette vue
      */

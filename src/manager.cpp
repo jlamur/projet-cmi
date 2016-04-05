@@ -3,9 +3,7 @@
 Manager::Manager() : window(
     sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)
-), view(NULL) {
-    window_view = window.getView();
-}
+), window_view(window.getView()), title(""), view(NULL) {}
 
 void Manager::start() {
     while (window.isOpen()) {
@@ -68,6 +66,20 @@ sf::View Manager::getWindowView() {
 void Manager::setWindowView(sf::View set_window_view) {
     window.setView(set_window_view);
     window_view = set_window_view;
+}
+
+std::string Manager::getTitle() {
+    return title;
+}
+
+void Manager::setTitle(std::string set_title) {
+    title = set_title;
+
+    if (title.empty()) {
+        window.setTitle("Skizzle");
+    } else {
+        window.setTitle("Skizzle - " + title);
+    }
 }
 
 bool Manager::isKeyPressed(sf::Keyboard::Key key) const {

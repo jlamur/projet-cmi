@@ -11,6 +11,11 @@ Game::Game(Manager& manager) : Level(manager), next_frame_time(manager.getCurren
 
 Game::~Game() {}
 
+void Game::load(std::ifstream& file) {
+    Level::load(file);
+    manager.setTitle(getName());
+}
+
 void Game::frame() {
     sf::Time current_time = manager.getCurrentTime();
 

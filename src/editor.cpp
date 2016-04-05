@@ -12,6 +12,11 @@ Editor::Editor(Manager& manager) : Level(manager) {
 
 Editor::~Editor() {}
 
+void Editor::load(std::ifstream& file) {
+    Level::load(file);
+    manager.setTitle("Edition de " + getName());
+}
+
 void Editor::frame() {
     const std::vector<sf::Event>& events = manager.getEvents();
 

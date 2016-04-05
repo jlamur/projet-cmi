@@ -14,6 +14,7 @@ private:
     sf::RenderWindow window;
     sf::Clock clock;
     sf::View window_view;
+    std::string title;
 
     ResourceManager resource_manager;
     std::vector<sf::Event> events;
@@ -63,6 +64,16 @@ public:
      * Modifie la vue de la fenêtre
      */
     void setWindowView(sf::View set_window_view);
+
+    /**
+     * Renvoie le titre actuel de la fenêtre
+     */
+    std::string getTitle();
+
+    /**
+     * Modifie le titre actuel de la fenêtre
+     */
+    void setTitle(std::string set_title);
 
     /**
      * Renvoie un booléen attestant de l'appui sur la

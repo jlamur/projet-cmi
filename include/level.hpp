@@ -34,12 +34,12 @@ public:
     /**
      * Charge un niveau de jeu depuis le fichier donné
      */
-    void load(std::ifstream& file);
+    virtual void load(std::ifstream& file);
 
     /**
      * Sauvegarde la configuration actuelle comme un niveau
      */
-    void save();
+    virtual void save();
 
     /**
      * Récupère le nom du niveau
