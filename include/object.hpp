@@ -18,6 +18,9 @@ private:
 
     mutable float inv_mass;
 
+    sf::Sprite selection_sprite;
+    bool is_selected;
+
     float mass;
     float charge;
     float restitution;
@@ -192,6 +195,16 @@ public:
      * Modifie la couche d'affichage de l'objet
      */
     void setLayer(int set_layer);
+
+    /**
+     * Récupère si l'objet est actuellement sélectionné
+     */
+    bool isSelected() const;
+
+    /**
+     * Sélectionne ou désélectionne l'objet
+     */
+    void setSelected(bool set_selected);
 };
 
 /**

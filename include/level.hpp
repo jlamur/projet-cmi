@@ -25,7 +25,7 @@ protected:
     /**
      * Dessine tous les objets et le fond à l'écran
      */
-    void draw();
+    virtual void draw();
 
 public:
     Level(Manager& manager);

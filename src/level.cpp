@@ -123,8 +123,6 @@ void Level::draw() {
         display_queue.top()->draw(manager);
         display_queue.pop();
     }
-
-    window.display();
 }
 
 std::string Level::getName() {

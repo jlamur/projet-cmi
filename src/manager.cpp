@@ -3,7 +3,9 @@
 Manager::Manager() : window(
     sf::VideoMode(704, 480), "Projet CMI", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)
-), view(NULL) {}
+), view(NULL) {
+    window_view = window.getView();
+}
 
 void Manager::start() {
     while (window.isOpen()) {
@@ -22,7 +24,7 @@ void Manager::start() {
             if (event.type == sf::Event::Resized) {
                 // mise à jour de la caméra en fonction de la taille de la fenêtre
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-                window.setView(sf::View(visibleArea));
+                setWindowView(sf::View(visibleArea));
             }
 
             events.push_back(event);
@@ -35,6 +37,7 @@ void Manager::start() {
         }
 
         view->frame();
+        window.display();
     }
 }
 
@@ -56,6 +59,15 @@ ResourceManager& Manager::getResourceManager() {
 
 const std::vector<sf::Event>& Manager::getEvents() {
     return events;
+}
+
+sf::View Manager::getWindowView() {
+    return window_view;
+}
+
+void Manager::setWindowView(sf::View set_window_view) {
+    window.setView(set_window_view);
+    window_view = set_window_view;
 }
 
 bool Manager::isKeyPressed(sf::Keyboard::Key key) const {

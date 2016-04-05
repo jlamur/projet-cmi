@@ -13,6 +13,7 @@ class Manager {
 private:
     sf::RenderWindow window;
     sf::Clock clock;
+    sf::View window_view;
 
     ResourceManager resource_manager;
     std::vector<sf::Event> events;
@@ -52,6 +53,16 @@ public:
      * précédente frame
      */
     const std::vector<sf::Event>& getEvents();
+
+    /**
+     * Renvoie la vue de la fenêtre (position centrale, taille)
+     */
+    sf::View getWindowView();
+
+    /**
+     * Modifie la vue de la fenêtre
+     */
+    void setWindowView(sf::View set_window_view);
 
     /**
      * Renvoie un booléen attestant de l'appui sur la

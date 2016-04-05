@@ -8,6 +8,16 @@
  * niveaux du jeu
  */
 class Editor : public Level {
+private:
+    ObjectPtr selected_object;
+
+protected:
+    /**
+     * Dessine tous les objets, le fond et
+     * l'interface de l'éditeur
+     */
+    virtual void draw();
+
 public:
     Editor(Manager& manager);
     virtual ~Editor();
