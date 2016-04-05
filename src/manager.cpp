@@ -1,7 +1,7 @@
 #include "manager.hpp"
 
 Manager::Manager() : window(
-    sf::VideoMode(704, 480), "Projet CMI", sf::Style::Default,
+    sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)
 ), view(NULL) {
     window_view = window.getView();
