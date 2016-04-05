@@ -19,7 +19,7 @@ std::string formatTime(int time) {
 WidgetTimer::WidgetTimer(Manager& manager, std::function<void(int)> time_left_cb) :
     manager(manager), time_left_cb(time_left_cb), timer_zone(sf::Vector2f(100, 32)),
     timer_up(manager, std::bind(&WidgetTimer::addTime, this), sf::Vector2f(30, 16), WidgetButton::ARROW_UP),
-    timer_down(manager, std::bind(&WidgetTimer::addTime, this), sf::Vector2f(30, 16), WidgetButton::ARROW_DOWN) {
+    timer_down(manager, std::bind(&WidgetTimer::subtractTime, this), sf::Vector2f(30, 16), WidgetButton::ARROW_DOWN) {
 
     // initialisation des formes
     timer_text.setFont(manager.getResourceManager().getFont("main_font.ttf"));
@@ -67,8 +67,8 @@ void WidgetTimer::draw(sf::Vector2f position) {
     window.draw(timer_zone);
 
     // affichage du temps du niveau
-    timer_text.setPosition(position + sf::Vector2f(35 - round(timer_text.getGlobalBounds().width / 2), 0));
     timer_text.setString(formatTime(time_left));
+    timer_text.setPosition(position + sf::Vector2f(60 - round(timer_text.getGlobalBounds().width), 0));
     window.draw(timer_text);
 
     // affichage des boutons
