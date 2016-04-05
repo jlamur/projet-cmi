@@ -30,6 +30,11 @@ public:
     void start();
 
     /**
+     * Renvoie la vue actuelle du jeu
+     */
+    std::shared_ptr<View> getView();
+
+    /**
      * Charge la vue donnée dans le jeu
      */
     void setView(std::shared_ptr<View> set_view);

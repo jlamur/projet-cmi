@@ -1,7 +1,10 @@
 #include "game.hpp"
 #include "constants.hpp"
 
-Game::Game(Manager& manager) : Level(manager), next_frame_time(manager.getCurrentTime()) {
+Game::Game(Manager& manager) : Level(manager),
+    next_frame_time(manager.getCurrentTime()),
+    test_mode(false), return_view(nullptr) {
+
     // on s'assure que la synchronisation verticale soit
     // bien désactivée : on s'occupe de la limitation du
     // framerate manuellement dans la fonction frame pour mettre
@@ -17,7 +20,21 @@ void Game::load(std::ifstream& file) {
 }
 
 void Game::frame() {
+    const std::vector<sf::Event>& events = manager.getEvents();
     sf::Time current_time = manager.getCurrentTime();
+
+    // traitement des événements
+    for (unsigned int i = 0; i < events.size(); i++) {
+        const sf::Event& event = events[i];
+
+        // appui sur espace en mode test : retour à l'éditeur
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && test_mode) {
+            test_mode = false;
+            manager.setView(return_view);
+            return; // important : ne pas dessiner la frame
+            // on risque d'avoir perdu le pointeur en changeant de vue
+        }
+    }
 
     if (current_time >= next_frame_time) {
         // si nous sommes en retard ou dans les temps
@@ -83,4 +100,9 @@ void Game::update() {
     for (unsigned int i = 0; i < getObjects().size(); i++) {
         getObjects()[i]->updateVelocity(manager, getObjects(), Constants::PHYSICS_TIME.asSeconds() / 2);
     }
+}
+
+void Game::setTestMode(std::shared_ptr<View> set_return_view) {
+    return_view = set_return_view;
+    test_mode = true;
 }

@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iostream>
 #include "editor.hpp"
+#include "game.hpp"
 #include "block.hpp"
 #include "constants.hpp"
 
@@ -44,6 +45,16 @@ void Editor::frame() {
             } else if (event.mouseButton.button == sf::Mouse::Right) {
                 // clic droit : on supprime l'objet pointé
                 removeObject(position);
+            }
+        }
+
+        // gestion des touches
+        if (event.type == sf::Event::KeyPressed) {
+            // appui sur espace : test du niveau en cours d'édition
+            if (event.key.code == sf::Keyboard::Space) {
+                testLevel();
+                return; // important : ne pas dessiner la frame
+                // on risque d'avoir perdu le pointeur en changeant de vue
             }
         }
     }
@@ -160,4 +171,30 @@ bool Editor::updateSelection(sf::Vector2f position) {
     }
 
     return has_changed;
+}
+
+void Editor::testLevel() {
+    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(manager));
+
+    // copie des propriétés
+    game->setName(getName());
+    game->setTotalTime(getTotalTime());
+
+    // copie des objets du niveau vers le jeu
+    std::vector<ObjectPtr>& objects = getObjects();
+
+    for (unsigned int i = 0; i < objects.size(); i++) {
+        game->getObjects().push_back(objects[i]);
+    }
+
+    // copie de la zone de jeu
+    std::vector<std::pair<float, float>>& zone = getZone();
+
+    for (unsigned int i = 0; i < zone.size(); i++) {
+        game->getZone().push_back(zone[i]);
+    }
+
+    // mise en mode test
+    game->setTestMode(manager.getView());
+    manager.setView(game);
 }

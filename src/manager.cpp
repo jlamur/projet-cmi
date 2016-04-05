@@ -39,6 +39,10 @@ void Manager::start() {
     }
 }
 
+std::shared_ptr<View> Manager::getView() {
+    return view;
+}
+
 void Manager::setView(std::shared_ptr<View> set_view) {
     view = set_view;
 }

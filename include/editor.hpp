@@ -1,5 +1,5 @@
-#ifndef __PTF_GAME_HPP__
-#define __PTF_GAME_HPP__
+#ifndef __PTF_EDITOR_HPP__
+#define __PTF_EDITOR_HPP__
 
 #include <unordered_map>
 #include "level.hpp"
@@ -31,6 +31,11 @@ private:
      * - si la sélection est modifiée, renvoie true, sinon false
      */
     bool updateSelection(sf::Vector2f position);
+
+    /**
+     * Lance le test du niveau
+     */
+    void testLevel();
 
 protected:
     /**
