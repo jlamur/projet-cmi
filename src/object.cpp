@@ -11,7 +11,7 @@ const unsigned int Object::PROP_LAYER = 6;
 
 Object::Object() :
     acceleration(0, 0), velocity(0, 0), position(0, 0),
-    inv_mass(-1.f), is_selected(false),
+    inv_mass(-1.f),
 
     // valeurs par défaut pour les propriétés
     // de tous les objets du jeu
@@ -128,18 +128,7 @@ sf::Vector2f Object::getForces(
     return forces;
 }
 
-void Object::draw(Manager& manager) {
-    // si l'objet est sélectionné, dessin de la texture de sélection
-    if (isSelected()) {
-        selection_sprite.setOrigin(sf::Vector2f(22, 22));
-        selection_sprite.setPosition(getPosition());
-        selection_sprite.setTexture(
-            manager.getResourceManager().getTexture("selection.png")
-        );
-
-        manager.getWindow().draw(selection_sprite);
-    }
-}
+void Object::draw(Manager& manager) {}
 
 void Object::updateVelocity(
     const Manager& manager, const std::vector<ObjectPtr>& objects, float delta
@@ -326,25 +315,6 @@ void Object::setLayer(int set_layer) {
     layer = set_layer;
 }
 
-bool Object::isSelected() const {
-    return is_selected;
-}
-
-void Object::setSelected(bool set_selected) {
-    is_selected = set_selected;
-}
-
 bool ObjectCompare::operator()(ObjectPtr const &t1, ObjectPtr const &t2) const {
-    // détermine la priorité de dessin des objets
-    // - si un objet est sélectionné, il est prioritaire
-    // - sinon, l'objet de la plus haute couche est prioritaire
-    if (t1->isSelected()) {
-        return true;
-    }
-
-    if (t2->isSelected()) {
-        return false;
-    }
-
     return t1->getLayer() > t2->getLayer();
 }
