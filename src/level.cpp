@@ -142,6 +142,10 @@ int Level::getTotalTime() {
 }
 
 void Level::setTotalTime(int set_total_time) {
+    // faisons rester le temps entre 10s et 59:59
+    set_total_time = std::min(set_total_time, 3599);
+    set_total_time = std::max(set_total_time, 10);
+
     total_time = set_total_time;
 }
 
