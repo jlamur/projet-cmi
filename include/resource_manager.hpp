@@ -9,6 +9,7 @@
 class ResourceManager {
 private:
     std::map<std::string, sf::Texture> textures;
+    std::map<std::string, sf::Font> fonts;
     sf::Music music;
 
 public:
@@ -21,6 +22,13 @@ public:
      * depuis son emplacement
      */
     sf::Texture& getTexture(std::string name);
+
+    /**
+     * Récupère la police demandée. Réutilise une police
+     * déjà chargée si elle a déjà été demandée, sinon, la
+     * charge depuis son emplacement
+     */
+    sf::Font& getFont(std::string name);
 
     /**
      * Change la musique en lecture de fond

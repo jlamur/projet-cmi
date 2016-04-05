@@ -56,6 +56,23 @@ sf::Texture& ResourceManager::getTexture(std::string name) {
     return textures[name];
 }
 
+sf::Font& ResourceManager::getFont(std::string name) {
+    // si la police est déjà chargée, on l'utilise directement
+    if (fonts.count(name) > 0) {
+        return fonts[name];
+    }
+
+    sf::Font font;
+
+    // tente de charger la police dans le chemin "CWD/res/name"
+    if (!font.loadFromFile(getResourcePath(name))) {
+        throw std::runtime_error("Impossible de charger la police : " + name);
+    }
+
+    fonts[name] = font;
+    return fonts[name];
+}
+
 void ResourceManager::setMusic(std::string name) {
     if (!music.openFromFile(getResourcePath(name))) {
         throw std::runtime_error("Impossible de charger la musique : " + name);
