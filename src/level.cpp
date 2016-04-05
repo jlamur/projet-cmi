@@ -51,6 +51,10 @@ void Level::load(std::ifstream& file) {
     // lecture du nom du niveau
     std::getline(file, name, '\0');
 
+    // lecture du temps total du niveau
+    file.read(reinterpret_cast<char*>(&total_time), sizeof(total_time));
+    total_time = ntohl(total_time);
+
     // lecture de la zone de jeu
     char control_points;
     file.read(&control_points, 1);
@@ -129,10 +133,22 @@ std::string Level::getName() {
     return name;
 }
 
+void Level::setName(std::string set_name) {
+    name = set_name;
+}
+
+int Level::getTotalTime() {
+    return total_time;
+}
+
+void Level::setTotalTime(int set_total_time) {
+    total_time = set_total_time;
+}
+
 std::vector<ObjectPtr>& Level::getObjects() {
     return objects;
 }
 
-const std::vector<std::pair<float, float>>& Level::getZone() {
+std::vector<std::pair<float, float>>& Level::getZone() {
     return zone;
 }

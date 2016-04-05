@@ -16,6 +16,7 @@
 class Level : public View {
 private:
     std::string name;
+    int total_time;
     sf::Sprite background;
 
     std::vector<ObjectPtr> objects;
@@ -47,6 +48,21 @@ public:
     std::string getName();
 
     /**
+     * Modifie le nom du niveau
+     */
+    void setName(std::string set_name);
+
+    /**
+     * Récupère le temps total alloué pour terminer le niveau
+     */
+    int getTotalTime();
+
+    /**
+     * Modifie le temps total du niveau
+     */
+    void setTotalTime(int set_total_time);
+
+    /**
      * Récupère la liste des objets
      */
     std::vector<ObjectPtr>& getObjects();
@@ -54,7 +70,7 @@ public:
     /**
      * Récupère la zone du niveau
      */
-    const std::vector<std::pair<float, float>>& getZone();
+    std::vector<std::pair<float, float>>& getZone();
 };
 
 #endif
