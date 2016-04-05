@@ -1,9 +1,11 @@
 #include <cmath>
+#include <iostream>
 #include "editor.hpp"
 #include "block.hpp"
 #include "constants.hpp"
 
-Editor::Editor(Manager& manager) : Level(manager) {
+Editor::Editor(Manager& manager) : Level(manager),
+    widget_timer(manager, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)) {
     // activation de la synchronisation verticale
     // car, dans l'éditeur, nous n'avons besoin que de dessiner
     // (pas de mise à jour physique)
@@ -20,8 +22,14 @@ void Editor::load(std::ifstream& file) {
 void Editor::frame() {
     const std::vector<sf::Event>& events = manager.getEvents();
 
+    // traitement des événements
     for (unsigned int i = 0; i < events.size(); i++) {
         const sf::Event& event = events[i];
+
+        // traitement des événements du widget timer
+        if (widget_timer.processEvent(event)) {
+            continue;
+        }
 
         // lorsque l'on clique dans l'éditeur
         if (event.type == sf::Event::MouseButtonPressed) {
@@ -33,25 +41,25 @@ void Editor::frame() {
                 if (!updateSelection(position)) {
                     addObject(position);
                 }
-            }
-
-            if (event.mouseButton.button == sf::Mouse::Right) {
+            } else if (event.mouseButton.button == sf::Mouse::Right) {
                 // clic droit : on supprime l'objet pointé
                 removeObject(position);
             }
         }
     }
 
+    // dessin de la frame
     draw();
 }
 
 void Editor::draw() {
     Level::draw();
+
     sf::RenderWindow& window = manager.getWindow();
     sf::View window_view = manager.getWindowView();
     sf::Color selection_color(255, 50, 41);
 
-    // on dessine des carrés de sélection autour des objets sélectionnés
+    // dessin de la sélection autour des objets sélectionnés
     for (auto iter = selection.begin(); iter != selection.end(); iter++) {
         sf::VertexArray selection(sf::LinesStrip, 5);
         std::unique_ptr<sf::FloatRect> aabb = iter->first->getAABB();
@@ -69,6 +77,10 @@ void Editor::draw() {
 
         window.draw(selection);
     }
+
+    // dessin du widget timer
+    widget_timer.setTimeLeft(getTotalTime());
+    widget_timer.draw(sf::Vector2f(window_view.getSize().x / 2 - 50, 0));
 
     // menu
     sf::RectangleShape menu(sf::Vector2f(window_view.getSize().x, 64));

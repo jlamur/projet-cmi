@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include "level.hpp"
+#include "util/widget_timer.hpp"
 
 /**
  * La classe Editor permet l'édition de
@@ -11,6 +12,7 @@
 class Editor : public Level {
 private:
     std::unordered_map<ObjectPtr, bool> selection;
+    WidgetTimer widget_timer;
 
     /**
      * Ajoute un objet du type actuel à la position donnée
