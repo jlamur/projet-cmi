@@ -6,12 +6,7 @@
 #include "constants.hpp"
 
 Editor::Editor(Manager& manager) : Level(manager),
-    widget_timer(manager, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)) {
-    // activation de la synchronisation verticale
-    // car, dans l'éditeur, nous n'avons besoin que de dessiner
-    // (pas de mise à jour physique)
-    manager.getWindow().setVerticalSyncEnabled(true);
-}
+    widget_timer(manager, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)) {}
 
 Editor::~Editor() {}
 
@@ -61,6 +56,7 @@ void Editor::frame() {
 
     // dessin de la frame
     draw();
+    sf::sleep(sf::seconds(1.f / 60));
 }
 
 void Editor::draw() {
