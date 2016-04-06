@@ -11,7 +11,7 @@ Block::Block() : Object() {
     setMass(0.f);
 
     // déplacement de l'origine au centre du bloc
-    sprite.setOrigin(sf::Vector2f(Constants::GRID / 2, Constants::GRID / 2));
+    sprite.setOrigin(sf::Vector2f(Constants::GRID / 2, 46 - Constants::GRID / 2));
 }
 
 Block::~Block() {}

@@ -58,18 +58,25 @@ sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectP
 
 void Player::draw(Manager& manager) {
     Object::draw(manager);
-
+    
     // utilisation de la texture
 	sprite.setTexture(
         manager.getResourceManager().getTexture("ball.png")
     );
 
+    // coloration du jooueur en fonction de son numéro
+    if (getPlayerNumber() == 0) {
+        sprite.setColor(sf::Color(239, 83, 80));
+    } else if (getPlayerNumber() == 1) {
+        sprite.setColor(sf::Color(92, 107, 192));
+    } 
+    
     // déplacement du sprite à la position de la balle
     sprite.setPosition(getPosition());
     manager.getWindow().draw(sprite);
 }
 
-void Player::updatePosition(float delta) {
+void Player::updatePosition(float delta){
     // calcul de la différence de position pour connaître
     // (approximativement) la rotation de la balle
     sf::Vector2f last_position = getPosition();

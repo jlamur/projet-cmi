@@ -316,5 +316,12 @@ void Object::setLayer(int set_layer) {
 }
 
 bool ObjectCompare::operator()(ObjectPtr const &t1, ObjectPtr const &t2) const {
+    if (t1->getLayer() == t2->getLayer()) {
+        sf::Vector2f t1_pos = t1->getPosition();
+        sf::Vector2f t2_pos = t2->getPosition();
+        
+        return t1_pos.x > t2_pos.x || t1_pos.y < t2_pos.y;
+    }
+
     return t1->getLayer() > t2->getLayer();
 }
