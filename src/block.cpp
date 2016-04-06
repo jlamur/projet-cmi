@@ -11,7 +11,7 @@ Block::Block() : Object() {
     setMass(0.f);
 
     // déplacement de l'origine au centre du bloc
-    sprite.setOrigin(sf::Vector2f(Constants::GRID / 2, 46 - Constants::GRID / 2));
+    sprite.setOrigin(sf::Vector2f(23, 23));
 }
 
 Block::~Block() {}
@@ -31,7 +31,6 @@ ObjectPtr Block::load(std::ifstream& file) {
 }
 
 void Block::draw(Manager& manager) {
-    Object::draw(manager);
 
     // utilisation de la texture
     sprite.setTexture(
@@ -49,6 +48,7 @@ void Block::draw(Manager& manager) {
 
     sprite.setPosition(getPosition());
     manager.getWindow().draw(sprite);
+    Object::draw(manager);
 }
 
 std::unique_ptr<sf::FloatRect> Block::getAABB() const {

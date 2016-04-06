@@ -2,7 +2,6 @@
 #include "block.hpp"
 #include "constants.hpp"
 #include <array>
-#include <iostream>
 
 const unsigned int Player::TYPE_ID = 1;
 
@@ -61,8 +60,6 @@ sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectP
 }
 
 void Player::draw(Manager& manager) {
-    Object::draw(manager);
-    
     // utilisation de la texture
 	sprite.setTexture(
         manager.getResourceManager().getTexture("ball.png")
@@ -73,11 +70,12 @@ void Player::draw(Manager& manager) {
         sprite.setColor(sf::Color(239, 83, 80));
     } else if (getPlayerNumber() == 1) {
         sprite.setColor(sf::Color(92, 107, 192));
-    } 
-    
+    }
+
     // déplacement du sprite à la position de la balle
     sprite.setPosition(getPosition());
     manager.getWindow().draw(sprite);
+    Object::draw(manager);
 }
 
 void Player::updatePosition(float delta){
