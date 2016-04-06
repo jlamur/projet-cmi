@@ -5,6 +5,7 @@
 #include <iostream>
 #include "manager.hpp"
 #include "game.hpp"
+#include "editor.hpp"
 #include "view.hpp"
 #include "resource_manager.hpp"
 #include <vector>
@@ -12,7 +13,7 @@
 #define NB_LVL_CHOICES 3
 
 /**
- * La classe Lvl_menu charge le menu permettant de 
+ * La classe Lvl_menu charge le menu permettant de
  * choisir le niveau auquel l'utilisateur souhaite
  * jouer.
  */
@@ -24,11 +25,11 @@ public:
 
     /**
      * Dessine le menu de niveaux
-     */  
+     */
     void frame();
 
     /**
-     * Permet de changer le choix sélectionné 
+     * Permet de changer le choix sélectionné
      */
     void MoveUp();
     void MoveDown();

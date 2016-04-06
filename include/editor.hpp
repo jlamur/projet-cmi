@@ -1,5 +1,5 @@
-#ifndef __PTF_GAME_HPP__
-#define __PTF_GAME_HPP__
+#ifndef __PTF_EDITOR_HPP__
+#define __PTF_EDITOR_HPP__
 
 #include "level.hpp"
 
