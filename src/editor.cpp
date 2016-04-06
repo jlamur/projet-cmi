@@ -6,7 +6,7 @@
 #include "constants.hpp"
 
 Editor::Editor(Manager& manager) : Level(manager),
-    widget_timer(manager, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)) {}
+    widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)) {}
 
 Editor::~Editor() {}
 

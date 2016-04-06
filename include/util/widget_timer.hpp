@@ -13,17 +13,20 @@
 class WidgetTimer {
 private:
     Manager& manager;
+    bool can_change;
     std::function<void(int)> time_left_cb;
     int time_left;
 
     sf::RectangleShape timer_zone;
-    sf::Text timer_text;
+    sf::Text timer_seconds_text;
+    sf::Text timer_sep_text;
+    sf::Text timer_minutes_text;
 
     WidgetButton timer_up;
     WidgetButton timer_down;
 
 public:
-    WidgetTimer(Manager& manager, std::function<void(int)> time_left_cb);
+    WidgetTimer(Manager& manager, bool can_change, std::function<void(int)> time_left_cb = std::function<void(int)>());
 
     /**
      * Process l'événement et renvoie true si

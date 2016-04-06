@@ -4,7 +4,8 @@ const unsigned int WidgetButton::ARROW_UP = 0;
 const unsigned int WidgetButton::ARROW_DOWN = 1;
 
 const sf::Color ARROW_COLOR = sf::Color(33, 33, 33);
-const sf::Color CLICKED_COLOR = sf::Color(187, 222, 251);
+const sf::Color CLICKED_COLOR = sf::Color(190, 190, 190);
+const sf::Color REST_COLOR = sf::Color(230, 230, 230);
 
 WidgetButton::WidgetButton(
     Manager& manager, std::function<void(void)> click_cb,
@@ -57,7 +58,7 @@ void WidgetButton::draw(sf::Vector2f position) {
     }
 
     // coloration des boutons si enfoncement
-    button.setFillColor(sf::Color::Transparent);
+    button.setFillColor(REST_COLOR);
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         sf::Vector2f mouse_position = (sf::Vector2f) sf::Mouse::getPosition(window);

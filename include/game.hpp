@@ -10,6 +10,7 @@
  */
 class Game : public Level {
 private:
+    WidgetTimer widget_timer;
     sf::Time next_frame_time;
     bool test_mode;
     std::shared_ptr<View> return_view;
@@ -19,6 +20,13 @@ private:
      * qu'ils s'adaptent au nouvel état
      */
     void update();
+
+protected:
+    /**
+     * Dessine tous les objets, le fond et
+     * l'interface de jeu
+     */
+    virtual void draw();
 
 public:
     Game(Manager& manager);

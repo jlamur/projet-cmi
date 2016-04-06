@@ -2,6 +2,7 @@
 #include "constants.hpp"
 
 Game::Game(Manager& manager) : Level(manager),
+    widget_timer(manager, false),
     next_frame_time(manager.getCurrentTime()),
     test_mode(false), return_view(nullptr) {}
 
@@ -46,6 +47,16 @@ void Game::frame() {
         // le temps nécessaire pour revenir dans les temps
         sf::sleep(next_frame_time - current_time);
     }
+}
+
+void Game::draw() {
+    Level::draw();
+
+    sf::View window_view = manager.getWindowView();
+
+    // dessin du widget
+    widget_timer.setTimeLeft(getTotalTime());
+    widget_timer.draw(sf::Vector2f(window_view.getSize().x / 2 - 50, 0));
 }
 
 void Game::update() {
