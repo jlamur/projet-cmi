@@ -25,15 +25,20 @@ public:
     virtual ~Player();
 
     /**
+     * Clone cet objet en un objet avec les mêmes propriétés
+     */
+    virtual ObjectPtr clone() const;
+
+    /**
      * Chargement de l'objet depuis le fichier donné
      */
-    static std::shared_ptr<Object> load(std::ifstream& file);
+    static ObjectPtr load(std::ifstream& file);
 
     /**
      * Dessine la balle dans la fenêtre donnée
      */
     virtual void draw(Manager& manager);
-    
+
     /**
      * Met à jour la position de l'objet selon sa
      * vitesse actuelle

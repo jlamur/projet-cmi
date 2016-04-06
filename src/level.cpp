@@ -12,7 +12,7 @@
  * à des instances qui seront utilisées pour la
  * construction d'autres objets de ces types
  */
-std::map<unsigned int, std::function<std::shared_ptr<Object>(std::ifstream&)>> object_type_map = {
+std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map = {
     {Player::TYPE_ID, Player::load},
     {Block::TYPE_ID, Block::load}
 };

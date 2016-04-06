@@ -46,10 +46,15 @@ public:
     virtual ~Object();
 
     /**
+     * Clone cet objet en un objet avec les mêmes propriétés
+     */
+    virtual ObjectPtr clone() const = 0;
+
+    /**
      * Charge les propriétés communes à tous les objets
      * depuis le fichier donné dans l'objet donné
      */
-    static void load(std::ifstream& file, std::shared_ptr<Object> object);
+    static void load(std::ifstream& file, ObjectPtr object);
 
     /**
      * Dessine l'objet dans la fenêtre donnée

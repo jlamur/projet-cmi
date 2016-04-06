@@ -13,8 +13,12 @@ Player::Player() : Object() {
 
 Player::~Player() {}
 
-std::shared_ptr<Object> Player::load(std::ifstream& file) {
-    std::shared_ptr<Object> object = std::shared_ptr<Object>(new Player);
+ObjectPtr Player::clone() const {
+    return ObjectPtr(new Player(*this));
+}
+
+ObjectPtr Player::load(std::ifstream& file) {
+    ObjectPtr object = ObjectPtr(new Player);
     std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(object);
 
     // lecture du numéro de joueur

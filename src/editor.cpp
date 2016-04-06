@@ -106,7 +106,7 @@ void Editor::addObject(sf::Vector2f position) {
     position *= Constants::GRID;
 
     // TODO: ajouter un objet du type choisi, pas uniquement de bloc
-    std::shared_ptr<Object> object = std::shared_ptr<Object>(new Block);
+    ObjectPtr object = ObjectPtr(new Block);
     object->setPosition(position);
 
     // avant d'ajouter l'objet, on vérifie qu'il ne soit
@@ -180,7 +180,7 @@ void Editor::testLevel() {
     std::vector<ObjectPtr>& objects = getObjects();
 
     for (unsigned int i = 0; i < objects.size(); i++) {
-        game->getObjects().push_back(objects[i]);
+        game->getObjects().push_back(objects[i]->clone());
     }
 
     // copie de la zone de jeu
