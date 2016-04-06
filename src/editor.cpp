@@ -175,6 +175,7 @@ void Editor::testLevel() {
     // copie des propriétés
     game->setName(getName());
     game->setTotalTime(getTotalTime());
+    game->setBackground(getBackground());
 
     // copie des objets du niveau vers le jeu
     std::vector<ObjectPtr>& objects = getObjects();

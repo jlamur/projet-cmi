@@ -15,7 +15,7 @@
  */
 class Level : public View {
 private:
-    std::string name;
+    sf::String name;
     int total_time;
     sf::Sprite background;
 
@@ -45,22 +45,32 @@ public:
     /**
      * Récupère le nom du niveau
      */
-    std::string getName();
+    sf::String getName() const;
 
     /**
      * Modifie le nom du niveau
      */
-    void setName(std::string set_name);
+    void setName(sf::String set_name);
 
     /**
      * Récupère le temps total alloué pour terminer le niveau
      */
-    int getTotalTime();
+    int getTotalTime() const;
 
     /**
      * Modifie le temps total du niveau
      */
     void setTotalTime(int set_total_time);
+
+    /**
+     * Récupère le fond du niveau
+     */
+    sf::Sprite getBackground() const;
+
+    /**
+     * Modifie le fond du niveau
+     */
+    void setBackground(sf::Sprite set_background);
 
     /**
      * Récupère la liste des objets
