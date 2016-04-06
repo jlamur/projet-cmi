@@ -12,7 +12,7 @@ Editor::~Editor() {}
 
 void Editor::load(std::ifstream& file) {
     Level::load(file);
-    manager.setTitle("Edition de " + getName());
+    manager.setTitle(sf::String(L"Édition de ") + getName());
 }
 
 void Editor::frame() {
