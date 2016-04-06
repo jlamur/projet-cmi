@@ -14,7 +14,7 @@ private:
     sf::RenderWindow window;
     sf::Clock clock;
     sf::View window_view;
-    std::string title;
+    sf::String title;
 
     ResourceManager resource_manager;
     std::vector<sf::Event> events;
@@ -28,6 +28,11 @@ public:
      * Démarre la boucle principale du jeu
      */
     void start();
+
+    /**
+     * Renvoie la vue actuelle du jeu
+     */
+    std::shared_ptr<View> getView();
 
     /**
      * Charge la vue donnée dans le jeu
@@ -68,12 +73,12 @@ public:
     /**
      * Renvoie le titre actuel de la fenêtre
      */
-    std::string getTitle();
+    sf::String getTitle();
 
     /**
      * Modifie le titre actuel de la fenêtre
      */
-    void setTitle(std::string set_title);
+    void setTitle(sf::String set_title);
 
     /**
      * Renvoie un booléen attestant de l'appui sur la

@@ -12,7 +12,7 @@
  * à des instances qui seront utilisées pour la
  * construction d'autres objets de ces types
  */
-std::map<unsigned int, std::function<std::shared_ptr<Object>(std::ifstream&)>> object_type_map = {
+std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map = {
     {Player::TYPE_ID, Player::load},
     {Block::TYPE_ID, Block::load}
 };
@@ -49,7 +49,9 @@ void Level::load(std::ifstream& file) {
     }
 
     // lecture du nom du niveau
-    std::getline(file, name, '\0');
+    std::string std_name;
+    std::getline(file, std_name, '\0');
+    name = sf::String(std_name);
 
     // lecture du temps total du niveau
     file.read(reinterpret_cast<char*>(&total_time), sizeof(total_time));
@@ -129,20 +131,32 @@ void Level::draw() {
     }
 }
 
-std::string Level::getName() {
+sf::String Level::getName() const {
     return name;
 }
 
-void Level::setName(std::string set_name) {
+void Level::setName(sf::String set_name) {
     name = set_name;
 }
 
-int Level::getTotalTime() {
+int Level::getTotalTime() const {
     return total_time;
 }
 
 void Level::setTotalTime(int set_total_time) {
+    // faisons rester le temps entre 10s et 59:59
+    set_total_time = std::min(set_total_time, 3599);
+    set_total_time = std::max(set_total_time, 10);
+
     total_time = set_total_time;
+}
+
+sf::Sprite Level::getBackground() const {
+    return background;
+}
+
+void Level::setBackground(sf::Sprite set_background) {
+    background = set_background;
 }
 
 std::vector<ObjectPtr>& Level::getObjects() {

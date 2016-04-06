@@ -16,8 +16,12 @@ Block::Block() : Object() {
 
 Block::~Block() {}
 
-std::shared_ptr<Object> Block::load(std::ifstream& file) {
-    std::shared_ptr<Object> object = std::shared_ptr<Object>(new Block);
+ObjectPtr Block::clone() const {
+    return ObjectPtr(new Block(*this));
+}
+
+ObjectPtr Block::load(std::ifstream& file) {
+    ObjectPtr object = ObjectPtr(new Block);
 
     // lecture des propriétés communes des objets
     Object::load(file, object);

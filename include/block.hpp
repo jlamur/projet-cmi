@@ -18,9 +18,14 @@ public:
     virtual ~Block();
 
     /**
+     * Clone cet objet en un objet avec les mêmes propriétés
+     */
+    virtual ObjectPtr clone() const;
+
+    /**
      * Chargement de l'objet depuis le fichier donné
      */
-    static std::shared_ptr<Object> load(std::ifstream& file);
+    static ObjectPtr load(std::ifstream& file);
 
     /**
      * Dessin du bloc dans la fenêtre donnée

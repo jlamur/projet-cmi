@@ -1,27 +1,31 @@
 #include <cmath>
+#include <iostream>
 #include "editor.hpp"
+#include "game.hpp"
 #include "block.hpp"
 #include "constants.hpp"
 
-Editor::Editor(Manager& manager) : Level(manager) {
-    // activation de la synchronisation verticale
-    // car, dans l'éditeur, nous n'avons besoin que de dessiner
-    // (pas de mise à jour physique)
-    manager.getWindow().setVerticalSyncEnabled(true);
-}
+Editor::Editor(Manager& manager) : Level(manager),
+    widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)) {}
 
 Editor::~Editor() {}
 
 void Editor::load(std::ifstream& file) {
     Level::load(file);
-    manager.setTitle("Edition de " + getName());
+    manager.setTitle(sf::String(L"Édition de ") + getName());
 }
 
 void Editor::frame() {
     const std::vector<sf::Event>& events = manager.getEvents();
 
+    // traitement des événements
     for (unsigned int i = 0; i < events.size(); i++) {
         const sf::Event& event = events[i];
+
+        // traitement des événements du widget timer
+        if (widget_timer.processEvent(event)) {
+            continue;
+        }
 
         // lorsque l'on clique dans l'éditeur
         if (event.type == sf::Event::MouseButtonPressed) {
@@ -33,25 +37,36 @@ void Editor::frame() {
                 if (!updateSelection(position)) {
                     addObject(position);
                 }
-            }
-
-            if (event.mouseButton.button == sf::Mouse::Right) {
+            } else if (event.mouseButton.button == sf::Mouse::Right) {
                 // clic droit : on supprime l'objet pointé
                 removeObject(position);
             }
         }
+
+        // gestion des touches
+        if (event.type == sf::Event::KeyPressed) {
+            // appui sur espace : test du niveau en cours d'édition
+            if (event.key.code == sf::Keyboard::Space) {
+                testLevel();
+                return; // important : ne pas dessiner la frame
+                // on risque d'avoir perdu le pointeur en changeant de vue
+            }
+        }
     }
 
+    // dessin de la frame
     draw();
+    sf::sleep(sf::seconds(1.f / 60));
 }
 
 void Editor::draw() {
     Level::draw();
+
     sf::RenderWindow& window = manager.getWindow();
     sf::View window_view = manager.getWindowView();
     sf::Color selection_color(255, 50, 41);
 
-    // on dessine des carrés de sélection autour des objets sélectionnés
+    // dessin de la sélection autour des objets sélectionnés
     for (auto iter = selection.begin(); iter != selection.end(); iter++) {
         sf::VertexArray selection(sf::LinesStrip, 5);
         std::unique_ptr<sf::FloatRect> aabb = iter->first->getAABB();
@@ -70,6 +85,10 @@ void Editor::draw() {
         window.draw(selection);
     }
 
+    // dessin du widget timer
+    widget_timer.setTimeLeft(getTotalTime());
+    widget_timer.draw(sf::Vector2f(window_view.getSize().x / 2 - 50, 0));
+
     // menu
     sf::RectangleShape menu(sf::Vector2f(window_view.getSize().x, 64));
     menu.setPosition(sf::Vector2f(0, window_view.getSize().y - 64));
@@ -87,7 +106,7 @@ void Editor::addObject(sf::Vector2f position) {
     position *= Constants::GRID;
 
     // TODO: ajouter un objet du type choisi, pas uniquement de bloc
-    std::shared_ptr<Object> object = std::shared_ptr<Object>(new Block);
+    ObjectPtr object = ObjectPtr(new Block);
     object->setPosition(position);
 
     // avant d'ajouter l'objet, on vérifie qu'il ne soit
@@ -148,4 +167,31 @@ bool Editor::updateSelection(sf::Vector2f position) {
     }
 
     return has_changed;
+}
+
+void Editor::testLevel() {
+    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(manager));
+
+    // copie des propriétés
+    game->setName(getName());
+    game->setTotalTime(getTotalTime());
+    game->setBackground(getBackground());
+
+    // copie des objets du niveau vers le jeu
+    std::vector<ObjectPtr>& objects = getObjects();
+
+    for (unsigned int i = 0; i < objects.size(); i++) {
+        game->getObjects().push_back(objects[i]->clone());
+    }
+
+    // copie de la zone de jeu
+    std::vector<std::pair<float, float>>& zone = getZone();
+
+    for (unsigned int i = 0; i < zone.size(); i++) {
+        game->getZone().push_back(zone[i]);
+    }
+
+    // mise en mode test
+    game->setTestMode(manager.getView());
+    manager.setView(game);
 }

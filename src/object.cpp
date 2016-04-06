@@ -23,7 +23,7 @@ Object::Object() :
 
 Object::~Object() {}
 
-void Object::load(std::ifstream& file, std::shared_ptr<Object> object) {
+void Object::load(std::ifstream& file, ObjectPtr object) {
     // lecture de la position de l'objet
     float pos_x, pos_y;
 

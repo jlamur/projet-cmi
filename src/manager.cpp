@@ -3,7 +3,7 @@
 Manager::Manager() : window(
     sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)
-), window_view(window.getView()), title(""), view(NULL) {}
+), window_view(window.getView()), title(sf::String(L"")), view(NULL) {}
 
 void Manager::start() {
     while (window.isOpen()) {
@@ -39,6 +39,10 @@ void Manager::start() {
     }
 }
 
+std::shared_ptr<View> Manager::getView() {
+    return view;
+}
+
 void Manager::setView(std::shared_ptr<View> set_view) {
     view = set_view;
 }
@@ -68,17 +72,17 @@ void Manager::setWindowView(sf::View set_window_view) {
     window_view = set_window_view;
 }
 
-std::string Manager::getTitle() {
+sf::String Manager::getTitle() {
     return title;
 }
 
-void Manager::setTitle(std::string set_title) {
+void Manager::setTitle(sf::String set_title) {
     title = set_title;
 
-    if (title.empty()) {
-        window.setTitle("Skizzle");
+    if (title.isEmpty()) {
+        window.setTitle(sf::String(L"Skizzle"));
     } else {
-        window.setTitle("Skizzle - " + title);
+        window.setTitle(sf::String(L"Skizzle ‒ ") + title);
     }
 }
 
