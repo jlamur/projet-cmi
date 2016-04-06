@@ -1,31 +1,29 @@
-#ifndef __PTF_MENU_HPP__
-#define __PTF_MENU_HPP__
+#ifndef __PTF_LVL_MENU_HPP__
+#define __PTF_LVL_MENU_HPP__
 
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "manager.hpp"
 #include "game.hpp"
-#include "editor.hpp"
 #include "view.hpp"
-#include "lvl_menu.hpp"
 #include "resource_manager.hpp"
 #include <vector>
 
-#define NB_CHOICES 4
+#define NB_LVL_CHOICES 3
 
 /**
- * La classe Menu charge le menu du jeu
- * et permet de choisir entre jouer, lire les règles
- * et quitter.
+ * La classe Lvl_menu charge le menu permettant de 
+ * choisir le niveau auquel l'utilisateur souhaite
+ * jouer.
  */
-class Menu : public View {
+class Lvl_menu : public View {
 
 public:
-    Menu(Manager& manager);
-    virtual ~Menu();
+    Lvl_menu(Manager& manager);
+    virtual ~Lvl_menu();
 
     /**
-     * Dessine le menu
+     * Dessine le menu de niveaux
      */  
     void frame();
 
@@ -43,7 +41,7 @@ private:
 
     //tableau de textes modélisant les différents
     //choix dans le menu
-    sf::Text choice[NB_CHOICES];
+    sf::Text choice[NB_LVL_CHOICES];
 };
 
 

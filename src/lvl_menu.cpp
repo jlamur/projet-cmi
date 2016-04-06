@@ -1,32 +1,31 @@
-#include "menu.hpp"
+#include "lvl_menu.hpp"
 
-Menu::Menu(Manager& manager) : View(manager){
+Lvl_menu::Lvl_menu(Manager& manager) : View(manager){
     
     //mise en place des propriétés des textes affichés dans le menu
     choice[0].setFont(manager.getResourceManager().getFont("Raleway-Regular.ttf"));
     choice[0].setColor(sf::Color::Red);
-    choice[0].setPosition(sf::Vector2f(460, 400/(NB_CHOICES + 1)));
+    choice[0].setPosition(sf::Vector2f(300, 400/(NB_LVL_CHOICES + 1)));
 
-    for(int i=1; i < NB_CHOICES; i++)
+    for(int i=1; i < NB_LVL_CHOICES; i++)
     {
         choice[i].setFont(manager.getResourceManager().getFont("Raleway-Regular.ttf"));
         choice[i].setColor(sf::Color::White);
-        choice[i].setPosition(sf::Vector2f(460, 400/((NB_CHOICES + 1))*(i+1)));
+        choice[i].setPosition(sf::Vector2f(300, 400/((NB_LVL_CHOICES + 1))*(i+1)));
     }
-    choice[0].setString("Jouer");
-    choice[1].setString("Regles du jeu");
-    choice[2].setString("Creer un niveau");
-    choice[3].setString("Quitter");
+    choice[0].setString("Tutoriel");
+    choice[1].setString("Niveau 1");
+    choice[2].setString("Niveau 2");
 
     //choix sélectionné à l'ouverture du menu
     selection = 0; 
 }
 
-Menu::~Menu(){
+Lvl_menu::~Lvl_menu(){
 }
 
 
-void Menu::MoveUp()
+void Lvl_menu::MoveUp()
 {   
     //change la couleur du choix sélectionné
     if(selection-1 >= 0)
@@ -37,10 +36,10 @@ void Menu::MoveUp()
     }
 }
 
-void Menu::MoveDown()
+void Lvl_menu::MoveDown()
 {
     //change la couleur du choix sélectionné
-    if(selection+1 < NB_CHOICES)
+    if(selection+1 < NB_LVL_CHOICES)
     {
         choice[selection].setColor(sf::Color::White);
         selection++;
@@ -48,7 +47,7 @@ void Menu::MoveDown()
     }
 }
 
-void Menu::frame(){
+void Lvl_menu::frame(){
     sf::RenderWindow& window = manager.getWindow();
     window.clear(sf::Color(66, 40, 245));
 
@@ -66,27 +65,33 @@ void Menu::frame(){
                 MoveDown();
             }
             if (event.key.code == sf::Keyboard::Return) {
-                //si on choisit "jouer", la vue se met sur Lvl_menu
+                //si on choisit "tutoriel", on charge le niveau
+                //tutoriel et la vue se met sur Game
                 if(selection==0){
-                    std::shared_ptr<View> lvl_menu = std::shared_ptr<View>(new Lvl_menu(manager));
-                    manager.setView(lvl_menu);
-                }
-                if(selection==1){
-                    
-                }
-                //si on choisit "créer un niveau", la vue se met sur Editor
-                if(selection==2){
-                    std::shared_ptr<View> editor = std::shared_ptr<View>(new Editor(manager));
-                    manager.setView(editor);   
+                    std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(manager));
+                    try {
+                        // ouverture du niveau
+                        std::ifstream file;
+                        file.open("./levels/level1.dat", std::ios::binary | std::ios::in);
+                        editor->load(file);
+                        file.close();
+
+                    } catch (const std::exception& exception) {
+                        std::cerr << "Le programme a quitté après une erreur d'exécution." << std::endl;
+                        std::cerr << exception.what() << std::endl;
+                    }
+                    std::shared_ptr<View> game = std::shared_ptr<View>(new Game(manager));
+                    manager.setView(game);  
                 }
             }
         }
     }
 
-    for(int i=0; i<NB_CHOICES; i++)
+    for(int i=0; i<NB_LVL_CHOICES; i++)
     {
         window.draw(choice[i]);
     }
     window.display();
 
 }
+
