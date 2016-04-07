@@ -23,106 +23,123 @@ void Editor::frame() {
 
     // traitement des événements
     for (unsigned int i = 0; i < events.size(); i++) {
-        const sf::Event& event = events[i];
-
-        // traitement des événements du widget timer
-        if (widget_timer.processEvent(event)) {
-            continue;
-        }
-
-        // lorsque l'on clique dans l'éditeur
-        if (event.type == sf::Event::MouseButtonPressed) {
-            sf::Vector2f position(event.mouseButton.x, event.mouseButton.y);
-            ObjectPtr pointed_object = getObject(position);
-
-            if (event.mouseButton.button == sf::Mouse::Left) {
-                // clic + shift : sélection par rectangle de sélection
-                if (manager.isKeyPressed(sf::Keyboard::LShift)) {
-                    drag_start = position;
-                    drag_end = position;
-                    drag_mode = DragMode::SELECT_RECT;
-
-                    continue;
-                }
-
-                // clic sur un objet : démarrage de la sélection libre
-                if (pointed_object != nullptr) {
-                    if (manager.isKeyPressed(sf::Keyboard::LControl)) {
-                        drag_start = position;
-                        drag_end = position;
-                        drag_mode = DragMode::SELECT_BULK;
-
-                        select(pointed_object, SelectionMode::ADD);
-                    } else {
-                        select(pointed_object, SelectionMode::FLIP);
-                    }
-                }
-
-                // clic gauche dans le vide : démarrage du placement
-                // en drag&ndrop
-                else {
-                    drag_start = position;
-                    drag_end = position;
-                    drag_mode = DragMode::PLACE_OBJECTS;
-
-                    select(addObject(position), SelectionMode::REPLACE);
-                }
-            } else if (event.mouseButton.button == sf::Mouse::Right) {
-                // clic droit : on supprime l'objet pointé
-                removeObject(pointed_object);
-            }
-        }
-
-        // lorsqu'on déplace la souris
-        if (event.type == sf::Event::MouseMoved) {
-            sf::Vector2f position(event.mouseMove.x, event.mouseMove.y);
-            ObjectPtr pointed_object = getObject(position);
-            drag_end = position;
-
-            // mode placement d'objets
-            if (drag_mode == DragMode::PLACE_OBJECTS && pointed_object == nullptr) {
-                select(addObject(position), SelectionMode::ADD);
-            }
-
-            // mode sélection libre : on l'objet à la sélection
-            if (drag_mode == DragMode::SELECT_BULK) {
-                select(position, SelectionMode::ADD);
-            }
-        }
-
-        // lorsqu'on relâche un clic dans l'éditeur
-        if (event.type == sf::Event::MouseButtonReleased) {
-            sf::Vector2f position(event.mouseButton.x, event.mouseButton.y);
-            drag_mode = DragMode::NONE;
-        }
-
-        // gestion des touches
-        if (event.type == sf::Event::KeyPressed) {
-            // appui sur suppr : suppression des blocs sélectionnés
-            if (event.key.code == sf::Keyboard::Delete) {
-                std::vector<ObjectPtr>& objects = getObjects();
-
-                for (unsigned int i = 0; i < selection.size(); i++) {
-                    objects.erase(std::remove(
-                        objects.begin(), objects.end(), selection[i]
-                    ), objects.end());
-                }
-
-                selection.clear();
-            }
-
-            // appui sur espace : test du niveau en cours d'édition
-            if (event.key.code == sf::Keyboard::Space) {
-                testLevel();
-                return; // important : ne pas dessiner la frame
-                // on risque d'avoir perdu le pointeur en changeant de vue
-            }
-        }
+        processEvent(events[i]);
     }
 
     // dessin de la frame
     draw();
     sf::sleep(sf::seconds(1.f / 30));
+}
+
+bool Editor::processEvent(const sf::Event& event) {
+    // traitement des événements du widget timer
+    if (widget_timer.processEvent(event)) {
+        return true;
+    }
+
+    // lorsque l'on clique dans l'éditeur
+    if (event.type == sf::Event::MouseButtonPressed) {
+        sf::Vector2f position(event.mouseButton.x, event.mouseButton.y);
+        ObjectPtr pointed_object = getObject(position);
+
+        if (event.mouseButton.button == sf::Mouse::Left) {
+            // clic + shift : sélection par rectangle de sélection
+            if (manager.isKeyPressed(sf::Keyboard::LShift)) {
+                drag_start = position;
+                drag_end = position;
+                drag_mode = DragMode::SELECT_RECT;
+
+                return true;
+            }
+
+            // clic sur un objet : démarrage de la sélection libre
+            if (pointed_object != nullptr) {
+                if (manager.isKeyPressed(sf::Keyboard::LControl)) {
+                    drag_start = position;
+                    drag_end = position;
+                    drag_mode = DragMode::SELECT_BULK;
+
+                    select(pointed_object, SelectionMode::ADD);
+                } else {
+                    select(pointed_object, SelectionMode::FLIP);
+                }
+
+                return true;
+            }
+
+            // clic gauche dans le vide : démarrage du placement
+            // en drag&ndrop
+            drag_start = position;
+            drag_end = position;
+            drag_mode = DragMode::PLACE_OBJECTS;
+
+            select(addObject(position), SelectionMode::REPLACE);
+            return true;
+        }
+
+        if (event.mouseButton.button == sf::Mouse::Right) {
+            // clic droit : on supprime l'objet pointé
+            removeObject(pointed_object);
+            return true;
+        }
+    }
+
+    // lorsqu'on déplace la souris
+    if (event.type == sf::Event::MouseMoved) {
+        sf::Vector2f position(event.mouseMove.x, event.mouseMove.y);
+        ObjectPtr pointed_object = getObject(position);
+        drag_end = position;
+
+        // mode placement d'objets
+        if (drag_mode == DragMode::PLACE_OBJECTS && pointed_object == nullptr) {
+            select(addObject(position), SelectionMode::ADD);
+            return true;
+        }
+
+        // mode sélection libre : on l'objet à la sélection
+        if (drag_mode == DragMode::SELECT_BULK) {
+            select(position, SelectionMode::ADD);
+            return true;
+        }
+    }
+
+    // lorsqu'on relâche un clic dans l'éditeur
+    if (event.type == sf::Event::MouseButtonReleased) {
+        sf::Vector2f position(event.mouseButton.x, event.mouseButton.y);
+
+        // mode sélection rectangulaire : on applique la sélection
+        if (drag_mode == DragMode::SELECT_RECT) {
+            select(drag_start, drag_end);
+        }
+
+        drag_mode = DragMode::NONE;
+        return true;        
+    }
+
+    // gestion des touches
+    if (event.type == sf::Event::KeyPressed) {
+        // appui sur suppr : suppression des blocs sélectionnés
+        if (event.key.code == sf::Keyboard::Delete) {
+            std::vector<ObjectPtr>& objects = getObjects();
+
+            for (unsigned int i = 0; i < selection.size(); i++) {
+                objects.erase(std::remove(
+                    objects.begin(), objects.end(), selection[i]
+                ), objects.end());
+            }
+
+            selection.clear();
+            return true;
+        }
+
+        // appui sur espace : test du niveau en cours d'édition
+        if (event.key.code == sf::Keyboard::Space) {
+            test();
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void Editor::draw() {
@@ -254,7 +271,31 @@ void Editor::select(sf::Vector2f position, SelectionMode mode) {
     select(getObject(position), mode);
 }
 
-void Editor::testLevel() {
+void Editor::select(sf::Vector2f top_left, sf::Vector2f bottom_right) {
+    std::vector<ObjectPtr>& objects = getObjects();
+    sf::FloatRect selection_rect(
+        std::min(top_left.x, bottom_right.x),
+        std::min(top_left.y, bottom_right.y),
+        std::abs(bottom_right.x - top_left.x),
+        std::abs(bottom_right.y - top_left.y)
+    );
+
+    // réinitialisation de la sélectionne
+    for (unsigned int i = 0; i < selection.size(); i++) {
+        selection[i]->setSelected(false);
+    }
+
+    selection.clear();
+
+    // sélection des éléments intersectant le rectangle
+    for (unsigned int i = 0; i < objects.size(); i++) {
+        if (objects[i]->getAABB()->intersects(selection_rect)) {
+            select(objects[i], SelectionMode::ADD);
+        }
+    }
+}
+
+void Editor::test() {
     std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(manager));
 
     // copie des propriétés

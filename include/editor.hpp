@@ -38,8 +38,8 @@ private:
     void removeObject(sf::Vector2f position);
 
     /**
-     * Ajoute l'objet donné (par position ou par pointeur)
-     * à la sélection
+     * Ajoute l'objet/les objets donné(s) (par position, entre deux
+     * positions ou par pointeur) à la sélection
      *
      * - REPLACE : remplace toute sélection précédente
      * - FLIP : sélectionne l'élément s'il ne l'est pas, sinon le désélectionne
@@ -47,11 +47,17 @@ private:
      */
     void select(ObjectPtr object, SelectionMode mode);
     void select(sf::Vector2f position, SelectionMode mode);
+    void select(sf::Vector2f top_left, sf::Vector2f bottom_right);
 
     /**
      * Lance le test du niveau
      */
-    void testLevel();
+    void test();
+
+    /**
+     * Traite l'événement et renvoie true si on s'en est servi
+     */
+    bool processEvent(const sf::Event& event);
 
 protected:
     /**
