@@ -4,7 +4,7 @@ Menu::Menu(Manager& manager) : View(manager){
 
     manager.getResourceManager().setMusic("menu.wav");
     manager.getResourceManager().playMusic();
-    
+
     menu1();
     //mise en place des propriétés des textes affichés dans le menu
     choice[0].setFont(manager.getResourceManager().getFont("Raleway-Regular.ttf"));
@@ -19,7 +19,7 @@ Menu::Menu(Manager& manager) : View(manager){
     }
 
     //choix sélectionné à l'ouverture du menu
-    selection = 0; 
+    selection = 0;
 }
 
 Menu::~Menu(){
@@ -47,7 +47,7 @@ void Menu::menu2(){
 }
 
 void Menu::MoveUp()
-{   
+{
     //change la couleur du choix sélectionné
     if(selection-1 >= 0)
     {
@@ -68,15 +68,15 @@ void Menu::MoveDown()
     }
 }
 
-void Menu::frame(){
+bool Menu::frame(){
     sf::RenderWindow& window = manager.getWindow();
     window.clear(sf::Color(66, 40, 245));
 
     const std::vector<sf::Event>& events = manager.getEvents();
-        
+
     for (unsigned int i = 0; i < events.size(); i++) {
         const sf::Event& event = events[i];
-    
+
         // gestion des touches
         if (event.type == sf::Event::KeyPressed) {
             if (event.key.code == sf::Keyboard::Up) {
@@ -90,7 +90,7 @@ void Menu::frame(){
                 //si on se trouve dans le menu 2 permettant de choisir les niveaux
                 if(menu_nb == 2){
 
-                    //si on choisit "tutoriel", on charge le niveau tutoriel et on 
+                    //si on choisit "tutoriel", on charge le niveau tutoriel et on
                     //la vue passe à Game
                     if(selection == 0){
                         std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(manager));
@@ -108,11 +108,19 @@ void Menu::frame(){
                         file.close();
 
                         manager.setView(game);
+
+                        // demande l'interruption du dessin de la
+                        // frame car l'objet risque d'être détruit
+                        return true;
                     }
 
                     //si on choisit "Quitter", la fenêtre se ferme
                     if(selection == 3){
                         manager.getWindow().close();
+
+                        // demande l'interruption du dessin de la
+                        // frame car l'objet risque d'être détruit
+                        return true;
                     }
                 }
                 if(menu_nb == 1){
@@ -122,24 +130,32 @@ void Menu::frame(){
                         menu2();
                     }
                     if(selection==1){
-                    
+
                     }
 
                     //si on choisit "créer un niveau", la vue se met sur Editor
                     if(selection==2){
                         std::shared_ptr<View> editor = std::shared_ptr<View>(new Editor(manager));
                         manager.setView(editor);
+
+                        // demande l'interruption du dessin de la
+                        // frame car l'objet risque d'être détruit
+                        return true;
                     }
 
                     //si on choisit "quitter", la fenêtre se ferme
                     if(selection==3){
                         manager.getWindow().close();
+
+                        // demande l'interruption du dessin de la
+                        // frame car l'objet risque d'être détruit
+                        return true;
                     }
                 }
 
             }
         }
-    
+
     }
 
     for(int i=0; i<NB_CHOICES; i++)
@@ -147,5 +163,5 @@ void Menu::frame(){
         window.draw(choice[i]);
     }
     window.display();
-
+    return false;
 }

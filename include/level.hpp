@@ -28,6 +28,12 @@ protected:
      */
     virtual void draw();
 
+    /**
+     * Traite un événement et renvoie true si le
+     * dessin de la frame doit être interrompu
+     */
+    virtual bool processEvent(const sf::Event& event) = 0;
+
 public:
     Level(Manager& manager);
     virtual ~Level();
@@ -41,6 +47,12 @@ public:
      * Sauvegarde la configuration actuelle comme un niveau
      */
     virtual void save();
+
+    /**
+     * Demande le passage à la frame suivante sur
+     * cette vue
+     */
+    virtual bool frame();
 
     /**
      * Récupère le nom du niveau
@@ -81,6 +93,16 @@ public:
      * Récupère la zone du niveau
      */
     std::vector<std::pair<float, float>>& getZone();
+
+    /**
+     * Récupère le centre de la vue
+     */
+    sf::Vector2f getViewCenter();
+
+    /**
+     * Modifie le centre de la vue
+     */
+    void setViewCenter(sf::Vector2f set_view_center);
 };
 
 #endif

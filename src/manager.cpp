@@ -18,13 +18,6 @@ void Manager::start() {
                 return;
             }
 
-            // lorsque la fenêtre est redimensionnée par l'utilisateur
-            if (event.type == sf::Event::Resized) {
-                // mise à jour de la caméra en fonction de la taille de la fenêtre
-                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-                setWindowView(sf::View(visibleArea));
-            }
-
             events.push_back(event);
         }
 
@@ -63,11 +56,11 @@ const std::vector<sf::Event>& Manager::getEvents() {
     return events;
 }
 
-sf::View Manager::getWindowView() {
+sf::View& Manager::getWindowView() {
     return window_view;
 }
 
-void Manager::setWindowView(sf::View set_window_view) {
+void Manager::setWindowView(sf::View& set_window_view) {
     window.setView(set_window_view);
     window_view = set_window_view;
 }

@@ -50,14 +50,19 @@ private:
     void select(sf::Vector2f top_left, sf::Vector2f bottom_right);
 
     /**
+     * Vide la sélection
+     */
+    void clearSelection();
+
+    /**
+     * Sélectionne tout
+     */
+    void selectAll();
+
+    /**
      * Lance le test du niveau
      */
     void test();
-
-    /**
-     * Traite l'événement et renvoie true si on s'en est servi
-     */
-    bool processEvent(const sf::Event& event);
 
 protected:
     /**
@@ -66,20 +71,26 @@ protected:
      */
     virtual void draw();
 
+    /**
+     * Traite un événement et renvoie true si le
+     * dessin de la frame doit être interrompu
+     */
+    virtual bool processEvent(const sf::Event& event);
+
 public:
     Editor(Manager& manager);
     virtual ~Editor();
 
     /**
+     * Demande le passage à la frame suivante sur cette vue,
+     * renvoie true si le rendu de la frame a été interrompu
+     */
+    virtual bool frame();
+
+    /**
      * Charge un niveau de jeu depuis le fichier donné
      */
     virtual void load(std::ifstream& file);
-
-    /**
-     * Demande le passage à la frame suivante sur
-     * cette vue
-     */
-    void frame();
 };
 
 #endif

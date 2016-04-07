@@ -25,11 +25,11 @@ public:
 
     /**
      * Dessine le menu
-     */  
-    void frame();
+     */
+    bool frame();
 
     /**
-     * Permet de changer le choix sélectionné 
+     * Permet de changer le choix sélectionné
      */
     void MoveUp();
     void MoveDown();

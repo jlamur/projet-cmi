@@ -18,10 +18,10 @@ public:
     virtual ~View();
 
     /**
-     * Demande le passage à la frame suivante sur
-     * cette vue
+     * Demande le passage à la frame suivante sur cette vue,
+     * renvoie true si le rendu de la frame a été interrompu
      */
-    virtual void frame() = 0;
+    virtual bool frame() = 0;
 };
 
 #endif

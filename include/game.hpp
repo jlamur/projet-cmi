@@ -28,6 +28,12 @@ protected:
      */
     virtual void draw();
 
+    /**
+     * Traite un événement et renvoie true si le
+     * dessin de la frame doit être interrompu
+     */
+    virtual bool processEvent(const sf::Event& event);
+
 public:
     Game(Manager& manager);
     virtual ~Game();
@@ -38,10 +44,10 @@ public:
     virtual void load(std::ifstream& file);
 
     /**
-     * Demande le passage à la frame suivante sur
-     * cette vue
+     * Demande le passage à la frame suivante sur cette vue,
+     * renvoie true si le rendu de la frame a été interrompu
      */
-    void frame();
+    virtual bool frame();
 
     /**
      * Mise en mode test : l'appui sur espace renvoie

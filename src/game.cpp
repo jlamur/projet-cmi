@@ -13,22 +13,14 @@ void Game::load(std::ifstream& file) {
     manager.setTitle(getName());
 }
 
-void Game::frame() {
-    const std::vector<sf::Event>& events = manager.getEvents();
-    sf::Time current_time = manager.getCurrentTime();
-
-    // traitement des événements
-    for (unsigned int i = 0; i < events.size(); i++) {
-        const sf::Event& event = events[i];
-
-        // appui sur espace en mode test : retour à l'éditeur
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && test_mode) {
-            test_mode = false;
-            manager.setView(return_view);
-            return; // important : ne pas dessiner la frame
-            // on risque d'avoir perdu le pointeur en changeant de vue
-        }
+bool Game::frame() {
+    // si le dessin de la frame a été interrompu par
+    // le traitement événementiel, on arrête
+    if (Level::frame()) {
+        return true;
     }
+
+    sf::Time current_time = manager.getCurrentTime();
 
     if (current_time >= next_frame_time) {
         // si nous sommes en retard ou dans les temps
@@ -47,6 +39,22 @@ void Game::frame() {
         // le temps nécessaire pour revenir dans les temps
         sf::sleep(next_frame_time - current_time);
     }
+
+    return false;
+}
+
+bool Game::processEvent(const sf::Event& event) {
+    // appui sur espace en mode test : retour à l'éditeur
+    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && test_mode) {
+        test_mode = false;
+        manager.setView(return_view);
+
+        // demande l'interruption du dessin de la
+        // frame car l'objet risque d'être détruit
+        return true;
+    }
+
+    return false;
 }
 
 void Game::draw() {

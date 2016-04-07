@@ -63,12 +63,12 @@ public:
     /**
      * Renvoie la vue de la fenêtre (position centrale, taille)
      */
-    sf::View getWindowView();
+    sf::View& getWindowView();
 
     /**
      * Modifie la vue de la fenêtre
      */
-    void setWindowView(sf::View set_window_view);
+    void setWindowView(sf::View& set_window_view);
 
     /**
      * Renvoie le titre actuel de la fenêtre

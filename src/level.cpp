@@ -19,6 +19,7 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
 
 Level::Level(Manager& manager) : View(manager), total_time(30) {}
 Level::~Level() {
+    setViewCenter(sf::Vector2f(0, 0));
     objects.clear();
 }
 
@@ -27,6 +28,9 @@ void Level::load(std::ifstream& file) {
     if (objects.size() != 0) {
         objects.clear();
     }
+
+    // positionnement de la vue au centre
+    setViewCenter(sf::Vector2f(0, 0));
 
     // lecture de la signture du fichier ("BAR")
     char signature[3];
@@ -111,6 +115,23 @@ void Level::save() {
     // TODO: faire une fonction d'enregistrement
 }
 
+bool Level::frame() {
+    const std::vector<sf::Event>& events = manager.getEvents();
+
+    // traitement des événements
+    for (unsigned int i = 0; i < events.size(); i++) {
+        if (processEvent(events[i])) {
+            // /!\ On arrête là si on a demandé l'interruption.
+            // Il est important de ne plus appeler aucune autre
+            // fonction de la classe pour éviter une erreur
+            // de segmentation
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void Level::draw() {
     // efface la scène précédente et dessine la couche de fond
     sf::RenderWindow& window = manager.getWindow();
@@ -165,4 +186,12 @@ std::vector<ObjectPtr>& Level::getObjects() {
 
 std::vector<std::pair<float, float>>& Level::getZone() {
     return zone;
+}
+
+sf::Vector2f Level::getViewCenter() {
+    return manager.getWindowView().getCenter();
+}
+
+void Level::setViewCenter(sf::Vector2f set_view_center) {
+    manager.getWindowView().setCenter(set_view_center);
 }
