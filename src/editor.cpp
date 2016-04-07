@@ -67,20 +67,25 @@ bool Editor::processEvent(const sf::Event& event) {
                 return true;
             }
 
-            // clic gauche dans le vide : démarrage du placement
-            // en drag&ndrop
+            // clic gauche dans le vide : démarrage du placement en drag&drop
             drag_start = position;
             drag_end = position;
-            drag_mode = DragMode::PLACE_OBJECTS;
+            drag_mode = DragMode::PLACE;
 
             select(addObject(position), SelectionMode::REPLACE);
             return true;
         }
 
         if (event.mouseButton.button == sf::Mouse::Right) {
-            // clic droit : on supprime l'objet pointé
-            removeObject(pointed_object);
-            return true;
+            // clic droit sur un objet : démarrage de la suppression en drag&drop
+            if (pointed_object != nullptr) {
+                drag_start = position;
+                drag_end = position;
+                drag_mode = DragMode::REMOVE;
+
+                removeObject(pointed_object);
+                return true;
+            }
         }
     }
 
@@ -91,8 +96,14 @@ bool Editor::processEvent(const sf::Event& event) {
         drag_end = position;
 
         // mode placement d'objets
-        if (drag_mode == DragMode::PLACE_OBJECTS && pointed_object == nullptr) {
+        if (drag_mode == DragMode::PLACE && pointed_object == nullptr) {
             select(addObject(position), SelectionMode::ADD);
+            return true;
+        }
+
+        // mode suppression d'objets
+        if (drag_mode == DragMode::REMOVE && pointed_object != nullptr) {
+            removeObject(pointed_object);
             return true;
         }
 
@@ -113,7 +124,7 @@ bool Editor::processEvent(const sf::Event& event) {
         }
 
         drag_mode = DragMode::NONE;
-        return true;        
+        return true;
     }
 
     // gestion des touches
@@ -228,7 +239,7 @@ void Editor::removeObject(ObjectPtr object) {
     // on supprime l'objet de la liste d'objets
     objects.erase(std::remove(
         objects.begin(), objects.end(), object
-    ), selection.end());
+    ), objects.end());
 }
 
 void Editor::removeObject(sf::Vector2f position) {

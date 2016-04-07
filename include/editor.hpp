@@ -5,7 +5,7 @@
 #include "level.hpp"
 #include "util/widget_timer.hpp"
 
-enum class DragMode {NONE, PLACE_OBJECTS, SELECT_RECT, SELECT_BULK};
+enum class DragMode {NONE, PLACE, SELECT_RECT, SELECT_BULK, REMOVE};
 enum class SelectionMode {REPLACE, FLIP, ADD};
 
 /**
