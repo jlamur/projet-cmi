@@ -5,6 +5,9 @@
 #include "level.hpp"
 #include "util/widget_timer.hpp"
 
+enum class DragMode {NONE, PLACE_OBJECTS, SELECT_RECT, SELECT_BULK};
+enum class SelectionMode {REPLACE, FLIP, ADD};
+
 /**
  * La classe Editor permet l'édition de
  * niveaux du jeu
@@ -12,25 +15,38 @@
 class Editor : public Level {
 private:
     std::vector<ObjectPtr> selection;
+    sf::Vector2f drag_start;
+    sf::Vector2f drag_end;
+    DragMode drag_mode;
     WidgetTimer widget_timer;
+
+    /**
+     * Renvoie l'objet pointé à la position donnée
+     * ou nullptr si aucun
+     */
+    ObjectPtr getObject(sf::Vector2f position);
 
     /**
      * Ajoute un objet du type actuel à la position donnée
      */
-    void addObject(sf::Vector2f position);
+    ObjectPtr addObject(sf::Vector2f position);
 
     /**
-     * Supprime les objets passant par la position donnée
+     * Supprime l'objet à la position donnée ou passé par pointeur
      */
+    void removeObject(ObjectPtr object);
     void removeObject(sf::Vector2f position);
 
     /**
-     * Met à jour la sélection avec la position donnée :
-     * - si la position correspond à un objet, si cet objet n'est
-     *   pas sélectionné on le sélectionne, sinon on le désélectionne
-     * - si la sélection est modifiée, renvoie true, sinon false
+     * Ajoute l'objet donné (par position ou par pointeur)
+     * à la sélection
+     *
+     * - REPLACE : remplace toute sélection précédente
+     * - FLIP : sélectionne l'élément s'il ne l'est pas, sinon le désélectionne
+     * - ADD : rajoute à la sélection courante
      */
-    bool updateSelection(sf::Vector2f position);
+    void select(ObjectPtr object, SelectionMode mode);
+    void select(sf::Vector2f position, SelectionMode mode);
 
     /**
      * Lance le test du niveau
