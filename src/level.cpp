@@ -17,7 +17,7 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
     {Block::TYPE_ID, Block::load}
 };
 
-Level::Level(Manager& manager) : View(manager) {}
+Level::Level(Manager& manager) : View(manager), total_time(30) {}
 Level::~Level() {
     objects.clear();
 }
