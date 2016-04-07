@@ -11,7 +11,7 @@ const unsigned int Object::PROP_LAYER = 6;
 
 Object::Object() :
     acceleration(0, 0), velocity(0, 0), position(0, 0),
-    inv_mass(-1.f),
+    selected(false), inv_mass(-1.f),
 
     // valeurs par défaut pour les propriétés
     // de tous les objets du jeu
@@ -127,8 +127,6 @@ sf::Vector2f Object::getForces(
 
     return forces;
 }
-
-void Object::draw(Manager& manager) {}
 
 void Object::updateVelocity(
     const Manager& manager, const std::vector<ObjectPtr>& objects, float delta
@@ -250,6 +248,14 @@ sf::Vector2f Object::getPosition() const {
 
 void Object::setPosition(sf::Vector2f set_position) {
     position = set_position;
+}
+
+bool Object::isSelected() const {
+    return selected;
+}
+
+void Object::setSelected(bool set_selected) {
+    selected = set_selected;
 }
 
 float Object::getMass() const {

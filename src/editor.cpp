@@ -1,5 +1,5 @@
 #include <cmath>
-#include <iostream>
+#include <algorithm>
 #include "editor.hpp"
 #include "game.hpp"
 #include "block.hpp"
@@ -56,7 +56,7 @@ void Editor::frame() {
 
     // dessin de la frame
     draw();
-    sf::sleep(sf::seconds(1.f / 60));
+    sf::sleep(sf::seconds(1.f / 30));
 }
 
 void Editor::draw() {
@@ -64,26 +64,6 @@ void Editor::draw() {
 
     sf::RenderWindow& window = manager.getWindow();
     sf::View window_view = manager.getWindowView();
-    sf::Color selection_color(255, 50, 41);
-
-    // dessin de la sélection autour des objets sélectionnés
-    for (auto iter = selection.begin(); iter != selection.end(); iter++) {
-        sf::VertexArray selection(sf::LinesStrip, 5);
-        std::unique_ptr<sf::FloatRect> aabb = iter->first->getAABB();
-
-        selection[0].position = sf::Vector2f(aabb->left - .5f, aabb->top - .5f);
-        selection[0].color = selection_color;
-        selection[1].position = sf::Vector2f(aabb->left + aabb->width + .5f, aabb->top - .5f);
-        selection[1].color = selection_color;
-        selection[2].position = sf::Vector2f(aabb->left + aabb->width + .5f, aabb->top + aabb->height + .5f);
-        selection[2].color = selection_color;
-        selection[3].position = sf::Vector2f(aabb->left - .5f, aabb->top + aabb->height + .5f);
-        selection[3].color = selection_color;
-        selection[4].position = sf::Vector2f(aabb->left - .5f, aabb->top - .5f);
-        selection[4].color = selection_color;
-
-        window.draw(selection);
-    }
 
     // dessin du widget timer
     widget_timer.setTimeLeft(getTotalTime());
@@ -136,7 +116,10 @@ void Editor::removeObject(sf::Vector2f position) {
     }
 
     if (remove_object_index >= 0) {
-        selection.erase(objects[remove_object_index]);
+        selection.erase(std::remove(
+            selection.begin(), selection.end(), objects[remove_object_index]
+        ), selection.end());
+
         objects.erase(objects.begin() + remove_object_index);
     }
 }
@@ -152,16 +135,24 @@ bool Editor::updateSelection(sf::Vector2f position) {
 
             // si l'objet n'est pas sélectionné, on le sélectionne
             // sinon on le désélectionne
-            if (selection.count(objects[i])) {
-                selection.erase(objects[i]);
+            if (std::count(selection.begin(), selection.end(), objects[i]) > 0) {
+                objects[i]->setSelected(false);
+                selection.erase(std::remove(
+                    selection.begin(), selection.end(), objects[i]
+                ), selection.end());
             } else {
                 // avant de sélectionner le nouvel objet, on
                 // vide la sélection si on n'est pas en mode multi
                 if (!multi) {
+                    for (unsigned int i = 0; i < selection.size(); i++) {
+                        selection[i]->setSelected(false);
+                    }
+
                     selection.clear();
                 }
 
-                selection[objects[i]] = true;
+                selection.push_back(objects[i]);
+                objects[i]->setSelected(true);
             }
         }
     }

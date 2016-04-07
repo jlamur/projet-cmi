@@ -7,6 +7,7 @@
 class Block : public Object {
 private:
     mutable sf::Sprite sprite;
+    mutable sf::Sprite select_sprite;
 
 public:
     /**

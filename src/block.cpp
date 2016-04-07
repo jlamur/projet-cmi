@@ -12,6 +12,7 @@ Block::Block() : Object() {
 
     // déplacement de l'origine au centre du bloc
     sprite.setOrigin(sf::Vector2f(23, 23));
+    select_sprite.setOrigin(sf::Vector2f(23, 23));
 }
 
 Block::~Block() {}
@@ -31,11 +32,12 @@ ObjectPtr Block::load(std::ifstream& file) {
 }
 
 void Block::draw(Manager& manager) {
-
     // utilisation de la texture
-    sprite.setTexture(
-        manager.getResourceManager().getTexture("block.png")
-    );
+    ResourceManager& resources = manager.getResourceManager();
+    sf::RenderWindow& window = manager.getWindow();
+
+    sprite.setTexture(resources.getTexture("block.png"));
+    select_sprite.setTexture(resources.getTexture("block_select.png"));
 
     // coloration du bloc en fonction de sa charge
     if (getCharge() > 0) {
@@ -47,8 +49,13 @@ void Block::draw(Manager& manager) {
     }
 
     sprite.setPosition(getPosition());
-    manager.getWindow().draw(sprite);
-    Object::draw(manager);
+    select_sprite.setPosition(getPosition());
+
+    window.draw(sprite);
+
+    if (isSelected()) {
+        window.draw(select_sprite);
+    }
 }
 
 std::unique_ptr<sf::FloatRect> Block::getAABB() const {

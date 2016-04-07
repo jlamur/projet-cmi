@@ -16,6 +16,7 @@ private:
     sf::Vector2f velocity;
     sf::Vector2f position;
 
+    bool selected;
     mutable float inv_mass;
 
     float mass;
@@ -59,7 +60,7 @@ public:
     /**
      * Dessine l'objet dans la fenêtre donnée
      */
-    virtual void draw(Manager& manager);
+    virtual void draw(Manager& manager) = 0;
 
     /**
      * Met à jour la vitesse de l'objet selon les
@@ -132,6 +133,16 @@ public:
      * (à utiliser avec précaution, préférer modifier les forces)
      */
     void setPosition(sf::Vector2f set_position);
+
+    /**
+     * Récupère si l'objet est sélectionné
+     */
+    bool isSelected() const;
+
+    /**
+     * Modifie si l'objet est sélectionné
+     */
+    void setSelected(bool set_selected);
 
     /**
      * Récupère la masse de l'objet

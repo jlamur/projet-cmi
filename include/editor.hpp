@@ -11,7 +11,7 @@
  */
 class Editor : public Level {
 private:
-    std::unordered_map<ObjectPtr, bool> selection;
+    std::vector<ObjectPtr> selection;
     WidgetTimer widget_timer;
 
     /**

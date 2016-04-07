@@ -65,17 +65,21 @@ void Player::draw(Manager& manager) {
         manager.getResourceManager().getTexture("ball.png")
     );
 
-    // coloration du jooueur en fonction de son numéro
-    if (getPlayerNumber() == 0) {
-        sprite.setColor(sf::Color(239, 83, 80));
-    } else if (getPlayerNumber() == 1) {
-        sprite.setColor(sf::Color(92, 107, 192));
+    // si le joueur est sélectionné, on le colore en rouge vif
+    if (isSelected()) {
+        sprite.setColor(sf::Color(255, 0, 0));
+    } else {
+        // coloration du joueur en fonction de son numéro
+        if (getPlayerNumber() == 0) {
+            sprite.setColor(sf::Color(239, 83, 80));
+        } else if (getPlayerNumber() == 1) {
+            sprite.setColor(sf::Color(92, 107, 192));
+        }
     }
 
     // déplacement du sprite à la position de la balle
     sprite.setPosition(getPosition());
     manager.getWindow().draw(sprite);
-    Object::draw(manager);
 }
 
 void Player::updatePosition(float delta){
