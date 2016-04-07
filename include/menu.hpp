@@ -7,7 +7,6 @@
 #include "game.hpp"
 #include "editor.hpp"
 #include "view.hpp"
-#include "lvl_menu.hpp"
 #include "resource_manager.hpp"
 #include <vector>
 
@@ -34,11 +33,17 @@ public:
      */
     void MoveUp();
     void MoveDown();
+    void menu1();
+    void menu2();
 
 private:
     //repère le choix sélectionné
     int selection;
 
+    int menu_nb;
+
+    int positionY;
+    std::vector<std::function<void()>> menu[NB_CHOICES];
     sf::Font font;
 
     //tableau de textes modélisant les différents
