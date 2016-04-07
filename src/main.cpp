@@ -12,12 +12,6 @@ int main() {
     std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(manager));
 
     try {
-        // ouverture du niveau
-        std::ifstream file;
-        file.open("./levels/level1.dat", std::ios::binary | std::ios::in);
-        editor->load(file);
-        file.close();
-
         manager.setView(menu);
         manager.start();
     } catch (const std::exception& exception) {

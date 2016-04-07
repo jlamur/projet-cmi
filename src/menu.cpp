@@ -2,6 +2,9 @@
 
 Menu::Menu(Manager& manager) : View(manager){
     
+    manager.getResourceManager().setMusic("menu.wav");
+    manager.getResourceManager().playMusic();
+    
     //mise en place des propriétés des textes affichés dans le menu
     choice[0].setFont(manager.getResourceManager().getFont("Raleway-Regular.ttf"));
     choice[0].setColor(sf::Color::Red);
