@@ -1,3 +1,5 @@
+#include <cmath>
+#include <iostream>
 #include "object.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
@@ -169,13 +171,16 @@ void Object::solveCollision(Object& obj, const sf::Vector2f& normal) {
 
     // si les directions sont divergentes, pas besoin
     // de résoudre la collision
-    if (dot_normal >= 0) {
+    if (dot_normal > 0) {
         return;
     }
 
-    // calcule et applique l'impulsion de résolution de la collision
+    // on utilise le plus petit coefficient de friction entre les
+    // deux objets comme le coefficient de la collision
     float restitution = std::min(getRestitution(), obj.getRestitution());
-    float collision_impulse = (-(1 + restitution) * dot_normal) /
+
+    // calcule et applique l'impulsion de résolution de la collision
+    float collision_impulse = -(1.f + restitution) * std::min(dot_normal + .8f, 0.f) /
         (getMassInvert() + obj.getMassInvert());
 
     setVelocity(getVelocity() - getMassInvert() * collision_impulse * normal);
@@ -217,13 +222,8 @@ void Object::solveCollision(Object& obj, const sf::Vector2f& normal) {
 }
 
 void Object::positionalCorrection(Object& obj, const sf::Vector2f& normal, float depth) {
-    // ne pas corriger les petites erreurs de position
-    // pour éviter l'instabilité du moteur
-    if (depth <= Constants::CORRECTION_THRESHOLD) {
-        return;
-    }
-
-    float position_correction = depth / (getMassInvert() + obj.getMassInvert()) *
+    float position_correction = std::max(depth - Constants::CORRECTION_SLOP, 0.0f) /
+        (getMassInvert() + obj.getMassInvert()) *
         Constants::CORRECTION_PERCENTAGE;
 
     setPosition(getPosition() - getMassInvert() * position_correction * normal);

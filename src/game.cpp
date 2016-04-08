@@ -1,4 +1,6 @@
+#include <cmath>
 #include "game.hpp"
+#include "player.hpp"
 #include "constants.hpp"
 
 Game::Game(Manager& manager) : Level(manager),
@@ -26,6 +28,33 @@ void Game::frame() {
 
         // on met à jour la physique d'un cran temporel
         update();
+
+        // on place la caméra à la position médiane des joueurs
+        // s'ils sont trop éloignés
+        std::vector<ObjectPtr>& objects = getObjects();
+        sf::Vector2f position_first_player;
+        sf::Vector2f position_second_player;
+
+        for (unsigned int i = 0; i < objects.size(); i++) {
+            if (Player* player = dynamic_cast<Player*>(objects[i].get())) {
+                if (player->getPlayerNumber() == 0) {
+                    position_first_player = player->getPosition();
+                }
+
+                if (player->getPlayerNumber() == 1) {
+                    position_second_player = player->getPosition();
+                }
+            }
+        }
+
+        sf::Vector2f diff = position_second_player - position_first_player;
+        sf::View camera = getCamera();
+
+        if (std::pow(diff.x, 2) + std::pow(diff.y, 2) > std::pow(camera.getSize().x / 3, 2)) {
+            sf::Vector2f middle = (position_second_player + position_first_player) / 2.f;
+            camera.setCenter(floor(middle.x), floor(middle.y));
+            setCamera(camera);
+        }
 
         // si on a encore suffisamment de temps, on dessine
         if (current_time < next_frame_time) {
@@ -76,7 +105,7 @@ void Game::update() {
         }
     }
 
-    // intégration des forces dans la vitesse (première moitié)
+    // intégration des forces dans la vitesse (seconde moitié)
     for (unsigned int i = 0; i < getObjects().size(); i++) {
         getObjects()[i]->updateVelocity(manager, getObjects(), Constants::PHYSICS_TIME.asSeconds() / 2);
     }
@@ -98,11 +127,6 @@ void Game::update() {
         collided.objA.positionalCorrection(
             collided.objB, collided.normal, collided.depth
         );
-    }
-
-    // intégration des forces dans la vitesse (seconde moitié)
-    for (unsigned int i = 0; i < getObjects().size(); i++) {
-        getObjects()[i]->updateVelocity(manager, getObjects(), Constants::PHYSICS_TIME.asSeconds() / 2);
     }
 }
 

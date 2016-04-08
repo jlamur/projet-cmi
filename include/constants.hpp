@@ -35,8 +35,8 @@ namespace Constants {
      * Correction positionnelle : pourcentage de correction
      * et seuil de correction
      */
-    static const float CORRECTION_PERCENTAGE = .2f;
-    static const float CORRECTION_THRESHOLD = .05f;
+    static const float CORRECTION_PERCENTAGE = .5f;
+    static const float CORRECTION_SLOP = .02f;
 
     /**
      * Taille de la grille des blocs en pixels
