@@ -38,7 +38,13 @@ protected:
      * Convertit les coordonnées à l'écran en coordonnées du monde
      * d'après la vue caméra
      */
-    sf::Vector2f convertCoords(sf::Vector2i initial);
+    sf::Vector2f pixelToCoords(sf::Vector2i pixel);
+
+    /**
+     * Convertit les coordonnées du monde en coordonnées à l'écran
+     * d'après la vue caméra
+     */
+    sf::Vector2i coordsToPixel(sf::Vector2f coords);
 
 public:
     Level(Manager& manager);

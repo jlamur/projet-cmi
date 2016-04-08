@@ -6,7 +6,7 @@
 
 class Player : public Object {
 private:
-    mutable sf::Sprite sprite;
+    mutable sf::CircleShape sprite;
     unsigned int player_number;
 
 protected:

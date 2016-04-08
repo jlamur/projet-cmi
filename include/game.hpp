@@ -33,6 +33,11 @@ protected:
      */
     virtual void processEvent(const sf::Event& event);
 
+    /**
+     * S'assure que la caméra est centrée sur les joueurs
+     */
+    void ensureCentered();
+
 public:
     Game(Manager& manager);
     virtual ~Game();

@@ -3,6 +3,8 @@
 #include "player.hpp"
 #include "constants.hpp"
 
+const float CAMERA_TOLERANCE_RATIO = 2.f / 3.f;
+
 Game::Game(Manager& manager) : Level(manager),
     widget_timer(manager, false),
     next_frame_time(manager.getCurrentTime()),
@@ -29,32 +31,8 @@ void Game::frame() {
         // on met à jour la physique d'un cran temporel
         update();
 
-        // on place la caméra à la position médiane des joueurs
-        // s'ils sont trop éloignés
-        std::vector<ObjectPtr>& objects = getObjects();
-        sf::Vector2f position_first_player;
-        sf::Vector2f position_second_player;
-
-        for (unsigned int i = 0; i < objects.size(); i++) {
-            if (Player* player = dynamic_cast<Player*>(objects[i].get())) {
-                if (player->getPlayerNumber() == 0) {
-                    position_first_player = player->getPosition();
-                }
-
-                if (player->getPlayerNumber() == 1) {
-                    position_second_player = player->getPosition();
-                }
-            }
-        }
-
-        sf::Vector2f diff = position_second_player - position_first_player;
-        sf::View camera = getCamera();
-
-        if (std::pow(diff.x, 2) + std::pow(diff.y, 2) > std::pow(camera.getSize().x / 3, 2)) {
-            sf::Vector2f middle = (position_second_player + position_first_player) / 2.f;
-            camera.setCenter(floor(middle.x), floor(middle.y));
-            setCamera(camera);
-        }
+        // on s'assure que la caméré soit centrée sur nos joueurs
+        ensureCentered();
 
         // si on a encore suffisamment de temps, on dessine
         if (current_time < next_frame_time) {
@@ -86,6 +64,25 @@ void Game::draw() {
     // dessin du timer
     widget_timer.setTimeLeft(getTotalTime());
     widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
+}
+
+void Game::ensureCentered() {
+    sf::Vector2i window_size = (sf::Vector2i) manager.getWindow().getSize();
+    std::vector<ObjectPtr>& objects = getObjects();
+
+    sf::Vector2f total_position;
+    int player_count = 0;
+
+    for (unsigned int i = 0; i < objects.size(); i++) {
+        if (Player* player = dynamic_cast<Player*>(objects[i].get())) {
+            total_position += player->getPosition();
+            player_count++;
+        }
+    }
+
+    sf::View camera = getCamera();
+    camera.setCenter(total_position / (float) player_count);
+    setCamera(camera);
 }
 
 void Game::update() {

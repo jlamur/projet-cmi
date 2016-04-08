@@ -8,6 +8,9 @@ const unsigned int Player::TYPE_ID = 1;
 Player::Player() : Object() {
     // déplacement de l'origine au centre de la balle
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
+    sprite.setRadius(getRadius());
+    sprite.setOutlineColor(sf::Color::Black);
+    sprite.setOutlineThickness(1.5f);
 }
 
 Player::~Player() {}
@@ -62,20 +65,20 @@ sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectP
 void Player::draw(Manager& manager) {
     // utilisation de la texture
 	sprite.setTexture(
-        manager.getResourceManager().getTexture("ball.png")
+        &manager.getResourceManager().getTexture("player.tga")
     );
 
     // si le joueur est sélectionné, on le colore en rouge vif
-    if (isSelected()) {
-        sprite.setColor(sf::Color(255, 0, 0));
-    } else {
+    // if (isSelected()) {
+    //     sprite.setColor(sf::Color(255, 0, 0));
+    // } else {
         // coloration du joueur en fonction de son numéro
         if (getPlayerNumber() == 0) {
-            sprite.setColor(sf::Color(239, 83, 80));
+            sprite.setFillColor(sf::Color(239, 83, 80));
         } else if (getPlayerNumber() == 1) {
-            sprite.setColor(sf::Color(92, 107, 192));
+            sprite.setFillColor(sf::Color(92, 107, 192));
         }
-    }
+    // }
 
     // déplacement du sprite à la position de la balle
     sprite.setPosition(getPosition());

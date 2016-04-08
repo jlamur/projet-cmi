@@ -202,15 +202,26 @@ sf::View Level::getCamera() {
     return camera;
 }
 
-sf::Vector2f Level::convertCoords(sf::Vector2i initial) {
+sf::Vector2f Level::pixelToCoords(sf::Vector2i pixel) {
     sf::RenderWindow& window = manager.getWindow();
     sf::View old_view = window.getView();
 
     window.setView(camera);
-    sf::Vector2f converted = window.mapPixelToCoords(initial);
+    sf::Vector2f coords = window.mapPixelToCoords(pixel);
     window.setView(old_view);
 
-    return converted;
+    return coords;
+}
+
+sf::Vector2i Level::coordsToPixel(sf::Vector2f coords) {
+    sf::RenderWindow& window = manager.getWindow();
+    sf::View old_view = window.getView();
+
+    window.setView(camera);
+    sf::Vector2i pixel = window.mapCoordsToPixel(coords);
+    window.setView(old_view);
+
+    return pixel;
 }
 
 void Level::setCamera(sf::View set_camera) {
