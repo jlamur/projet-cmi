@@ -15,6 +15,7 @@ private:
     sf::Clock clock;
     sf::View window_view;
     sf::String title;
+    sf::View default_view;
 
     ResourceManager resource_manager;
     std::vector<sf::Event> events;
@@ -61,14 +62,9 @@ public:
     const std::vector<sf::Event>& getEvents();
 
     /**
-     * Renvoie la vue de la fenêtre (position centrale, taille)
+     * Remet la vue par défaut (zoom 1:1, origine en haut à gauche)
      */
-    sf::View& getWindowView();
-
-    /**
-     * Modifie la vue de la fenêtre
-     */
-    void setWindowView(sf::View& set_window_view);
+    void resetDefaultView();
 
     /**
      * Renvoie le titre actuel de la fenêtre

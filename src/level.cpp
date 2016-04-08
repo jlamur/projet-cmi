@@ -17,9 +17,12 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
     {Block::TYPE_ID, Block::load}
 };
 
-Level::Level(Manager& manager) : View(manager), total_time(30) {}
+Level::Level(Manager& manager) : View(manager), total_time(30) {
+    camera = manager.getWindow().getDefaultView();
+    camera.setCenter(0, 0);
+}
+
 Level::~Level() {
-    setViewCenter(sf::Vector2f(0, 0));
     objects.clear();
 }
 
@@ -29,8 +32,8 @@ void Level::load(std::ifstream& file) {
         objects.clear();
     }
 
-    // positionnement de la vue au centre
-    setViewCenter(sf::Vector2f(0, 0));
+    // positionnement de la caméra au centre du niveau
+    camera.setCenter(0, 0);
 
     // lecture de la signture du fichier ("BAR")
     char signature[3];
@@ -132,9 +135,23 @@ bool Level::frame() {
     return false;
 }
 
+bool Level::processEvent(const sf::Event& event) {
+    // lorsque la fenêtre est redimensionnée, mise à jour
+    // de la taille de la caméra
+    if (event.type == sf::Event::Resized) {
+        camera.setSize(event.size.width, event.size.height);
+    }
+
+    return false;
+}
+
 void Level::draw() {
-    // efface la scène précédente et dessine la couche de fond
     sf::RenderWindow& window = manager.getWindow();
+
+    // passage sur la vue caméra
+    window.setView(camera);
+
+    // efface la scène précédente et dessine la couche de fond
     window.clear(sf::Color(66, 165, 245));
     window.draw(background);
 
@@ -150,6 +167,9 @@ void Level::draw() {
         display_queue.top()->draw(manager);
         display_queue.pop();
     }
+
+    // passage sur la vue par défaut
+    manager.resetDefaultView();
 }
 
 sf::String Level::getName() const {
@@ -188,10 +208,21 @@ std::vector<std::pair<float, float>>& Level::getZone() {
     return zone;
 }
 
-sf::Vector2f Level::getViewCenter() {
-    return manager.getWindowView().getCenter();
+sf::View Level::getCamera() {
+    return camera;
 }
 
-void Level::setViewCenter(sf::Vector2f set_view_center) {
-    manager.getWindowView().setCenter(set_view_center);
+sf::Vector2f Level::convertCoords(sf::Vector2i initial) {
+    sf::RenderWindow& window = manager.getWindow();
+    sf::View old_view = window.getView();
+
+    window.setView(camera);
+    sf::Vector2f converted = window.mapPixelToCoords(initial);
+    window.setView(old_view);
+
+    return converted;
+}
+
+void Level::setCamera(sf::View set_camera) {
+    camera = set_camera;
 }

@@ -15,8 +15,8 @@ enum class SelectionMode {REPLACE, FLIP, ADD};
 class Editor : public Level {
 private:
     std::vector<ObjectPtr> selection;
-    sf::Vector2f drag_start;
-    sf::Vector2f drag_end;
+    sf::Vector2i drag_start;
+    sf::Vector2i drag_end;
     DragMode drag_mode;
     WidgetTimer widget_timer;
 

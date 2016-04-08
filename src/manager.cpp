@@ -18,6 +18,12 @@ void Manager::start() {
                 return;
             }
 
+            if (event.type == sf::Event::Resized) {
+                default_view = sf::View(sf::FloatRect(
+                    0, 0, event.size.width, event.size.height
+                ));
+            }
+
             events.push_back(event);
         }
 
@@ -56,13 +62,8 @@ const std::vector<sf::Event>& Manager::getEvents() {
     return events;
 }
 
-sf::View& Manager::getWindowView() {
-    return window_view;
-}
-
-void Manager::setWindowView(sf::View& set_window_view) {
-    window.setView(set_window_view);
-    window_view = set_window_view;
+void Manager::resetDefaultView() {
+    window.setView(default_view);
 }
 
 sf::String Manager::getTitle() {

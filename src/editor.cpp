@@ -8,6 +8,8 @@
 
 const sf::Color SELECTION_COLOR = sf::Color(33, 33, 33, 40);
 const sf::Color SELECTION_BORDER_COLOR = sf::Color(33, 33, 33, 127);
+const int SCROLL_SPEED = 2;
+const int SCROLL_PADDING = 8;
 
 Editor::Editor(Manager& manager) : Level(manager), drag_mode(DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)) {}
@@ -34,6 +36,10 @@ bool Editor::frame() {
 }
 
 bool Editor::processEvent(const sf::Event& event) {
+    if (Level::processEvent(event)) {
+        return true;
+    }
+
     // traitement des événements du widget timer
     if (widget_timer.processEvent(event)) {
         return false;
@@ -41,22 +47,23 @@ bool Editor::processEvent(const sf::Event& event) {
 
     // lorsque l'on clique dans l'éditeur
     if (event.type == sf::Event::MouseButtonPressed) {
-        sf::Vector2f position(event.mouseButton.x, event.mouseButton.y);
+        sf::Vector2i mouse_position(event.mouseButton.x, event.mouseButton.y);
+        sf::Vector2f position = convertCoords(mouse_position);
         ObjectPtr pointed_object = getObject(position);
 
         if (event.mouseButton.button == sf::Mouse::Left) {
             // clic + shift : sélection par rectangle de sélection
             if (manager.isKeyPressed(sf::Keyboard::LShift)) {
-                drag_start = position;
-                drag_end = position;
+                drag_start = mouse_position;
+                drag_end = mouse_position;
                 drag_mode = DragMode::SELECT_RECT;
             }
 
             // clic sur un objet : démarrage de la sélection libre
             else if (pointed_object != nullptr) {
                 if (manager.isKeyPressed(sf::Keyboard::LControl)) {
-                    drag_start = position;
-                    drag_end = position;
+                    drag_start = mouse_position;
+                    drag_end = mouse_position;
                     drag_mode = DragMode::SELECT_BULK;
 
                     select(pointed_object, SelectionMode::ADD);
@@ -67,8 +74,8 @@ bool Editor::processEvent(const sf::Event& event) {
 
             // clic gauche dans le vide : démarrage du placement en drag&drop
             else {
-                drag_start = position;
-                drag_end = position;
+                drag_start = mouse_position;
+                drag_end = mouse_position;
                 drag_mode = DragMode::PLACE;
 
                 select(addObject(position), SelectionMode::REPLACE);
@@ -78,8 +85,8 @@ bool Editor::processEvent(const sf::Event& event) {
         if (event.mouseButton.button == sf::Mouse::Right) {
             // clic droit sur un objet : démarrage de la suppression en drag&drop
             if (pointed_object != nullptr) {
-                drag_start = position;
-                drag_end = position;
+                drag_start = mouse_position;
+                drag_end = mouse_position;
                 drag_mode = DragMode::REMOVE;
 
                 removeObject(pointed_object);
@@ -89,9 +96,11 @@ bool Editor::processEvent(const sf::Event& event) {
 
     // lorsqu'on déplace la souris
     if (event.type == sf::Event::MouseMoved) {
-        sf::Vector2f position(event.mouseMove.x, event.mouseMove.y);
+        sf::Vector2i mouse_position(event.mouseMove.x, event.mouseMove.y);
+        sf::Vector2f position = convertCoords(mouse_position);
         ObjectPtr pointed_object = getObject(position);
-        drag_end = position;
+
+        drag_end = mouse_position;
 
         // mode placement d'objets
         if (drag_mode == DragMode::PLACE && pointed_object == nullptr) {
@@ -111,11 +120,9 @@ bool Editor::processEvent(const sf::Event& event) {
 
     // lorsqu'on relâche un clic dans l'éditeur
     if (event.type == sf::Event::MouseButtonReleased) {
-        sf::Vector2f position(event.mouseButton.x, event.mouseButton.y);
-
         // mode sélection rectangulaire : on applique la sélection
         if (drag_mode == DragMode::SELECT_RECT) {
-            select(drag_start, drag_end);
+            select(convertCoords(drag_start), convertCoords(drag_end));
         }
 
         drag_mode = DragMode::NONE;
@@ -155,15 +162,37 @@ bool Editor::processEvent(const sf::Event& event) {
 }
 
 void Editor::draw() {
-    Level::draw();
-
     sf::RenderWindow& window = manager.getWindow();
-    sf::View window_view = manager.getWindowView();
+    sf::Vector2i window_size = (sf::Vector2i) window.getSize();
+
+    // scroll de la caméra lorsque la souris se situe sur les bords
+    if (window.hasFocus()) {
+        sf::View camera = getCamera();
+        sf::Vector2i mouse = sf::Mouse::getPosition(window);
+
+        if (mouse.x < SCROLL_PADDING) {
+            camera.move(sf::Vector2f(-SCROLL_SPEED, 0));
+        } else if (mouse.x > window_size.x - SCROLL_PADDING) {
+            camera.move(sf::Vector2f(SCROLL_SPEED, 0));
+        } else if (mouse.y < SCROLL_PADDING) {
+            camera.move(sf::Vector2f(0, -SCROLL_SPEED));
+        } else if (mouse.y > window_size.y - SCROLL_PADDING) {
+            camera.move(sf::Vector2f(0, SCROLL_SPEED));
+        }
+
+        setCamera(camera);
+    }
+
+    // dessin des objets du niveau
+    Level::draw();
 
     // dessin du rectangle de sélection
     if (drag_mode == DragMode::SELECT_RECT) {
-        sf::RectangleShape selection_rect(drag_end - drag_start);
-        selection_rect.setPosition(drag_start);
+        sf::Vector2f size = (sf::Vector2f) (drag_end - drag_start);
+        sf::Vector2f pos = (sf::Vector2f) drag_start;
+
+        sf::RectangleShape selection_rect(size);
+        selection_rect.setPosition(pos);
         selection_rect.setFillColor(SELECTION_COLOR);
         selection_rect.setOutlineThickness(2.f);
         selection_rect.setOutlineColor(SELECTION_BORDER_COLOR);
@@ -173,11 +202,11 @@ void Editor::draw() {
 
     // dessin du widget timer
     widget_timer.setTimeLeft(getTotalTime());
-    widget_timer.draw(sf::Vector2f(window_view.getSize().x / 2 - 50, 0));
+    widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
 
     // menu
-    sf::RectangleShape menu(sf::Vector2f(window_view.getSize().x, 64));
-    menu.setPosition(sf::Vector2f(0, window_view.getSize().y - 64));
+    sf::RectangleShape menu(sf::Vector2f(window_size.x, 64));
+    menu.setPosition(sf::Vector2f(0, window_size.y - 64));
 
     window.draw(menu);
 }

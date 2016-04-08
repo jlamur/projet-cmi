@@ -15,6 +15,7 @@
  */
 class Level : public View {
 private:
+    sf::View camera;
     sf::String name;
     int total_time;
     sf::Sprite background;
@@ -32,7 +33,13 @@ protected:
      * Traite un événement et renvoie true si le
      * dessin de la frame doit être interrompu
      */
-    virtual bool processEvent(const sf::Event& event) = 0;
+    virtual bool processEvent(const sf::Event& event);
+
+    /**
+     * Convertit les coordonnées à l'écran en coordonnées du monde
+     * d'après la vue caméra
+     */
+    sf::Vector2f convertCoords(sf::Vector2i initial);
 
 public:
     Level(Manager& manager);
@@ -95,14 +102,14 @@ public:
     std::vector<std::pair<float, float>>& getZone();
 
     /**
-     * Récupère le centre de la vue
+     * Récupère la caméra actuelle
      */
-    sf::Vector2f getViewCenter();
+    sf::View getCamera();
 
     /**
-     * Modifie le centre de la vue
+     * Modifie la caméra
      */
-    void setViewCenter(sf::Vector2f set_view_center);
+    void setCamera(sf::View set_camera);
 };
 
 #endif
