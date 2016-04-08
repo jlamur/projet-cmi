@@ -68,7 +68,7 @@ void Menu::MoveDown()
     }
 }
 
-bool Menu::frame(){
+void Menu::frame(){
     sf::RenderWindow& window = manager.getWindow();
     window.clear(sf::Color(66, 40, 245));
 
@@ -108,19 +108,11 @@ bool Menu::frame(){
                         file.close();
 
                         manager.setView(game);
-
-                        // demande l'interruption du dessin de la
-                        // frame car l'objet risque d'être détruit
-                        return true;
                     }
 
                     //si on choisit "Quitter", la fenêtre se ferme
                     if(selection == 3){
-                        manager.getWindow().close();
-
-                        // demande l'interruption du dessin de la
-                        // frame car l'objet risque d'être détruit
-                        return true;
+                        manager.quit();
                     }
                 }
                 if(menu_nb == 1){
@@ -137,19 +129,11 @@ bool Menu::frame(){
                     if(selection==2){
                         std::shared_ptr<View> editor = std::shared_ptr<View>(new Editor(manager));
                         manager.setView(editor);
-
-                        // demande l'interruption du dessin de la
-                        // frame car l'objet risque d'être détruit
-                        return true;
                     }
 
                     //si on choisit "quitter", la fenêtre se ferme
                     if(selection==3){
-                        manager.getWindow().close();
-
-                        // demande l'interruption du dessin de la
-                        // frame car l'objet risque d'être détruit
-                        return true;
+                        manager.quit();
                     }
                 }
 
@@ -162,6 +146,6 @@ bool Menu::frame(){
     {
         window.draw(choice[i]);
     }
+
     window.display();
-    return false;
 }

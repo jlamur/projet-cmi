@@ -21,28 +21,21 @@ void Editor::load(std::ifstream& file) {
     manager.setTitle(sf::String(L"Édition de ") + getName());
 }
 
-bool Editor::frame() {
-    // si le dessin de la frame a été interrompu par
-    // le traitement événementiel, on arrête
-    if (Level::frame()) {
-        return true;
-    }
+void Editor::frame() {
+    // traitements généraux
+    Level::frame();
 
     // dessin de la frame
     draw();
     sf::sleep(sf::seconds(1.f / 30));
-
-    return true;
 }
 
-bool Editor::processEvent(const sf::Event& event) {
-    if (Level::processEvent(event)) {
-        return true;
-    }
+void Editor::processEvent(const sf::Event& event) {
+    Level::processEvent(event);
 
     // traitement des événements du widget timer
     if (widget_timer.processEvent(event)) {
-        return false;
+        return;
     }
 
     // lorsque l'on clique dans l'éditeur
@@ -151,14 +144,8 @@ bool Editor::processEvent(const sf::Event& event) {
         // appui sur espace : test du niveau en cours d'édition
         if (event.key.code == sf::Keyboard::Space) {
             test();
-
-            // demande l'interruption du dessin de la
-            // frame car l'objet risque d'être détruit
-            return true;
         }
     }
-
-    return false;
 }
 
 void Editor::draw() {

@@ -13,12 +13,9 @@ void Game::load(std::ifstream& file) {
     manager.setTitle(getName());
 }
 
-bool Game::frame() {
-    // si le dessin de la frame a été interrompu par
-    // le traitement événementiel, on arrête
-    if (Level::frame()) {
-        return true;
-    }
+void Game::frame() {
+    // traitements généraux
+    Level::frame();
 
     sf::Time current_time = manager.getCurrentTime();
 
@@ -39,32 +36,27 @@ bool Game::frame() {
         // le temps nécessaire pour revenir dans les temps
         sf::sleep(next_frame_time - current_time);
     }
-
-    return false;
 }
 
-bool Game::processEvent(const sf::Event& event) {
+void Game::processEvent(const sf::Event& event) {
+    Level::processEvent(event);
+
     // appui sur espace en mode test : retour à l'éditeur
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && test_mode) {
         test_mode = false;
         manager.setView(return_view);
-
-        // demande l'interruption du dessin de la
-        // frame car l'objet risque d'être détruit
-        return true;
     }
-
-    return false;
 }
 
 void Game::draw() {
+    sf::Vector2i window_size = (sf::Vector2i) manager.getWindow().getSize();
+
+    // dessin des objets du niveau
     Level::draw();
 
-    sf::View window_view = manager.getWindowView();
-
-    // dessin du widget
+    // dessin du timer
     widget_timer.setTimeLeft(getTotalTime());
-    widget_timer.draw(sf::Vector2f(window_view.getSize().x / 2 - 50, 0));
+    widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
 }
 
 void Game::update() {

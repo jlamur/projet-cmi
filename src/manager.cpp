@@ -3,21 +3,30 @@
 Manager::Manager() : window(
     sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)
-), window_view(window.getView()), title(sf::String(L"")), view(NULL) {}
+), default_view(window.getDefaultView()), title(sf::String(L"")),
+view(NULL), next_view(NULL), running(false) {}
 
 void Manager::start() {
-    while (window.isOpen()) {
+    running = true;
+
+    while (running) {
         sf::Event event;
         events.clear();
+
+        // si un changement de vue a été demandé, on l'effectue maintenant
+        if (next_view != nullptr) {
+            view = next_view;
+            next_view = nullptr;
+        }
 
         // traitement des évènements reçus
         while (window.pollEvent(event)) {
             // fermeture de la fenêtre
             if (event.type == sf::Event::Closed) {
-                window.close();
-                return;
+                quit();
             }
 
+            // redimensionnement de la fenêtre
             if (event.type == sf::Event::Resized) {
                 default_view = sf::View(sf::FloatRect(
                     0, 0, event.size.width, event.size.height
@@ -38,12 +47,18 @@ void Manager::start() {
     }
 }
 
+void Manager::quit() {
+    running = false;
+}
+
 std::shared_ptr<View> Manager::getView() {
     return view;
 }
 
 void Manager::setView(std::shared_ptr<View> set_view) {
-    view = set_view;
+    // on ne change pas immédiatement la vue, on attend
+    // la prochaine frame pour éviter toute erreur de segmentation
+    next_view = set_view;
 }
 
 sf::RenderWindow& Manager::getWindow() {

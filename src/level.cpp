@@ -118,31 +118,21 @@ void Level::save() {
     // TODO: faire une fonction d'enregistrement
 }
 
-bool Level::frame() {
+void Level::frame() {
     const std::vector<sf::Event>& events = manager.getEvents();
 
     // traitement des événements
     for (unsigned int i = 0; i < events.size(); i++) {
-        if (processEvent(events[i])) {
-            // /!\ On arrête là si on a demandé l'interruption.
-            // Il est important de ne plus appeler aucune autre
-            // fonction de la classe pour éviter une erreur
-            // de segmentation
-            return true;
-        }
+        processEvent(events[i]);
     }
-
-    return false;
 }
 
-bool Level::processEvent(const sf::Event& event) {
+void Level::processEvent(const sf::Event& event) {
     // lorsque la fenêtre est redimensionnée, mise à jour
     // de la taille de la caméra
     if (event.type == sf::Event::Resized) {
         camera.setSize(event.size.width, event.size.height);
     }
-
-    return false;
 }
 
 void Level::draw() {

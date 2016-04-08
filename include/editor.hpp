@@ -72,20 +72,18 @@ protected:
     virtual void draw();
 
     /**
-     * Traite un événement et renvoie true si le
-     * dessin de la frame doit être interrompu
+     * Traite un événement
      */
-    virtual bool processEvent(const sf::Event& event);
+    virtual void processEvent(const sf::Event& event);
 
 public:
     Editor(Manager& manager);
     virtual ~Editor();
 
     /**
-     * Demande le passage à la frame suivante sur cette vue,
-     * renvoie true si le rendu de la frame a été interrompu
+     * Demande le passage à la frame suivante sur cette vue
      */
-    virtual bool frame();
+    virtual void frame();
 
     /**
      * Charge un niveau de jeu depuis le fichier donné

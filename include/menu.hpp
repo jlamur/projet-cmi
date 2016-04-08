@@ -26,7 +26,7 @@ public:
     /**
      * Dessine le menu
      */
-    bool frame();
+    void frame();
 
     /**
      * Permet de changer le choix sélectionné

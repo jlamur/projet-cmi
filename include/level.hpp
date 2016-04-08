@@ -30,10 +30,9 @@ protected:
     virtual void draw();
 
     /**
-     * Traite un événement et renvoie true si le
-     * dessin de la frame doit être interrompu
+     * Traite un événement
      */
-    virtual bool processEvent(const sf::Event& event);
+    virtual void processEvent(const sf::Event& event);
 
     /**
      * Convertit les coordonnées à l'écran en coordonnées du monde
@@ -56,10 +55,9 @@ public:
     virtual void save();
 
     /**
-     * Demande le passage à la frame suivante sur
-     * cette vue
+     * Demande le passage à la frame suivante sur cette vue
      */
-    virtual bool frame();
+    virtual void frame();
 
     /**
      * Récupère le nom du niveau

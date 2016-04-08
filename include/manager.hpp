@@ -13,14 +13,16 @@ class Manager {
 private:
     sf::RenderWindow window;
     sf::Clock clock;
-    sf::View window_view;
-    sf::String title;
     sf::View default_view;
+    sf::String title;
 
     ResourceManager resource_manager;
     std::vector<sf::Event> events;
 
     std::shared_ptr<View> view;
+    std::shared_ptr<View> next_view;
+
+    bool running;
 
 public:
     Manager();
@@ -29,6 +31,11 @@ public:
      * Démarre la boucle principale du jeu
      */
     void start();
+
+    /**
+     * Termine la boucle principale et quitte le jeu
+     */
+    void quit();
 
     /**
      * Renvoie la vue actuelle du jeu
