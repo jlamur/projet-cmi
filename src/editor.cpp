@@ -1,10 +1,9 @@
-#include <iostream>
-#include <cmath>
-#include <algorithm>
 #include "editor.hpp"
 #include "game.hpp"
 #include "block.hpp"
 #include "constants.hpp"
+#include <cmath>
+#include <algorithm>
 
 const sf::Color SELECTION_COLOR = sf::Color(33, 33, 33, 40);
 const sf::Color SELECTION_BORDER_COLOR = sf::Color(33, 33, 33, 127);

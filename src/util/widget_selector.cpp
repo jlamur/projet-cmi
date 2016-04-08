@@ -1,6 +1,5 @@
-#include <iostream>
-#include <utility>
 #include "util/widget_selector.hpp"
+#include <utility>
 
 const int PADDING = 8;
 

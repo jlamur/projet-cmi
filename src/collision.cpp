@@ -4,6 +4,7 @@
 #include "object.hpp"
 #include <functional>
 #include <utility>
+#include <cmath>
 
 /**
  * Détermination des informations sur une collision entre

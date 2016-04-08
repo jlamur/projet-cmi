@@ -1,13 +1,12 @@
 #ifndef __PTF_MENU_HPP__
 #define __PTF_MENU_HPP__
 
-#include <SFML/Audio.hpp>
-#include <iostream>
 #include "manager.hpp"
 #include "game.hpp"
 #include "editor.hpp"
 #include "view.hpp"
 #include "resource_manager.hpp"
+#include <SFML/Audio.hpp>
 #include <vector>
 
 #define NB_CHOICES 4

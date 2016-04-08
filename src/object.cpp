@@ -1,8 +1,7 @@
-#include <cmath>
-#include <iostream>
 #include "object.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
+#include <cmath>
 
 const unsigned int Object::PROP_MASS = 1;
 const unsigned int Object::PROP_CHARGE = 2;
