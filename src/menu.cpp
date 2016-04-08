@@ -7,13 +7,13 @@ Menu::Menu(Manager& manager) : View(manager){
 
     menu1();
     //mise en place des propriétés des textes affichés dans le menu
-    choice[0].setFont(manager.getResourceManager().getFont("Raleway-Regular.ttf"));
+    choice[0].setFont(manager.getResourceManager().getFont("raleway.ttf"));
     choice[0].setColor(sf::Color::Red);
     choice[0].setPosition(sf::Vector2f(positionY, 400/(NB_CHOICES + 1)));
 
     for(int i=1; i < NB_CHOICES; i++)
     {
-        choice[i].setFont(manager.getResourceManager().getFont("Raleway-Regular.ttf"));
+        choice[i].setFont(manager.getResourceManager().getFont("raleway.ttf"));
         choice[i].setColor(sf::Color::White);
         choice[i].setPosition(sf::Vector2f(positionY, 400/((NB_CHOICES + 1))*(i+1)));
     }
