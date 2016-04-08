@@ -8,11 +8,18 @@
 
 const sf::Color SELECTION_COLOR = sf::Color(33, 33, 33, 40);
 const sf::Color SELECTION_BORDER_COLOR = sf::Color(33, 33, 33, 127);
-const int SCROLL_SPEED = 2;
-const int SCROLL_PADDING = 8;
+const int SCROLL_SPEED = 5;
+const int SCROLL_PADDING = 5;
 
 Editor::Editor(Manager& manager) : Level(manager), drag_mode(DragMode::NONE),
-    widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)) {}
+    widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
+    widget_selector(manager) {
+
+    ResourceManager& resources = manager.getResourceManager();
+    std::shared_ptr<SelectorCategory> basic = widget_selector.addCategory("BASE");
+    basic->addItem("Bloc", resources.getTexture("block.png"), resources.getTexture("block_select.png"));
+    basic->addItem("Ball", resources.getTexture("ball.png"), resources.getTexture("block_select.png"));
+}
 
 Editor::~Editor() {}
 
@@ -35,6 +42,11 @@ void Editor::processEvent(const sf::Event& event) {
 
     // traitement des événements du widget timer
     if (widget_timer.processEvent(event)) {
+        return;
+    }
+
+    // traitement des événements du widget selector
+    if (widget_selector.processEvent(event)) {
         return;
     }
 
@@ -191,11 +203,11 @@ void Editor::draw() {
     widget_timer.setTimeLeft(getTotalTime());
     widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
 
-    // menu
-    sf::RectangleShape menu(sf::Vector2f(window_size.x, 64));
-    menu.setPosition(sf::Vector2f(0, window_size.y - 64));
-
-    window.draw(menu);
+    // sélectionneur d'objet
+    widget_selector.draw(
+        sf::Vector2f(window_size.x - 64, 0),
+        sf::Vector2f(64, window_size.y)
+    );
 }
 
 ObjectPtr Editor::getObject(sf::Vector2f position) {

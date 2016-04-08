@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "level.hpp"
 #include "util/widget_timer.hpp"
+#include "util/widget_selector.hpp"
 
 enum class DragMode {NONE, PLACE, SELECT_RECT, SELECT_BULK, REMOVE};
 enum class SelectionMode {REPLACE, FLIP, ADD};
@@ -18,7 +19,9 @@ private:
     sf::Vector2i drag_start;
     sf::Vector2i drag_end;
     DragMode drag_mode;
+    
     WidgetTimer widget_timer;
+    WidgetSelector widget_selector;
 
     /**
      * Renvoie l'objet pointé à la position donnée
