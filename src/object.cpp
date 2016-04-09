@@ -91,7 +91,7 @@ sf::Vector2f Object::getForces(const Level& level) const {
     const std::vector<ObjectPtr>& objects = level.getObjects();
 
     // force de gravité
-    forces += sf::Vector2f(0, getMass() * Constants::GRAVITY);
+    forces += getMass() * level.getGravity();
 
     // force d'attraction entre objets chargés
     if (getCharge() != 0) {
