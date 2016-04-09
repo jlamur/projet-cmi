@@ -7,6 +7,8 @@
 #include <utility>
 #include "level.hpp"
 
+const float GRAVITY = 235;
+
 /**
  * Dictionnaire associant les types d'objets
  * à des instances qui seront utilisées pour la
@@ -17,7 +19,7 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
     {Block::TYPE_ID, Block::load}
 };
 
-Level::Level(Manager& manager) : View(manager) {}
+Level::Level(Manager& manager) : View(manager), gravity(0, GRAVITY) {}
 Level::~Level() {}
 
 void Level::load(std::ifstream& file) {
@@ -188,6 +190,30 @@ sf::Sprite Level::getBackground() const {
 
 void Level::setBackground(sf::Sprite set_background) {
     background = set_background;
+}
+
+sf::Vector2f Level::getGravity() const {
+    return gravity;
+}
+
+void Level::setGravity(GravityDirection direction) {
+    switch (direction) {
+    case GravityDirection::NORTH:
+        gravity = sf::Vector2f(0, -GRAVITY);
+        break;
+
+    case GravityDirection::WEST:
+        gravity = sf::Vector2f(GRAVITY, 0);
+        break;
+
+    case GravityDirection::SOUTH:
+        gravity = sf::Vector2f(0, GRAVITY);
+        break;
+
+    case GravityDirection::EAST:
+        gravity = sf::Vector2f(-GRAVITY, 0);
+        break;
+    }
 }
 
 std::vector<ObjectPtr>& Level::getObjects() {

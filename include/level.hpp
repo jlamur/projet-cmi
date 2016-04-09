@@ -8,6 +8,9 @@
 #include "manager.hpp"
 #include "resource_manager.hpp"
 
+// liste des directions de la gravité
+enum class GravityDirection {NORTH, EAST, SOUTH, WEST};
+
 /**
  * La classe Level est une abstraction des
  * classes affichant une collection d'objets, comme
@@ -21,6 +24,7 @@ private:
     sf::Sprite background;
     std::string music_name;
 
+    sf::Vector2f gravity;
     std::vector<ObjectPtr> objects;
     std::vector<std::pair<float, float>> zone;
 
@@ -102,6 +106,16 @@ public:
      * Modifie le fond du niveau
      */
     void setBackground(sf::Sprite set_background);
+
+    /**
+     * Récupère le vecteur gravité
+     */
+    sf::Vector2f getGravity() const;
+
+    /**
+     * Modifie la direction de la gravité
+     */
+    void setGravity(GravityDirection direction);
 
     /**
      * Récupère la liste des objets
