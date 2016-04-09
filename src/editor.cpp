@@ -5,10 +5,15 @@
 #include <cmath>
 #include <algorithm>
 
-const sf::Color SELECTION_COLOR = sf::Color(33, 33, 33, 40);
-const sf::Color SELECTION_BORDER_COLOR = sf::Color(33, 33, 33, 127);
-const int SCROLL_SPEED = 5;
-const int SCROLL_PADDING = 5;
+const sf::Color SELECT_RECT_COLOR = sf::Color(33, 33, 33, 40);
+const sf::Color SELECT_RECT_BORDER_COLOR = sf::Color(33, 33, 33, 127);
+
+const float WHEEL_SCROLL_SPEED = -4.f;
+const float POINTER_SCROLL_SPEED = 4.f;
+const float POINTER_SCROLL_MAX_SPEED = 10.f;
+const float POINTER_SCROLL_STEP = 64.f;
+const float ASSUME_TITLEBAR = 32.f;
+const int POINTER_SCROLL_PADDING = 5;
 
 Editor::Editor(Manager& manager) : Level(manager), drag_mode(DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
@@ -135,6 +140,19 @@ void Editor::processEvent(const sf::Event& event) {
         drag_mode = DragMode::NONE;
     }
 
+    // lorsqu'on scrolle on déplace la vue
+    if (event.type == sf::Event::MouseWheelScrolled) {
+        sf::View camera = getCamera();
+
+        if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel) {
+            camera.move(sf::Vector2f(event.mouseWheelScroll.delta, 0) * WHEEL_SCROLL_SPEED);
+        } else if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+            camera.move(sf::Vector2f(0, event.mouseWheelScroll.delta) * WHEEL_SCROLL_SPEED);
+        }
+
+        setCamera(camera);
+    }
+
     // gestion des touches
     if (event.type == sf::Event::KeyPressed) {
         // appui sur suppr : suppression des blocs sélectionnés
@@ -179,15 +197,31 @@ void Editor::draw() {
         sf::View camera = getCamera();
         sf::Vector2i mouse = sf::Mouse::getPosition(window);
 
-        if (mouse.x < SCROLL_PADDING) {
-            camera.move(sf::Vector2f(-SCROLL_SPEED, 0));
-        } else if (mouse.x > window_size.x - SCROLL_PADDING) {
-            camera.move(sf::Vector2f(SCROLL_SPEED, 0));
-        } else if (mouse.y < SCROLL_PADDING) {
-            camera.move(sf::Vector2f(0, -SCROLL_SPEED));
-        } else if (mouse.y > window_size.y - SCROLL_PADDING) {
-            camera.move(sf::Vector2f(0, SCROLL_SPEED));
+        sf::Vector2f change;
+        float absolute_diff;
+
+        // détection du dépassement sur un des 4 bords
+        if (mouse.x < POINTER_SCROLL_PADDING) {
+            absolute_diff = POINTER_SCROLL_PADDING - mouse.x;
+            change = sf::Vector2f(-POINTER_SCROLL_SPEED, 0);
+        } else if (mouse.x > window_size.x - POINTER_SCROLL_PADDING) {
+            absolute_diff = mouse.x - window_size.x + POINTER_SCROLL_PADDING;
+            change = sf::Vector2f(POINTER_SCROLL_SPEED, 0);
+        } else if (mouse.y < POINTER_SCROLL_PADDING) {
+            // on évite de scroller sur la barre de titre (c'est chiant)
+            if (mouse.y >= 0 || mouse.y < -ASSUME_TITLEBAR) {
+                absolute_diff = POINTER_SCROLL_PADDING - mouse.y;
+                change = sf::Vector2f(0, -POINTER_SCROLL_SPEED);
+            }
+        } else if (mouse.y > window_size.y - POINTER_SCROLL_PADDING) {
+            absolute_diff = mouse.y - window_size.y + POINTER_SCROLL_PADDING;
+            change = sf::Vector2f(0, POINTER_SCROLL_SPEED);
         }
+
+        camera.move(change * std::min(
+            1 + absolute_diff / POINTER_SCROLL_STEP,
+            POINTER_SCROLL_MAX_SPEED
+        ));
 
         setCamera(camera);
     }
@@ -202,9 +236,9 @@ void Editor::draw() {
 
         sf::RectangleShape selection_rect(size);
         selection_rect.setPosition(pos);
-        selection_rect.setFillColor(SELECTION_COLOR);
+        selection_rect.setFillColor(SELECT_RECT_COLOR);
         selection_rect.setOutlineThickness(2.f);
-        selection_rect.setOutlineColor(SELECTION_BORDER_COLOR);
+        selection_rect.setOutlineColor(SELECT_RECT_BORDER_COLOR);
 
         window.draw(selection_rect);
     }
