@@ -63,6 +63,8 @@ void WidgetSelector::draw(sf::Vector2f position, sf::Vector2f size) {
     background.setPosition(position);
     window.draw(background);
 
+    float total_y = PADDING;
+
     for (unsigned int i = 0; i < categories.size(); i++) {
         std::shared_ptr<SelectorCategory> category = categories[i];
 
@@ -75,22 +77,25 @@ void WidgetSelector::draw(sf::Vector2f position, sf::Vector2f size) {
         category_label.setColor(sf::Color::Black);
         category_label.setPosition(position + sf::Vector2f(
             floor(size.x / 2 - category_label.getGlobalBounds().width / 2),
-            PADDING
+            total_y
         ));
 
         window.draw(category_label);
 
         for (unsigned int j = 0; j < category->items.size(); j++) {
+            total_y += PADDING + 24;
+
             std::shared_ptr<SelectorItem> item = category->items[j];
             sf::Vector2f sprite_position = position + sf::Vector2f(
                 size.x / 2 - item->sprite.getGlobalBounds().width / 2,
-                PADDING + 24 + 38 * j
+                total_y
             );
 
             // affichage du sprite de l'item
             item->sprite.setPosition(sprite_position);
             window.draw(item->sprite);
         }
-    }
 
+        total_y += 64;
+    }
 }

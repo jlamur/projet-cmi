@@ -66,7 +66,7 @@ public:
     /**
      * Appelé lorsque l'objet est activé par un autre
      */
-    virtual void activated(Object& object) = 0;
+    virtual void activated(Level& level, Object& object) = 0;
 
     /**
      * Récupère l'identifiant de type de cet objet
@@ -102,7 +102,7 @@ public:
      * et l'objet passé en paramètre selon la normale
      * donnée
      */
-    virtual void solveCollision(Object& obj, const sf::Vector2f& normal);
+    virtual void solveCollision(Level& level, Object& obj, const sf::Vector2f& normal);
 
     /**
      * Application de la correction positionnelle sur

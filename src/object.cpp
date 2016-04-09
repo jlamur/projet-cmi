@@ -154,7 +154,7 @@ bool Object::detectCollision(const Object& obj, CollisionData& data) const {
     return getCollisionData(data);
 }
 
-void Object::solveCollision(Object& obj, const sf::Vector2f& normal) {
+void Object::solveCollision(Level& level, Object& obj, const sf::Vector2f& normal) {
     // si les deux objets sont de masse infinie, réinitialisation
     // des vitesses en tant que collision
     if (getMassInvert() == 0 && obj.getMassInvert() == 0) {
@@ -174,8 +174,8 @@ void Object::solveCollision(Object& obj, const sf::Vector2f& normal) {
 
     // en ce point, on est bertins qu'une collision a eu lieu.
     // activation réciproque des deux objets
-    activated(obj);
-    obj.activated(*this);
+    activated(level, obj);
+    obj.activated(level, *this);
 
     // on utilise le plus petit coefficient de friction entre les
     // deux objets comme le coefficient de la collision

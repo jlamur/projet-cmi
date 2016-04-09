@@ -1,11 +1,12 @@
 #include "constants.hpp"
-#include "block.hpp"
+#include "level.hpp"
 #include "player.hpp"
+#include "block.hpp"
+#include "gravity_block.hpp"
 #include <arpa/inet.h>
 #include <cstring>
 #include <queue>
 #include <utility>
-#include "level.hpp"
 
 const float GRAVITY = 235;
 
@@ -16,7 +17,8 @@ const float GRAVITY = 235;
  */
 std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map = {
     {Player::TYPE_ID, Player::load},
-    {Block::TYPE_ID, Block::load}
+    {Block::TYPE_ID, Block::load},
+    {GravityBlock::TYPE_ID, GravityBlock::load}
 };
 
 Level::Level(Manager& manager) : View(manager), gravity(0, GRAVITY) {}
@@ -196,21 +198,21 @@ sf::Vector2f Level::getGravity() const {
     return gravity;
 }
 
-void Level::setGravity(GravityDirection direction) {
+void Level::setGravityDirection(GravityDirection direction) {
     switch (direction) {
     case GravityDirection::NORTH:
         gravity = sf::Vector2f(0, -GRAVITY);
         break;
 
-    case GravityDirection::WEST:
+    case GravityDirection::EAST:
         gravity = sf::Vector2f(GRAVITY, 0);
         break;
 
     case GravityDirection::SOUTH:
-        gravity = sf::Vector2f(0, GRAVITY);
+        gravity = sf::Vector2f(0, -GRAVITY);
         break;
 
-    case GravityDirection::EAST:
+    case GravityDirection::WEST:
         gravity = sf::Vector2f(-GRAVITY, 0);
         break;
     }

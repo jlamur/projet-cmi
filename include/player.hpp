@@ -42,7 +42,7 @@ public:
     /**
      * Appelé lorsque le joueur est activé par un objet
      */
-    virtual void activated(Object& object);
+    virtual void activated(Level& level, Object& object);
 
     /**
      * Récupère l'identifiant de type des joueurs

@@ -1,6 +1,7 @@
 #include "collision.hpp"
 #include "player.hpp"
 #include "block.hpp"
+#include "gravity_block.hpp"
 #include "object.hpp"
 #include <functional>
 #include <utility>
@@ -189,10 +190,15 @@ std::map<
     std::pair<unsigned int, unsigned int>,
     std::function<bool(CollisionData&)>
 > collision_map = {
-    {std::make_pair(Player::TYPE_ID, Block::TYPE_ID), playerToBlock},
-    {std::make_pair(Block::TYPE_ID, Player::TYPE_ID), blockToPlayer},
     {std::make_pair(Player::TYPE_ID, Player::TYPE_ID), playerToPlayer},
-    {std::make_pair(Block::TYPE_ID, Block::TYPE_ID), blockToBlock}
+    {std::make_pair(Player::TYPE_ID, Block::TYPE_ID), playerToBlock},
+    {std::make_pair(Player::TYPE_ID, GravityBlock::TYPE_ID), playerToBlock},
+    {std::make_pair(Block::TYPE_ID, Block::TYPE_ID), blockToBlock},
+    {std::make_pair(Block::TYPE_ID, GravityBlock::TYPE_ID), blockToBlock},
+    {std::make_pair(Block::TYPE_ID, Player::TYPE_ID), blockToPlayer},
+    {std::make_pair(GravityBlock::TYPE_ID, Block::TYPE_ID), blockToBlock},
+    {std::make_pair(GravityBlock::TYPE_ID, GravityBlock::TYPE_ID), blockToBlock},
+    {std::make_pair(GravityBlock::TYPE_ID, Player::TYPE_ID), blockToPlayer}
 };
 
 CollisionData::CollisionData(Object& objA, Object& objB) :

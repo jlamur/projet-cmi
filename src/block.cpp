@@ -37,7 +37,7 @@ void Block::draw(Level& level) {
     ResourceManager& resources = level.getResourceManager();
     sf::RenderWindow& window = level.getWindow();
 
-    sprite.setTexture(resources.getTexture("block.png"));
+    sprite.setTexture(resources.getTexture("block.tga"));
     select_sprite.setTexture(resources.getTexture("block_select.png"));
 
     // coloration du bloc en fonction de sa charge
@@ -59,7 +59,7 @@ void Block::draw(Level& level) {
     }
 }
 
-void Block::activated(Object& object) {
+void Block::activated(Level& level, Object& object) {
     // ne rien faire si le bloc est activé.
     // Ceci est un bloc de base qui n'a pas a réagir
     // aux activations

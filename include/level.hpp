@@ -115,7 +115,7 @@ public:
     /**
      * Modifie la direction de la gravité
      */
-    void setGravity(GravityDirection direction);
+    void setGravityDirection(GravityDirection direction);
 
     /**
      * Récupère la liste des objets

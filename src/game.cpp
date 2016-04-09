@@ -111,7 +111,7 @@ void Game::update() {
     // résolution des collisions détectées
     for (unsigned int i = 0; i < colliding.size(); i++) {
         CollisionData& collided = colliding[i];
-        collided.objA.solveCollision(collided.objB, collided.normal);
+        collided.objA.solveCollision(*this, collided.objB, collided.normal);
     }
 
     // intégration de la vitesse dans la position

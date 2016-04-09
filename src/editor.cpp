@@ -18,9 +18,16 @@ Editor::Editor(Manager& manager) : Level(manager), drag_mode(DragMode::NONE),
     setTotalTime(30);
 
     ResourceManager& resources = getResourceManager();
-    std::shared_ptr<SelectorCategory> basic = widget_selector.addCategory("BASE");
-    basic->addItem("Block", resources.getTexture("block.png"));
-    basic->addItem("Player", resources.getTexture("player.tga"));
+
+    std::shared_ptr<SelectorCategory> basic_cat = widget_selector.addCategory("BASE");
+    basic_cat->addItem("Block", resources.getTexture("block.tga"));
+    basic_cat->addItem("Player", resources.getTexture("player.tga"));
+
+    std::shared_ptr<SelectorCategory> gravity_cat = widget_selector.addCategory(sf::String(L"GRAVITÉ"));
+    gravity_cat->addItem("GravityN", resources.getTexture("gravity_block_north.tga"));
+    gravity_cat->addItem("GravityE", resources.getTexture("gravity_block_east.tga"));
+    gravity_cat->addItem("GravityS", resources.getTexture("gravity_block_south.tga"));
+    gravity_cat->addItem("GravityW", resources.getTexture("gravity_block_west.tga"));
 }
 
 Editor::~Editor() {}
