@@ -58,6 +58,12 @@ void Block::draw(Manager& manager) {
     }
 }
 
+void Block::activated(Object& object) {
+    // ne rien faire si le bloc est activé.
+    // Ceci est un bloc de base qui n'a pas a réagir
+    // aux activations
+}
+
 std::unique_ptr<sf::FloatRect> Block::getAABB() const {
     return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
         getPosition().x - Constants::GRID / 2,

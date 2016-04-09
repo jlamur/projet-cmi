@@ -11,13 +11,13 @@ private:
 
 protected:
     /**
-     * Calcule les forces appliquées à l'objet
+     * Calcule les forces appliquées au joueur
      */
     virtual sf::Vector2f getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const;
 
 public:
     /**
-     * Identifiant unique du type d'objet
+     * Identifiant unique du type "joueur"
      */
     static const unsigned int TYPE_ID;
 
@@ -25,19 +25,34 @@ public:
     virtual ~Player();
 
     /**
-     * Clone cet objet en un objet avec les mêmes propriétés
+     * Clone ce joueur en un joueur avec les mêmes propriétés
      */
     virtual ObjectPtr clone() const;
 
     /**
-     * Chargement de l'objet depuis le fichier donné
+     * Récupère la boîte englobante du joueur
      */
-    static ObjectPtr load(std::ifstream& file);
+    virtual std::unique_ptr<sf::FloatRect> getAABB() const;
 
     /**
-     * Dessine la balle dans la fenêtre donnée
+     * Dessine le joueur dans la fenêtre donnée
      */
     virtual void draw(Manager& manager);
+
+    /**
+     * Appelé lorsque le joueur est activé par un objet
+     */
+    virtual void activated(Object& object);
+
+    /**
+     * Récupère l'identifiant de type des joueurs
+     */
+    virtual unsigned int getTypeId() const;
+
+    /**
+     * Chargement du joueur depuis le fichier donné
+     */
+    static ObjectPtr load(std::ifstream& file);
 
     /**
      * Met à jour la position de l'objet selon sa
@@ -46,17 +61,7 @@ public:
     virtual void updatePosition(float delta);
 
     /**
-     * Récupère la boîte englobante de l'objet
-     */
-    virtual std::unique_ptr<sf::FloatRect> getAABB() const;
-
-    /**
-     * Récupère l'identifiant de type de cet objet
-     */
-    virtual unsigned int getTypeId() const;
-
-    /**
-     * Renvoie le rayon de la balle
+     * Renvoie le rayon de la balle du joueur
      */
     float getRadius() const;
 

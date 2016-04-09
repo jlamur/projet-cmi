@@ -11,7 +11,7 @@ private:
 
 public:
     /**
-     * Identifiant unique du type d'objet
+     * Identifiant unique du type "bloc"
      */
     static const unsigned int TYPE_ID;
 
@@ -19,14 +19,14 @@ public:
     virtual ~Block();
 
     /**
-     * Clone cet objet en un objet avec les mêmes propriétés
+     * Clone ce bloc en un bloc avec les mêmes propriétés
      */
     virtual ObjectPtr clone() const;
 
     /**
-     * Chargement de l'objet depuis le fichier donné
+     * Récupère la boîte englobante du bloc
      */
-    static ObjectPtr load(std::ifstream& file);
+    virtual std::unique_ptr<sf::FloatRect> getAABB() const;
 
     /**
      * Dessin du bloc dans la fenêtre donnée
@@ -34,14 +34,19 @@ public:
     virtual void draw(Manager& manager);
 
     /**
-     * Récupère la boîte englobante de l'objet
+     * Appelé lorsque le bloc est activé par un objet
      */
-    virtual std::unique_ptr<sf::FloatRect> getAABB() const;
+    virtual void activated(Object& object);
 
     /**
-     * Récupère l'identifiant de type de cet objet
+     * Récupère l'identifiant de type des blocs
      */
     virtual unsigned int getTypeId() const;
+
+    /**
+     * Chargement du bloc depuis le fichier donné
+     */
+    static ObjectPtr load(std::ifstream& file);
 };
 
 #endif

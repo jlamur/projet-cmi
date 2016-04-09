@@ -68,7 +68,7 @@ void Player::draw(Manager& manager) {
         &manager.getResourceManager().getTexture("player.tga")
     );
 
-    // si le joueur est sélectionné, on le colore en rouge vif
+    // si le joueur est sélectionné, on met sa bordure en rouge
     // if (isSelected()) {
     //     sprite.setColor(sf::Color(255, 0, 0));
     // } else {
@@ -83,6 +83,12 @@ void Player::draw(Manager& manager) {
     // déplacement du sprite à la position de la balle
     sprite.setPosition(getPosition());
     manager.getWindow().draw(sprite);
+}
+
+void Player::activated(Object& object) {
+    // ne rien faire si le joueur est activé.
+    // en règle générale, c'est l'objet activé par le joueur
+    // qui s'occupe de la réponse
 }
 
 void Player::updatePosition(float delta){

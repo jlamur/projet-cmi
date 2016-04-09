@@ -52,15 +52,30 @@ public:
     virtual ObjectPtr clone() const = 0;
 
     /**
-     * Charge les propriétés communes à tous les objets
-     * depuis le fichier donné dans l'objet donné
+     * Récupère la boîte englobante de l'objet
      */
-    static void load(std::ifstream& file, ObjectPtr object);
+    virtual std::unique_ptr<sf::FloatRect> getAABB() const = 0;
 
     /**
      * Dessine l'objet dans la fenêtre donnée
      */
     virtual void draw(Manager& manager) = 0;
+
+    /**
+     * Appelé lorsque l'objet est activé par un autre
+     */
+    virtual void activated(Object& object) = 0;
+
+    /**
+     * Récupère l'identifiant de type de cet objet
+     */
+    virtual unsigned int getTypeId() const = 0;
+
+    /**
+     * Charge les propriétés communes à tous les objets
+     * depuis le fichier donné dans l'objet donné
+     */
+    static void load(std::ifstream& file, ObjectPtr object);
 
     /**
      * Met à jour la vitesse de l'objet selon les
@@ -96,16 +111,6 @@ public:
      * qui les fait "plonger" les uns dans les autres
      */
     virtual void positionalCorrection(Object& obj, const sf::Vector2f& normal, float depth);
-
-    /**
-     * Récupère la boîte englobante de l'objet
-     */
-    virtual std::unique_ptr<sf::FloatRect> getAABB() const = 0;
-
-    /**
-     * Récupère l'identifiant de type de cet objet
-     */
-    virtual unsigned int getTypeId() const = 0;
 
     /**
      * Récupère l'accélération de l'objet

@@ -174,6 +174,11 @@ void Object::solveCollision(Object& obj, const sf::Vector2f& normal) {
         return;
     }
 
+    // en ce point, on est bertins qu'une collision a eu lieu.
+    // activation réciproque des deux objets
+    activated(obj);
+    obj.activated(*this);
+
     // on utilise le plus petit coefficient de friction entre les
     // deux objets comme le coefficient de la collision
     float restitution = std::min(getRestitution(), obj.getRestitution());
