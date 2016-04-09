@@ -118,6 +118,8 @@ void Level::begin() {
     if (music_name != "") {
         resources.setMusic(music_name);
         resources.playMusic();
+    } else {
+        resources.stopMusic();
     }
 }
 

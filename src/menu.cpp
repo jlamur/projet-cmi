@@ -4,7 +4,6 @@
 #include <cmath>
 
 const float MAX_WIDTH_PROPORTION = 1.f / 3.f;
-const float PADDING = 24.f;
 
 Menu::Menu(Manager& manager) : View(manager) {}
 Menu::~Menu() {}
@@ -31,32 +30,42 @@ void Menu::frame(const std::vector<sf::Event>& events) {
     sf::Vector2f size = (sf::Vector2f) window.getSize();
     sf::Font font = manager.getResourceManager().getFont("raleway.ttf");
 
+    manager.resetDefaultView();
     window.clear(sf::Color(66, 40, 245));
     // TODO: dessiner l'image du fond
 
     // on crée les textes pour chaque choix et on les dessine
     float step = size.y / (choices.size() + 1);
-    int font_size = std::max((int) std::floor(step - PADDING), 12);
+    int font_size = std::max((int) step / 3, 12);
+
+    labels.clear();
 
     for (unsigned int i = 0; i < choices.size(); i++) {
-        sf::Text label(choices[i], font, 32);
-        sf::Vector2f position(
-            (1 - MAX_WIDTH_PROPORTION) * size.x,
-            step * (i + 1) - font_size / 2
+        sf::Text label(choices[i], font, font_size);
+        sf::FloatRect text_size = label.getLocalBounds();
+
+        sf::Vector2f base_position(
+            size.x - (font_size * 8),
+            step * (i + 1)
         );
 
-        float width = label.getGlobalBounds().width;
-        label.setPosition(position);
         label.setColor(sf::Color::White);
+        label.setPosition(base_position - sf::Vector2f(
+            text_size.left, text_size.top + text_size.height / 2
+        ));
 
-        // si c'est le choix sélecitonné, on le souligne
+        // si c'est le choix sélectionné, on le souligne
         if (selection == i) {
-            sf::RectangleShape underline(sf::Vector2f(width, 2.f));
-            underline.setPosition(position.x, position.y + font_size / 2 + 6);
+            sf::RectangleShape underline(sf::Vector2f(text_size.width, 2.f));
             underline.setFillColor(sf::Color::White);
+            underline.setPosition(base_position + sf::Vector2f(
+                0, text_size.height / 2 + 8
+            ));
+
             window.draw(underline);
         }
 
+        labels.push_back(label);
         window.draw(label);
     }
 
@@ -77,7 +86,7 @@ void Menu::processEvent(const sf::Event& event) {
 
         // touche flèche bas : on passe au choix suivant
         if (event.key.code == sf::Keyboard::Down) {
-            if (selection == choices.size()) {
+            if (selection == choices.size() - 1) {
                 selection = 0;
             } else {
                 selection++;
@@ -87,6 +96,29 @@ void Menu::processEvent(const sf::Event& event) {
         // touche entrée : on exécute le choix sélectionné
         if (event.key.code == sf::Keyboard::Return) {
             actions[selection]();
+        }
+    }
+
+    // au clic, on exécute le choix pointé s'il y a lieu
+    if (event.type == sf::Event::MouseButtonPressed) {
+        sf::Vector2f position(event.mouseButton.x, event.mouseButton.y);
+
+        for (unsigned int i = 0; i < labels.size(); i++) {
+            if (labels[i].getGlobalBounds().contains(position)) {
+                actions[i]();
+                return;
+            }
+        }
+    }
+
+    // au déplacement de souris, on sélectionne le choix pointé s'il y a lieu
+    if (event.type == sf::Event::MouseMoved) {
+        sf::Vector2f position(event.mouseMove.x, event.mouseMove.y);
+
+        for (unsigned int i = 0; i < labels.size(); i++) {
+            if (labels[i].getGlobalBounds().contains(position)) {
+                selection = i;
+            }
         }
     }
 }

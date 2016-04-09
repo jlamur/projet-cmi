@@ -14,6 +14,7 @@
 class Menu : public View {
 private:
     std::vector<sf::String> choices;
+    std::vector<sf::Text> labels;
     std::vector<std::function<void(void)>> actions;
     unsigned int selection;
 
@@ -22,6 +23,26 @@ protected:
      * Traite l'événement donné
      */
     virtual void processEvent(const sf::Event& event);
+
+    /**
+     * Affiche les règles du jeu
+     */
+    void loadRules();
+
+    /**
+     * Démarre l'éditeur
+     */
+    void launchEditor();
+
+    /**
+     * Démarre le jeu avec le niveau donné
+     */
+    void launchGame(std::string name);
+
+    /**
+     * Quitte le jeu et le menu
+     */
+    void quit();
 
 public:
     Menu(Manager& manager);
@@ -47,26 +68,6 @@ public:
      * Affiche le menu de choix des niveaux
      */
     void loadLevelMenu();
-
-    /**
-     * Affiche les règles du jeu
-     */
-    void loadRules();
-
-    /**
-     * Démarre l'éditeur
-     */
-    void launchEditor();
-
-    /**
-     * Démarre le jeu avec le niveau donné
-     */
-    void launchGame(std::string name);
-
-    /**
-     * Quitte le jeu et le menu
-     */
-    void quit();
 };
 
 
