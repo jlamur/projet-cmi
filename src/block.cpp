@@ -32,15 +32,12 @@ ObjectPtr Block::load(std::ifstream& file) {
     return object;
 }
 
-void Block::draw(Level& level) {
-    // utilisation de la texture
-    ResourceManager& resources = level.getResourceManager();
-    sf::RenderWindow& window = level.getWindow();
+void Block::beforeDraw(Level& level) {
+    // texturage et coloration du bloc selon ses propriétés
+    sprite.setTexture(
+        level.getResourceManager().getTexture("block.tga")
+    );
 
-    sprite.setTexture(resources.getTexture("block.tga"));
-    select_sprite.setTexture(resources.getTexture("block_select.png"));
-
-    // coloration du bloc en fonction de sa charge
     if (getCharge() > 0) {
         sprite.setColor(sf::Color(180, 180, 255));
     } else if (getCharge() < 0) {
@@ -48,13 +45,22 @@ void Block::draw(Level& level) {
     } else {
         sprite.setColor(sf::Color::White);
     }
+}
+
+void Block::draw(Level& level) {
+    // utilisation de la texture
+    sf::RenderWindow& window = level.getWindow();
+    beforeDraw(level);
 
     sprite.setPosition(getPosition());
-    select_sprite.setPosition(getPosition());
-
     window.draw(sprite);
 
     if (isSelected()) {
+        select_sprite.setPosition(getPosition());
+        select_sprite.setTexture(
+            level.getResourceManager().getTexture("block_select.png")
+        );
+
         window.draw(select_sprite);
     }
 }

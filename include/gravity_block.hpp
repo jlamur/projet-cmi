@@ -23,6 +23,11 @@ public:
     virtual ObjectPtr clone() const;
 
     /**
+     * Opérations de préparation de la texture du bloc
+     */
+    virtual void beforeDraw(Level& level);
+
+    /**
      * Appelé lorsque le bloc de gravité est activé par un objet
      */
     virtual void activated(Level& level, Object& object);

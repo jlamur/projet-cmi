@@ -6,8 +6,10 @@
 
 class Block : public Object {
 private:
-    mutable sf::Sprite sprite;
     mutable sf::Sprite select_sprite;
+
+protected:
+    mutable sf::Sprite sprite;
 
 public:
     /**
@@ -27,6 +29,11 @@ public:
      * Récupère la boîte englobante du bloc
      */
     virtual std::unique_ptr<sf::FloatRect> getAABB() const;
+
+    /**
+     * Opérations de préparation de la texture du bloc
+     */
+    virtual void beforeDraw(Level& level);
 
     /**
      * Dessin du bloc dans la fenêtre donnée
