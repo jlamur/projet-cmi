@@ -31,7 +31,7 @@ public:
     /**
      * Dessin du bloc dans la fenêtre donnée
      */
-    virtual void draw(Manager& manager);
+    virtual void draw(Level& level);
 
     /**
      * Appelé lorsque le bloc est activé par un objet

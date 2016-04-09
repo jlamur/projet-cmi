@@ -10,6 +10,8 @@
 
 typedef std::shared_ptr<Object> ObjectPtr;
 
+class Level;
+
 class Object {
 private:
     sf::Vector2f acceleration;
@@ -30,7 +32,7 @@ protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    virtual sf::Vector2f getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const;
+    virtual sf::Vector2f getForces(const Level& level) const;
 
 public:
     /**
@@ -59,7 +61,7 @@ public:
     /**
      * Dessine l'objet dans la fenêtre donnée
      */
-    virtual void draw(Manager& manager) = 0;
+    virtual void draw(Level& level) = 0;
 
     /**
      * Appelé lorsque l'objet est activé par un autre
@@ -81,13 +83,13 @@ public:
      * Met à jour la vitesse de l'objet selon les
      * forces qui lui sont appliquées
      */
-    virtual void updateVelocity(const Manager& manager, const std::vector<ObjectPtr>& objects, float delta);
+    virtual void updateVelocity(const Level& level);
 
     /**
      * Met à jour la position de l'objet selon sa
      * vitesse actuelle
      */
-    virtual void updatePosition(float delta);
+    virtual void updatePosition();
 
     /**
      * Détecte s'il y a collision entre cet objet

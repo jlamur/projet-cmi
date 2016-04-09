@@ -1,4 +1,5 @@
 #include "block.hpp"
+#include "level.hpp"
 #include "player.hpp"
 #include "constants.hpp"
 #include "resource_manager.hpp"
@@ -31,10 +32,10 @@ ObjectPtr Block::load(std::ifstream& file) {
     return object;
 }
 
-void Block::draw(Manager& manager) {
+void Block::draw(Level& level) {
     // utilisation de la texture
-    ResourceManager& resources = manager.getResourceManager();
-    sf::RenderWindow& window = manager.getWindow();
+    ResourceManager& resources = level.getResourceManager();
+    sf::RenderWindow& window = level.getWindow();
 
     sprite.setTexture(resources.getTexture("block.png"));
     select_sprite.setTexture(resources.getTexture("block_select.png"));

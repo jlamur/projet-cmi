@@ -14,7 +14,7 @@ Game::~Game() {}
 
 void Game::begin() {
     Level::begin();
-    manager.getWindow().setFramerateLimit(0);
+    getWindow().setFramerateLimit(0);
 }
 
 void Game::frame(const std::vector<sf::Event>& events) {
@@ -22,9 +22,8 @@ void Game::frame(const std::vector<sf::Event>& events) {
     Level::frame(events);
 
     // titre de la fenêtre
-    manager.setTitle(getName());
-
-    sf::Time current_time = manager.getCurrentTime();
+    getManager().setTitle(getName());
+    sf::Time current_time = getManager().getCurrentTime();
 
     if (current_time >= next_frame_time) {
         // si nous sommes en retard ou dans les temps
@@ -54,12 +53,12 @@ void Game::processEvent(const sf::Event& event) {
     // appui sur espace en mode test : retour à l'éditeur
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && test_mode) {
         test_mode = false;
-        manager.setView(return_view);
+        getManager().setView(return_view);
     }
 }
 
 void Game::draw() {
-    sf::Vector2i window_size = (sf::Vector2i) manager.getWindow().getSize();
+    sf::Vector2i window_size = (sf::Vector2i) getWindow().getSize();
 
     // dessin des objets du niveau
     Level::draw();
@@ -106,7 +105,7 @@ void Game::update() {
 
     // intégration des forces dans la vitesse (seconde moitié)
     for (unsigned int i = 0; i < getObjects().size(); i++) {
-        getObjects()[i]->updateVelocity(manager, getObjects(), Constants::PHYSICS_TIME.asSeconds() / 2);
+        getObjects()[i]->updateVelocity(*this);
     }
 
     // résolution des collisions détectées
@@ -117,7 +116,7 @@ void Game::update() {
 
     // intégration de la vitesse dans la position
     for (unsigned int i = 0; i < getObjects().size(); i++) {
-        getObjects()[i]->updatePosition(Constants::PHYSICS_TIME.asSeconds());
+        getObjects()[i]->updatePosition();
     }
 
     // application de la correction positionnelle

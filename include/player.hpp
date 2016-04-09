@@ -13,7 +13,7 @@ protected:
     /**
      * Calcule les forces appliquées au joueur
      */
-    virtual sf::Vector2f getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const;
+    virtual sf::Vector2f getForces(const Level& level) const;
 
 public:
     /**
@@ -37,7 +37,7 @@ public:
     /**
      * Dessine le joueur dans la fenêtre donnée
      */
-    virtual void draw(Manager& manager);
+    virtual void draw(Level& manager);
 
     /**
      * Appelé lorsque le joueur est activé par un objet
@@ -58,7 +58,7 @@ public:
      * Met à jour la position de l'objet selon sa
      * vitesse actuelle
      */
-    virtual void updatePosition(float delta);
+    virtual void updatePosition();
 
     /**
      * Renvoie le rayon de la balle du joueur

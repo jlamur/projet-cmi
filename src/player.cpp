@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include "level.hpp"
 #include "block.hpp"
 #include "constants.hpp"
 #include <array>
@@ -35,26 +36,26 @@ ObjectPtr Player::load(std::ifstream& file) {
     return object;
 }
 
-sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectPtr>& objects) const {
-    sf::Vector2f forces = Object::getForces(manager, objects);
+sf::Vector2f Player::getForces(const Level& level) const {
+    sf::Vector2f forces = Object::getForces(level);
 
     // déplacement de la balle après appui sur les touches de direction
     if (getPlayerNumber() == 0) {
-        if (manager.isKeyPressed(sf::Keyboard::Left)) {
+        if (level.isKeyPressed(sf::Keyboard::Left)) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
 
-        if (manager.isKeyPressed(sf::Keyboard::Right)) {
+        if (level.isKeyPressed(sf::Keyboard::Right)) {
             forces += sf::Vector2f(Constants::MOVE, 0);
         }
     }
 
     if (getPlayerNumber() == 1) {
-        if (manager.isKeyPressed(sf::Keyboard::Q)) {
+        if (level.isKeyPressed(sf::Keyboard::Q)) {
             forces += sf::Vector2f(-Constants::MOVE, 0);
         }
 
-        if (manager.isKeyPressed(sf::Keyboard::D)) {
+        if (level.isKeyPressed(sf::Keyboard::D)) {
             forces += sf::Vector2f(Constants::MOVE, 0);
         }
     }
@@ -62,10 +63,10 @@ sf::Vector2f Player::getForces(const Manager& manager, const std::vector<ObjectP
     return forces;
 }
 
-void Player::draw(Manager& manager) {
+void Player::draw(Level& level) {
     // utilisation de la texture
 	sprite.setTexture(
-        &manager.getResourceManager().getTexture("player.tga")
+        &level.getResourceManager().getTexture("player.tga")
     );
 
     // si le joueur est sélectionné, on met sa bordure en rouge
@@ -82,7 +83,7 @@ void Player::draw(Manager& manager) {
 
     // déplacement du sprite à la position de la balle
     sprite.setPosition(getPosition());
-    manager.getWindow().draw(sprite);
+    level.getWindow().draw(sprite);
 }
 
 void Player::activated(Object& object) {
@@ -91,11 +92,11 @@ void Player::activated(Object& object) {
     // qui s'occupe de la réponse
 }
 
-void Player::updatePosition(float delta){
+void Player::updatePosition() {
     // calcul de la différence de position pour connaître
     // (approximativement) la rotation de la balle
     sf::Vector2f last_position = getPosition();
-    Object::updatePosition(delta);
+    Object::updatePosition();
     sprite.rotate((getPosition() - last_position).x * 3.f);
 }
 

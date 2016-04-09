@@ -17,7 +17,7 @@ Editor::Editor(Manager& manager) : Level(manager), drag_mode(DragMode::NONE),
     setName("Nouveau niveau");
     setTotalTime(30);
 
-    ResourceManager& resources = manager.getResourceManager();
+    ResourceManager& resources = getResourceManager();
     std::shared_ptr<SelectorCategory> basic = widget_selector.addCategory("BASE");
     basic->addItem("Block", resources.getTexture("block.png"));
     basic->addItem("Player", resources.getTexture("player.tga"));
@@ -27,7 +27,7 @@ Editor::~Editor() {}
 
 void Editor::begin() {
     Level::begin();
-    manager.getWindow().setFramerateLimit(60);
+    getWindow().setFramerateLimit(60);
 }
 
 void Editor::frame(const std::vector<sf::Event>& events) {
@@ -35,7 +35,7 @@ void Editor::frame(const std::vector<sf::Event>& events) {
     Level::frame(events);
 
     // titre de la fenêtre
-    manager.setTitle(sf::String(L"Édition de ") + getName());
+    getManager().setTitle(sf::String(L"Édition de ") + getName());
 
     // dessin de la frame
     draw();
@@ -62,7 +62,7 @@ void Editor::processEvent(const sf::Event& event) {
 
         if (event.mouseButton.button == sf::Mouse::Left) {
             // clic + shift : sélection par rectangle de sélection
-            if (manager.isKeyPressed(sf::Keyboard::LShift)) {
+            if (isKeyPressed(sf::Keyboard::LShift)) {
                 drag_start = mouse_position;
                 drag_end = mouse_position;
                 drag_mode = DragMode::SELECT_RECT;
@@ -70,7 +70,7 @@ void Editor::processEvent(const sf::Event& event) {
 
             // clic sur un objet : démarrage de la sélection libre
             else if (pointed_object != nullptr) {
-                if (manager.isKeyPressed(sf::Keyboard::LControl)) {
+                if (isKeyPressed(sf::Keyboard::LControl)) {
                     drag_start = mouse_position;
                     drag_end = mouse_position;
                     drag_mode = DragMode::SELECT_BULK;
@@ -165,7 +165,7 @@ void Editor::processEvent(const sf::Event& event) {
 }
 
 void Editor::draw() {
-    sf::RenderWindow& window = manager.getWindow();
+    sf::RenderWindow& window = getWindow();
     sf::Vector2i window_size = (sf::Vector2i) window.getSize();
 
     // scroll de la caméra lorsque la souris se situe sur les bords
@@ -348,7 +348,7 @@ void Editor::selectAll() {
 }
 
 void Editor::test() {
-    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(manager));
+    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(getManager()));
     clearSelection();
 
     // copie des propriétés
@@ -371,6 +371,6 @@ void Editor::test() {
     }
 
     // mise en mode test
-    game->setTestMode(manager.getView());
-    manager.setView(game);
+    game->setTestMode(getManager().getView());
+    getManager().setView(game);
 }

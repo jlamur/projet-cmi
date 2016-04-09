@@ -9,13 +9,13 @@ Menu::Menu(Manager& manager) : View(manager) {}
 Menu::~Menu() {}
 
 void Menu::begin() {
-    ResourceManager& resources = manager.getResourceManager();
+    ResourceManager& resources = getResourceManager();
 
     loadMainMenu();
     resources.setMusic("menu.wav");
     resources.playMusic();
 
-    manager.getWindow().setFramerateLimit(60);
+    getWindow().setFramerateLimit(60);
 }
 
 void Menu::frame(const std::vector<sf::Event>& events) {
@@ -23,14 +23,14 @@ void Menu::frame(const std::vector<sf::Event>& events) {
     View::frame(events);
 
     // titre de la fenêtitre
-    manager.setTitle("");
+    getManager().setTitle("");
 
     // affichage du menu
-    sf::RenderWindow& window = manager.getWindow();
+    sf::RenderWindow& window = getWindow();
     sf::Vector2f size = (sf::Vector2f) window.getSize();
-    sf::Font font = manager.getResourceManager().getFont("raleway.ttf");
+    sf::Font font = getResourceManager().getFont("raleway.ttf");
 
-    manager.resetDefaultView();
+    getManager().resetDefaultView();
     window.clear(sf::Color(66, 40, 245));
     // TODO: dessiner l'image du fond
 
@@ -164,12 +164,12 @@ void Menu::loadRules() {
 }
 
 void Menu::launchEditor() {
-    std::shared_ptr<View> editor = std::shared_ptr<View>(new Editor(manager));
-    manager.setView(editor);
+    std::shared_ptr<View> editor = std::shared_ptr<View>(new Editor(getManager()));
+    getManager().setView(editor);
 }
 
 void Menu::launchGame(std::string name) {
-    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(manager));
+    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(getManager()));
     std::string path = "./levels/" + name;
 
     std::ifstream file;
@@ -177,9 +177,9 @@ void Menu::launchGame(std::string name) {
     game->load(file);
     file.close();
 
-    manager.setView(game);
+    getManager().setView(game);
 }
 
 void Menu::quit() {
-    manager.quit();
+    getManager().quit();
 }

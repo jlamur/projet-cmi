@@ -109,14 +109,24 @@ public:
     std::vector<ObjectPtr>& getObjects();
 
     /**
+     * Récupère la liste des objets (version constante)
+     */
+    const std::vector<ObjectPtr>& getObjects() const;
+
+    /**
      * Récupère la zone du niveau
      */
     std::vector<std::pair<float, float>>& getZone();
 
     /**
+     * Récupère la zone du niveau (version constante)
+     */
+    const std::vector<std::pair<float, float>>& getZone() const;
+
+    /**
      * Récupère la caméra actuelle
      */
-    sf::View getCamera();
+    sf::View getCamera() const;
 
     /**
      * Modifie la caméra

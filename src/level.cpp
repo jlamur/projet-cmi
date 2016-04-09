@@ -77,11 +77,10 @@ void Level::load(std::ifstream& file) {
 
     // lecture des chemins de la musique et du fond
     std::string background_name;
-    ResourceManager& resource_manager = manager.getResourceManager();
 
     std::getline(file, music_name, '\0');
     std::getline(file, background_name, '\0');
-    background.setTexture(resource_manager.getTexture(background_name));
+    background.setTexture(getResourceManager().getTexture(background_name));
 
     // lecture du nombre de blocs
     int block_count;
@@ -110,9 +109,9 @@ void Level::save() {
 }
 
 void Level::begin() {
-    ResourceManager& resources = manager.getResourceManager();
+    ResourceManager& resources = getResourceManager();
 
-    camera = manager.getWindow().getDefaultView();
+    camera = getWindow().getDefaultView();
     camera.setCenter(0, 0);
 
     if (music_name != "") {
@@ -137,7 +136,7 @@ void Level::processEvent(const sf::Event& event) {
 }
 
 void Level::draw() {
-    sf::RenderWindow& window = manager.getWindow();
+    sf::RenderWindow& window = getWindow();
 
     // passage sur la vue caméra
     window.setView(camera);
@@ -155,12 +154,12 @@ void Level::draw() {
 
     // dessin des objets de la file d'affichage couche par couche
     while (!display_queue.empty()) {
-        display_queue.top()->draw(manager);
+        display_queue.top()->draw(*this);
         display_queue.pop();
     }
 
     // passage sur la vue par défaut
-    manager.resetDefaultView();
+    getManager().resetDefaultView();
 }
 
 sf::String Level::getName() const {
@@ -195,16 +194,24 @@ std::vector<ObjectPtr>& Level::getObjects() {
     return objects;
 }
 
+const std::vector<ObjectPtr>& Level::getObjects() const {
+    return objects;
+}
+
 std::vector<std::pair<float, float>>& Level::getZone() {
     return zone;
 }
 
-sf::View Level::getCamera() {
+const std::vector<std::pair<float, float>>& Level::getZone() const {
+    return zone;
+}
+
+sf::View Level::getCamera() const {
     return camera;
 }
 
 sf::Vector2f Level::pixelToCoords(sf::Vector2i pixel) {
-    sf::RenderWindow& window = manager.getWindow();
+    sf::RenderWindow& window = getWindow();
     sf::View old_view = window.getView();
 
     window.setView(camera);
@@ -215,7 +222,7 @@ sf::Vector2f Level::pixelToCoords(sf::Vector2i pixel) {
 }
 
 sf::Vector2i Level::coordsToPixel(sf::Vector2f coords) {
-    sf::RenderWindow& window = manager.getWindow();
+    sf::RenderWindow& window = getWindow();
     sf::View old_view = window.getView();
 
     window.setView(camera);

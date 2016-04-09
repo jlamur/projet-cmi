@@ -1,4 +1,5 @@
 #include "object.hpp"
+#include "level.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
 #include <cmath>
@@ -85,10 +86,9 @@ void Object::load(std::ifstream& file, ObjectPtr object) {
     }
 }
 
-sf::Vector2f Object::getForces(
-    const Manager& manager, const std::vector<ObjectPtr>& objects
-) const {
+sf::Vector2f Object::getForces(const Level& level) const {
     sf::Vector2f forces(0, 0);
+    const std::vector<ObjectPtr>& objects = level.getObjects();
 
     // force de gravité
     forces += sf::Vector2f(0, getMass() * Constants::GRAVITY);
@@ -129,15 +129,13 @@ sf::Vector2f Object::getForces(
     return forces;
 }
 
-void Object::updateVelocity(
-    const Manager& manager, const std::vector<ObjectPtr>& objects, float delta
-) {
-    acceleration = getForces(manager, objects) * getMassInvert();
-    velocity += acceleration * delta;
+void Object::updateVelocity(const Level& level) {
+    acceleration = getForces(level) * getMassInvert();
+    velocity += acceleration * Constants::PHYSICS_TIME.asSeconds();
 }
 
-void Object::updatePosition(float delta) {
-    position += velocity * delta;
+void Object::updatePosition() {
+    position += velocity * Constants::PHYSICS_TIME.asSeconds();
 }
 
 bool Object::detectCollision(const Object& obj, CollisionData& data) const {
