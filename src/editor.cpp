@@ -8,8 +8,8 @@
 const sf::Color SELECT_RECT_COLOR = sf::Color(33, 33, 33, 40);
 const sf::Color SELECT_RECT_BORDER_COLOR = sf::Color(33, 33, 33, 127);
 
-const float WHEEL_SCROLL_SPEED = -8.f;
-const float POINTER_SCROLL_SPEED = 8.f;
+const float WHEEL_SCROLL_SPEED = -7.f;
+const float POINTER_SCROLL_SPEED = 5.f;
 const float POINTER_SCROLL_MAX_SPEED = 10.f;
 const float POINTER_SCROLL_STEP = 64.f;
 const float ASSUME_TITLEBAR = 32.f;
@@ -144,9 +144,17 @@ void Editor::processEvent(const sf::Event& event) {
     if (event.type == sf::Event::MouseWheelScrolled) {
         sf::View camera = getCamera();
 
-        if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel) {
+        // la molette est horizontale ssi. elle l'est vraiment ou
+        // si on utilise la molette verticale et shift
+        bool horizontal = (
+            event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel ||
+            (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel &&
+            getManager().isKeyPressed(Manager::Modifier::SHIFT))
+        );
+
+        if (horizontal) {
             camera.move(sf::Vector2f(event.mouseWheelScroll.delta, 0) * WHEEL_SCROLL_SPEED);
-        } else if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+        } else {
             camera.move(sf::Vector2f(0, event.mouseWheelScroll.delta) * WHEEL_SCROLL_SPEED);
         }
 
