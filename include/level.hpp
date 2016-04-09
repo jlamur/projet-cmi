@@ -19,11 +19,13 @@ private:
     sf::String name;
     int total_time;
     sf::Sprite background;
+    std::string music_name;
 
     std::vector<ObjectPtr> objects;
     std::vector<std::pair<float, float>> zone;
 
 protected:
+
     /**
      * Dessine tous les objets et le fond à l'écran
      */
@@ -61,9 +63,15 @@ public:
     virtual void save();
 
     /**
+     * Appelé par le manager lorsque la vue commence à
+     * être utilisée
+     */
+    virtual void begin();
+
+    /**
      * Demande le passage à la frame suivante sur cette vue
      */
-    virtual void frame();
+    virtual void frame(const std::vector<sf::Event>& events);
 
     /**
      * Récupère le nom du niveau

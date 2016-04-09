@@ -63,12 +63,6 @@ public:
     ResourceManager& getResourceManager();
 
     /**
-     * Renvoie la liste des événements reçus pour la
-     * précédente frame
-     */
-    const std::vector<sf::Event>& getEvents();
-
-    /**
      * Remet la vue par défaut (zoom 1:1, origine en haut à gauche)
      */
     void resetDefaultView();

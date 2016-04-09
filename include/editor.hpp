@@ -19,7 +19,7 @@ private:
     sf::Vector2i drag_start;
     sf::Vector2i drag_end;
     DragMode drag_mode;
-    
+
     WidgetTimer widget_timer;
     WidgetSelector widget_selector;
 
@@ -84,14 +84,15 @@ public:
     virtual ~Editor();
 
     /**
-     * Demande le passage à la frame suivante sur cette vue
+     * Appelé par le manager lorsque la vue commence à
+     * être utilisée
      */
-    virtual void frame();
+    virtual void begin();
 
     /**
-     * Charge un niveau de jeu depuis le fichier donné
+     * Demande le passage à la frame suivante sur cette vue
      */
-    virtual void load(std::ifstream& file);
+    virtual void frame(const std::vector<sf::Event>& events);
 };
 
 #endif

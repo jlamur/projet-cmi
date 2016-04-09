@@ -15,22 +15,20 @@ std::shared_ptr<SelectorCategory> WidgetSelector::addCategory(sf::String name) {
     return cat;
 }
 
-void SelectorCategory::addItem(sf::String name, sf::Texture& texture, sf::Texture& select_texture) {
+std::shared_ptr<SelectorItem> SelectorCategory::addItem(sf::String name, sf::Texture& texture) {
     auto item = std::shared_ptr<SelectorItem>(new SelectorItem);
     item->sprite.setTexture(texture, true);
-    item->select_sprite.setTexture(select_texture, true);
-
     float width = item->sprite.getLocalBounds().width;
 
     // mise à l'échelle si trop grand ou trop petit
     if (width < 20 || width > 28) {
         item->sprite.scale(24 / width, 24 / width);
-        item->select_sprite.scale(24 / width, 24 / width);
         width = 24;
     }
 
     item->name = name;
     items.push_back(item);
+    return item;
 }
 
 bool WidgetSelector::processEvent(const sf::Event& event) {
@@ -89,16 +87,9 @@ void WidgetSelector::draw(sf::Vector2f position, sf::Vector2f size) {
                 PADDING + 24 + 38 * j
             );
 
-            // affichage des sprites des items + le sprite
-            // de sélection si sélectionné
+            // affichage du sprite de l'item
             item->sprite.setPosition(sprite_position);
-            item->select_sprite.setPosition(sprite_position);
-
             window.draw(item->sprite);
-
-            if (selected == item.get()) {
-                window.draw(item->select_sprite);
-            }
         }
     }
 

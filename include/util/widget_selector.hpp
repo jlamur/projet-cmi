@@ -10,9 +10,7 @@
  */
 struct SelectorItem {
     sf::String name;
-
     sf::Sprite sprite;
-    sf::Sprite select_sprite;
 };
 
 /**
@@ -25,7 +23,7 @@ struct SelectorCategory {
     /**
      * Ajoute un nouvel item dans cette catégorie
      */
-    void addItem(sf::String name, sf::Texture& texture, sf::Texture& select_texture);
+    std::shared_ptr<SelectorItem> addItem(sf::String name, sf::Texture& texture);
 };
 
 /**

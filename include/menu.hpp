@@ -2,14 +2,9 @@
 #define __PTF_MENU_HPP__
 
 #include "manager.hpp"
-#include "game.hpp"
-#include "editor.hpp"
 #include "view.hpp"
-#include "resource_manager.hpp"
-#include <SFML/Audio.hpp>
+#include <functional>
 #include <vector>
-
-#define NB_CHOICES 4
 
 /**
  * La classe Menu charge le menu du jeu
@@ -17,37 +12,61 @@
  * et quitter.
  */
 class Menu : public View {
+private:
+    std::vector<sf::String> choices;
+    std::vector<std::function<void(void)>> actions;
+    unsigned int selection;
+
+protected:
+    /**
+     * Traite l'événement donné
+     */
+    virtual void processEvent(const sf::Event& event);
 
 public:
     Menu(Manager& manager);
     virtual ~Menu();
 
     /**
-     * Dessine le menu
+     * Appelé par le manager lorsque la vue commence à
+     * être utilisée
      */
-    void frame();
+    virtual void begin();
 
     /**
-     * Permet de changer le choix sélectionné
+     * Dessine le menu
      */
-    void MoveUp();
-    void MoveDown();
-    void menu1();
-    void menu2();
+    virtual void frame(const std::vector<sf::Event>& events);
 
-private:
-    //repère le choix sélectionné
-    int selection;
+    /**
+     * Affiche le menu principal
+     */
+    void loadMainMenu();
 
-    int menu_nb;
+    /**
+     * Affiche le menu de choix des niveaux
+     */
+    void loadLevelMenu();
 
-    int positionY;
-    std::vector<std::function<void()>> menu[NB_CHOICES];
-    sf::Font font;
+    /**
+     * Affiche les règles du jeu
+     */
+    void loadRules();
 
-    //tableau de textes modélisant les différents
-    //choix dans le menu
-    sf::Text choice[NB_CHOICES];
+    /**
+     * Démarre l'éditeur
+     */
+    void launchEditor();
+
+    /**
+     * Démarre le jeu avec le niveau donné
+     */
+    void launchGame(std::string name);
+
+    /**
+     * Quitte le jeu et le menu
+     */
+    void quit();
 };
 
 

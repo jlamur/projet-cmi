@@ -1,151 +1,153 @@
 #include "menu.hpp"
+#include "editor.hpp"
+#include "game.hpp"
+#include <cmath>
 
-Menu::Menu(Manager& manager) : View(manager){
+const float MAX_WIDTH_PROPORTION = 1.f / 3.f;
+const float PADDING = 24.f;
 
-    manager.getResourceManager().setMusic("menu.wav");
-    manager.getResourceManager().playMusic();
+Menu::Menu(Manager& manager) : View(manager) {}
+Menu::~Menu() {}
 
-    menu1();
-    //mise en place des propriétés des textes affichés dans le menu
-    choice[0].setFont(manager.getResourceManager().getFont("raleway.ttf"));
-    choice[0].setColor(sf::Color::Red);
-    choice[0].setPosition(sf::Vector2f(positionY, 400/(NB_CHOICES + 1)));
+void Menu::begin() {
+    ResourceManager& resources = manager.getResourceManager();
 
-    for(int i=1; i < NB_CHOICES; i++)
-    {
-        choice[i].setFont(manager.getResourceManager().getFont("raleway.ttf"));
-        choice[i].setColor(sf::Color::White);
-        choice[i].setPosition(sf::Vector2f(positionY, 400/((NB_CHOICES + 1))*(i+1)));
-    }
+    loadMainMenu();
+    resources.setMusic("menu.wav");
+    resources.playMusic();
 
-    //choix sélectionné à l'ouverture du menu
-    selection = 0;
+    manager.getWindow().setFramerateLimit(60);
 }
 
-Menu::~Menu(){
-}
+void Menu::frame(const std::vector<sf::Event>& events) {
+    // traitement des événements
+    View::frame(events);
 
-void Menu::menu1(){
-    menu_nb = 1;
-    positionY = 460;
+    // titre de la fenêtitre
+    manager.setTitle("");
 
-    //mise en place des textes des choix
-    choice[0].setString("Jouer");
-    choice[1].setString("Regles du jeu");
-    choice[2].setString("Creer un niveau");
-    choice[3].setString("Quitter");
-}
-
-void Menu::menu2(){
-    menu_nb = 2;
-    positionY = 300;
-
-    //mise en place des textes des choix
-    choice[0].setString("Tutoriel");
-    choice[1].setString("Niveau 1");
-    choice[2].setString("Niveau 2");
-}
-
-void Menu::MoveUp()
-{
-    //change la couleur du choix sélectionné
-    if(selection-1 >= 0)
-    {
-        choice[selection].setColor(sf::Color::White);
-        selection--;
-        choice[selection].setColor(sf::Color::Red);
-    }
-}
-
-void Menu::MoveDown()
-{
-    //change la couleur du choix sélectionné
-    if(selection+1 < NB_CHOICES)
-    {
-        choice[selection].setColor(sf::Color::White);
-        selection++;
-        choice[selection].setColor(sf::Color::Red);
-    }
-}
-
-void Menu::frame(){
+    // affichage du menu
     sf::RenderWindow& window = manager.getWindow();
+    sf::Vector2f size = (sf::Vector2f) window.getSize();
+    sf::Font font = manager.getResourceManager().getFont("raleway.ttf");
+
     window.clear(sf::Color(66, 40, 245));
+    // TODO: dessiner l'image du fond
 
-    const std::vector<sf::Event>& events = manager.getEvents();
+    // on crée les textes pour chaque choix et on les dessine
+    float step = size.y / (choices.size() + 1);
+    int font_size = std::max((int) std::floor(step - PADDING), 12);
 
-    for (unsigned int i = 0; i < events.size(); i++) {
-        const sf::Event& event = events[i];
+    for (unsigned int i = 0; i < choices.size(); i++) {
+        sf::Text label(choices[i], font, 32);
+        sf::Vector2f position(
+            (1 - MAX_WIDTH_PROPORTION) * size.x,
+            step * (i + 1) - font_size / 2
+        );
 
-        // gestion des touches
-        if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Up) {
-                MoveUp();
-            }
-            if (event.key.code == sf::Keyboard::Down) {
-                MoveDown();
-            }
-            if (event.key.code == sf::Keyboard::Return) {
+        float width = label.getGlobalBounds().width;
+        label.setPosition(position);
+        label.setColor(sf::Color::White);
 
-                //si on se trouve dans le menu 2 permettant de choisir les niveaux
-                if(menu_nb == 2){
-
-                    //si on choisit "tutoriel", on charge le niveau tutoriel et on
-                    //la vue passe à Game
-                    if(selection == 0){
-                        std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(manager));
-                        std::string path;
-
-                        switch (selection) {
-                            case 0:
-                                path = "./levels/level1.dat";
-                                break;
-                        }
-
-                        std::ifstream file;
-                        file.open(path, std::ios::binary | std::ios::in);
-                        game->load(file);
-                        file.close();
-
-                        manager.setView(game);
-                    }
-
-                    //si on choisit "Quitter", la fenêtre se ferme
-                    if(selection == 3){
-                        manager.quit();
-                    }
-                }
-                if(menu_nb == 1){
-
-                    //si on choisit "jouer", la vue se met sur Lvl_menu
-                    if(selection==0){
-                        menu2();
-                    }
-                    if(selection==1){
-
-                    }
-
-                    //si on choisit "créer un niveau", la vue se met sur Editor
-                    if(selection==2){
-                        std::shared_ptr<View> editor = std::shared_ptr<View>(new Editor(manager));
-                        manager.setView(editor);
-                    }
-
-                    //si on choisit "quitter", la fenêtre se ferme
-                    if(selection==3){
-                        manager.quit();
-                    }
-                }
-
-            }
+        // si c'est le choix sélecitonné, on le souligne
+        if (selection == i) {
+            sf::RectangleShape underline(sf::Vector2f(width, 2.f));
+            underline.setPosition(position.x, position.y + font_size / 2 + 6);
+            underline.setFillColor(sf::Color::White);
+            window.draw(underline);
         }
 
-    }
-
-    for(int i=0; i<NB_CHOICES; i++)
-    {
-        window.draw(choice[i]);
+        window.draw(label);
     }
 
     window.display();
+}
+
+void Menu::processEvent(const sf::Event& event) {
+    // gestion des touches
+    if (event.type == sf::Event::KeyPressed) {
+        // touche flèche haut : on passe au choix précédent
+        if (event.key.code == sf::Keyboard::Up) {
+            if (selection == 0) {
+                selection = choices.size() - 1;
+            } else {
+                selection--;
+            }
+        }
+
+        // touche flèche bas : on passe au choix suivant
+        if (event.key.code == sf::Keyboard::Down) {
+            if (selection == choices.size()) {
+                selection = 0;
+            } else {
+                selection++;
+            }
+        }
+
+        // touche entrée : on exécute le choix sélectionné
+        if (event.key.code == sf::Keyboard::Return) {
+            actions[selection]();
+        }
+    }
+}
+
+void Menu::loadMainMenu() {
+    choices.clear();
+    actions.clear();
+    selection = 0;
+
+    choices.push_back(sf::String(L"Jouer"));
+    actions.push_back(std::bind(&Menu::loadLevelMenu, this));
+
+    choices.push_back(sf::String(L"Règles du jeu"));
+    actions.push_back(std::bind(&Menu::loadRules, this));
+
+    choices.push_back(sf::String(L"Éditeur"));
+    actions.push_back(std::bind(&Menu::launchEditor, this));
+
+    choices.push_back(sf::String(L"Quitter"));
+    actions.push_back(std::bind(&Menu::quit, this));
+}
+
+void Menu::loadLevelMenu() {
+    choices.clear();
+    actions.clear();
+    selection = 0;
+
+    choices.push_back(sf::String(L"Tutoriel"));
+    actions.push_back(std::bind(&Menu::launchGame, this, "level1.dat"));
+
+    choices.push_back(sf::String(L"Niveau 1"));
+    actions.push_back(std::bind(&Menu::launchGame, this, "level2.dat"));
+
+    choices.push_back(sf::String(L"Niveau 2"));
+    actions.push_back(std::bind(&Menu::launchGame, this, "level3.dat"));
+
+    choices.push_back(sf::String(L"Retour"));
+    actions.push_back(std::bind(&Menu::loadMainMenu, this));
+}
+
+void Menu::loadRules() {
+    // TODO: coder l'affichage des règles
+}
+
+void Menu::launchEditor() {
+    std::shared_ptr<View> editor = std::shared_ptr<View>(new Editor(manager));
+    manager.setView(editor);
+}
+
+void Menu::launchGame(std::string name) {
+    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(manager));
+    std::string path = "./levels/" + name;
+
+    std::ifstream file;
+    file.open(path, std::ios::binary | std::ios::in);
+    game->load(file);
+    file.close();
+
+    manager.setView(game);
+}
+
+void Menu::quit() {
+    manager.quit();
 }

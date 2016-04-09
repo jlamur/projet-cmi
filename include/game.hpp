@@ -43,14 +43,15 @@ public:
     virtual ~Game();
 
     /**
-     * Charge un niveau de jeu depuis le fichier donné
+     * Appelé par le manager lorsque la vue commence à
+     * être utilisée
      */
-    virtual void load(std::ifstream& file);
+    virtual void begin();
 
     /**
      * Demande le passage à la frame suivante sur cette vue
      */
-    virtual void frame();
+    virtual void frame(const std::vector<sf::Event>& events);
 
     /**
      * Mise en mode test : l'appui sur espace renvoie

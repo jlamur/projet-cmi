@@ -12,14 +12,17 @@ Game::Game(Manager& manager) : Level(manager),
 
 Game::~Game() {}
 
-void Game::load(std::ifstream& file) {
-    Level::load(file);
-    manager.setTitle(getName());
+void Game::begin() {
+    Level::begin();
+    manager.getWindow().setFramerateLimit(0);
 }
 
-void Game::frame() {
-    // traitements généraux
-    Level::frame();
+void Game::frame(const std::vector<sf::Event>& events) {
+    // traitement des événements
+    Level::frame(events);
+
+    // titre de la fenêtre
+    manager.setTitle(getName());
 
     sf::Time current_time = manager.getCurrentTime();
 
@@ -67,7 +70,6 @@ void Game::draw() {
 }
 
 void Game::ensureCentered() {
-    sf::Vector2i window_size = (sf::Vector2i) manager.getWindow().getSize();
     std::vector<ObjectPtr>& objects = getObjects();
 
     sf::Vector2f total_position;

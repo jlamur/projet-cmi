@@ -17,14 +17,8 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
     {Block::TYPE_ID, Block::load}
 };
 
-Level::Level(Manager& manager) : View(manager), total_time(30) {
-    camera = manager.getWindow().getDefaultView();
-    camera.setCenter(0, 0);
-}
-
-Level::~Level() {
-    objects.clear();
-}
+Level::Level(Manager& manager) : View(manager) {}
+Level::~Level() {}
 
 void Level::load(std::ifstream& file) {
     // vide le niveau précédent s'il y a lieu
@@ -82,13 +76,10 @@ void Level::load(std::ifstream& file) {
     }
 
     // lecture des chemins de la musique et du fond
-    std::string music_name, background_name;
+    std::string background_name;
     ResourceManager& resource_manager = manager.getResourceManager();
 
     std::getline(file, music_name, '\0');
-    resource_manager.setMusic(music_name);
-    resource_manager.playMusic();
-
     std::getline(file, background_name, '\0');
     background.setTexture(resource_manager.getTexture(background_name));
 
@@ -118,13 +109,21 @@ void Level::save() {
     // TODO: faire une fonction d'enregistrement
 }
 
-void Level::frame() {
-    const std::vector<sf::Event>& events = manager.getEvents();
+void Level::begin() {
+    ResourceManager& resources = manager.getResourceManager();
 
-    // traitement des événements
-    for (unsigned int i = 0; i < events.size(); i++) {
-        processEvent(events[i]);
+    camera = manager.getWindow().getDefaultView();
+    camera.setCenter(0, 0);
+
+    if (music_name != "") {
+        resources.setMusic(music_name);
+        resources.playMusic();
     }
+}
+
+void Level::frame(const std::vector<sf::Event>& events) {
+    // traitement des événements
+    View::frame(events);
 }
 
 void Level::processEvent(const sf::Event& event) {

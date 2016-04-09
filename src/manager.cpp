@@ -11,11 +11,12 @@ void Manager::start() {
 
     while (running) {
         sf::Event event;
-        events.clear();
+        std::vector<sf::Event> events;
 
         // si un changement de vue a été demandé, on l'effectue maintenant
         if (next_view != nullptr) {
             view = next_view;
+            next_view->begin();
             next_view = nullptr;
         }
 
@@ -26,7 +27,7 @@ void Manager::start() {
                 quit();
             }
 
-            // redimensionnement de la fenêtre
+            // redimensionnement de la vue par défaut
             if (event.type == sf::Event::Resized) {
                 default_view = sf::View(sf::FloatRect(
                     0, 0, event.size.width, event.size.height
@@ -42,7 +43,7 @@ void Manager::start() {
             throw std::runtime_error("Aucune vue à afficher pour le jeu");
         }
 
-        view->frame();
+        view->frame(events);
         window.display();
     }
 }
@@ -73,10 +74,6 @@ ResourceManager& Manager::getResourceManager() {
     return resource_manager;
 }
 
-const std::vector<sf::Event>& Manager::getEvents() {
-    return events;
-}
-
 void Manager::resetDefaultView() {
     window.setView(default_view);
 }
@@ -86,6 +83,10 @@ sf::String Manager::getTitle() {
 }
 
 void Manager::setTitle(sf::String set_title) {
+    if (title == set_title) {
+        return;
+    }
+
     title = set_title;
 
     if (title.isEmpty()) {

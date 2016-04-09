@@ -14,26 +14,31 @@ Editor::Editor(Manager& manager) : Level(manager), drag_mode(DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
     widget_selector(manager) {
 
+    setName("Nouveau niveau");
+    setTotalTime(30);
+
     ResourceManager& resources = manager.getResourceManager();
     std::shared_ptr<SelectorCategory> basic = widget_selector.addCategory("BASE");
-    basic->addItem("Bloc", resources.getTexture("block.png"), resources.getTexture("block_select.png"));
-    basic->addItem("Ball", resources.getTexture("ball.png"), resources.getTexture("block_select.png"));
+    basic->addItem("Block", resources.getTexture("block.png"));
+    basic->addItem("Player", resources.getTexture("player.tga"));
 }
 
 Editor::~Editor() {}
 
-void Editor::load(std::ifstream& file) {
-    Level::load(file);
-    manager.setTitle(sf::String(L"Édition de ") + getName());
+void Editor::begin() {
+    Level::begin();
+    manager.getWindow().setFramerateLimit(60);
 }
 
-void Editor::frame() {
-    // traitements généraux
-    Level::frame();
+void Editor::frame(const std::vector<sf::Event>& events) {
+    // traitement des événements
+    Level::frame(events);
+
+    // titre de la fenêtre
+    manager.setTitle(sf::String(L"Édition de ") + getName());
 
     // dessin de la frame
     draw();
-    sf::sleep(sf::seconds(1.f / 30));
 }
 
 void Editor::processEvent(const sf::Event& event) {
@@ -52,7 +57,7 @@ void Editor::processEvent(const sf::Event& event) {
     // lorsque l'on clique dans l'éditeur
     if (event.type == sf::Event::MouseButtonPressed) {
         sf::Vector2i mouse_position(event.mouseButton.x, event.mouseButton.y);
-        sf::Vector2f position = convertCoords(mouse_position);
+        sf::Vector2f position = pixelToCoords(mouse_position);
         ObjectPtr pointed_object = getObject(position);
 
         if (event.mouseButton.button == sf::Mouse::Left) {
@@ -101,7 +106,7 @@ void Editor::processEvent(const sf::Event& event) {
     // lorsqu'on déplace la souris
     if (event.type == sf::Event::MouseMoved) {
         sf::Vector2i mouse_position(event.mouseMove.x, event.mouseMove.y);
-        sf::Vector2f position = convertCoords(mouse_position);
+        sf::Vector2f position = pixelToCoords(mouse_position);
         ObjectPtr pointed_object = getObject(position);
 
         drag_end = mouse_position;
@@ -126,7 +131,7 @@ void Editor::processEvent(const sf::Event& event) {
     if (event.type == sf::Event::MouseButtonReleased) {
         // mode sélection rectangulaire : on applique la sélection
         if (drag_mode == DragMode::SELECT_RECT) {
-            select(convertCoords(drag_start), convertCoords(drag_end));
+            select(pixelToCoords(drag_start), pixelToCoords(drag_end));
         }
 
         drag_mode = DragMode::NONE;
