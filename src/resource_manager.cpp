@@ -1,20 +1,18 @@
 #include "resource_manager.hpp"
 #include "whereami.h"
-#include <memory>
+#include <cstring>
 
-ResourceManager::ResourceManager() {
-    music.setLoop(true);
-}
+// définition du séparateur de fichiers en fonction
+// du type de système
+#ifdef _WIN32
+const std::string SEP = "\\";
+#else
+const std::string SEP = "/";
+#endif
 
-ResourceManager::~ResourceManager() {
-    textures.clear();
-}
-
-/**
- * Récupère le chemin actuel de l'exécutable sous la forme
- * d'une chaîne de caractères grâce à la librairie whereami
- */
-std::string getCurrentDirectory() {
+ResourceManager::ResourceManager() : music_volume(5) {
+    // on récupère le chemin actuel de l'exécutable pour pouvoir accéder
+    // au dossier des ressources qui est situé dans le même dossier
     int length = wai_getExecutablePath(NULL, 0, NULL), dirname_length;
     std::unique_ptr<char[]> buffer = std::unique_ptr<char[]>(new char[length + 1]);
     wai_getExecutablePath(buffer.get(), length, &dirname_length);
@@ -24,19 +22,17 @@ std::string getCurrentDirectory() {
     }
 
     buffer.get()[length] = '\0';
-    return std::string(buffer.get()).substr(0, dirname_length);
+    std::string base_dir = std::string(buffer.get()).substr(0, dirname_length);
+    resources_dir = base_dir + SEP + "res" + SEP;
+
+    // initialisation de la musique en bouclage et au volume par défaut
+    music.setLoop(true);
+    music.setVolume(music_volume);
 }
 
-/**
- * Récupère le chemin absolu vers la ressource dont
- * le nom est passé en argument
- */
-inline std::string getResourcePath(std::string name) {
-#ifdef _WIN32
-    return getCurrentDirectory() + "\\res\\" + name;
-#else
-    return getCurrentDirectory() + "/res/" + name;
-#endif
+ResourceManager::~ResourceManager() {
+    textures.clear();
+    fonts.clear();
 }
 
 sf::Texture& ResourceManager::getTexture(std::string name) {
@@ -47,9 +43,11 @@ sf::Texture& ResourceManager::getTexture(std::string name) {
 
     sf::Texture texture;
 
-    // tente de charger la texture dans le chemin "CWD/res/name"
-    if (!texture.loadFromFile(getResourcePath(name))) {
-        throw std::runtime_error("Impossible de charger l'image : " + name);
+    // tente de charger la texture dans le chemin "res/textures/name.png"
+    if (!texture.loadFromFile(resources_dir + SEP + "textures" + SEP + name)) {
+        throw std::runtime_error(
+            "Impossible de charger l'image \"" + name + "\""
+        );
     }
 
     textures[name] = texture;
@@ -64,29 +62,71 @@ sf::Font& ResourceManager::getFont(std::string name) {
 
     sf::Font font;
 
-    // tente de charger la police dans le chemin "CWD/res/name"
-    if (!font.loadFromFile(getResourcePath(name))) {
-        throw std::runtime_error("Impossible de charger la police : " + name);
+    // tente de charger la police depuis le dossier "res/fonts"
+    if (!font.loadFromFile(resources_dir + SEP + "fonts" + SEP + name)) {
+        throw std::runtime_error(
+            "Impossible de charger la police \"" + name + "\""
+        );
     }
 
     fonts[name] = font;
     return fonts[name];
 }
 
-void ResourceManager::setMusic(std::string name) {
-    if (!music.openFromFile(getResourcePath(name))) {
+LevelReader ResourceManager::getLevelReader(std::string name) {
+    LevelReader reader = LevelReader(new std::ifstream);
+    reader->open(
+        resources_dir + SEP + "levels" + SEP + name,
+        std::ios::binary | std::ios::in
+    );
+
+    // on vérifie que le fichier ait correctement été ouvert en lecture
+    if (reader->fail()) {
+        throw std::runtime_error(
+            "Impossible de charger le niveau \"" + name + "\" " +
+            "(" + std::string(strerror(errno)) + ")"
+        );
+    }
+
+    return reader;
+}
+
+LevelWriter ResourceManager::getLevelWriter(std::string name) {
+    LevelWriter writer = LevelWriter(new std::ofstream);
+    writer->open(
+        resources_dir + SEP + "levels" + SEP + name,
+        std::ios::binary | std::ios::in
+    );
+
+    // on vérifie que le fichier ait correctement été ouvert en écriture
+    if (writer->fail()) {
+        throw std::runtime_error(
+            "Impossible d'écrire le niveau '" + name + "' " +
+            "(" + std::string(strerror(errno)) + ")"
+        );
+    }
+
+    return writer;
+}
+
+void ResourceManager::playMusic(std::string name) {
+    // tente de charger la musique depuis le dossier "res/musics"
+    if (!music.openFromFile(resources_dir + SEP + "musics" + SEP + name)) {
         throw std::runtime_error("Impossible de charger la musique : " + name);
     }
-}
 
-void ResourceManager::playMusic() {
     music.play();
-}
-
-void ResourceManager::pauseMusic() {
-    music.pause();
 }
 
 void ResourceManager::stopMusic() {
     music.stop();
+}
+
+float ResourceManager::getMusicVolume() {
+    return music_volume;
+}
+
+void ResourceManager::setMusicVolume(float set_music_volume) {
+    music_volume = set_music_volume;
+    music.setVolume(music_volume);
 }

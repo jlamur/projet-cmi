@@ -34,6 +34,8 @@ Editor::~Editor() {}
 
 void Editor::begin() {
     Level::begin();
+
+    getResourceManager().playMusic("editor.ogg");
     getWindow().setFramerateLimit(60);
 }
 

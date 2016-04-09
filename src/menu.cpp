@@ -9,12 +9,9 @@ Menu::Menu(Manager& manager) : State(manager) {}
 Menu::~Menu() {}
 
 void Menu::begin() {
-    ResourceManager& resources = getResourceManager();
-
     loadMainMenu();
-    resources.setMusic("menu.wav");
-    resources.playMusic();
 
+    getResourceManager().playMusic("menu.ogg");
     getWindow().setFramerateLimit(60);
 }
 
@@ -22,7 +19,7 @@ void Menu::frame(const std::vector<sf::Event>& events) {
     // traitement des événements
     State::frame(events);
 
-    // titre de la fenêtitre
+    // titre de la fenêtre
     getManager().setTitle("");
 
     // affichage du menu
@@ -170,13 +167,7 @@ void Menu::launchEditor() {
 
 void Menu::launchGame(std::string name) {
     std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(getManager()));
-    std::string path = "./levels/" + name;
-
-    std::ifstream file;
-    file.open(path, std::ios::binary | std::ios::in);
-    game->load(file);
-    file.close();
-
+    game->load(name);
     getManager().setState(game);
 }
 

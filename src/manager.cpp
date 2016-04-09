@@ -2,7 +2,7 @@
 
 Manager::Manager() : window(
     sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
-    sf::ContextSettings(0, 0, 2)
+    sf::ContextSettings(0, 0, 4)
 ), default_view(window.getDefaultView()), title(sf::String(L"")),
 state(NULL), next_state(NULL), running(false) {}
 

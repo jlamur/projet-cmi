@@ -3,13 +3,22 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include <map>
+#include <unordered_map>
 #include <string>
+#include <fstream>
+#include <memory>
+
+typedef std::unique_ptr<std::ifstream> LevelReader;
+typedef std::unique_ptr<std::ofstream> LevelWriter;
 
 class ResourceManager {
 private:
-    std::map<std::string, sf::Texture> textures;
-    std::map<std::string, sf::Font> fonts;
+    std::string resources_dir;
+
+    std::unordered_map<std::string, sf::Texture> textures;
+    std::unordered_map<std::string, sf::Font> fonts;
+
+    float music_volume;
     sf::Music music;
 
 public:
@@ -31,25 +40,36 @@ public:
     sf::Font& getFont(std::string name);
 
     /**
-     * Change la musique en lecture de fond
-     * Doit être utilisé pour la lecture en continu
+     * Récupère un lecteur de fichier vers le niveau donné
+     * (penser à refermer après usage)
      */
-    void setMusic(std::string name);
+    LevelReader getLevelReader(std::string name);
 
     /**
-     * Démarre la musique de fond
+     * Récupère un jacob de fichier vers le niveau donné
+     * (penser à refermer après usage)
      */
-    void playMusic();
+    LevelWriter getLevelWriter(std::string name);
 
     /**
-     * Met en pause la musique de fond
+     * Démarre la musique de fond donnée
      */
-    void pauseMusic();
+    void playMusic(std::string name);
 
     /**
      * Arrête la musique de fond
      */
     void stopMusic();
+
+    /**
+     * Récupère le volume de la musique de fond
+     */
+    float getMusicVolume();
+
+    /**
+     * Modifie le volume de la musique de fond
+     */
+    void setMusicVolume(float set_music_volume);
 };
 
 #endif

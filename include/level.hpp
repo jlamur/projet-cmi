@@ -59,14 +59,14 @@ public:
     virtual ~Level();
 
     /**
-     * Charge un niveau de jeu depuis le fichier donné
+     * Charge un niveau de jeu avec le nom donné
      */
-    virtual void load(std::ifstream& file);
+    virtual void load(std::string name);
 
     /**
-     * Sauvegarde la configuration actuelle comme un niveau
+     * Sauvegarde la configuration actuelle dans le niveau donné
      */
-    virtual void save();
+    virtual void save(std::string name);
 
     /**
      * Appelé par le manager lorsque l'état commence à être utilisé
