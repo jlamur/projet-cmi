@@ -8,8 +8,8 @@
 const sf::Color SELECT_RECT_COLOR = sf::Color(33, 33, 33, 40);
 const sf::Color SELECT_RECT_BORDER_COLOR = sf::Color(33, 33, 33, 127);
 
-const float WHEEL_SCROLL_SPEED = -4.f;
-const float POINTER_SCROLL_SPEED = 4.f;
+const float WHEEL_SCROLL_SPEED = -8.f;
+const float POINTER_SCROLL_SPEED = 8.f;
 const float POINTER_SCROLL_MAX_SPEED = 10.f;
 const float POINTER_SCROLL_STEP = 64.f;
 const float ASSUME_TITLEBAR = 32.f;
