@@ -4,7 +4,7 @@ Manager::Manager() : window(
     sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)
 ), default_view(window.getDefaultView()), title(sf::String(L"")),
-view(NULL), next_view(NULL), running(false) {}
+state(NULL), next_state(NULL), running(false) {}
 
 void Manager::start() {
     running = true;
@@ -13,11 +13,11 @@ void Manager::start() {
         sf::Event event;
         std::vector<sf::Event> events;
 
-        // si un changement de vue a été demandé, on l'effectue maintenant
-        if (next_view != nullptr) {
-            view = next_view;
-            next_view->begin();
-            next_view = nullptr;
+        // si un changement d'état a été demandé, on l'effectue maintenant
+        if (next_state != nullptr) {
+            state = next_state;
+            next_state->begin();
+            next_state = nullptr;
         }
 
         // traitement des évènements reçus
@@ -37,13 +37,13 @@ void Manager::start() {
             events.push_back(event);
         }
 
-        // demande à la vue de se mettre à jour sur
+        // demande à l'état de se mettre à jour sur
         // la prochaine frame
-        if (view == NULL) {
-            throw std::runtime_error("Aucune vue à afficher pour le jeu");
+        if (state == NULL) {
+            throw std::runtime_error("Aucune état à afficher pour le jeu");
         }
 
-        view->frame(events);
+        state->frame(events);
         window.display();
     }
 }
@@ -52,14 +52,14 @@ void Manager::quit() {
     running = false;
 }
 
-std::shared_ptr<View> Manager::getView() {
-    return view;
+std::shared_ptr<State> Manager::getState() {
+    return state;
 }
 
-void Manager::setView(std::shared_ptr<View> set_view) {
-    // on ne change pas immédiatement la vue, on attend
+void Manager::setState(std::shared_ptr<State> set_state) {
+    // on ne change pas immédiatement l'état, on attend
     // la prochaine frame pour éviter toute erreur de segmentation
-    next_view = set_view;
+    next_state = set_state;
 }
 
 sf::RenderWindow& Manager::getWindow() {

@@ -8,7 +8,7 @@ const float CAMERA_TOLERANCE_RATIO = 2.f / 3.f;
 Game::Game(Manager& manager) : Level(manager),
     widget_timer(manager, false),
     next_frame_time(manager.getCurrentTime()),
-    test_mode(false), return_view(nullptr) {}
+    test_mode(false), return_state(nullptr) {}
 
 Game::~Game() {}
 
@@ -53,7 +53,7 @@ void Game::processEvent(const sf::Event& event) {
     // appui sur espace en mode test : retour à l'éditeur
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && test_mode) {
         test_mode = false;
-        getManager().setView(return_view);
+        getManager().setState(return_state);
     }
 }
 
@@ -128,7 +128,7 @@ void Game::update() {
     }
 }
 
-void Game::setTestMode(std::shared_ptr<View> set_return_view) {
-    return_view = set_return_view;
+void Game::setTestMode(std::shared_ptr<State> set_return_state) {
+    return_state = set_return_state;
     test_mode = true;
 }

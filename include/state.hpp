@@ -1,5 +1,5 @@
-#ifndef __PTF_VIEW_HPP__
-#define __PTF_VIEW_HPP__
+#ifndef __PTF_STATE_HPP__
+#define __PTF_STATE_HPP__
 
 #include <SFML/Graphics.hpp>
 
@@ -8,9 +8,9 @@ class Manager;
 class Object;
 
 /**
- * Classe abstraite pour les vues
+ * Classe abstraite pour les états de jeu
  */
-class View {
+class State {
 private:
     Manager& manager;
 
@@ -21,17 +21,17 @@ protected:
     virtual void processEvent(const sf::Event& event) = 0;
 
 public:
-    View(Manager& manager);
-    virtual ~View();
+    State(Manager& manager);
+    virtual ~State();
 
     /**
-     * Appelé par le manager lorsque la vue commence à
-     * être utilisée
+     * Appelé par le manager lorsque l'état commence à
+     * être utilisé
      */
     virtual void begin() = 0;
 
     /**
-     * Demande le passage à la frame suivante sur cette vue
+     * Demande le passage à la frame suivante sur cet état
      */
     virtual void frame(const std::vector<sf::Event>& events);
 

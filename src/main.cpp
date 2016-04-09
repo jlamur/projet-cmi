@@ -12,7 +12,7 @@ int main() {
     std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(manager));
 
     try {
-        manager.setView(menu);
+        manager.setState(menu);
         manager.start();
     } catch (const std::exception& exception) {
         std::cerr << "Le programme a quitté après une erreur d'exécution." << std::endl;

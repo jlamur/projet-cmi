@@ -1,9 +1,9 @@
-#ifndef __PTF_OBJECT_VIEW_HPP__
-#define __PTF_OBJECT_VIEW_HPP__
+#ifndef __PTF_LEVEL_HPP__
+#define __PTF_LEVEL_HPP__
 
 #include <fstream>
 #include <vector>
-#include "view.hpp"
+#include "state.hpp"
 #include "object.hpp"
 #include "manager.hpp"
 #include "resource_manager.hpp"
@@ -14,9 +14,9 @@ enum class GravityDirection {NORTH, EAST, SOUTH, WEST};
 /**
  * La classe Level est une abstraction des
  * classes affichant une collection d'objets, comme
- * les classe de l'éditeur et du jeu
+ * les classes de l'éditeur et du jeu
  */
-class Level : public View {
+class Level : public State {
 private:
     sf::View camera;
     sf::String name;
@@ -67,13 +67,12 @@ public:
     virtual void save();
 
     /**
-     * Appelé par le manager lorsque la vue commence à
-     * être utilisée
+     * Appelé par le manager lorsque l'état commence à être utilisé
      */
     virtual void begin();
 
     /**
-     * Demande le passage à la frame suivante sur cette vue
+     * Demande le passage à la frame suivante sur cet état
      */
     virtual void frame(const std::vector<sf::Event>& events);
 

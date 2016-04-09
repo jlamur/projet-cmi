@@ -5,7 +5,7 @@
 
 const float MAX_WIDTH_PROPORTION = 1.f / 3.f;
 
-Menu::Menu(Manager& manager) : View(manager) {}
+Menu::Menu(Manager& manager) : State(manager) {}
 Menu::~Menu() {}
 
 void Menu::begin() {
@@ -20,7 +20,7 @@ void Menu::begin() {
 
 void Menu::frame(const std::vector<sf::Event>& events) {
     // traitement des événements
-    View::frame(events);
+    State::frame(events);
 
     // titre de la fenêtitre
     getManager().setTitle("");
@@ -164,8 +164,8 @@ void Menu::loadRules() {
 }
 
 void Menu::launchEditor() {
-    std::shared_ptr<View> editor = std::shared_ptr<View>(new Editor(getManager()));
-    getManager().setView(editor);
+    std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(getManager()));
+    getManager().setState(editor);
 }
 
 void Menu::launchGame(std::string name) {
@@ -177,7 +177,7 @@ void Menu::launchGame(std::string name) {
     game->load(file);
     file.close();
 
-    getManager().setView(game);
+    getManager().setState(game);
 }
 
 void Menu::quit() {

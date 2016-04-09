@@ -2,11 +2,11 @@
 #define __PTF_MANAGER_HPP__
 
 #include "resource_manager.hpp"
-#include "view.hpp"
+#include "state.hpp"
 #include <memory>
 
 /**
- * Gestionnaire principal de toutes les vues et
+ * Gestionnaire principal de tous les états, vues et
  * ressources du jeu
  */
 class Manager {
@@ -19,8 +19,8 @@ private:
     ResourceManager resource_manager;
     std::vector<sf::Event> events;
 
-    std::shared_ptr<View> view;
-    std::shared_ptr<View> next_view;
+    std::shared_ptr<State> state;
+    std::shared_ptr<State> next_state;
 
     bool running;
 
@@ -38,14 +38,14 @@ public:
     void quit();
 
     /**
-     * Renvoie la vue actuelle du jeu
+     * Renvoie l'état actuel du jeu
      */
-    std::shared_ptr<View> getView();
+    std::shared_ptr<State> getState();
 
     /**
-     * Charge la vue donnée dans le jeu
+     * Charge l'état donné dans le jeu
      */
-    void setView(std::shared_ptr<View> set_view);
+    void setState(std::shared_ptr<State> set_state);
 
     /**
      * Renvoie la fenêtre actuellement utilisée pour le dessin

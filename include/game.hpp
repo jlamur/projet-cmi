@@ -13,7 +13,7 @@ private:
     WidgetTimer widget_timer;
     sf::Time next_frame_time;
     bool test_mode;
-    std::shared_ptr<View> return_view;
+    std::shared_ptr<State> return_state;
 
     /**
      * Met à jour les objets du jeu pour
@@ -43,13 +43,12 @@ public:
     virtual ~Game();
 
     /**
-     * Appelé par le manager lorsque la vue commence à
-     * être utilisée
+     * Appelé par le manager lorsque le jeu commence
      */
     virtual void begin();
 
     /**
-     * Demande le passage à la frame suivante sur cette vue
+     * Demande le passage à la frame suivante du jeu
      */
     virtual void frame(const std::vector<sf::Event>& events);
 
@@ -57,7 +56,7 @@ public:
      * Mise en mode test : l'appui sur espace renvoie
      * vers l'éditeur donné
      */
-    void setTestMode(std::shared_ptr<View> set_return_view);
+    void setTestMode(std::shared_ptr<State> set_return_state);
 };
 
 #endif

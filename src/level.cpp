@@ -21,7 +21,7 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
     {GravityBlock::TYPE_ID, GravityBlock::load}
 };
 
-Level::Level(Manager& manager) : View(manager), gravity(0, GRAVITY) {}
+Level::Level(Manager& manager) : State(manager), gravity(0, GRAVITY) {}
 Level::~Level() {}
 
 void Level::load(std::ifstream& file) {
@@ -128,7 +128,7 @@ void Level::begin() {
 
 void Level::frame(const std::vector<sf::Event>& events) {
     // traitement des événements
-    View::frame(events);
+    State::frame(events);
 }
 
 void Level::processEvent(const sf::Event& event) {

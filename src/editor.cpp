@@ -378,6 +378,6 @@ void Editor::test() {
     }
 
     // mise en mode test
-    game->setTestMode(getManager().getView());
-    getManager().setView(game);
+    game->setTestMode(getManager().getState());
+    getManager().setState(game);
 }

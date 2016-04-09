@@ -2,7 +2,7 @@
 #define __PTF_MENU_HPP__
 
 #include "manager.hpp"
-#include "view.hpp"
+#include "state.hpp"
 #include <functional>
 #include <vector>
 
@@ -11,7 +11,7 @@
  * et permet de choisir entre jouer, lire les règles
  * et quitter.
  */
-class Menu : public View {
+class Menu : public State {
 private:
     std::vector<sf::String> choices;
     std::vector<sf::Text> labels;
@@ -49,13 +49,12 @@ public:
     virtual ~Menu();
 
     /**
-     * Appelé par le manager lorsque la vue commence à
-     * être utilisée
+     * Appelé par le manager lorsque le menu est affiché
      */
     virtual void begin();
 
     /**
-     * Dessine le menu
+     * Dessine la prochaine frame du menu
      */
     virtual void frame(const std::vector<sf::Event>& events);
 

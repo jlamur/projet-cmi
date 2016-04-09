@@ -84,13 +84,13 @@ public:
     virtual ~Editor();
 
     /**
-     * Appelé par le manager lorsque la vue commence à
+     * Appelé par le manager lorsque l'état commence à
      * être utilisée
      */
     virtual void begin();
 
     /**
-     * Demande le passage à la frame suivante sur cette vue
+     * Demande le passage à la frame suivante sur cet état
      */
     virtual void frame(const std::vector<sf::Event>& events);
 };
