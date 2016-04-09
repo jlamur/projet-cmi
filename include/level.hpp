@@ -19,12 +19,15 @@ enum class GravityDirection {NORTH, EAST, SOUTH, WEST};
 class Level : public State {
 private:
     sf::View camera;
+    float camera_angle;
+    float camera_angle_animate;
+    GravityDirection gravity_direction;
+
     sf::String name;
     int total_time;
     sf::Sprite background;
     std::string music_name;
 
-    GravityDirection gravity_direction;
     std::vector<ObjectPtr> objects;
     std::vector<std::pair<float, float>> zone;
 

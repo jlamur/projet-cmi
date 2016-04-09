@@ -8,7 +8,14 @@
 #include <queue>
 #include <utility>
 
+/**
+ * Constante de gravité
+ */
 const float GRAVITY = 235;
+
+/**
+ * Constante de déplacement des objets à déplacement manuel
+ */
 const float MOVE = 200;
 
 /**
@@ -22,7 +29,9 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
     {GravityBlock::TYPE_ID, GravityBlock::load}
 };
 
-Level::Level(Manager& manager) : State(manager), gravity_direction(GravityDirection::SOUTH) {}
+Level::Level(Manager& manager) : State(manager),
+    camera_angle(0.f), camera_angle_animate(0.f),
+    gravity_direction(GravityDirection::SOUTH) {}
 Level::~Level() {}
 
 void Level::load(std::ifstream& file) {
@@ -143,8 +152,9 @@ void Level::processEvent(const sf::Event& event) {
 void Level::draw() {
     sf::RenderWindow& window = getWindow();
 
-    // rotation de la caméra selon la gravité et passage sur cette vue
-    camera.setRotation(180 + (float) gravity_direction * 90);
+    // animation de la rotation de la caméra
+    float change = (180 + (float) gravity_direction * 90 - camera_angle) * Constants::PHYSICS_TIME.asSeconds();
+    camera.rotate(change);
     window.setView(camera);
 
     // efface la scène précédente et dessine la couche de fond
