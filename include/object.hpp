@@ -59,6 +59,11 @@ public:
     virtual std::unique_ptr<sf::FloatRect> getAABB() const = 0;
 
     /**
+     * Récupère le rayon de l'objet
+     */
+    virtual float getRadius() const = 0;
+
+    /**
      * Dessine l'objet dans la fenêtre donnée
      */
     virtual void draw(Level& level) = 0;
@@ -72,6 +77,11 @@ public:
      * Récupère l'identifiant de type de cet objet
      */
     virtual unsigned int getTypeId() const = 0;
+
+    /**
+     * Récupère le type de collision de cet objet
+     */
+    virtual CollisionType getCollisionType() const = 0;
 
     /**
      * Charge les propriétés communes à tous les objets

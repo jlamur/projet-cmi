@@ -79,6 +79,14 @@ std::unique_ptr<sf::FloatRect> Block::getAABB() const {
     ));
 }
 
+float Block::getRadius() const {
+    return Constants::GRID / 2;
+}
+
 unsigned int Block::getTypeId() const {
     return TYPE_ID;
+}
+
+CollisionType Block::getCollisionType() const {
+    return CollisionType::AABB;
 }

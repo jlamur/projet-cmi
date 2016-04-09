@@ -31,6 +31,11 @@ public:
     virtual std::unique_ptr<sf::FloatRect> getAABB() const;
 
     /**
+     * Récupère le rayon du bloc
+     */
+    virtual float getRadius() const;
+
+    /**
      * Opérations de préparation de la texture du bloc
      */
     virtual void beforeDraw(Level& level);
@@ -49,6 +54,11 @@ public:
      * Récupère l'identifiant de type des blocs
      */
     virtual unsigned int getTypeId() const;
+
+    /**
+     * Récupère le type de collision des blocs
+     */
+    virtual CollisionType getCollisionType() const;
 
     /**
      * Chargement du bloc depuis le fichier donné

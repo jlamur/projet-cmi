@@ -35,6 +35,11 @@ public:
     virtual std::unique_ptr<sf::FloatRect> getAABB() const;
 
     /**
+     * Récupère le rayon du joueur
+     */
+    virtual float getRadius() const;
+
+    /**
      * Dessine le joueur dans la fenêtre donnée
      */
     virtual void draw(Level& manager);
@@ -50,6 +55,11 @@ public:
     virtual unsigned int getTypeId() const;
 
     /**
+     * Récupère le type de collision des joueurs
+     */
+    virtual CollisionType getCollisionType() const;
+
+    /**
      * Chargement du joueur depuis le fichier donné
      */
     static ObjectPtr load(std::ifstream& file);
@@ -59,11 +69,6 @@ public:
      * vitesse actuelle
      */
     virtual void updatePosition();
-
-    /**
-     * Renvoie le rayon de la balle du joueur
-     */
-    float getRadius() const;
 
     /**
      * Renvoie le numéro du joueur

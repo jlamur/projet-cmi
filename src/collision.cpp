@@ -9,81 +9,79 @@
 
 /**
  * Détermination des informations sur une collision entre
- * un joueur et un bloc (normale et profondeur de collision)
+ * un cercle et un rectangle
  */
-bool playerToBlock(CollisionData& data) {
-    Player player = dynamic_cast<Player&>(data.objA);
-    Block block = dynamic_cast<Block&>(data.objB);
+bool circleToAABB(CollisionData& data) {
+    Object& circle = data.obj_a;
+    Object& aabb = data.obj_b;
 
-    // recherche du point le plus proche du centre de la
-    // balle sur le bloc. On regarde la position relative
-    // du cercle par rapport au bloc
-    std::unique_ptr<sf::FloatRect> aabb = block.getAABB();
-    sf::Vector2f relpos = block.getPosition() - player.getPosition();
+    // recherche du point le plus proche du centre du cercle
+    // sur le rectangle. On regarde la position relative du cercle
+    // par rapport au rectangle
+    std::unique_ptr<sf::FloatRect> box = aabb.getAABB();
+    sf::Vector2f relpos = aabb.getPosition() - circle.getPosition();
     sf::Vector2f closest = relpos;
 
     // on restreint la position relative pour rester
-    // à l'intérieur du bloc
-    if (closest.x < -aabb->width / 2) {
-        closest.x = -aabb->width / 2;
+    // à l'intérieur du rectangle
+    if (closest.x < -box->width / 2) {
+        closest.x = -box->width / 2;
     }
 
-    if (closest.x > aabb->width / 2) {
-        closest.x = aabb->width / 2;
+    if (closest.x > box->width / 2) {
+        closest.x = box->width / 2;
     }
 
-    if (closest.y < -aabb->height / 2) {
-        closest.y = -aabb->height / 2;
+    if (closest.y < -box->height / 2) {
+        closest.y = -box->height / 2;
     }
 
-    if (closest.y > aabb->height / 2) {
-        closest.y = aabb->height / 2;
+    if (closest.y > box->height / 2) {
+        closest.y = box->height / 2;
     }
 
-    // si la position n'a pas été changée, elle
-    // était déjà à l'intérieur du cercle : le cercle
-    // est dans le bloc
-    float isInside = false;
+    // si la position n'a pas été changée, elle était déjà
+    // à l'intérieur du cercle : le cercle est dans le rectangle
+    float is_inside = false;
 
     if (relpos == closest) {
-        isInside = true;
+        is_inside = true;
 
-        // on se colle au bord le plus proche du bloc
+        // on se colle au bord le plus proche du rectangle
         if (std::abs(relpos.x) > std::abs(relpos.y)) {
             if (closest.x > 0) {
-                closest.x = aabb->width / 2;
+                closest.x = box->width / 2;
             } else {
-                closest.x = -aabb->width / 2;
+                closest.x = -box->width / 2;
             }
         } else {
             if (closest.y > 0) {
-                closest.y = aabb->height / 2;
+                closest.y = box->height / 2;
             } else {
-                closest.y = -aabb->height / 2;
+                closest.y = -box->height / 2;
             }
         }
     }
 
     // la normale est portée par la direction
-    // du point le plus proche au centre de la balle
+    // du point le plus proche au centre du cercle
     sf::Vector2f prenormal = relpos - closest;
-    float squaredLength = prenormal.x * prenormal.x + prenormal.y * prenormal.y;
+    float squared_length = prenormal.x * prenormal.x + prenormal.y * prenormal.y;
 
-    // si la balle est à l'extérieur et que
-    // la normale est plus longue que son rayon,
-    // il n'y a pas collision
-    if (!isInside && squaredLength >= player.getRadius() * player.getRadius()) {
+    // si le cercle est à l'extérieur et que la normale est plus
+    // longue que son rayon, il n'y a pas collision
+    if (!is_inside && squared_length >= circle.getRadius() * circle.getRadius()) {
         return false;
     }
 
-    float length = std::sqrt(squaredLength);
-    data.depth = player.getRadius() - length;
+    float length = std::sqrt(squared_length);
+    data.depth = circle.getRadius() - length;
 
     if (length != 0) {
         data.normal = prenormal / length;
     }
 
-    if (isInside) {
+    if (is_inside) {
         data.normal *= -1.f;
     }
 
@@ -92,66 +90,66 @@ bool playerToBlock(CollisionData& data) {
 
 /**
  * Détermination des informations sur une collision entre
- * un bloc et un joueur (normale et profondeur de collision)
+ * un rectangle et un cercle
  */
-bool blockToPlayer(CollisionData& data) {
-    // la collision Block -> Player est la collision Player -> Block
-    Object& objT = data.objB;
-    data.objB = data.objA;
-    data.objA = objT;
+bool AABBToCircle(CollisionData& data) {
+    // la collision rectangle -> cercle est la collision cercle -> rectangle
+    Object& transfer = data.obj_b;
+    data.obj_b = data.obj_a;
+    data.obj_a = transfer;
 
-    return playerToBlock(data);
+    return circleToAABB(data);
 }
 
 /**
  * Détermination des informations sur une collision entre
- * deux joueurs (normale et profondeur de collision)
+ * deux cercles
  */
-bool playerToPlayer(CollisionData& data) {
-    Player playerA = dynamic_cast<Player&>(data.objA);
-    Player playerB = dynamic_cast<Player&>(data.objB);
+bool circleToCircle(CollisionData& data) {
+    Object& circle_a = data.obj_a;
+    Object& circle_b = data.obj_b;
 
-    sf::Vector2f dir = playerB.getPosition() - playerA.getPosition();
-    float squaredLength = dir.x * dir.x + dir.y * dir.y;
-    float totalRadius = playerB.getRadius() + playerA.getRadius();
+    sf::Vector2f dir = circle_b.getPosition() - circle_a.getPosition();
+    float squared_length = dir.x * dir.x + dir.y * dir.y;
+    float total_radius = circle_b.getRadius() + circle_a.getRadius();
 
-    // si les deux balles sont à une distance supérieure
+    // si les deux cercles sont à une distance supérieure
     // à la somme de leurs deux rayons, il n'y a pas eu collision
-    if (squaredLength > totalRadius * totalRadius) {
+    if (squared_length > total_radius * total_radius) {
         return false;
     }
 
-    float length = std::sqrt(squaredLength);
+    float length = std::sqrt(squared_length);
 
-    // les balles sont sur la même position.
-    // Renvoie une normale apte à séparer les deux balles
+    // les cercles sont sur la même position.
+    // Renvoie une normale apte à séparer les deux cercles
     if (length == 0) {
-        data.depth = totalRadius;
+        data.depth = total_radius;
         data.normal.x = 0;
         data.normal.y = -1;
         return true;
     }
 
     // il y a eu collision
-    data.depth = totalRadius - length;
+    data.depth = total_radius - length;
     data.normal = dir / length;
     return true;
 }
 
 /**
  * Détermination des informations sur une collision entre
- * deux blocs (normale et profondeur de collision)
+ * deux rectangles
  */
-bool blockToBlock(CollisionData& data) {
-    Block blockA = dynamic_cast<Block&>(data.objA);
-    Block blockB = dynamic_cast<Block&>(data.objB);
+bool AABBToAABB(CollisionData& data) {
+    Object& aabb_a = data.obj_a;
+    Object& aabb_b = data.obj_b;
 
-    std::unique_ptr<sf::FloatRect> aabb = blockA.getAABB();
-    std::unique_ptr<sf::FloatRect> obj_aabb = blockB.getAABB();
-    sf::Vector2f relpos = blockB.getPosition() - blockA.getPosition();
+    std::unique_ptr<sf::FloatRect> box_a = aabb_a.getAABB();
+    std::unique_ptr<sf::FloatRect> box_b = aabb_b.getAABB();
+    sf::Vector2f relpos = aabb_b.getPosition() - aabb_a.getPosition();
 
-    float overlap_x = aabb->width / 2 + obj_aabb->width / 2 - std::abs(relpos.x);
-    float overlap_y = aabb->height / 2 + obj_aabb->height / 2 - std::abs(relpos.y);
+    float overlap_x = box_a->width / 2 + box_b->width / 2 - std::abs(relpos.x);
+    float overlap_y = box_a->height / 2 + box_b->height / 2 - std::abs(relpos.y);
 
     // si il n'y a pas de chauvauchement sur l'axe X et Y, pas de collision
     if (overlap_x <= 0 || overlap_y <= 0) {
@@ -187,26 +185,19 @@ bool blockToBlock(CollisionData& data) {
  * dans une collision à leur fonction de résolution
  */
 std::map<
-    std::pair<unsigned int, unsigned int>,
+    std::pair<CollisionType, CollisionType>,
     std::function<bool(CollisionData&)>
 > collision_map = {
-    {std::make_pair(Player::TYPE_ID, Player::TYPE_ID), playerToPlayer},
-    {std::make_pair(Player::TYPE_ID, Block::TYPE_ID), playerToBlock},
-    {std::make_pair(Player::TYPE_ID, GravityBlock::TYPE_ID), playerToBlock},
-    {std::make_pair(Block::TYPE_ID, Block::TYPE_ID), blockToBlock},
-    {std::make_pair(Block::TYPE_ID, GravityBlock::TYPE_ID), blockToBlock},
-    {std::make_pair(Block::TYPE_ID, Player::TYPE_ID), blockToPlayer},
-    {std::make_pair(GravityBlock::TYPE_ID, Block::TYPE_ID), blockToBlock},
-    {std::make_pair(GravityBlock::TYPE_ID, GravityBlock::TYPE_ID), blockToBlock},
-    {std::make_pair(GravityBlock::TYPE_ID, Player::TYPE_ID), blockToPlayer}
+    {std::make_pair(CollisionType::CIRCLE, CollisionType::CIRCLE), circleToCircle},
+    {std::make_pair(CollisionType::CIRCLE, CollisionType::AABB), circleToAABB},
+    {std::make_pair(CollisionType::AABB, CollisionType::AABB), AABBToAABB},
+    {std::make_pair(CollisionType::AABB, CollisionType::CIRCLE), AABBToCircle}
 };
 
-CollisionData::CollisionData(Object& objA, Object& objB) :
-    objA(objA), objB(objB) {}
-
+CollisionData::CollisionData(Object& obj_a, Object& obj_b) : obj_a(obj_a), obj_b(obj_b) {}
 bool getCollisionData(CollisionData& data) {
     return collision_map[std::make_pair(
-        data.objA.getTypeId(),
-        data.objB.getTypeId()
+        data.obj_a.getCollisionType(),
+        data.obj_b.getCollisionType()
     )](data);
 }

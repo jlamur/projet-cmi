@@ -91,13 +91,13 @@ void Game::update() {
 
     // détection des objets en collision
     for (unsigned int i = 0; i < getObjects().size(); i++) {
-        ObjectPtr objA = getObjects()[i];
+        ObjectPtr obj_a = getObjects()[i];
 
         for (unsigned int j = i + 1; j < getObjects().size(); j++) {
-            ObjectPtr objB = getObjects()[j];
-            CollisionData data(*objA, *objB);
+            ObjectPtr obj_b = getObjects()[j];
+            CollisionData data(*obj_a, *obj_b);
 
-            if (objA->detectCollision(*objB, data)) {
+            if (obj_a->detectCollision(*obj_b, data)) {
                 colliding.push_back(data);
             }
         }
@@ -111,7 +111,7 @@ void Game::update() {
     // résolution des collisions détectées
     for (unsigned int i = 0; i < colliding.size(); i++) {
         CollisionData& collided = colliding[i];
-        collided.objA.solveCollision(*this, collided.objB, collided.normal);
+        collided.obj_a.solveCollision(*this, collided.obj_b, collided.normal);
     }
 
     // intégration de la vitesse dans la position
@@ -122,8 +122,8 @@ void Game::update() {
     // application de la correction positionnelle
     for (unsigned int i = 0; i < colliding.size(); i++) {
         CollisionData& collided = colliding[i];
-        collided.objA.positionalCorrection(
-            collided.objB, collided.normal, collided.depth
+        collided.obj_a.positionalCorrection(
+            collided.obj_b, collided.normal, collided.depth
         );
     }
 }

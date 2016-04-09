@@ -108,12 +108,16 @@ std::unique_ptr<sf::FloatRect> Player::getAABB() const {
     ));
 }
 
+float Player::getRadius() const {
+    return 10 * getMass();
+}
+
 unsigned int Player::getTypeId() const {
     return TYPE_ID;
 }
 
-float Player::getRadius() const {
-    return 10 * getMass();
+CollisionType Player::getCollisionType() const {
+    return CollisionType::CIRCLE;
 }
 
 unsigned int Player::getPlayerNumber() const {
