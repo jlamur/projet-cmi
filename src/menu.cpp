@@ -15,10 +15,58 @@ void Menu::begin() {
     getWindow().setFramerateLimit(60);
 }
 
-void Menu::frame(const std::vector<sf::Event>& events) {
-    // traitement des événements
-    State::frame(events);
+void Menu::processEvent(const sf::Event& event) {
+    // gestion des touches
+    if (event.type == sf::Event::KeyPressed) {
+        // touche flèche haut : on passe au choix précédent
+        if (event.key.code == sf::Keyboard::Up) {
+            if (selection == 0) {
+                selection = choices.size() - 1;
+            } else {
+                selection--;
+            }
+        }
 
+        // touche flèche bas : on passe au choix suivant
+        if (event.key.code == sf::Keyboard::Down) {
+            if (selection == choices.size() - 1) {
+                selection = 0;
+            } else {
+                selection++;
+            }
+        }
+
+        // touche entrée : on exécute le choix sélectionné
+        if (event.key.code == sf::Keyboard::Return) {
+            actions[selection]();
+        }
+    }
+
+    // au clic, on exécute le choix pointé s'il y a lieu
+    if (event.type == sf::Event::MouseButtonPressed) {
+        sf::Vector2f position(event.mouseButton.x, event.mouseButton.y);
+
+        for (unsigned int i = 0; i < labels.size(); i++) {
+            if (labels[i].getGlobalBounds().contains(position)) {
+                actions[i]();
+                return;
+            }
+        }
+    }
+
+    // au déplacement de souris, on sélectionne le choix pointé s'il y a lieu
+    if (event.type == sf::Event::MouseMoved) {
+        sf::Vector2f position(event.mouseMove.x, event.mouseMove.y);
+
+        for (unsigned int i = 0; i < labels.size(); i++) {
+            if (labels[i].getGlobalBounds().contains(position)) {
+                selection = i;
+            }
+        }
+    }
+}
+
+void Menu::frame() {
     // titre de la fenêtre
     getManager().setTitle("");
 
@@ -85,57 +133,6 @@ void Menu::frame(const std::vector<sf::Event>& events) {
     }
 
     window.display();
-}
-
-void Menu::processEvent(const sf::Event& event) {
-    // gestion des touches
-    if (event.type == sf::Event::KeyPressed) {
-        // touche flèche haut : on passe au choix précédent
-        if (event.key.code == sf::Keyboard::Up) {
-            if (selection == 0) {
-                selection = choices.size() - 1;
-            } else {
-                selection--;
-            }
-        }
-
-        // touche flèche bas : on passe au choix suivant
-        if (event.key.code == sf::Keyboard::Down) {
-            if (selection == choices.size() - 1) {
-                selection = 0;
-            } else {
-                selection++;
-            }
-        }
-
-        // touche entrée : on exécute le choix sélectionné
-        if (event.key.code == sf::Keyboard::Return) {
-            actions[selection]();
-        }
-    }
-
-    // au clic, on exécute le choix pointé s'il y a lieu
-    if (event.type == sf::Event::MouseButtonPressed) {
-        sf::Vector2f position(event.mouseButton.x, event.mouseButton.y);
-
-        for (unsigned int i = 0; i < labels.size(); i++) {
-            if (labels[i].getGlobalBounds().contains(position)) {
-                actions[i]();
-                return;
-            }
-        }
-    }
-
-    // au déplacement de souris, on sélectionne le choix pointé s'il y a lieu
-    if (event.type == sf::Event::MouseMoved) {
-        sf::Vector2f position(event.mouseMove.x, event.mouseMove.y);
-
-        for (unsigned int i = 0; i < labels.size(); i++) {
-            if (labels[i].getGlobalBounds().contains(position)) {
-                selection = i;
-            }
-        }
-    }
 }
 
 void Menu::loadMainMenu() {

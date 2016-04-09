@@ -14,26 +14,24 @@ class State {
 private:
     Manager& manager;
 
-protected:
-    /**
-     * Traite l'événement donné
-     */
-    virtual void processEvent(const sf::Event& event) = 0;
-
 public:
     State(Manager& manager);
     virtual ~State();
 
     /**
-     * Appelé par le manager lorsque l'état commence à
-     * être utilisé
+     * Appelé par le manager lorsque l'état est utilisé
      */
     virtual void begin() = 0;
 
     /**
-     * Demande le passage à la frame suivante sur cet état
+     * Traite l'événement donné
      */
-    virtual void frame(const std::vector<sf::Event>& events);
+    virtual void processEvent(const sf::Event& event) = 0;
+
+    /**
+     * Demande le dessin d'une frame
+     */
+    virtual void frame() = 0;
 
     /**
      * Récupère le gestionnaire

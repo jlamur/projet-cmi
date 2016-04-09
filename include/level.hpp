@@ -38,11 +38,6 @@ protected:
     virtual void draw();
 
     /**
-     * Traite un événement
-     */
-    virtual void processEvent(const sf::Event& event);
-
-    /**
      * Convertit les coordonnées à l'écran en coordonnées du monde
      * d'après la vue caméra
      */
@@ -69,14 +64,14 @@ public:
     virtual void save(std::string name);
 
     /**
-     * Appelé par le manager lorsque l'état commence à être utilisé
+     * Appelé par le manager lorsque l'état est utilisé
      */
     virtual void begin();
 
     /**
-     * Demande le passage à la frame suivante sur cet état
+     * Traite l'événement donné
      */
-    virtual void frame(const std::vector<sf::Event>& events);
+    virtual void processEvent(const sf::Event& event);
 
     /**
      * Récupère le nom du niveau

@@ -19,6 +19,11 @@ void Manager::start() {
             next_state = nullptr;
         }
 
+        // vérification de sécurité
+        if (state == NULL) {
+            throw std::runtime_error("Aucun état à afficher pour le jeu");
+        }
+
         // traitement des évènements reçus
         while (window.pollEvent(event)) {
             // fermeture de la fenêtre
@@ -33,16 +38,11 @@ void Manager::start() {
                 ));
             }
 
-            events.push_back(event);
+            state->processEvent(event);
         }
 
-        // demande à l'état de se mettre à jour sur
-        // la prochaine frame
-        if (state == NULL) {
-            throw std::runtime_error("Aucune état à afficher pour le jeu");
-        }
-
-        state->frame(events);
+        // affichage de la prochaine frame
+        state->frame();
         window.display();
     }
 }

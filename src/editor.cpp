@@ -39,17 +39,6 @@ void Editor::begin() {
     getWindow().setFramerateLimit(60);
 }
 
-void Editor::frame(const std::vector<sf::Event>& events) {
-    // traitement des événements
-    Level::frame(events);
-
-    // titre de la fenêtre
-    getManager().setTitle(sf::String(L"Édition de ") + getName());
-
-    // dessin de la frame
-    draw();
-}
-
 void Editor::processEvent(const sf::Event& event) {
     Level::processEvent(event);
 
@@ -171,6 +160,14 @@ void Editor::processEvent(const sf::Event& event) {
             test();
         }
     }
+}
+
+void Editor::frame() {
+    // titre de la fenêtre
+    getManager().setTitle(sf::String(L"Édition de ") + getName());
+
+    // dessin de la frame
+    draw();
 }
 
 void Editor::draw() {

@@ -22,11 +22,6 @@ private:
 
 protected:
     /**
-     * Traite l'événement donné
-     */
-    virtual void processEvent(const sf::Event& event);
-
-    /**
      * Affiche les règles du jeu
      */
     void loadRules();
@@ -51,14 +46,19 @@ public:
     virtual ~Menu();
 
     /**
-     * Appelé par le manager lorsque le menu est affiché
+     * Appelé par le manager lorsque l'état est utilisé
      */
     virtual void begin();
 
     /**
-     * Dessine la prochaine frame du menu
+     * Traite l'événement donné
      */
-    virtual void frame(const std::vector<sf::Event>& events);
+    virtual void processEvent(const sf::Event& event);
+
+    /**
+     * Demande le dessin d'une frame
+     */
+    virtual void frame();
 
     /**
      * Affiche le menu principal

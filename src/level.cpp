@@ -138,11 +138,6 @@ void Level::begin() {
     }
 }
 
-void Level::frame(const std::vector<sf::Event>& events) {
-    // traitement des événements
-    State::frame(events);
-}
-
 void Level::processEvent(const sf::Event& event) {
     // lorsque la fenêtre est redimensionnée, mise à jour
     // de la taille de la caméra

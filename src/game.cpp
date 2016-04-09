@@ -17,10 +17,17 @@ void Game::begin() {
     getWindow().setFramerateLimit(0);
 }
 
-void Game::frame(const std::vector<sf::Event>& events) {
-    // traitement des événements
-    Level::frame(events);
+void Game::processEvent(const sf::Event& event) {
+    Level::processEvent(event);
 
+    // appui sur espace en mode test : retour à l'éditeur
+    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && test_mode) {
+        test_mode = false;
+        getManager().setState(return_state);
+    }
+}
+
+void Game::frame() {
     // titre de la fenêtre
     getManager().setTitle(getName());
     sf::Time current_time = getManager().getCurrentTime();
@@ -44,16 +51,6 @@ void Game::frame(const std::vector<sf::Event>& events) {
         // si nous sommes en avance, on endort le processus
         // le temps nécessaire pour revenir dans les temps
         sf::sleep(next_frame_time - current_time);
-    }
-}
-
-void Game::processEvent(const sf::Event& event) {
-    Level::processEvent(event);
-
-    // appui sur espace en mode test : retour à l'éditeur
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && test_mode) {
-        test_mode = false;
-        getManager().setState(return_state);
     }
 }
 

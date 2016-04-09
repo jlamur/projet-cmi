@@ -74,25 +74,24 @@ protected:
      */
     virtual void draw();
 
-    /**
-     * Traite un événement
-     */
-    virtual void processEvent(const sf::Event& event);
-
 public:
     Editor(Manager& manager);
     virtual ~Editor();
 
     /**
-     * Appelé par le manager lorsque l'état commence à
-     * être utilisée
+     * Appelé par le manager lorsque l'état est utilisé
      */
     virtual void begin();
 
     /**
-     * Demande le passage à la frame suivante sur cet état
+     * Traite l'événement donné
      */
-    virtual void frame(const std::vector<sf::Event>& events);
+    virtual void processEvent(const sf::Event& event);
+
+    /**
+     * Demande le dessin d'une frame
+     */
+    virtual void frame();
 };
 
 #endif

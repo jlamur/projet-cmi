@@ -29,11 +29,6 @@ protected:
     virtual void draw();
 
     /**
-     * Traite un événement
-     */
-    virtual void processEvent(const sf::Event& event);
-
-    /**
      * S'assure que la caméra est centrée sur les joueurs
      */
     void ensureCentered();
@@ -43,14 +38,19 @@ public:
     virtual ~Game();
 
     /**
-     * Appelé par le manager lorsque le jeu commence
+     * Appelé par le manager lorsque l'état est utilisé
      */
     virtual void begin();
 
     /**
-     * Demande le passage à la frame suivante du jeu
+     * Traite l'événement donné
      */
-    virtual void frame(const std::vector<sf::Event>& events);
+    virtual void processEvent(const sf::Event& event);
+
+    /**
+     * Demande le dessin d'une frame
+     */
+    virtual void frame();
 
     /**
      * Mise en mode test : l'appui sur espace renvoie
