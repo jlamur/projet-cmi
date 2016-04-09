@@ -2,7 +2,7 @@
 
 Manager::Manager() : window(
     sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
-    sf::ContextSettings(0, 0, 4)
+    sf::ContextSettings(0, 0, 2)
 ), default_view(window.getDefaultView()), title(sf::String(L"")),
 state(NULL), next_state(NULL), running(false) {}
 
@@ -11,7 +11,6 @@ void Manager::start() {
 
     while (running) {
         sf::Event event;
-        std::vector<sf::Event> events;
 
         // si un changement d'état a été demandé, on l'effectue maintenant
         if (next_state != nullptr) {

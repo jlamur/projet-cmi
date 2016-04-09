@@ -27,14 +27,32 @@ void Menu::frame(const std::vector<sf::Event>& events) {
     sf::Vector2f size = (sf::Vector2f) window.getSize();
     sf::Font font = getResourceManager().getFont("raleway.ttf");
 
+    // on s'assure d'être dans la vue par défaut (pas de zoom, 0x0 en haut gauche)
     getManager().resetDefaultView();
-    window.clear(sf::Color(66, 40, 245));
-    // TODO: dessiner l'image du fond
+
+    // dessin du fond
+    window.clear(sf::Color::White);
+
+    float bg_scale = size.x / background.getLocalBounds().width;
+    background.setScale(bg_scale, bg_scale);
+    background.setPosition(sf::Vector2f(
+        size.x / 2 - background.getGlobalBounds().width / 2,
+        size.y - background.getGlobalBounds().height
+    ));
+
+    window.draw(background);
 
     // on crée les textes pour chaque choix et on les dessine
     float step = size.y / (choices.size() + 1);
     int font_size = std::max((int) step / 3, 12);
 
+    // d'abord un fond pour éviter de mélanger texte et image
+    sf::Vector2f mask_position(size.x - (font_size * 10), 0);
+    sf::RectangleShape mask(sf::Vector2f(font_size * 10, size.y));
+    mask.setPosition(mask_position);
+    mask.setFillColor(sf::Color(0, 0, 0, 127));
+
+    window.draw(mask);
     labels.clear();
 
     for (unsigned int i = 0; i < choices.size(); i++) {
@@ -124,6 +142,10 @@ void Menu::loadMainMenu() {
     choices.clear();
     actions.clear();
     selection = 0;
+
+    sf::Texture& texture = getResourceManager().getTexture("bg_menu.tga");
+    texture.setSmooth(true);
+    background.setTexture(texture);
 
     choices.push_back(sf::String(L"Jouer"));
     actions.push_back(std::bind(&Menu::loadLevelMenu, this));

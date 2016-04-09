@@ -13,6 +13,8 @@
  */
 class Menu : public State {
 private:
+    sf::Sprite background;
+
     std::vector<sf::String> choices;
     std::vector<sf::Text> labels;
     std::vector<std::function<void(void)>> actions;
