@@ -209,7 +209,7 @@ void Level::setGravityDirection(GravityDirection direction) {
         break;
 
     case GravityDirection::SOUTH:
-        gravity = sf::Vector2f(0, -GRAVITY);
+        gravity = sf::Vector2f(0, GRAVITY);
         break;
 
     case GravityDirection::WEST:
