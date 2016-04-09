@@ -3,6 +3,7 @@
 #include "player.hpp"
 #include "block.hpp"
 #include "gravity_block.hpp"
+#include <iostream>
 #include <arpa/inet.h>
 #include <cstring>
 #include <queue>
@@ -29,8 +30,7 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
     {GravityBlock::TYPE_ID, GravityBlock::load}
 };
 
-Level::Level(Manager& manager) : State(manager),
-    camera_angle(0.f), camera_angle_animate(0.f),
+Level::Level(Manager& manager) : State(manager), camera_angle(180.f),
     gravity_direction(GravityDirection::SOUTH) {}
 Level::~Level() {}
 
@@ -153,8 +153,17 @@ void Level::draw() {
     sf::RenderWindow& window = getWindow();
 
     // animation de la rotation de la caméra
-    float change = (180 + (float) gravity_direction * 90 - camera_angle) * Constants::PHYSICS_TIME.asSeconds();
-    camera.rotate(change);
+    float goal = std::fmod((float) gravity_direction * 90, 360);
+    float diff = goal - camera_angle;
+    float speed = diff * Constants::PHYSICS_TIME.asSeconds() * 5;
+
+    if (std::abs(diff) < .05f) {
+        camera_angle = goal;
+    } else {
+        camera_angle += speed;
+    }
+
+    camera.setRotation(camera_angle + 180);
     window.setView(camera);
 
     // efface la scène précédente et dessine la couche de fond
