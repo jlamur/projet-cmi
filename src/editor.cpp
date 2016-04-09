@@ -65,7 +65,7 @@ void Editor::processEvent(const sf::Event& event) {
 
         if (event.mouseButton.button == sf::Mouse::Left) {
             // clic + shift : sélection par rectangle de sélection
-            if (isKeyPressed(sf::Keyboard::LShift)) {
+            if (getManager().isKeyPressed(Manager::Modifier::SHIFT)) {
                 drag_start = mouse_position;
                 drag_end = mouse_position;
                 drag_mode = DragMode::SELECT_RECT;
@@ -73,7 +73,7 @@ void Editor::processEvent(const sf::Event& event) {
 
             // clic sur un objet : démarrage de la sélection libre
             else if (pointed_object != nullptr) {
-                if (isKeyPressed(sf::Keyboard::LControl)) {
+                if (getManager().isKeyPressed(Manager::Modifier::CONTROL)) {
                     drag_start = mouse_position;
                     drag_end = mouse_position;
                     drag_mode = DragMode::SELECT_BULK;

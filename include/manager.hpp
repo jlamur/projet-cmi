@@ -25,6 +25,11 @@ private:
     bool running;
 
 public:
+    /**
+     * Énumération des modificateurs
+     */
+    enum class Modifier {CONTROL, ALT, SHIFT, SYSTEM};
+
     Manager();
 
     /**
@@ -82,6 +87,12 @@ public:
      * touche donnée ou non
      */
     bool isKeyPressed(sf::Keyboard::Key key) const;
+
+    /**
+     * Renvoie un booléen attestant de l'appui sur le
+     * modificateur
+     */
+    bool isKeyPressed(Modifier modifier) const;
 };
 
 #endif

@@ -98,3 +98,21 @@ void Manager::setTitle(sf::String set_title) {
 bool Manager::isKeyPressed(sf::Keyboard::Key key) const {
     return sf::Keyboard::isKeyPressed(key) && window.hasFocus();
 }
+
+bool Manager::isKeyPressed(Manager::Modifier modifier) const {
+    switch (modifier) {
+    case Manager::Modifier::CONTROL:
+        return isKeyPressed(sf::Keyboard::LControl) || isKeyPressed(sf::Keyboard::RControl);
+
+    case Manager::Modifier::ALT:
+        return isKeyPressed(sf::Keyboard::LAlt) || isKeyPressed(sf::Keyboard::RAlt);
+
+    case Manager::Modifier::SYSTEM:
+        return isKeyPressed(sf::Keyboard::LSystem) || isKeyPressed(sf::Keyboard::RSystem);
+
+    case Manager::Modifier::SHIFT:
+        return isKeyPressed(sf::Keyboard::LShift) || isKeyPressed(sf::Keyboard::RShift);
+    }
+
+    return false;
+}

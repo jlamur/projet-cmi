@@ -4,8 +4,8 @@
 #include <SFML/Graphics.hpp>
 
 class ResourceManager;
-class Manager;
 class Object;
+class Manager;
 
 /**
  * Classe abstraite pour les états de jeu
@@ -39,9 +39,19 @@ public:
     Manager& getManager();
 
     /**
+     * Récupère le gestionnaire (version constante)
+     */
+    const Manager& getManager() const;
+
+    /**
      * Récupère le gestionnaire de ressources
      */
     ResourceManager& getResourceManager();
+
+    /**
+     * Récupère le gestionnaire de ressources (version constante)
+     */
+    const ResourceManager& getResourceManager() const;
 
     /**
      * Récupère la fenêtre
@@ -49,9 +59,9 @@ public:
     sf::RenderWindow& getWindow();
 
     /**
-     * Récupère si une touche est pressée
+     * Récupère la fenêtre (version constante)
      */
-    bool isKeyPressed(sf::Keyboard::Key key) const;
+    const sf::RenderWindow& getWindow() const;
 };
 
 #endif
