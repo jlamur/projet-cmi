@@ -42,21 +42,21 @@ sf::Vector2f Player::getForces(const Level& level) const {
     // déplacement de la balle après appui sur les touches de direction
     if (getPlayerNumber() == 0) {
         if (level.isKeyPressed(sf::Keyboard::Left)) {
-            forces += sf::Vector2f(-Constants::MOVE, 0);
+            forces += level.getLeftDirection();
         }
 
         if (level.isKeyPressed(sf::Keyboard::Right)) {
-            forces += sf::Vector2f(Constants::MOVE, 0);
+            forces += level.getRightDirection();
         }
     }
 
     if (getPlayerNumber() == 1) {
         if (level.isKeyPressed(sf::Keyboard::Q)) {
-            forces += sf::Vector2f(-Constants::MOVE, 0);
+            forces += level.getLeftDirection();
         }
 
         if (level.isKeyPressed(sf::Keyboard::D)) {
-            forces += sf::Vector2f(Constants::MOVE, 0);
+            forces += level.getRightDirection();
         }
     }
 

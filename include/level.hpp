@@ -24,7 +24,7 @@ private:
     sf::Sprite background;
     std::string music_name;
 
-    sf::Vector2f gravity;
+    GravityDirection gravity_direction;
     std::vector<ObjectPtr> objects;
     std::vector<std::pair<float, float>> zone;
 
@@ -107,14 +107,29 @@ public:
     void setBackground(sf::Sprite set_background);
 
     /**
-     * Récupère le vecteur gravité
+     * Calcule le vecteur gravité en fonction de la direction de la gravité
      */
     sf::Vector2f getGravity() const;
 
     /**
+     * Calcule la direction gauche en fonction de la direction de la gravité
+     */
+    sf::Vector2f getLeftDirection() const;
+
+    /**
+     * Calcule la direction droite en fonction de la direction de la gravité
+     */
+    sf::Vector2f getRightDirection() const;
+
+    /**
+     * Récupère la direction de la gravité
+     */
+    GravityDirection getGravityDirection();
+
+    /**
      * Modifie la direction de la gravité
      */
-    void setGravityDirection(GravityDirection direction);
+    void setGravityDirection(GravityDirection set_gravity_direction);
 
     /**
      * Récupère la liste des objets

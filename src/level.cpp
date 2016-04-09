@@ -9,6 +9,7 @@
 #include <utility>
 
 const float GRAVITY = 235;
+const float MOVE = 200;
 
 /**
  * Dictionnaire associant les types d'objets
@@ -21,7 +22,7 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
     {GravityBlock::TYPE_ID, GravityBlock::load}
 };
 
-Level::Level(Manager& manager) : State(manager), gravity(0, GRAVITY) {}
+Level::Level(Manager& manager) : State(manager), gravity_direction(GravityDirection::SOUTH) {}
 Level::~Level() {}
 
 void Level::load(std::ifstream& file) {
@@ -142,7 +143,8 @@ void Level::processEvent(const sf::Event& event) {
 void Level::draw() {
     sf::RenderWindow& window = getWindow();
 
-    // passage sur la vue caméra
+    // rotation de la caméra selon la gravité et passage sur cette vue
+    camera.setRotation(180 + (float) gravity_direction * 90);
     window.setView(camera);
 
     // efface la scène précédente et dessine la couche de fond
@@ -195,27 +197,51 @@ void Level::setBackground(sf::Sprite set_background) {
 }
 
 sf::Vector2f Level::getGravity() const {
-    return gravity;
-}
-
-void Level::setGravityDirection(GravityDirection direction) {
-    switch (direction) {
+    switch (gravity_direction) {
     case GravityDirection::NORTH:
-        gravity = sf::Vector2f(0, -GRAVITY);
-        break;
+        return sf::Vector2f(0, -GRAVITY);
 
     case GravityDirection::EAST:
-        gravity = sf::Vector2f(GRAVITY, 0);
-        break;
+        return sf::Vector2f(GRAVITY, 0);
 
     case GravityDirection::SOUTH:
-        gravity = sf::Vector2f(0, GRAVITY);
-        break;
+        return sf::Vector2f(0, GRAVITY);
 
     case GravityDirection::WEST:
-        gravity = sf::Vector2f(-GRAVITY, 0);
-        break;
+        return sf::Vector2f(-GRAVITY, 0);
     }
+
+    return sf::Vector2f(0, 0);
+}
+
+sf::Vector2f Level::getLeftDirection() const {
+    switch (gravity_direction) {
+    case GravityDirection::NORTH:
+        return sf::Vector2f(MOVE, 0);
+
+    case GravityDirection::EAST:
+        return sf::Vector2f(0, MOVE);
+
+    case GravityDirection::SOUTH:
+        return sf::Vector2f(-MOVE, 0);
+
+    case GravityDirection::WEST:
+        return sf::Vector2f(0, -MOVE);
+    }
+
+    return sf::Vector2f(0, 0);
+}
+
+sf::Vector2f Level::getRightDirection() const {
+    return -1.f * getLeftDirection();
+}
+
+GravityDirection Level::getGravityDirection() {
+    return gravity_direction;
+}
+
+void Level::setGravityDirection(GravityDirection set_gravity_direction) {
+    gravity_direction = set_gravity_direction;
 }
 
 std::vector<ObjectPtr>& Level::getObjects() {
