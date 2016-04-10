@@ -29,7 +29,7 @@ const unsigned int VERSION_NUMBER = 0;
  * à des instances qui seront utilisées pour la
  * construction d'autres objets de ces types
  */
-std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map = {
+std::map<unsigned int, std::function<Object::Ptr(std::ifstream&)>> object_type_map = {
     {Player::TYPE_ID, Player::load},
     {Block::TYPE_ID, Block::load},
     {GravityBlock::TYPE_ID, GravityBlock::load}
@@ -222,7 +222,7 @@ void Level::draw() {
     window.draw(background_sprite);
 
     // chargement de la file d'affichage des objets
-    std::priority_queue<ObjectPtr, std::vector<ObjectPtr>, ObjectCompare> display_queue;
+    std::priority_queue<Object::Ptr, std::vector<Object::Ptr>, ObjectCompare> display_queue;
 
     for (unsigned int i = 0; i < objects.size(); i++) {
         display_queue.push(objects[i]);
@@ -322,11 +322,11 @@ void Level::setGravityDirection(GravityDirection set_gravity_direction) {
     gravity_direction = set_gravity_direction;
 }
 
-std::vector<ObjectPtr>& Level::getObjects() {
+std::vector<Object::Ptr>& Level::getObjects() {
     return objects;
 }
 
-const std::vector<ObjectPtr>& Level::getObjects() const {
+const std::vector<Object::Ptr>& Level::getObjects() const {
     return objects;
 }
 

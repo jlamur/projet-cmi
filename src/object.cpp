@@ -32,7 +32,7 @@ Object::Object() :
 
 Object::~Object() {}
 
-void Object::load(std::ifstream& file, ObjectPtr object) {
+void Object::init(std::ifstream& file, Object::Ptr object) {
     // lecture de la position de l'objet
     float pos_x, pos_y;
 
@@ -85,9 +85,7 @@ void Object::load(std::ifstream& file, ObjectPtr object) {
             break;
 
         default:
-            // propriété de type inconnu : on recule
-            // d'un octet et on sort
-            file.seekg(-1, file.cur);
+            // propriété de type inconnu : on sort
             return;
         }
     }
@@ -137,7 +135,7 @@ void Object::save(std::ofstream& file) const {
     if (layer != DEFAULT_LAYER) {
         prop_type = Object::PROP_LAYER;
         file.write(&prop_type, 1);
-        
+
         char write_layer = layer + 127;
         file.write(&write_layer, 1);
     }
@@ -149,7 +147,7 @@ void Object::save(std::ofstream& file) const {
 
 sf::Vector2f Object::getForces(const Level& level) const {
     sf::Vector2f forces(0, 0);
-    const std::vector<ObjectPtr>& objects = level.getObjects();
+    const std::vector<Object::Ptr>& objects = level.getObjects();
 
     // force de gravité
     forces += getMass() * level.getGravity();
@@ -157,7 +155,7 @@ sf::Vector2f Object::getForces(const Level& level) const {
     // force d'attraction entre objets chargés
     if (getCharge() != 0) {
         for (unsigned int j = 0; j < objects.size(); j++) {
-            ObjectPtr attractive = objects[j];
+            Object::Ptr attractive = objects[j];
 
             if (attractive.get() == this || attractive->getCharge() == 0) {
                 continue;
@@ -384,7 +382,7 @@ void Object::setLayer(int set_layer) {
     layer = set_layer;
 }
 
-bool ObjectCompare::operator()(ObjectPtr const &t1, ObjectPtr const &t2) const {
+bool ObjectCompare::operator()(Object::Ptr const &t1, Object::Ptr const &t2) const {
     sf::Vector2f t1_pos = t1->getPosition();
     sf::Vector2f t2_pos = t2->getPosition();
 

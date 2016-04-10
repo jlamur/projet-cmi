@@ -2,14 +2,24 @@
 #define __PTF_BLOCK_HPP__
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "object.hpp"
 
 class Block : public Object {
+public:
+    typedef std::shared_ptr<Block> Ptr;
+
 private:
-    mutable sf::Sprite select_sprite;
+    sf::Sprite select_sprite;
 
 protected:
     mutable sf::Sprite sprite;
+
+    /**
+     * Initialisation des propriétés du bloc donné
+     * depuis le fichier donné
+     */
+    static void init(std::ifstream& file, Object::Ptr object);
 
 public:
     /**
@@ -23,7 +33,7 @@ public:
     /**
      * Clone ce bloc en un bloc avec les mêmes propriétés
      */
-    virtual ObjectPtr clone() const;
+    virtual Object::Ptr clone() const;
 
     /**
      * Récupère la boîte englobante du bloc
@@ -61,9 +71,9 @@ public:
     virtual CollisionType getCollisionType() const;
 
     /**
-     * Chargement du bloc depuis le fichier donné
+     * Chargement d'un bloc depuis le fichier donné
      */
-    static ObjectPtr load(std::ifstream& file);
+    static Object::Ptr load(std::ifstream& file);
 
     /**
      * Sauvegarde le bloc dans le fichier donné

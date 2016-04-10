@@ -81,7 +81,7 @@ void Game::draw() {
 }
 
 void Game::ensureCentered() {
-    std::vector<ObjectPtr>& objects = getObjects();
+    std::vector<Object::Ptr>& objects = getObjects();
 
     sf::Vector2f total_position;
     int player_count = 0;
@@ -111,10 +111,10 @@ void Game::update() {
 
     // détection des objets en collision
     for (unsigned int i = 0; i < getObjects().size(); i++) {
-        ObjectPtr obj_a = getObjects()[i];
+        Object::Ptr obj_a = getObjects()[i];
 
         for (unsigned int j = i + 1; j < getObjects().size(); j++) {
-            ObjectPtr obj_b = getObjects()[j];
+            Object::Ptr obj_b = getObjects()[j];
             CollisionData data(*obj_a, *obj_b);
 
             if (obj_a->detectCollision(*obj_b, data)) {

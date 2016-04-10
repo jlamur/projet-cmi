@@ -29,7 +29,7 @@ private:
     std::string background;
     std::string music;
 
-    std::vector<ObjectPtr> objects;
+    std::vector<Object::Ptr> objects;
     std::vector<std::pair<float, float>> zone;
 
 protected:
@@ -143,12 +143,12 @@ public:
     /**
      * Récupère la liste des objets
      */
-    std::vector<ObjectPtr>& getObjects();
+    std::vector<Object::Ptr>& getObjects();
 
     /**
      * Récupère la liste des objets (version constante)
      */
-    const std::vector<ObjectPtr>& getObjects() const;
+    const std::vector<Object::Ptr>& getObjects() const;
 
     /**
      * Récupère la zone du niveau

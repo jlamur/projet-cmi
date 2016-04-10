@@ -58,7 +58,7 @@ void Editor::processEvent(const sf::Event& event) {
     if (event.type == sf::Event::MouseButtonPressed) {
         sf::Vector2i mouse_position(event.mouseButton.x, event.mouseButton.y);
         sf::Vector2f position = pixelToCoords(mouse_position);
-        ObjectPtr pointed_object = getObject(position);
+        Object::Ptr pointed_object = getObject(position);
 
         if (event.mouseButton.button == sf::Mouse::Left) {
             // clic + shift : sélection par rectangle de sélection
@@ -107,7 +107,7 @@ void Editor::processEvent(const sf::Event& event) {
     if (event.type == sf::Event::MouseMoved) {
         sf::Vector2i mouse_position(event.mouseMove.x, event.mouseMove.y);
         sf::Vector2f position = pixelToCoords(mouse_position);
-        ObjectPtr pointed_object = getObject(position);
+        Object::Ptr pointed_object = getObject(position);
 
         drag_end = mouse_position;
 
@@ -162,7 +162,7 @@ void Editor::processEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         // appui sur suppr : suppression des blocs sélectionnés
         if (event.key.code == sf::Keyboard::Delete) {
-            std::vector<ObjectPtr>& objects = getObjects();
+            std::vector<Object::Ptr>& objects = getObjects();
 
             for (unsigned int i = 0; i < selection.size(); i++) {
                 objects.erase(std::remove(
@@ -244,8 +244,8 @@ void Editor::draw() {
     );
 }
 
-ObjectPtr Editor::getObject(sf::Vector2f position) {
-    std::vector<ObjectPtr>& objects = getObjects();
+Object::Ptr Editor::getObject(sf::Vector2f position) {
+    std::vector<Object::Ptr>& objects = getObjects();
 
     for (unsigned int i = 0; i < objects.size(); i++) {
         if (objects[i]->getAABB().contains(position)) {
@@ -256,8 +256,8 @@ ObjectPtr Editor::getObject(sf::Vector2f position) {
     return nullptr;
 }
 
-ObjectPtr Editor::addObject(sf::Vector2f position) {
-    std::vector<ObjectPtr>& objects = getObjects();
+Object::Ptr Editor::addObject(sf::Vector2f position) {
+    std::vector<Object::Ptr>& objects = getObjects();
 
     // on arrondit à l'unité de grille la plus proche
     position /= Constants::GRID;
@@ -266,7 +266,7 @@ ObjectPtr Editor::addObject(sf::Vector2f position) {
     position *= Constants::GRID;
 
     // TODO: ajouter un objet du type choisi, pas uniquement de bloc
-    ObjectPtr object = ObjectPtr(new Block);
+    Object::Ptr object = Object::Ptr(new Block);
     object->setPosition(position);
 
     // avant d'ajouter l'objet, on vérifie qu'il ne soit
@@ -287,12 +287,12 @@ ObjectPtr Editor::addObject(sf::Vector2f position) {
     return nullptr;
 }
 
-void Editor::removeObject(ObjectPtr object) {
+void Editor::removeObject(Object::Ptr object) {
     if (object == nullptr) {
         return;
     }
 
-    std::vector<ObjectPtr>& objects = getObjects();
+    std::vector<Object::Ptr>& objects = getObjects();
 
     // on supprime l'objet de la sélection
     selection.erase(std::remove(
@@ -309,7 +309,7 @@ void Editor::removeObject(sf::Vector2f position) {
     removeObject(getObject(position));
 }
 
-void Editor::select(ObjectPtr object, SelectionMode mode) {
+void Editor::select(Object::Ptr object, SelectionMode mode) {
     if (object == nullptr) {
         return;
     }
@@ -342,7 +342,7 @@ void Editor::select(sf::Vector2f position, SelectionMode mode) {
 }
 
 void Editor::select(sf::Vector2f top_left, sf::Vector2f bottom_right) {
-    std::vector<ObjectPtr>& objects = getObjects();
+    std::vector<Object::Ptr>& objects = getObjects();
     sf::FloatRect selection_rect(
         std::min(top_left.x, bottom_right.x),
         std::min(top_left.y, bottom_right.y),
@@ -369,7 +369,7 @@ void Editor::clearSelection() {
 }
 
 void Editor::selectAll() {
-    std::vector<ObjectPtr>& objects = getObjects();
+    std::vector<Object::Ptr>& objects = getObjects();
 
     for (unsigned int i = 0; i < objects.size(); i++) {
         objects[i]->setSelected(true);
@@ -388,7 +388,7 @@ void Editor::test() {
     game->setMusic(getMusic());
 
     // copie des objets du niveau vers le jeu
-    std::vector<ObjectPtr>& objects = getObjects();
+    std::vector<Object::Ptr>& objects = getObjects();
 
     for (unsigned int i = 0; i < objects.size(); i++) {
         game->getObjects().push_back(objects[i]->clone());

@@ -2,9 +2,13 @@
 #define __PTF_PLAYER_HPP__
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "object.hpp"
 
 class Player : public Object {
+public:
+    typedef std::shared_ptr<Player> Ptr;
+
 private:
     mutable sf::CircleShape sprite;
     unsigned int player_number;
@@ -14,6 +18,12 @@ protected:
      * Calcule les forces appliquées au joueur
      */
     virtual sf::Vector2f getForces(const Level& level) const;
+
+    /**
+     * Initialisation des propriétés du joueur donné
+     * depuis le fichier donné
+     */
+    static void init(std::ifstream& file, Object::Ptr object);
 
 public:
     /**
@@ -27,7 +37,7 @@ public:
     /**
      * Clone ce joueur en un joueur avec les mêmes propriétés
      */
-    virtual ObjectPtr clone() const;
+    virtual Object::Ptr clone() const;
 
     /**
      * Récupère la boîte englobante du joueur
@@ -60,9 +70,9 @@ public:
     virtual CollisionType getCollisionType() const;
 
     /**
-     * Chargement du joueur depuis le fichier donné
+     * Chargement d'un joueur depuis le fichier donné
      */
-    static ObjectPtr load(std::ifstream& file);
+    static Object::Ptr load(std::ifstream& file);
 
     /**
      * Sauvegarde le joueur dans le fichier donné

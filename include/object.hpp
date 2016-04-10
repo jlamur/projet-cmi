@@ -8,11 +8,12 @@
 #include "manager.hpp"
 #include "resource_manager.hpp"
 
-typedef std::shared_ptr<Object> ObjectPtr;
-
 class Level;
 
 class Object {
+public:
+    typedef std::shared_ptr<Object> Ptr;
+
 private:
     sf::Vector2f acceleration;
     sf::Vector2f velocity;
@@ -34,6 +35,12 @@ protected:
      */
     virtual sf::Vector2f getForces(const Level& level) const;
 
+    /**
+     * Initialisation des propriétés communes à tous les objets
+     * depuis le fichier donné dans l'objet donné
+     */
+    static void init(std::ifstream& file, Object::Ptr object);
+
 public:
     /**
      * Identifiants uniques des propriétés communes modifiables
@@ -51,7 +58,7 @@ public:
     /**
      * Clone cet objet en un objet avec les mêmes propriétés
      */
-    virtual ObjectPtr clone() const = 0;
+    virtual Object::Ptr clone() const = 0;
 
     /**
      * Récupère la boîte englobante de l'objet
@@ -82,12 +89,6 @@ public:
      * Récupère le type de collision de cet objet
      */
     virtual CollisionType getCollisionType() const = 0;
-
-    /**
-     * Charge les propriétés communes à tous les objets
-     * depuis le fichier donné dans l'objet donné
-     */
-    static void load(std::ifstream& file, ObjectPtr object);
 
     /**
      * Sauvegarde cet objet dans le fichier donné
@@ -238,7 +239,7 @@ public:
  * qui doit être dessinée avant celle du second
  */
 struct ObjectCompare {
-	bool operator()(ObjectPtr const &t1, ObjectPtr const &t2) const;
+	bool operator()(Object::Ptr const &t1, Object::Ptr const &t2) const;
 };
 
 #endif

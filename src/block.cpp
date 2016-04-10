@@ -18,17 +18,18 @@ Block::Block() : Object() {
 
 Block::~Block() {}
 
-ObjectPtr Block::clone() const {
-    return ObjectPtr(new Block(*this));
+Object::Ptr Block::clone() const {
+    return Object::Ptr(new Block(*this));
 }
 
-ObjectPtr Block::load(std::ifstream& file) {
-    ObjectPtr object = ObjectPtr(new Block);
-
+void Block::init(std::ifstream& file, Object::Ptr object) {
     // lecture des propriétés communes des objets
-    Object::load(file, object);
-    file.seekg(1, file.cur);
+    Object::init(file, object);
+}
 
+Object::Ptr Block::load(std::ifstream& file) {
+    Object::Ptr object = Object::Ptr(new Block);
+    Block::init(file, object);
     return object;
 }
 

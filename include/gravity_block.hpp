@@ -1,12 +1,24 @@
 #ifndef __PTF_GRAVITY_BLOCK_HPP__
 #define __PTF_GRAVITY_BLOCK_HPP__
 
+#include <SFML/Graphics.hpp>
+#include <memory>
 #include "block.hpp"
 #include "level.hpp"
 
 class GravityBlock : public Block {
+public:
+    typedef std::shared_ptr<GravityBlock> Ptr;
+
 private:
     GravityDirection gravity_direction;
+
+protected:
+    /**
+     * Initialisation des propriétés du bloc de gravité donné
+     * depuis le fichier donné
+     */
+    static void init(std::ifstream& file, Object::Ptr object);
 
 public:
     /**
@@ -20,7 +32,7 @@ public:
     /**
      * Clone ce bloc de gravité en un bloc de gravité avec les mêmes propriétés
      */
-    virtual ObjectPtr clone() const;
+    virtual Object::Ptr clone() const;
 
     /**
      * Opérations de préparation de la texture du bloc
@@ -38,9 +50,9 @@ public:
     virtual unsigned int getTypeId() const;
 
     /**
-     * Chargement du bloc de gravité depuis le fichier donné
+     * Chargement d'un bloc de gravité depuis le fichier donné
      */
-    static ObjectPtr load(std::ifstream& file);
+    static Object::Ptr load(std::ifstream& file);
 
     /**
      * Sauvegarde le bloc de gravité dans le fichier donné

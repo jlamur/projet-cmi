@@ -15,7 +15,7 @@ enum class SelectionMode {REPLACE, FLIP, ADD};
  */
 class Editor : public Level {
 private:
-    std::vector<ObjectPtr> selection;
+    std::vector<Object::Ptr> selection;
     sf::Vector2i drag_start;
     sf::Vector2i drag_end;
     DragMode drag_mode;
@@ -27,17 +27,17 @@ private:
      * Renvoie l'objet pointé à la position donnée
      * ou nullptr si aucun
      */
-    ObjectPtr getObject(sf::Vector2f position);
+    Object::Ptr getObject(sf::Vector2f position);
 
     /**
      * Ajoute un objet du type actuel à la position donnée
      */
-    ObjectPtr addObject(sf::Vector2f position);
+    Object::Ptr addObject(sf::Vector2f position);
 
     /**
      * Supprime l'objet à la position donnée ou passé par pointeur
      */
-    void removeObject(ObjectPtr object);
+    void removeObject(Object::Ptr object);
     void removeObject(sf::Vector2f position);
 
     /**
@@ -48,7 +48,7 @@ private:
      * - FLIP : sélectionne l'élément s'il ne l'est pas, sinon le désélectionne
      * - ADD : rajoute à la sélection courante
      */
-    void select(ObjectPtr object, SelectionMode mode);
+    void select(Object::Ptr object, SelectionMode mode);
     void select(sf::Vector2f position, SelectionMode mode);
     void select(sf::Vector2f top_left, sf::Vector2f bottom_right);
 

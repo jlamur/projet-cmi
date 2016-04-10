@@ -6,8 +6,8 @@ const unsigned int GravityBlock::TYPE_ID = 3;
 GravityBlock::GravityBlock() : Block() {}
 GravityBlock::~GravityBlock() {}
 
-ObjectPtr GravityBlock::clone() const {
-    return ObjectPtr(new GravityBlock(*this));
+Object::Ptr GravityBlock::clone() const {
+    return Object::Ptr(new GravityBlock(*this));
 }
 
 void GravityBlock::beforeDraw(Level& level) {
@@ -51,18 +51,21 @@ unsigned int GravityBlock::getTypeId() const {
     return TYPE_ID;
 }
 
-ObjectPtr GravityBlock::load(std::ifstream& file) {
+void GravityBlock::init(std::ifstream& file, Object::Ptr object) {
+    GravityBlock::Ptr gravity_block = std::dynamic_pointer_cast<GravityBlock>(object);
+
     // lecture de la direction de la gravité
     char gravity_direction;
     file.read(&gravity_direction, 1);
+    gravity_block->setGravityDirection((GravityDirection) gravity_direction);
 
     // lecture des propriétés d'un bloc
-    ObjectPtr object = Block::load(file);
-    std::shared_ptr<GravityBlock> block = std::dynamic_pointer_cast<GravityBlock>(object);
+    Block::init(file, object);
+}
 
-    // attribution de la direction
-    block->setGravityDirection((GravityDirection) gravity_direction);
-
+Object::Ptr GravityBlock::load(std::ifstream& file) {
+    Object::Ptr object = Object::Ptr(new GravityBlock);
+    GravityBlock::init(file, object);
     return object;
 }
 
