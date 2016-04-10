@@ -9,7 +9,6 @@
 int main() {
     Manager manager;
     std::shared_ptr<Menu> menu = std::shared_ptr<Menu>(new Menu(manager));
-    std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(manager));
 
     try {
         manager.setState(menu);
