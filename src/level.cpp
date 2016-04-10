@@ -202,7 +202,6 @@ void Level::save(std::string filename) {
 void Level::begin() {
     sf::Vector2u window_size = getWindow().getSize();
     camera.setSize(window_size.x, window_size.y);
-    camera.setCenter(0, 0);
     camera_angle = 180.f;
 
     gravity_direction = GravityDirection::SOUTH;

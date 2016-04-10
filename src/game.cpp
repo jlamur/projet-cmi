@@ -30,6 +30,10 @@ void Game::processEvent(const sf::Event& event) {
         // appui sur espace en mode test : retour à l'éditeur
         if (event.key.code == sf::Keyboard::Space && test_mode) {
             test_mode = false;
+
+            // on s'assure que la position de la caméra reste la même
+            return_state->setCamera(getCamera());
+
             getManager().setState(return_state);
             return_state = nullptr;
         }
@@ -162,7 +166,7 @@ bool Game::getTestMode() {
     return test_mode;
 }
 
-void Game::setTestMode(std::shared_ptr<State> set_return_state) {
+void Game::setTestMode(std::shared_ptr<Editor> set_return_state) {
     return_state = set_return_state;
     test_mode = true;
 }

@@ -19,7 +19,7 @@ private:
     WidgetTimer widget_timer;
     sf::Time next_frame_time;
     bool test_mode;
-    std::shared_ptr<State> return_state;
+    std::shared_ptr<Editor> return_state;
     Mode mode;
 
     /**
@@ -68,7 +68,7 @@ public:
      * Mise en mode test : l'appui sur espace renvoie
      * vers l'éditeur donné
      */
-    void setTestMode(std::shared_ptr<State> set_return_state);
+    void setTestMode(std::shared_ptr<Editor> set_return_state);
 
     /**
      * Récupère le mode actuel de jeu

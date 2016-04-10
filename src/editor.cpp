@@ -472,6 +472,6 @@ void Editor::test() {
     }
 
     // mise en mode test
-    game->setTestMode(getManager().getState());
+    game->setTestMode(std::dynamic_pointer_cast<Editor>(getManager().getState()));
     getManager().setState(game);
 }
