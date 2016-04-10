@@ -38,12 +38,20 @@ void Block::save(std::ofstream& file) const {
     Object::save(file);
 }
 
-void Block::beforeDraw(Level& level) {
-    // texturage et coloration du bloc selon ses propriétés
-    sprite.setTexture(
-        level.getResourceManager().getTexture("block.tga")
-    );
+std::string Block::getTexture() {
+    if (getMass() == 0) {
+        return "block.tga";
+    }
 
+    return "movable_block.tga";
+}
+
+void Block::draw(Level& level) {
+    // utilisation de la texture
+    sf::RenderWindow& window = level.getWindow();
+    sprite.setTexture(level.getResourceManager().getTexture(getTexture()));
+
+    // coloration du bloc selon sa charge
     if (getCharge() > 0) {
         sprite.setColor(sf::Color(180, 180, 255));
     } else if (getCharge() < 0) {
@@ -51,12 +59,6 @@ void Block::beforeDraw(Level& level) {
     } else {
         sprite.setColor(sf::Color::White);
     }
-}
-
-void Block::draw(Level& level) {
-    // utilisation de la texture
-    sf::RenderWindow& window = level.getWindow();
-    beforeDraw(level);
 
     sprite.setPosition(getPosition());
     window.draw(sprite);
