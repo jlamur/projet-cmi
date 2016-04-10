@@ -271,7 +271,7 @@ void Editor::draw() {
 
     // on passe au dessin d'éléments d'interface.
     // Changement de vue sur la vue par défaut
-    getManager().resetDefaultView();
+    getManager().useGUIView();
 
     // dessin du rectangle de sélection
     if (drag_mode == Editor::DragMode::SELECT_RECT) {

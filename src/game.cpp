@@ -83,7 +83,7 @@ void Game::draw() {
 
     // on passe au dessin d'éléments d'interface.
     // Changement de vue sur la vue par défaut
-    getManager().resetDefaultView();
+    getManager().useGUIView();
 
     // dessin du timer
     widget_timer.setTimeLeft(getTotalTime());

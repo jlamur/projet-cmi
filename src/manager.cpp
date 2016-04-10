@@ -4,8 +4,7 @@
 const unsigned int Manager::FPS = 60;
 const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);
 
-Manager::Manager() : default_view(window.getDefaultView()),
-title(sf::String(L"")), state(NULL), next_state(NULL), running(false) {
+Manager::Manager() : title(sf::String(L"")), state(NULL), next_state(NULL), running(false) {
     // préchargement des textures
     resource_manager.preload();
 
@@ -15,6 +14,9 @@ title(sf::String(L"")), state(NULL), next_state(NULL), running(false) {
         sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
         sf::ContextSettings(0, 0, 2)
     );
+
+    // récupération de la vue par défaut comme vue du gui
+    gui_view = window.getDefaultView();
 }
 
 void Manager::start() {
@@ -44,7 +46,7 @@ void Manager::start() {
 
             // redimensionnement de la vue par défaut
             if (event.type == sf::Event::Resized) {
-                default_view = sf::View(sf::FloatRect(
+                gui_view = sf::View(sf::FloatRect(
                     0, 0, event.size.width, event.size.height
                 ));
             }
@@ -84,8 +86,8 @@ ResourceManager& Manager::getResourceManager() {
     return resource_manager;
 }
 
-void Manager::resetDefaultView() {
-    window.setView(default_view);
+void Manager::useGUIView() {
+    window.setView(gui_view);
 }
 
 sf::String Manager::getTitle() {

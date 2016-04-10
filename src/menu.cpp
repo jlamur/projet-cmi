@@ -1,6 +1,3 @@
-////////////////////////
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NE PAS COMMITTER AVEC CHGTS
-
 #include "menu.hpp"
 #include "editor.hpp"
 #include "game.hpp"
@@ -79,7 +76,7 @@ void Menu::frame() {
     sf::Font font = getResourceManager().getFont("raleway.ttf");
 
     // on s'assure d'être dans la vue par défaut (pas de zoom, 0x0 en haut gauche)
-    getManager().resetDefaultView();
+    getManager().useGUIView();
 
     // dessin du fond
     window.clear(sf::Color::White);
@@ -184,6 +181,8 @@ void Menu::loadRules() {
 
 void Menu::launchEditor() {
     std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(getManager()));
+
+    // TODO: charger dynamiquement le niveau
     editor->load("level1.dat");
     getManager().setState(editor);
 }

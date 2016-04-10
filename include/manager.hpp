@@ -15,7 +15,7 @@ private:
     ResourceManager resource_manager;
 
     sf::Clock clock;
-    sf::View default_view;
+    sf::View gui_view;
     sf::String title;
 
     std::shared_ptr<State> state;
@@ -77,9 +77,10 @@ public:
     ResourceManager& getResourceManager();
 
     /**
-     * Remet la vue par défaut (zoom 1:1, origine en haut à gauche)
+     * Passage en vue de l'interface
+     * (coin en haut à gauche, zoom 1:1)
      */
-    void resetDefaultView();
+    void useGUIView();
 
     /**
      * Renvoie le titre actuel de la fenêtre
