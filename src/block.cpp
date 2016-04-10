@@ -64,7 +64,7 @@ void Block::draw(Level& level) {
     if (isSelected()) {
         select_sprite.setPosition(getPosition());
         select_sprite.setTexture(
-            level.getResourceManager().getTexture("block_select.png")
+            level.getResourceManager().getTexture("block_select.tga")
         );
 
         window.draw(select_sprite);
