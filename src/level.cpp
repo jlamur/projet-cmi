@@ -126,7 +126,13 @@ void Level::load(std::string filename) {
         }
 
         // lecture de l'objet
-        objects.push_back(object_type_map[object_type](file));
+        Object::Ptr read_object = object_type_map[object_type](file);
+        objects.push_back(read_object);
+
+        // si c'est un joueur, on l'ajoute à la liste
+        if ((unsigned int) object_type == Player::TYPE_ID) {
+            players.push_back(std::dynamic_pointer_cast<Player>(read_object));
+        }
     }
 }
 
@@ -198,7 +204,7 @@ void Level::begin() {
     camera.setSize(window_size.x, window_size.y);
     camera.setCenter(0, 0);
     camera_angle = 180.f;
-    
+
     gravity_direction = GravityDirection::SOUTH;
 }
 
@@ -334,12 +340,53 @@ void Level::setGravityDirection(GravityDirection set_gravity_direction) {
     gravity_direction = set_gravity_direction;
 }
 
-std::vector<Object::Ptr>& Level::getObjects() {
+std::vector<Object::Ptr>& Level::getObjects()  {
     return objects;
 }
 
 const std::vector<Object::Ptr>& Level::getObjects() const {
     return objects;
+}
+
+std::vector<Player::Ptr>& Level::getPlayers() {
+    return players;
+}
+
+const std::vector<Player::Ptr>& Level::getPlayers() const {
+    return players;
+}
+
+void Level::addObject(Object::Ptr object) {
+    // si c'est un joueur, on le met dans le tableau des joueurs
+    // et on lui attribue un numéro
+    if (object->getTypeId() == Player::TYPE_ID) {
+        Player::Ptr player = std::dynamic_pointer_cast<Player>(object);
+
+        player->setPlayerNumber(players.size());
+        players.push_back(std::dynamic_pointer_cast<Player>(object));
+    }
+
+    objects.push_back(object);
+}
+
+void Level::removeObject(Object::Ptr object) {
+    // si c'est un joueur, on le supprime de la liste des joueurs
+    if (object->getTypeId() == Player::TYPE_ID) {
+        Player::Ptr player = std::dynamic_pointer_cast<Player>(object);
+        players.erase(std::remove(
+            players.begin(), players.end(), player
+        ), players.end());
+
+        // on réattribue les numéros de joueurs
+        for (unsigned int i = 0; i < players.size(); i++) {
+            players[i]->setPlayerNumber(i);
+        }
+    }
+
+    // on supprime l'objet de la liste d'objets
+    objects.erase(std::remove(
+        objects.begin(), objects.end(), object
+    ), objects.end());
 }
 
 std::vector<sf::Vector2f>& Level::getZone() {

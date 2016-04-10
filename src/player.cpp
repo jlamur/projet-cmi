@@ -21,11 +21,6 @@ Object::Ptr Player::clone() const {
 void Player::init(std::ifstream& file, Object::Ptr object) {
     Player::Ptr player = std::dynamic_pointer_cast<Player>(object);
 
-    // lecture du numéro de joueur
-    char player_number;
-    file.read(&player_number, 1);
-    player->setPlayerNumber(player_number);
-
     // lecture des propriétés communes des objets
     Object::init(file, object);
 }
@@ -37,10 +32,6 @@ Object::Ptr Player::load(std::ifstream& file) {
 }
 
 void Player::save(std::ofstream& file) const {
-    // écriture du numéro de joueur
-    char write_player_number = player_number;
-    file.write(&write_player_number, 1);
-
     // écriture des propriétés communes
     Object::save(file);
 }

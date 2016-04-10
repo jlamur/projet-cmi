@@ -91,19 +91,15 @@ void Game::draw() {
 }
 
 void Game::ensureCentered() {
-    std::vector<Object::Ptr>& objects = getObjects();
+    std::vector<Player::Ptr>& players = getPlayers();
 
     sf::Vector2f total_position;
-    int player_count = 0;
-
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        if (Player* player = dynamic_cast<Player*>(objects[i].get())) {
-            total_position += player->getPosition();
-            player_count++;
-        }
-    }
-
     sf::View camera = getCamera();
+    unsigned int player_count = players.size();
+
+    for (unsigned int i = 0; i < player_count; i++) {
+        total_position += players[i]->getPosition();
+    }
 
     if (player_count == 0) {
         // on évite la division par zéro
@@ -118,13 +114,14 @@ void Game::ensureCentered() {
 
 void Game::update() {
     std::vector<CollisionData> colliding;
+    std::vector<Object::Ptr>& objects = getObjects();
 
     // détection des objets en collision
-    for (unsigned int i = 0; i < getObjects().size(); i++) {
-        Object::Ptr obj_a = getObjects()[i];
+    for (unsigned int i = 0; i < objects.size(); i++) {
+        Object::Ptr obj_a = objects[i];
 
-        for (unsigned int j = i + 1; j < getObjects().size(); j++) {
-            Object::Ptr obj_b = getObjects()[j];
+        for (unsigned int j = i + 1; j < objects.size(); j++) {
+            Object::Ptr obj_b = objects[j];
             CollisionData data(*obj_a, *obj_b);
 
             if (obj_a->detectCollision(*obj_b, data)) {
@@ -134,8 +131,8 @@ void Game::update() {
     }
 
     // intégration des forces dans la vitesse (seconde moitié)
-    for (unsigned int i = 0; i < getObjects().size(); i++) {
-        getObjects()[i]->updateVelocity(*this);
+    for (unsigned int i = 0; i < objects.size(); i++) {
+        objects[i]->updateVelocity(*this);
     }
 
     // résolution des collisions détectées
@@ -145,8 +142,8 @@ void Game::update() {
     }
 
     // intégration de la vitesse dans la position
-    for (unsigned int i = 0; i < getObjects().size(); i++) {
-        getObjects()[i]->updatePosition();
+    for (unsigned int i = 0; i < objects.size(); i++) {
+        objects[i]->updatePosition();
     }
 
     // application de la correction positionnelle

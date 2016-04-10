@@ -5,6 +5,7 @@
 #include <vector>
 #include "state.hpp"
 #include "object.hpp"
+#include "player.hpp"
 #include "manager.hpp"
 #include "resource_manager.hpp"
 
@@ -30,6 +31,7 @@ private:
     std::string music;
 
     std::vector<Object::Ptr> objects;
+    std::vector<Player::Ptr> players;
     std::vector<sf::Vector2f> zone;
 
 protected:
@@ -146,9 +148,29 @@ public:
     std::vector<Object::Ptr>& getObjects();
 
     /**
-     * Récupère la liste des objets (version constante)
+     * Récupère la liste des objets (constante)
      */
     const std::vector<Object::Ptr>& getObjects() const;
+
+    /**
+     * Récupère la liste des joueurs
+     */
+    std::vector<Player::Ptr>& getPlayers();
+
+    /**
+     * Récupère la liste des joueurs (constante)
+     */
+    const std::vector<Player::Ptr>& getPlayers() const;
+
+    /**
+     * Ajoute un nouvel objet
+     */
+    void addObject(Object::Ptr object);
+
+    /**
+     * Supprime l'objet donné
+     */
+    void removeObject(Object::Ptr object);
 
     /**
      * Récupère la zone du niveau

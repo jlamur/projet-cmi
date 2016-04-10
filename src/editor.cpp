@@ -189,12 +189,8 @@ void Editor::processEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         // appui sur suppr : suppression des blocs sélectionnés
         if (event.key.code == sf::Keyboard::Delete) {
-            std::vector<Object::Ptr>& objects = getObjects();
-
             for (unsigned int i = 0; i < selection.size(); i++) {
-                objects.erase(std::remove(
-                    objects.begin(), objects.end(), selection[i]
-                ), objects.end());
+                removeObject(selection[i]);
             }
 
             clearSelection();
@@ -299,7 +295,7 @@ void Editor::draw() {
 }
 
 Object::Ptr Editor::getObject(sf::Vector2f position) {
-    std::vector<Object::Ptr>& objects = getObjects();
+    const std::vector<Object::Ptr>& objects = getObjects();
 
     for (unsigned int i = 0; i < objects.size(); i++) {
         if (objects[i]->getAABB().contains(position)) {
@@ -323,7 +319,7 @@ sf::Vector2f* Editor::getControlPoint(sf::Vector2f position) {
 }
 
 Object::Ptr Editor::addObject(sf::Vector2f position) {
-    std::vector<Object::Ptr>& objects = getObjects();
+    const std::vector<Object::Ptr>& objects = getObjects();
 
     // on arrondit à l'unité de grille la plus proche
     position = roundVectorToGrid(position);
@@ -346,7 +342,7 @@ Object::Ptr Editor::addObject(sf::Vector2f position) {
     }
 
     if (!overlaps) {
-        objects.push_back(object);
+        Level::addObject(object);
         return object;
     }
 
@@ -358,17 +354,12 @@ void Editor::removeObject(Object::Ptr object) {
         return;
     }
 
-    std::vector<Object::Ptr>& objects = getObjects();
-
     // on supprime l'objet de la sélection
     selection.erase(std::remove(
         selection.begin(), selection.end(), object
     ), selection.end());
 
-    // on supprime l'objet de la liste d'objets
-    objects.erase(std::remove(
-        objects.begin(), objects.end(), object
-    ), objects.end());
+    Level::removeObject(object);
 }
 
 void Editor::removeControlPoint(sf::Vector2f* control_point) {
@@ -421,7 +412,7 @@ void Editor::select(sf::Vector2f position, Editor::SelectionMode mode) {
 }
 
 void Editor::select(sf::Vector2f top_left, sf::Vector2f bottom_right) {
-    std::vector<Object::Ptr>& objects = getObjects();
+    const std::vector<Object::Ptr>& objects = getObjects();
     sf::FloatRect selection_rect(
         std::min(top_left.x, bottom_right.x),
         std::min(top_left.y, bottom_right.y),
@@ -448,7 +439,7 @@ void Editor::clearSelection() {
 }
 
 void Editor::selectAll() {
-    std::vector<Object::Ptr>& objects = getObjects();
+    const std::vector<Object::Ptr>& objects = getObjects();
 
     for (unsigned int i = 0; i < objects.size(); i++) {
         objects[i]->setSelected(true);
@@ -470,7 +461,7 @@ void Editor::test() {
     std::vector<Object::Ptr>& objects = getObjects();
 
     for (unsigned int i = 0; i < objects.size(); i++) {
-        game->getObjects().push_back(objects[i]->clone());
+        game->addObject(objects[i]->clone());
     }
 
     // copie de la zone de jeu
