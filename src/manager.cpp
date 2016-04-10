@@ -1,13 +1,21 @@
+#include <iostream>
 #include "manager.hpp"
 
 const unsigned int Manager::FPS = 60;
 const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);
 
-Manager::Manager() : window(
-    sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
-    sf::ContextSettings(0, 0, 2)
-), default_view(window.getDefaultView()), title(sf::String(L"")),
-state(NULL), next_state(NULL), running(false) {}
+Manager::Manager() : default_view(window.getDefaultView()),
+title(sf::String(L"")), state(NULL), next_state(NULL), running(false) {
+    // préchargement des textures
+    resource_manager.preload();
+
+    // création de la fenêtre (après avoir préchargé les ressources,
+    // on évite ainsi tout lag pendant le traitement des événements)
+    window.create(
+        sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
+        sf::ContextSettings(0, 0, 2)
+    );
+}
 
 void Manager::start() {
     running = true;

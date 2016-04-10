@@ -12,12 +12,11 @@
 class Manager {
 private:
     sf::RenderWindow window;
+    ResourceManager resource_manager;
+
     sf::Clock clock;
     sf::View default_view;
     sf::String title;
-
-    ResourceManager resource_manager;
-    std::vector<sf::Event> events;
 
     std::shared_ptr<State> state;
     std::shared_ptr<State> next_state;

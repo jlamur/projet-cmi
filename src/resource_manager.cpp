@@ -1,86 +1,104 @@
 #include "resource_manager.hpp"
-#include "whereami.h"
+#include <iostream>
 #include <cstring>
 
-// définition du séparateur de fichiers en fonction
-// du type de système
-#ifdef _WIN32
-const std::string SEP = "\\";
-#else
-const std::string SEP = "/";
-#endif
+using dir_iter = boost::filesystem::directory_iterator;
+using fs_path = boost::filesystem::path;
 
-ResourceManager::ResourceManager() : music_volume(5) {
-    // on récupère le chemin actuel de l'exécutable pour pouvoir accéder
-    // au dossier des ressources qui est situé dans le même dossier
-    int length = wai_getExecutablePath(NULL, 0, NULL), dirname_length;
-    std::unique_ptr<char[]> buffer = std::unique_ptr<char[]>(new char[length + 1]);
-    wai_getExecutablePath(buffer.get(), length, &dirname_length);
-
-    if (length == 0) {
-        throw std::runtime_error("Impossible de déterminer le chemin actuel");
-    }
-
-    buffer.get()[length] = '\0';
-    std::string base_dir = std::string(buffer.get()).substr(0, dirname_length);
-    resources_dir = base_dir + SEP + "res" + SEP;
-
+ResourceManager::ResourceManager() : preloaded(false), music_volume(20) {
     // initialisation de la musique en bouclage et au volume par défaut
     music.setLoop(true);
     music.setVolume(music_volume);
 }
 
-ResourceManager::~ResourceManager() {
-    textures.clear();
-    fonts.clear();
+void ResourceManager::preload() {
+    if (preloaded) {
+        return;
+    }
+
+    fs_path current = boost::filesystem::current_path();
+    dir_iter end;
+
+    // on garde une référence aux chemins des différentes ressources
+    textures_path = current / "res/textures";
+    fonts_path = current / "res/fonts";
+    levels_path = current / "res/levels";
+    musics_path = current / "res/musics";
+
+    // préchargement de toutes les textures
+    for (dir_iter it(textures_path); it != end; ++it) {
+        if (boost::filesystem::is_regular_file(it->path())) {
+            std::string full_path = boost::filesystem::canonical(it->path()).string();
+            std::string name = it->path().filename().string();
+
+            auto texture = std::unique_ptr<sf::Texture>(new sf::Texture);
+            std::cout << "Chargement de la texture " << name << "... ";
+
+            if (!texture->loadFromFile(full_path)) {
+                std::cerr << "ERREUR!" << std::endl;
+            } else {
+                std::cout << "OK!" << std::endl;
+            }
+
+            textures[name] = std::move(texture);
+        }
+    }
+
+    // préchargement de toutes les polices
+    for (dir_iter it(fonts_path); it != end; ++it) {
+        if (boost::filesystem::is_regular_file(it->path())) {
+            std::string full_path = boost::filesystem::canonical(it->path()).string();
+            std::string name = it->path().filename().string();
+
+            auto font = std::unique_ptr<sf::Font>(new sf::Font);
+            std::cout << "Chargement de la police " << name << "... ";
+
+            if (!font->loadFromFile(full_path)) {
+                std::cerr << "ERREUR!" << std::endl;
+            } else {
+                std::cout << "OK!" << std::endl;
+            }
+
+            fonts[name] = std::move(font);
+        }
+    }
+
+    preloaded = true;
 }
 
 sf::Texture& ResourceManager::getTexture(std::string name) {
-    // si la texture est déjà chargée, on l'utilise directement
-    if (textures.count(name) > 0) {
-        return *textures[name];
-    }
-
-    auto texture = std::unique_ptr<sf::Texture>(new sf::Texture);
-
-    // tente de charger la texture dans le chemin "res/textures/name.png"
-    if (!texture->loadFromFile(resources_dir + SEP + "textures" + SEP + name)) {
+    if (textures.count(name) == 0) {
         throw std::runtime_error(
-            "Impossible de charger l'image \"" + name + "\""
+            "Impossible de charger la texture inexistante : " + name
         );
     }
 
-    textures[name] = std::move(texture);
     return *textures[name];
 }
 
 sf::Font& ResourceManager::getFont(std::string name) {
-    // si la police est déjà chargée, on l'utilise directement
-    if (fonts.count(name) > 0) {
-        return *fonts[name];
-    }
-
-    auto font = std::unique_ptr<sf::Font>(new sf::Font);
-
-    // tente de charger la police depuis le dossier "res/fonts"
-    if (!font->loadFromFile(resources_dir + SEP + "fonts" + SEP + name)) {
+    if (fonts.count(name) == 0) {
         throw std::runtime_error(
-            "Impossible de charger la police \"" + name + "\""
+            "Impossible de charger la police inexistante : " + name
         );
     }
 
-    fonts[name] = std::move(font);
     return *fonts[name];
 }
 
 std::string ResourceManager::getLevelPath(std::string name) {
-    return resources_dir + SEP + "levels" + SEP + name;
+    return boost::filesystem::canonical(levels_path / name).string();
 }
 
 void ResourceManager::playMusic(std::string name) {
     // tente de charger la musique depuis le dossier "res/musics"
-    if (!music.openFromFile(resources_dir + SEP + "musics" + SEP + name)) {
-        throw std::runtime_error("Impossible de charger la musique : " + name);
+    std::string full_path = boost::filesystem::canonical(musics_path / name).string();
+    std::cout << "Lecture de la musique " << name << "... ";
+
+    if (!music.openFromFile(full_path)) {
+        std::cerr << "ERREUR!" << std::endl;
+    } else {
+        std::cout << "OK!" << std::endl;
     }
 
     music.play();

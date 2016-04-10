@@ -52,6 +52,9 @@ Editor::~Editor() {}
 void Editor::begin() {
     Level::begin();
 
+    getResourceManager().stopMusic();
+    // TODO: on doit arrêter la musique car celle du
+    // niveau est chargée par dessous dans level.. C'est sale
     getResourceManager().playMusic("editor.ogg");
     getWindow().setFramerateLimit(Manager::FPS);
 }

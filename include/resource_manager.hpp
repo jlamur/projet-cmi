@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <boost/filesystem.hpp>
 #include <unordered_map>
 #include <string>
 #include <fstream>
@@ -16,29 +17,34 @@
  */
 class ResourceManager {
 private:
-    std::string resources_dir;
+    bool preloaded;
 
+    boost::filesystem::path textures_path;
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    boost::filesystem::path fonts_path;
     std::unordered_map<std::string, std::unique_ptr<sf::Font>> fonts;
 
+    boost::filesystem::path levels_path;
+
+    boost::filesystem::path musics_path;
     float music_volume;
     sf::Music music;
 
 public:
     ResourceManager();
-    ~ResourceManager();
 
     /**
-     * Récupère une image. Réutilise l'image déjà chargée
-     * si elle l'a déjà été, sinon, tente de la charger
-     * depuis son emplacement
+     * Précharge toutes les ressources préchargeables
+     */
+    void preload();
+
+    /**
+     * Récupère une texture préchargée
      */
     sf::Texture& getTexture(std::string name);
 
     /**
-     * Récupère la police demandée. Réutilise une police
-     * déjà chargée si elle a déjà été demandée, sinon, la
-     * charge depuis son emplacement
+     * Récupère une police préchargée
      */
     sf::Font& getFont(std::string name);
 
