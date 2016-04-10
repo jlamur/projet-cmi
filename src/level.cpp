@@ -126,13 +126,7 @@ void Level::load(std::string filename) {
         }
 
         // lecture de l'objet
-        Object::Ptr read_object = object_type_map[object_type](file);
-        objects.push_back(read_object);
-
-        // si c'est un joueur, on l'ajoute à la liste
-        if ((unsigned int) object_type == Player::TYPE_ID) {
-            players.push_back(std::dynamic_pointer_cast<Player>(read_object));
-        }
+        addObject(object_type_map[object_type](file));
     }
 }
 
