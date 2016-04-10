@@ -194,13 +194,11 @@ void Level::save(std::string filename) {
 }
 
 void Level::begin() {
-    // TODO: ceci ne devrait pas être là
-    // (imaginons que l'on quitte et revienne à un niveau)
-    // (il faudra réfléchir à abandonner le concept de ::begin())
-
-    camera = getWindow().getDefaultView();
+    sf::Vector2u window_size = getWindow().getSize();
+    camera.setSize(window_size.x, window_size.y);
     camera.setCenter(0, 0);
     camera_angle = 180.f;
+    
     gravity_direction = GravityDirection::SOUTH;
 }
 
