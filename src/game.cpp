@@ -24,9 +24,8 @@ void Game::processEvent(const sf::Event& event) {
         // appui sur espace en mode test : retour à l'éditeur
         if (event.key.code == sf::Keyboard::Space && test_mode) {
             test_mode = false;
-            return_state = nullptr;
-
             getManager().setState(return_state);
+            return_state = nullptr;
         }
 
         // appui sur échap : échange entre le mode pause et normal
@@ -95,7 +94,15 @@ void Game::ensureCentered() {
     }
 
     sf::View camera = getCamera();
-    camera.setCenter(total_position / (float) player_count);
+
+    if (player_count == 0) {
+        // on évite la division par zéro
+        camera.setCenter(sf::Vector2f(0, 0));
+    } else {
+        // on place la caméra à la position médiane de tous les joueurs
+        camera.setCenter(total_position / (float) player_count);
+    }
+
     setCamera(camera);
 }
 
