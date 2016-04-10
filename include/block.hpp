@@ -58,7 +58,7 @@ public:
     /**
      * Appelé lorsque le bloc est activé par un objet
      */
-    virtual void activated(Level& level, Object& object);
+    virtual void activated(Level& level, Object* object);
 
     /**
      * Récupère l'identifiant de type des blocs

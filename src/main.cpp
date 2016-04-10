@@ -5,10 +5,12 @@
 #include <iostream>
 #include <memory>
 #include <fstream>
+#include <fenv.h>
 
 int main() {
     Manager manager;
     std::shared_ptr<Menu> menu = std::shared_ptr<Menu>(new Menu(manager));
+    feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 
     try {
         manager.setState(menu);

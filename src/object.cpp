@@ -2,6 +2,7 @@
 #include "level.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
+#include <iostream>
 #include <cmath>
 
 const unsigned int Object::PROP_MASS = 1;
@@ -197,32 +198,32 @@ void Object::updatePosition() {
     position += velocity * Manager::FRAME_TIME.asSeconds();
 }
 
-bool Object::detectCollision(const Object& obj, CollisionData& data) const {
+bool Object::detectCollision(Object::Ptr obj, CollisionData& data) const {
     // si les objets ne sont pas sur la même couche,
     // ils ne peuvent pas entrer en collision
-    if (getLayer() != obj.getLayer()) {
+    if (getLayer() != obj->getLayer()) {
         return false;
     }
 
     // si les deux boîtes englobantes des deux objets ne
     // s'intersectent pas, il ne risque pas d'y avoir de collision
-    if (!getAABB().intersects(obj.getAABB())) {
+    if (!getAABB().intersects(obj->getAABB())) {
         return false;
     }
 
     return getCollisionData(data);
 }
 
-void Object::solveCollision(Level& level, Object& obj, const sf::Vector2f& normal) {
+void Object::solveCollision(Level& level, Object::Ptr obj, const sf::Vector2f& normal) {
     // si les deux objets sont de masse infinie, réinitialisation
     // des vitesses en tant que collision
-    if (getMassInvert() == 0 && obj.getMassInvert() == 0) {
+    if (getMassInvert() == 0 && obj->getMassInvert() == 0) {
         setVelocity(sf::Vector2f(0, 0));
-        obj.setVelocity(sf::Vector2f(0, 0));
+        obj->setVelocity(sf::Vector2f(0, 0));
         return;
     }
 
-    sf::Vector2f rel_velo = obj.getVelocity() - getVelocity();
+    sf::Vector2f rel_velo = obj->getVelocity() - getVelocity();
     float dot_normal = rel_velo.x * normal.x + rel_velo.y * normal.y;
 
     // si les directions sont divergentes, pas besoin
@@ -233,24 +234,24 @@ void Object::solveCollision(Level& level, Object& obj, const sf::Vector2f& norma
 
     // en ce point, on est bertins qu'une collision a eu lieu.
     // activation réciproque des deux objets
-    activated(level, obj);
-    obj.activated(level, *this);
+    activated(level, obj.get());
+    obj->activated(level, this);
 
     // on utilise le plus petit coefficient de friction entre les
     // deux objets comme le coefficient de la collision
-    float restitution = std::min(getRestitution(), obj.getRestitution());
+    float restitution = std::min(getRestitution(), obj->getRestitution());
 
     // calcule et applique l'impulsion de résolution de la collision
     float collision_impulse = -(1.f + restitution) * std::min(dot_normal + .8f, 0.f) /
-        (getMassInvert() + obj.getMassInvert());
+        (getMassInvert() + obj->getMassInvert());
 
     setVelocity(getVelocity() - getMassInvert() * collision_impulse * normal);
-    obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * collision_impulse * normal);
+    obj->setVelocity(obj->getVelocity() + obj->getMassInvert() * collision_impulse * normal);
 
     // application des forces de frottement entre les deux objets
     // on calcule le vecteur tangent qui porte la force de frottement.
     // les coefficients de friction utilisés sont les moyennes de ceux des deux objets
-    rel_velo = obj.getVelocity() - getVelocity();
+    rel_velo = obj->getVelocity() - getVelocity();
     dot_normal = rel_velo.x * normal.x + rel_velo.y * normal.y;
 
     sf::Vector2f tangent = rel_velo - dot_normal * normal;
@@ -265,9 +266,9 @@ void Object::solveCollision(Level& level, Object& obj, const sf::Vector2f& norma
     tangent /= tangent_length;
 
     float magnitude = -(rel_velo.x * tangent.x + rel_velo.y * tangent.y) /
-        (getMassInvert() + obj.getMassInvert());
-    float static_friction = (getStaticFriction() + obj.getStaticFriction()) / 2.f;
-    float dynamic_friction = (getDynamicFriction() + obj.getDynamicFriction()) / 2.f;
+        (getMassInvert() + obj->getMassInvert());
+    float static_friction = (getStaticFriction() + obj->getStaticFriction()) / 2.f;
+    float dynamic_friction = (getDynamicFriction() + obj->getDynamicFriction()) / 2.f;
     float friction_impulse;
 
     // utilisation de la loi de Coulomb sur les frottements dynamiques/statiques
@@ -279,16 +280,16 @@ void Object::solveCollision(Level& level, Object& obj, const sf::Vector2f& norma
     }
 
     setVelocity(getVelocity() - getMassInvert() * friction_impulse * tangent);
-    obj.setVelocity(obj.getVelocity() + obj.getMassInvert() * friction_impulse * tangent);
+    obj->setVelocity(obj->getVelocity() + obj->getMassInvert() * friction_impulse * tangent);
 }
 
-void Object::positionalCorrection(Object& obj, const sf::Vector2f& normal, float depth) {
+void Object::positionalCorrection(Object::Ptr obj, const sf::Vector2f& normal, float depth) {
     float position_correction = std::max(depth - Constants::CORRECTION_SLOP, 0.0f) /
-        (getMassInvert() + obj.getMassInvert()) *
+        (getMassInvert() + obj->getMassInvert()) *
         Constants::CORRECTION_PERCENTAGE;
 
     setPosition(getPosition() - getMassInvert() * position_correction * normal);
-    obj.setPosition(obj.getPosition() + obj.getMassInvert() * position_correction * normal);
+    obj->setPosition(obj->getPosition() + obj->getMassInvert() * position_correction * normal);
 }
 
 sf::Vector2f Object::getAcceleration() const {
@@ -338,6 +339,9 @@ float Object::getMassInvert() const {
 }
 
 void Object::setMass(float set_mass) {
+    if (getTypeId() == 1){
+        std::cout << "Change mass player from " << mass << " to " << set_mass << std::endl;
+    }
     mass = set_mass;
     inv_mass = -1.f;
 }

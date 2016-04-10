@@ -122,9 +122,12 @@ void Game::update() {
 
         for (unsigned int j = i + 1; j < objects.size(); j++) {
             Object::Ptr obj_b = objects[j];
-            CollisionData data(*obj_a, *obj_b);
+            CollisionData data;
 
-            if (obj_a->detectCollision(*obj_b, data)) {
+            data.obj_a = obj_a;
+            data.obj_b = obj_b;
+
+            if (obj_a->detectCollision(obj_b, data)) {
                 colliding.push_back(data);
             }
         }
@@ -138,7 +141,7 @@ void Game::update() {
     // résolution des collisions détectées
     for (unsigned int i = 0; i < colliding.size(); i++) {
         CollisionData& collided = colliding[i];
-        collided.obj_a.solveCollision(*this, collided.obj_b, collided.normal);
+        collided.obj_a->solveCollision(*this, collided.obj_b, collided.normal);
     }
 
     // intégration de la vitesse dans la position
@@ -149,7 +152,7 @@ void Game::update() {
     // application de la correction positionnelle
     for (unsigned int i = 0; i < colliding.size(); i++) {
         CollisionData& collided = colliding[i];
-        collided.obj_a.positionalCorrection(
+        collided.obj_a->positionalCorrection(
             collided.obj_b, collided.normal, collided.depth
         );
     }

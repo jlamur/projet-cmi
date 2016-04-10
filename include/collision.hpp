@@ -2,6 +2,7 @@
 #define __PTF_COLLISION_HPP__
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 class Object;
 
@@ -19,10 +20,10 @@ struct CollisionData {
     sf::Vector2f normal;
     float depth;
 
-    Object& obj_a;
-    Object& obj_b;
+    std::shared_ptr<Object> obj_a;
+    std::shared_ptr<Object> obj_b;
 
-    CollisionData(Object& obj_a, Object& obj_b);
+    CollisionData();
 };
 
 /**

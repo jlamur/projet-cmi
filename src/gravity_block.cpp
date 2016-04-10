@@ -39,7 +39,7 @@ void GravityBlock::beforeDraw(Level& level) {
     );
 }
 
-void GravityBlock::activated(Level& level, Object& object) {
+void GravityBlock::activated(Level& level, Object* object) {
     Block::activated(level, object);
 
     // lorsque le bloc est activé, il transmet son

@@ -78,7 +78,7 @@ public:
     /**
      * Appelé lorsque l'objet est activé par un autre
      */
-    virtual void activated(Level& level, Object& object) = 0;
+    virtual void activated(Level& level, Object* object) = 0;
 
     /**
      * Récupère l'identifiant de type de cet objet
@@ -111,14 +111,14 @@ public:
      * Détecte s'il y a collision entre cet objet
      * et l'objet passé en paramètre
      */
-    virtual bool detectCollision(const Object& obj, CollisionData& data) const;
+    virtual bool detectCollision(Object::Ptr obj, CollisionData& data) const;
 
     /**
      * Résolution de la collision entre cet objet
      * et l'objet passé en paramètre selon la normale
      * donnée
      */
-    virtual void solveCollision(Level& level, Object& obj, const sf::Vector2f& normal);
+    virtual void solveCollision(Level& level, Object::Ptr obj, const sf::Vector2f& normal);
 
     /**
      * Application de la correction positionnelle sur
@@ -128,7 +128,7 @@ public:
      * les objets peuvent accumuler une erreur de positionnement
      * qui les fait "plonger" les uns dans les autres
      */
-    virtual void positionalCorrection(Object& obj, const sf::Vector2f& normal, float depth);
+    virtual void positionalCorrection(Object::Ptr obj, const sf::Vector2f& normal, float depth);
 
     /**
      * Récupère l'accélération de l'objet

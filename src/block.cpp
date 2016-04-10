@@ -71,7 +71,7 @@ void Block::draw(Level& level) {
     }
 }
 
-void Block::activated(Level& level, Object& object) {
+void Block::activated(Level& level, Object* object) {
     // ne rien faire si le bloc est activé.
     // Ceci est un bloc de base qui n'a pas a réagir
     // aux activations
