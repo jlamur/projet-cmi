@@ -3,8 +3,8 @@
 
 #include <unordered_map>
 #include "level.hpp"
-#include "util/widget_timer.hpp"
-#include "util/widget_selector.hpp"
+#include "widget_timer.hpp"
+#include "widget_selector.hpp"
 
 enum class DragMode {NONE, PLACE, SELECT_RECT, SELECT_BULK, CONTROL_POINT, REMOVE};
 enum class SelectionMode {REPLACE, FLIP, ADD};

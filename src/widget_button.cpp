@@ -1,4 +1,4 @@
-#include "util/widget_button.hpp"
+#include "widget_button.hpp"
 
 const unsigned int WidgetButton::ARROW_UP = 0;
 const unsigned int WidgetButton::ARROW_DOWN = 1;

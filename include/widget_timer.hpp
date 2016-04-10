@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <functional>
-#include "util/widget_button.hpp"
+#include "widget_button.hpp"
 #include "manager.hpp"
 
 /**
