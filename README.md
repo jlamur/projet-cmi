@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://cdn.rawgit.com/matteodelabre/projet-cmi/master/docs/screenshots/02.png" alt="Capture d'écran du jeu" />
+    <img src="https://cdn.rawgit.com/matteodelabre/projet-cmi/master/docs/screenshots/03.png" alt="Capture d'écran du jeu" />
     <h1>projet-cmi</h1>
 </div>
 
