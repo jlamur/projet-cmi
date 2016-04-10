@@ -43,14 +43,10 @@ public:
     sf::Font& getFont(std::string name);
 
     /**
-     * Récupère un lecteur de fichier vers le niveau donné
+     * Récupère le chemin vers le fichier du niveau portant le
+     * nom passé en argument
      */
-    std::ifstream getLevelReader(std::string name);
-
-    /**
-     * Récupère un jacob de fichier vers le niveau donné
-     */
-    std::ofstream getLevelWriter(std::string name);
+    std::string getLevelPath(std::string name);
 
     /**
      * Démarre la musique de fond donnée

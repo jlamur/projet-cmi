@@ -38,7 +38,19 @@ Level::Level(Manager& manager) : State(manager) {}
 Level::~Level() {}
 
 void Level::load(std::string filename) {
-    std::ifstream file = getResourceManager().getLevelReader(filename);
+    std::ifstream file;
+    file.open(
+        getResourceManager().getLevelPath(filename),
+        std::ios::binary | std::ios::in
+    );
+
+    // on vérifie que le fichier ait correctement été ouvert en lecture
+    if (file.fail()) {
+        throw std::runtime_error(
+            "Impossible de charger le niveau \"" + name + "\" " +
+            "(" + std::string(strerror(errno)) + ")"
+        );
+    }
 
     // vidage du niveau précédent et positionnement
     // de la caméra au centre du niveau
@@ -119,7 +131,19 @@ void Level::load(std::string filename) {
 }
 
 void Level::save(std::string filename) {
-    std::ofstream file = getResourceManager().getLevelWriter(filename);
+    std::ofstream file;
+    file.open(
+        getResourceManager().getLevelPath(filename),
+        std::ios::binary | std::ios::out
+    );
+
+    // on vérifie que le fichier ait correctement été ouvert en lecture
+    if (file.fail()) {
+        throw std::runtime_error(
+            "Impossible d'enregistrer le niveau \"" + name + "\" " +
+            "(" + std::string(strerror(errno)) + ")"
+        );
+    }
 
     // écriture de la signture du fichier ("BAR")
     char signature[3] = {'B', 'A', 'R'};

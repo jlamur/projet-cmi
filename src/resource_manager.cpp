@@ -73,40 +73,8 @@ sf::Font& ResourceManager::getFont(std::string name) {
     return *fonts[name];
 }
 
-std::ifstream ResourceManager::getLevelReader(std::string name) {
-    std::ifstream reader;
-    reader.open(
-        resources_dir + SEP + "levels" + SEP + name,
-        std::ios::binary | std::ios::in
-    );
-
-    // on vérifie que le fichier ait correctement été ouvert en lecture
-    if (reader.fail()) {
-        throw std::runtime_error(
-            "Impossible de charger le niveau \"" + name + "\" " +
-            "(" + std::string(strerror(errno)) + ")"
-        );
-    }
-
-    return reader;
-}
-
-std::ofstream ResourceManager::getLevelWriter(std::string name) {
-    std::ofstream writer;
-    writer.open(
-        resources_dir + SEP + "levels" + SEP + name,
-        std::ios::binary | std::ios::out
-    );
-
-    // on vérifie que le fichier ait correctement été ouvert en écriture
-    if (writer.fail()) {
-        throw std::runtime_error(
-            "Impossible d'écrire le niveau '" + name + "' " +
-            "(" + std::string(strerror(errno)) + ")"
-        );
-    }
-
-    return writer;
+std::string ResourceManager::getLevelPath(std::string name) {
+    return resources_dir + SEP + "levels" + SEP + name;
 }
 
 void ResourceManager::playMusic(std::string name) {
