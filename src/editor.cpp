@@ -327,8 +327,12 @@ Object::Ptr Editor::addObject(sf::Vector2f position) {
 
     // on arrondit à l'unité de grille la plus proche
     position = roundVectorToGrid(position);
-
     Object::Ptr object = widget_toolbar.createObject();
+
+    if (object == nullptr) {
+        return nullptr;
+    }
+
     object->setPosition(position);
 
     // avant d'ajouter l'objet, on vérifie qu'il ne soit

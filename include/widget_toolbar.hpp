@@ -13,7 +13,10 @@
 struct ToolbarObject {
     typedef std::shared_ptr<ToolbarObject> Ptr;
 
+    // image représentant cet objet visuellement
     sf::Sprite sprite;
+
+    // fonction appelée pour instancier un objet de ce type
     std::function<Object::Ptr(void)> create_object;
 };
 
@@ -23,13 +26,16 @@ struct ToolbarObject {
 struct ToolbarCategory {
     typedef std::shared_ptr<ToolbarCategory> Ptr;
 
+    // nom de la catégorie
     sf::String name;
+
+    // liste des objets dans la catégorie
     std::vector<ToolbarObject::Ptr> objects;
 
     /**
      * Ajoute un nouvel objet dans cette catégorie
      */
-    void addObject(
+    ToolbarObject::Ptr addObject(
         sf::Texture& texture,
         std::function<Object::Ptr(void)> create_object
     );
@@ -44,12 +50,17 @@ private:
 
     sf::RectangleShape background;
     std::vector<ToolbarCategory::Ptr> categories;
-    ToolbarObject* selected;
+    ToolbarObject::Ptr selected;
 
     /**
      * Crée un objet de type Block
      */
     Object::Ptr createBlock();
+
+    /**
+     * Crée un objet de type Block déplaçable
+     */
+    Object::Ptr createMovableBlock();
 
     /**
      * Crée un objet de type Player

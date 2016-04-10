@@ -8,12 +8,13 @@ const int PADDING = 8;
 
 ToolbarCategory::Ptr WidgetToolbar::addCategory(sf::String name) {
     auto cat = ToolbarCategory::Ptr(new ToolbarCategory);
+
     cat->name = name;
     categories.push_back(cat);
     return cat;
 }
 
-void ToolbarCategory::addObject(
+ToolbarObject::Ptr ToolbarCategory::addObject(
     sf::Texture& texture,
     std::function<Object::Ptr(void)> create_object
 ) {
@@ -22,10 +23,17 @@ void ToolbarCategory::addObject(
     object->sprite.setTexture(texture, true);
     object->create_object = create_object;
     objects.push_back(object);
+    return object;
 }
 
 Object::Ptr WidgetToolbar::createBlock() {
     return Object::Ptr(new Block);
+}
+
+Object::Ptr WidgetToolbar::createMovableBlock() {
+    Object::Ptr movable = Object::Ptr(new Block);
+    movable->setMass(2.f);
+    return movable;
 }
 
 Object::Ptr WidgetToolbar::createPlayer() {
@@ -39,17 +47,26 @@ Object::Ptr WidgetToolbar::createGravityBlock(GravityDirection direction) {
 }
 
 Object::Ptr WidgetToolbar::createObject() {
-    return selected->create_object();
+    if (selected != nullptr) {
+        return selected->create_object();
+    }
+
+    return nullptr;
 }
 
-WidgetToolbar::WidgetToolbar(Manager& manager) : manager(manager), selected(NULL) {
+WidgetToolbar::WidgetToolbar(Manager& manager) : manager(manager), selected(nullptr) {
     // catégorie des objets plaçables de base
     ResourceManager& resources = manager.getResourceManager();
     ToolbarCategory::Ptr basic_cat = addCategory("BASE");
 
-    basic_cat->addObject(
+    selected = basic_cat->addObject(
         resources.getTexture("toolbar_block.tga"),
         std::bind(&WidgetToolbar::createBlock, this)
+    );
+
+    basic_cat->addObject(
+        resources.getTexture("toolbar_movable_block.tga"),
+        std::bind(&WidgetToolbar::createMovableBlock, this)
     );
 
     basic_cat->addObject(
@@ -90,7 +107,7 @@ bool WidgetToolbar::processEvent(const sf::Event& event) {
             for (unsigned int i = 0; i < categories.size(); i++) {
                 for (unsigned int j = 0; j < categories[i]->objects.size(); j++) {
                     if (categories[i]->objects[j]->sprite.getGlobalBounds().contains(position)) {
-                        selected = categories[i]->objects[j].get();
+                        selected = categories[i]->objects[j];
                         return true;
                     }
                 }
@@ -141,7 +158,7 @@ void WidgetToolbar::draw(sf::Vector2f position, sf::Vector2f size) {
                 total_y
             );
 
-            if (selected == object.get()) {
+            if (selected == object) {
                 sf::RectangleShape selection_rectangle(sf::Vector2f(32, 32));
                 selection_rectangle.setPosition(sprite_position + sf::Vector2f(-4, -4));
                 selection_rectangle.setFillColor(sf::Color(0, 0, 0, 20));
