@@ -3,7 +3,6 @@
 #include "player.hpp"
 #include "block.hpp"
 #include "gravity_block.hpp"
-#include <iostream>
 #include <arpa/inet.h>
 #include <cstring>
 #include <queue>
@@ -349,10 +348,15 @@ const std::vector<Player::Ptr>& Level::getPlayers() const {
     return players;
 }
 
-void Level::addObject(Object::Ptr object) {
+Object::Ptr Level::addObject(Object::Ptr object) {
     // si c'est un joueur, on le met dans le tableau des joueurs
     // et on lui attribue un numéro
     if (object->getTypeId() == Player::TYPE_ID) {
+        // on n'autorise pas plus de deux joueurs
+        if (players.size() >= 2) {
+            return nullptr;
+        }
+
         Player::Ptr player = std::dynamic_pointer_cast<Player>(object);
 
         player->setPlayerNumber(players.size());
@@ -360,6 +364,7 @@ void Level::addObject(Object::Ptr object) {
     }
 
     objects.push_back(object);
+    return object;
 }
 
 void Level::removeObject(Object::Ptr object) {

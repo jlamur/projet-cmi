@@ -343,8 +343,7 @@ Object::Ptr Editor::addObject(sf::Vector2f position) {
     }
 
     if (!overlaps) {
-        Level::addObject(object);
-        return object;
+        return Level::addObject(object);
     }
 
     return nullptr;
