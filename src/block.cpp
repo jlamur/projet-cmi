@@ -73,10 +73,14 @@ void Block::draw(Level& level) {
     }
 }
 
-void Block::activated(Level& level, Object* object) {
+void Block::activate(Level& level, Object* object) {
     // ne rien faire si le bloc est activé.
     // Ceci est un bloc de base qui n'a pas a réagir
     // aux activations
+}
+
+void Block::kill(Game& game) {
+    // rien à faire de plus si le bloc a été tué
 }
 
 sf::FloatRect Block::getAABB() const {

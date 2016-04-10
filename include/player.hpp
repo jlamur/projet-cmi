@@ -57,7 +57,13 @@ public:
     /**
      * Appelé lorsque le joueur est activé par un objet
      */
-    virtual void activated(Level& level, Object* object);
+    virtual void activate(Level& level, Object* object);
+
+    /**
+     * Appelé lorsque le jouer a été tué. Si cette fonction
+     * est appelé, le joueur sera supprimé à la frame suivante
+     */
+    virtual void kill(Game& game);
 
     /**
      * Récupère l'identifiant de type des joueurs

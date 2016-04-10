@@ -35,8 +35,8 @@ std::string GravityBlock::getTexture() {
     return texture_name + ".tga";
 }
 
-void GravityBlock::activated(Level& level, Object* object) {
-    Block::activated(level, object);
+void GravityBlock::activate(Level& level, Object* object) {
+    Block::activate(level, object);
 
     // lorsque le bloc est activé, il transmet son
     // sens de gravité au niveau

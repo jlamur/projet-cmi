@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 #include "game.hpp"
 #include "player.hpp"
 #include "constants.hpp"
@@ -120,6 +121,23 @@ void Game::update() {
     std::vector<CollisionData> colliding;
     std::vector<Object::Ptr>& objects = getObjects();
 
+    // on tue les objets qui étaient déjà planifiés pour mourir
+    for (auto it = pending_kill.begin(); it != pending_kill.end(); it++) {
+        removeObject(*it);
+    }
+
+    pending_kill.empty();
+
+    // détection des objets en dehors de la zone de jeu
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        if (!isInZone(*it)) {
+            // l'objet est sorti de la zone, on le signale et on
+            // planifie sa mort à la prochaine frame
+            (*it)->kill(*this);
+            pending_kill.push_back(*it);
+        }
+    }
+
     // détection des objets en collision
     for (unsigned int i = 0; i < objects.size(); i++) {
         Object::Ptr obj_a = objects[i];
@@ -160,6 +178,27 @@ void Game::update() {
             collided.obj_b, collided.normal, collided.depth
         );
     }
+}
+
+/**
+ * Implémentation tirée de
+ * http://stackoverflow.com/a/2922778/3452708
+ */
+bool Game::isInZone(Object::Ptr object) {
+    std::vector<sf::Vector2f>& zone = getZone();
+    sf::Vector2f pos = object->getPosition();
+    unsigned int vertices = getZone().size();
+    bool result = false;
+
+    for (unsigned int i = 0, j = vertices - 1; i < vertices; j = i++) {
+        if (((zone[i].y > pos.y) != (zone[j].y > pos.y)) &&
+           (pos.x < (zone[j].x - zone[i].x) * (pos.y - zone[i].y) /
+           (zone[j].y - zone[i].y) + zone[i].x)) {
+            result = !result;
+        }
+    }
+
+    return result;
 }
 
 bool Game::getTestMode() {

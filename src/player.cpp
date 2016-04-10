@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include "game.hpp"
 #include "level.hpp"
 #include "block.hpp"
 #include "constants.hpp"
@@ -89,10 +90,14 @@ void Player::draw(Level& level) {
     level.getWindow().draw(sprite);
 }
 
-void Player::activated(Level& level, Object* object) {
+void Player::activate(Level& level, Object* object) {
     // ne rien faire si le joueur est activé.
     // en règle générale, c'est l'objet activé par le joueur
     // qui s'occupe de la réponse
+}
+
+void Player::kill(Game& game) {
+    game.setMode(Game::Mode::LOST);
 }
 
 void Player::updatePosition() {

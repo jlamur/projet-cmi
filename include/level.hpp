@@ -171,6 +171,7 @@ public:
      * Supprime l'objet donné
      */
     void removeObject(Object::Ptr object);
+    void removeObject(Object* object);
 
     /**
      * Récupère la zone du niveau

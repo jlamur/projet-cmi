@@ -58,7 +58,13 @@ public:
     /**
      * Appelé lorsque le bloc est activé par un objet
      */
-    virtual void activated(Level& level, Object* object);
+    virtual void activate(Level& level, Object* object);
+
+    /**
+     * Appelé lorsque le bloc a été tué. Si cette fonction
+     * est appelé, le bloc sera supprimé à la frame suivante
+     */
+    virtual void kill(Game& game);
 
     /**
      * Récupère l'identifiant de type des blocs

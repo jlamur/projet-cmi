@@ -9,6 +9,7 @@
 #include "resource_manager.hpp"
 
 class Level;
+class Game;
 
 class Object {
 public:
@@ -78,7 +79,13 @@ public:
     /**
      * Appelé lorsque l'objet est activé par un autre
      */
-    virtual void activated(Level& level, Object* object) = 0;
+    virtual void activate(Level& level, Object* object) = 0;
+
+    /**
+     * Appelé lorsque l'objet a été tué. Si cette fonction
+     * est appelé, l'objet sera supprimé à la frame suivante
+     */
+    virtual void kill(Game& game) = 0;
 
     /**
      * Récupère l'identifiant de type de cet objet

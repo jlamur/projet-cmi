@@ -18,6 +18,8 @@ public:
 private:
     WidgetTimer widget_timer;
     sf::Time next_frame_time;
+    std::vector<Object::Ptr> pending_kill;
+
     bool test_mode;
     std::shared_ptr<Editor> return_state;
     Mode mode;
@@ -27,6 +29,12 @@ private:
      * qu'ils s'adaptent au nouvel état
      */
     void update();
+
+    /**
+     * Vérifie si l'objet donné se trouve dans
+     * la zone de jeu ou non
+     */
+    bool isInZone(Object::Ptr object);
 
 protected:
     /**
