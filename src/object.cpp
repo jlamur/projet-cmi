@@ -5,11 +5,17 @@
 #include <cmath>
 
 const unsigned int Object::PROP_MASS = 1;
+const float DEFAULT_MASS = 1.f;
 const unsigned int Object::PROP_CHARGE = 2;
+const float DEFAULT_CHARGE = 0.f;
 const unsigned int Object::PROP_RESTITUTION = 3;
+const float DEFAULT_RESTITUTION = 0.4f;
 const unsigned int Object::PROP_STATIC_FRICTION = 4;
+const float DEFAULT_STATIC_FRICTION = 0.4f;
 const unsigned int Object::PROP_DYNAMIC_FRICTION = 5;
+const float DEFAULT_DYNAMIC_FRICTION = 0.2f;
 const unsigned int Object::PROP_LAYER = 6;
+const int DEFAULT_LAYER = 0;
 
 Object::Object() :
     acceleration(0, 0), velocity(0, 0), position(0, 0),
@@ -17,11 +23,12 @@ Object::Object() :
 
     // valeurs par défaut pour les propriétés
     // de tous les objets du jeu
-    mass(1.f), charge(0.f),
-    restitution(0.4f),
-    static_friction(0.4f),
-    dynamic_friction(0.2f),
-    layer(0) {}
+    mass(DEFAULT_MASS),
+    charge(DEFAULT_CHARGE),
+    restitution(DEFAULT_RESTITUTION),
+    static_friction(DEFAULT_STATIC_FRICTION),
+    dynamic_friction(DEFAULT_DYNAMIC_FRICTION),
+    layer(DEFAULT_LAYER) {}
 
 Object::~Object() {}
 
@@ -29,8 +36,8 @@ void Object::load(std::ifstream& file, ObjectPtr object) {
     // lecture de la position de l'objet
     float pos_x, pos_y;
 
-    file.read(reinterpret_cast<char*>(&pos_x), sizeof(pos_x));
-    file.read(reinterpret_cast<char*>(&pos_y), sizeof(pos_y));
+    file.read(reinterpret_cast<char*>(&pos_x), 4);
+    file.read(reinterpret_cast<char*>(&pos_y), 4);
 
     object->setPosition(sf::Vector2f(
         pos_x * Constants::GRID, pos_y * Constants::GRID
@@ -43,31 +50,31 @@ void Object::load(std::ifstream& file, ObjectPtr object) {
         switch (prop_type) {
         case Object::PROP_MASS:
             float mass;
-            file.read(reinterpret_cast<char*>(&mass), sizeof(mass));
+            file.read(reinterpret_cast<char*>(&mass), 4);
             object->setMass(mass);
             break;
 
         case Object::PROP_CHARGE:
             float charge;
-            file.read(reinterpret_cast<char*>(&charge), sizeof(charge));
+            file.read(reinterpret_cast<char*>(&charge), 4);
             object->setCharge(charge);
             break;
 
         case Object::PROP_RESTITUTION:
             float restitution;
-            file.read(reinterpret_cast<char*>(&restitution), sizeof(restitution));
+            file.read(reinterpret_cast<char*>(&restitution), 4);
             object->setRestitution(restitution);
             break;
 
         case Object::PROP_STATIC_FRICTION:
             float static_friction;
-            file.read(reinterpret_cast<char*>(&static_friction), sizeof(static_friction));
+            file.read(reinterpret_cast<char*>(&static_friction), 4);
             object->setStaticFriction(static_friction);
             break;
 
         case Object::PROP_DYNAMIC_FRICTION:
             float dynamic_friction;
-            file.read(reinterpret_cast<char*>(&dynamic_friction), sizeof(dynamic_friction));
+            file.read(reinterpret_cast<char*>(&dynamic_friction), 4);
             object->setDynamicFriction(dynamic_friction);
             break;
 
@@ -84,6 +91,60 @@ void Object::load(std::ifstream& file, ObjectPtr object) {
             return;
         }
     }
+}
+
+void Object::save(std::ofstream& file) const {
+    // écriture de la position de l'objet
+    float pos_x = getPosition().x / Constants::GRID;
+    float pos_y = getPosition().y / Constants::GRID;
+
+    file.write(reinterpret_cast<const char*>(&pos_x), 4);
+    file.write(reinterpret_cast<const char*>(&pos_y), 4);
+
+    // écriture des propriétés facultatives si nécessaire
+    char prop_type;
+
+    if (mass != DEFAULT_MASS) {
+        prop_type = Object::PROP_MASS;
+        file.write(&prop_type, 1);
+        file.write(reinterpret_cast<const char*>(&mass), 4);
+    }
+
+    if (charge != DEFAULT_CHARGE) {
+        prop_type = Object::PROP_CHARGE;
+        file.write(&prop_type, 1);
+        file.write(reinterpret_cast<const char*>(&charge), 4);
+    }
+
+    if (restitution != DEFAULT_RESTITUTION) {
+        prop_type = Object::PROP_RESTITUTION;
+        file.write(&prop_type, 1);
+        file.write(reinterpret_cast<const char*>(&restitution), 4);
+    }
+
+    if (static_friction != DEFAULT_STATIC_FRICTION) {
+        prop_type = Object::PROP_STATIC_FRICTION;
+        file.write(&prop_type, 1);
+        file.write(reinterpret_cast<const char*>(&static_friction), 4);
+    }
+
+    if (dynamic_friction != DEFAULT_DYNAMIC_FRICTION) {
+        prop_type = Object::PROP_DYNAMIC_FRICTION;
+        file.write(&prop_type, 1);
+        file.write(reinterpret_cast<const char*>(&dynamic_friction), 4);
+    }
+
+    if (layer != DEFAULT_LAYER) {
+        prop_type = Object::PROP_LAYER;
+        file.write(&prop_type, 1);
+        
+        char write_layer = layer + 127;
+        file.write(&write_layer, 1);
+    }
+
+    // on termine par un octet nul pour signaler la fin
+    char null_byte = 0;
+    file.write(&null_byte, 1);
 }
 
 sf::Vector2f Object::getForces(const Level& level) const {

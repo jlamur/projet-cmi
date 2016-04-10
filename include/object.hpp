@@ -90,6 +90,11 @@ public:
     static void load(std::ifstream& file, ObjectPtr object);
 
     /**
+     * Sauvegarde cet objet dans le fichier donné
+     */
+    virtual void save(std::ofstream& file) const = 0;
+
+    /**
      * Met à jour la vitesse de l'objet selon les
      * forces qui lui sont appliquées
      */

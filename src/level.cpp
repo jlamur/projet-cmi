@@ -20,6 +20,11 @@ const float GRAVITY = 235;
 const float MOVE = 200;
 
 /**
+ * Numéro actuel de version du format de fichier
+ */
+const unsigned int VERSION_NUMBER = 0;
+
+/**
  * Dictionnaire associant les types d'objets
  * à des instances qui seront utilisées pour la
  * construction d'autres objets de ces types
@@ -33,8 +38,8 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
 Level::Level(Manager& manager) : State(manager) {}
 Level::~Level() {}
 
-void Level::load(std::string name) {
-    std::ifstream file = getResourceManager().getLevelReader(name);
+void Level::load(std::string filename) {
+    std::ifstream file = getResourceManager().getLevelReader(filename);
 
     // vidage du niveau précédent et positionnement
     // de la caméra au centre du niveau
@@ -43,9 +48,9 @@ void Level::load(std::string name) {
 
     // lecture de la signture du fichier ("BAR")
     char signature[3];
-    file.read(signature, sizeof(signature));
+    file.read(signature, 3);
 
-    if (strncmp(signature, "BAR", sizeof(signature)) != 0) {
+    if (strncmp(signature, "BAR", 3) != 0) {
         throw std::runtime_error(
             "Impossible de lire le fichier : en-tête invalide"
         );
@@ -55,7 +60,7 @@ void Level::load(std::string name) {
     char file_version;
     file.read(&file_version, 1);
 
-    if (file_version != 0) {
+    if (file_version != VERSION_NUMBER) {
         throw std::runtime_error(
             "Impossible de lire le fichier : version non prise en charge"
         );
@@ -67,7 +72,7 @@ void Level::load(std::string name) {
     name = sf::String(std_name);
 
     // lecture du temps total du niveau
-    file.read(reinterpret_cast<char*>(&total_time), sizeof(total_time));
+    file.read(reinterpret_cast<char*>(&total_time), 4);
     total_time = ntohl(total_time);
 
     // lecture de la zone de jeu
@@ -78,8 +83,8 @@ void Level::load(std::string name) {
     for (int i = 0; i < control_points; i++) {
         float pos_x, pos_y;
 
-        file.read(reinterpret_cast<char*>(&pos_x), sizeof(pos_x));
-        file.read(reinterpret_cast<char*>(&pos_y), sizeof(pos_y));
+        file.read(reinterpret_cast<char*>(&pos_x), 4);
+        file.read(reinterpret_cast<char*>(&pos_y), 4);
 
         pos_x *= Constants::GRID;
         pos_y *= Constants::GRID;
@@ -88,50 +93,95 @@ void Level::load(std::string name) {
     }
 
     // lecture des chemins de la musique et du fond
-    std::string background_name;
+    std::getline(file, music, '\0');
+    std::getline(file, background, '\0');
 
-    std::getline(file, music_name, '\0');
-    std::getline(file, background_name, '\0');
-    background.setTexture(getResourceManager().getTexture(background_name));
+    // lecture des objets
+    int object_count;
 
-    // lecture du nombre de blocs
-    int block_count;
+    file.read(reinterpret_cast<char*>(&object_count), 4);
+    object_count = ntohl(object_count);
 
-    file.read(reinterpret_cast<char*>(&block_count), sizeof(block_count));
-    block_count = ntohl(block_count);
-
-    for (int i = 0; i < block_count; i++) {
-        char block_type;
-        file.read(&block_type, 1);
+    for (int i = 0; i < object_count; i++) {
+        char object_type;
+        file.read(&object_type, 1);
 
         // vérifie que le type est pris en charge
         // pour éviter une erreur de segmentation
-        if (object_type_map.count(block_type) == 0) {
+        if (object_type_map.count(object_type) == 0) {
             throw std::runtime_error(
                 "Impossible de lire le fichier : type d'objet inconnu"
             );
         }
 
-        objects.push_back(object_type_map[block_type](file));
+        // lecture de l'objet
+        objects.push_back(object_type_map[object_type](file));
     }
 }
 
-void Level::save(std::string name) {
-    std::ofstream file = getResourceManager().getLevelWriter(name);
+void Level::save(std::string filename) {
+    std::ofstream file = getResourceManager().getLevelWriter(filename);
 
-    // TODO: faire une fonction d'enregistrement
+    // écriture de la signture du fichier ("BAR")
+    char signature[3] = {'B', 'A', 'R'};
+    file.write(signature, 3);
+
+    // écriture de la version du fichier
+    char file_version = VERSION_NUMBER;
+    file.write(&file_version, 1);
+
+    // écriture du nom du niveau
+    char *write_name = (char*) name.toAnsiString().data();
+    file.write(write_name, name.getSize() + 1);
+
+    // écriture du temps total du niveau
+    int conv_total_time = htonl(total_time);
+    file.write(reinterpret_cast<char*>(&conv_total_time), 4);
+
+    // écriture de la zone de jeu
+    char control_points = (char) zone.size();
+    file.write(&control_points, 1);
+
+    for (int i = 0; i < control_points; i++) {
+        float pos_x = std::get<0>(zone[i]) / Constants::GRID;
+        float pos_y = std::get<1>(zone[i]) / Constants::GRID;
+
+        file.write(reinterpret_cast<char*>(&pos_x), 4);
+        file.write(reinterpret_cast<char*>(&pos_y), 4);
+    }
+
+    // écriture des noms de la musique et du fond
+    char *write_music = (char*) music.data();
+    file.write(write_music, music.size() + 1);
+
+    char *write_background = (char*) background.data();
+    file.write(write_background, background.size() + 1);
+
+    // écriture des objets
+    int object_count = htonl(objects.size());
+    file.write(reinterpret_cast<char*>(&object_count), 4);
+
+    for (unsigned int i = 0; i < objects.size(); i++) {
+        char object_type = objects[i]->getTypeId();
+        file.write(&object_type, 1);
+
+        // écriture de l'objet
+        objects[i]->save(file);
+    }
 }
 
 void Level::begin() {
     // TODO: ceci ne devrait pas être là
     // (imaginons que l'on quitte et revienne à un niveau)
+    // (il faudra réfléchir à abandonner le concept de ::begin())
+
     camera = getWindow().getDefaultView();
     camera.setCenter(0, 0);
     camera_angle = 180.f;
     gravity_direction = GravityDirection::SOUTH;
 
-    if (music_name != "") {
-        getResourceManager().playMusic(music_name);
+    if (music != "") {
+        getResourceManager().playMusic(music);
     } else {
         getResourceManager().stopMusic();
     }
@@ -164,7 +214,12 @@ void Level::draw() {
 
     // efface la scène précédente et dessine la couche de fond
     window.clear(sf::Color(66, 165, 245));
-    window.draw(background);
+
+    if (background != "") {
+        background_sprite.setTexture(getResourceManager().getTexture(background));
+    }
+
+    window.draw(background_sprite);
 
     // chargement de la file d'affichage des objets
     std::priority_queue<ObjectPtr, std::vector<ObjectPtr>, ObjectCompare> display_queue;
@@ -203,11 +258,19 @@ void Level::setTotalTime(int set_total_time) {
     total_time = set_total_time;
 }
 
-sf::Sprite Level::getBackground() const {
+std::string Level::getMusic() const {
+    return music;
+}
+
+void Level::setMusic(std::string set_music) {
+    music = set_music;
+}
+
+std::string Level::getBackground() const {
     return background;
 }
 
-void Level::setBackground(sf::Sprite set_background) {
+void Level::setBackground(std::string set_background) {
     background = set_background;
 }
 

@@ -64,6 +64,11 @@ public:
      * Chargement du bloc depuis le fichier donné
      */
     static ObjectPtr load(std::ifstream& file);
+
+    /**
+     * Sauvegarde le bloc dans le fichier donné
+     */
+    virtual void save(std::ofstream& file) const;
 };
 
 #endif

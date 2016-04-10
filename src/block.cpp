@@ -32,6 +32,11 @@ ObjectPtr Block::load(std::ifstream& file) {
     return object;
 }
 
+void Block::save(std::ofstream& file) const {
+    // écriture des propriétés communes
+    Object::save(file);
+}
+
 void Block::beforeDraw(Level& level) {
     // texturage et coloration du bloc selon ses propriétés
     sprite.setTexture(

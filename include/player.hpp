@@ -65,6 +65,11 @@ public:
     static ObjectPtr load(std::ifstream& file);
 
     /**
+     * Sauvegarde le joueur dans le fichier donné
+     */
+    virtual void save(std::ofstream& file) const;
+
+    /**
      * Met à jour la position de l'objet selon sa
      * vitesse actuelle
      */

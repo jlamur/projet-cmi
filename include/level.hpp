@@ -24,8 +24,10 @@ private:
 
     sf::String name;
     int total_time;
-    sf::Sprite background;
-    std::string music_name;
+
+    sf::Sprite background_sprite;
+    std::string background;
+    std::string music;
 
     std::vector<ObjectPtr> objects;
     std::vector<std::pair<float, float>> zone;
@@ -56,12 +58,12 @@ public:
     /**
      * Charge un niveau de jeu avec le nom donné
      */
-    virtual void load(std::string name);
+    virtual void load(std::string filename);
 
     /**
      * Sauvegarde la configuration actuelle dans le niveau donné
      */
-    virtual void save(std::string name);
+    virtual void save(std::string filename);
 
     /**
      * Appelé par le manager lorsque l'état est utilisé
@@ -94,14 +96,24 @@ public:
     void setTotalTime(int set_total_time);
 
     /**
+     * Récupère la musique du niveau
+     */
+    std::string getMusic() const;
+
+    /**
+     * Modifie la musique du niveau
+     */
+    void setMusic(std::string set_music);
+
+    /**
      * Récupère le fond du niveau
      */
-    sf::Sprite getBackground() const;
+    std::string getBackground() const;
 
     /**
      * Modifie le fond du niveau
      */
-    void setBackground(sf::Sprite set_background);
+    void setBackground(std::string set_background);
 
     /**
      * Calcule le vecteur gravité en fonction de la direction de la gravité

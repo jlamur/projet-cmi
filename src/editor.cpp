@@ -385,6 +385,7 @@ void Editor::test() {
     game->setName(getName());
     game->setTotalTime(getTotalTime());
     game->setBackground(getBackground());
+    game->setMusic(getMusic());
 
     // copie des objets du niveau vers le jeu
     std::vector<ObjectPtr>& objects = getObjects();

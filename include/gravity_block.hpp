@@ -43,6 +43,11 @@ public:
     static ObjectPtr load(std::ifstream& file);
 
     /**
+     * Sauvegarde le bloc de gravité dans le fichier donné
+     */
+    virtual void save(std::ofstream& file) const;
+
+    /**
      * Récupère la direction de gravité du bloc changeur de gravité
      */
     GravityDirection getGravityDirection() const;

@@ -52,19 +52,27 @@ unsigned int GravityBlock::getTypeId() const {
 }
 
 ObjectPtr GravityBlock::load(std::ifstream& file) {
-    ObjectPtr object = ObjectPtr(new GravityBlock);
-    std::shared_ptr<GravityBlock> block = std::dynamic_pointer_cast<GravityBlock>(object);
-
     // lecture de la direction de la gravité
     char gravity_direction;
     file.read(&gravity_direction, 1);
+
+    // lecture des propriétés d'un bloc
+    ObjectPtr object = Block::load(file);
+    std::shared_ptr<GravityBlock> block = std::dynamic_pointer_cast<GravityBlock>(object);
+
+    // attribution de la direction
     block->setGravityDirection((GravityDirection) gravity_direction);
 
-    // lecture des propriétés communes des objets
-    Object::load(file, object);
-    file.seekg(1, file.cur);
-
     return object;
+}
+
+void GravityBlock::save(std::ofstream& file) const {
+    // écriture de la direction de la gravité
+    char write_gravity_direction = (char) gravity_direction;
+    file.write(&write_gravity_direction, 1);
+
+    // écriture des propriétés d'un bloc
+    Block::save(file);
 }
 
 GravityDirection GravityBlock::getGravityDirection() const {

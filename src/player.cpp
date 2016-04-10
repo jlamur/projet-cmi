@@ -34,6 +34,15 @@ ObjectPtr Player::load(std::ifstream& file) {
     return object;
 }
 
+void Player::save(std::ofstream& file) const {
+    // écriture du numéro de joueur
+    char write_player_number = player_number;
+    file.write(&write_player_number, 1);
+
+    // écriture des propriétés communes
+    Object::save(file);
+}
+
 sf::Vector2f Player::getForces(const Level& level) const {
     sf::Vector2f forces = Object::getForces(level);
 
