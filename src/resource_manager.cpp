@@ -32,6 +32,7 @@ void ResourceManager::preload() {
             std::string name = it->path().filename().string();
 
             auto texture = std::unique_ptr<sf::Texture>(new sf::Texture);
+            texture->setSmooth(true);
             std::cout << "Chargement de la texture " << name << "... ";
 
             if (!texture->loadFromFile(full_path)) {
