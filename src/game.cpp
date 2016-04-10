@@ -75,6 +75,10 @@ void Game::draw() {
     // dessin des objets du niveau
     Level::draw();
 
+    // on passe au dessin d'éléments d'interface.
+    // Changement de vue sur la vue par défaut
+    getManager().resetDefaultView();
+
     // dessin du timer
     widget_timer.setTimeLeft(getTotalTime());
     widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));

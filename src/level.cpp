@@ -7,7 +7,6 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <queue>
-#include <utility>
 
 /**
  * Constante de gravité
@@ -89,7 +88,7 @@ void Level::load(std::string filename) {
         pos_x *= Constants::GRID;
         pos_y *= Constants::GRID;
 
-        zone.push_back(std::make_pair(pos_x, pos_y));
+        zone.push_back(sf::Vector2f(pos_x, pos_y));
     }
 
     // lecture des chemins de la musique et du fond
@@ -143,8 +142,8 @@ void Level::save(std::string filename) {
     file.write(&control_points, 1);
 
     for (int i = 0; i < control_points; i++) {
-        float pos_x = std::get<0>(zone[i]) / Constants::GRID;
-        float pos_y = std::get<1>(zone[i]) / Constants::GRID;
+        float pos_x = zone[i].x / Constants::GRID;
+        float pos_y = zone[i].y / Constants::GRID;
 
         file.write(reinterpret_cast<char*>(&pos_x), 4);
         file.write(reinterpret_cast<char*>(&pos_y), 4);
@@ -233,9 +232,6 @@ void Level::draw() {
         display_queue.top()->draw(*this);
         display_queue.pop();
     }
-
-    // passage sur la vue par défaut
-    getManager().resetDefaultView();
 }
 
 sf::String Level::getName() const {
@@ -330,11 +326,11 @@ const std::vector<Object::Ptr>& Level::getObjects() const {
     return objects;
 }
 
-std::vector<std::pair<float, float>>& Level::getZone() {
+std::vector<sf::Vector2f>& Level::getZone() {
     return zone;
 }
 
-const std::vector<std::pair<float, float>>& Level::getZone() const {
+const std::vector<sf::Vector2f>& Level::getZone() const {
     return zone;
 }
 

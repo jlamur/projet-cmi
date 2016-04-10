@@ -7,12 +7,27 @@
 
 const sf::Color SELECT_RECT_COLOR = sf::Color(33, 33, 33, 40);
 const sf::Color SELECT_RECT_BORDER_COLOR = sf::Color(33, 33, 33, 127);
+const sf::Color ZONE_POINT_COLOR = sf::Color(140, 15, 15, 255);
+const sf::Color ZONE_BORDER_COLOR = sf::Color(200, 15, 15, 255);
 
 const float WHEEL_SCROLL_SPEED = -7.f;
 const float POINTER_SCROLL_SPEED = 5.f;
 const int POINTER_SCROLL_PADDING = 10;
 
-Editor::Editor(Manager& manager) : Level(manager), drag_mode(DragMode::NONE),
+/**
+ * Arrondit le vecteur donné à une position
+ * sur la grille
+ */
+inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
+    input /= Constants::GRID;
+    input.x = round(input.x);
+    input.y = round(input.y);
+    input *= Constants::GRID;
+    return input;
+}
+
+Editor::Editor(Manager& manager) : Level(manager),
+    drag_control_point(0), drag_mode(DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
     widget_selector(manager) {
 
@@ -61,15 +76,27 @@ void Editor::processEvent(const sf::Event& event) {
         Object::Ptr pointed_object = getObject(position);
 
         if (event.mouseButton.button == sf::Mouse::Left) {
+            std::vector<sf::Vector2f>& zone = getZone();
+
+            for (unsigned int i = 0; i < zone.size(); i++) {
+                // clic sur un point de contrôle : déplacement du point
+                if (zone_control_points[i].getGlobalBounds().contains(position)) {
+                    drag_control_point = i;
+                    drag_mode = DragMode::CONTROL_POINT;
+                    return;
+                }
+            }
+
             // clic + shift : sélection par rectangle de sélection
             if (getManager().isKeyPressed(Manager::Modifier::SHIFT)) {
                 drag_start = mouse_position;
                 drag_end = mouse_position;
                 drag_mode = DragMode::SELECT_RECT;
+                return;
             }
 
             // clic sur un objet : démarrage de la sélection libre
-            else if (pointed_object != nullptr) {
+            if (pointed_object != nullptr) {
                 if (getManager().isKeyPressed(Manager::Modifier::CONTROL)) {
                     drag_start = mouse_position;
                     drag_end = mouse_position;
@@ -79,16 +106,16 @@ void Editor::processEvent(const sf::Event& event) {
                 } else {
                     select(pointed_object, SelectionMode::FLIP);
                 }
+
+                return;
             }
 
             // clic gauche dans le vide : démarrage du placement en drag&drop
-            else {
-                drag_start = mouse_position;
-                drag_end = mouse_position;
-                drag_mode = DragMode::PLACE;
+            drag_start = mouse_position;
+            drag_end = mouse_position;
+            drag_mode = DragMode::PLACE;
 
-                select(addObject(position), SelectionMode::REPLACE);
-            }
+            select(addObject(position), SelectionMode::REPLACE);
         }
 
         if (event.mouseButton.button == sf::Mouse::Right) {
@@ -99,6 +126,7 @@ void Editor::processEvent(const sf::Event& event) {
                 drag_mode = DragMode::REMOVE;
 
                 removeObject(pointed_object);
+                return;
             }
         }
     }
@@ -110,6 +138,12 @@ void Editor::processEvent(const sf::Event& event) {
         Object::Ptr pointed_object = getObject(position);
 
         drag_end = mouse_position;
+
+        // mode déplacement de point de contrôle
+        if (drag_mode == DragMode::CONTROL_POINT) {
+            std::vector<sf::Vector2f>& zone = getZone();
+            zone[drag_control_point] = roundVectorToGrid(position);
+        }
 
         // mode placement d'objets
         if (drag_mode == DragMode::PLACE && pointed_object == nullptr) {
@@ -125,6 +159,8 @@ void Editor::processEvent(const sf::Event& event) {
         if (drag_mode == DragMode::SELECT_BULK) {
             select(position, SelectionMode::ADD);
         }
+
+        return;
     }
 
     // lorsqu'on relâche un clic dans l'éditeur
@@ -132,6 +168,7 @@ void Editor::processEvent(const sf::Event& event) {
         // mode sélection rectangulaire : on applique la sélection
         if (drag_mode == DragMode::SELECT_RECT) {
             select(pixelToCoords(drag_start), pixelToCoords(drag_end));
+            return;
         }
 
         drag_mode = DragMode::NONE;
@@ -156,6 +193,7 @@ void Editor::processEvent(const sf::Event& event) {
         }
 
         setCamera(camera);
+        return;
     }
 
     // gestion des touches
@@ -219,6 +257,33 @@ void Editor::draw() {
     // dessin des objets du niveau
     Level::draw();
 
+    // dessin de la zone de jeu
+    const std::vector<sf::Vector2f>& zone = getZone();
+    sf::VertexArray zone_points(sf::LinesStrip);
+    zone_control_points.clear();
+
+    for (unsigned int i = 0; i < zone.size() + 1; i++) {
+        sf::CircleShape control_point(5);
+        sf::Vector2f position = zone[i % zone.size()];
+
+        control_point.setOrigin(sf::Vector2f(5, 5));
+        control_point.setFillColor(ZONE_POINT_COLOR);
+        control_point.setPosition(position);
+
+        zone_points.append(sf::Vertex(position, ZONE_BORDER_COLOR));
+        zone_control_points.push_back(control_point);
+    }
+
+    window.draw(zone_points);
+
+    for (unsigned int i = 0; i < zone.size(); i++) {
+        window.draw(zone_control_points[i]);
+    }
+
+    // on passe au dessin d'éléments d'interface.
+    // Changement de vue sur la vue par défaut
+    getManager().resetDefaultView();
+
     // dessin du rectangle de sélection
     if (drag_mode == DragMode::SELECT_RECT) {
         sf::Vector2f size = (sf::Vector2f) (drag_end - drag_start);
@@ -260,10 +325,7 @@ Object::Ptr Editor::addObject(sf::Vector2f position) {
     std::vector<Object::Ptr>& objects = getObjects();
 
     // on arrondit à l'unité de grille la plus proche
-    position /= Constants::GRID;
-    position.x = round(position.x);
-    position.y = round(position.y);
-    position *= Constants::GRID;
+    position = roundVectorToGrid(position);
 
     // TODO: ajouter un objet du type choisi, pas uniquement de bloc
     Object::Ptr object = Object::Ptr(new Block);
@@ -395,7 +457,7 @@ void Editor::test() {
     }
 
     // copie de la zone de jeu
-    std::vector<std::pair<float, float>>& zone = getZone();
+    std::vector<sf::Vector2f>& zone = getZone();
 
     for (unsigned int i = 0; i < zone.size(); i++) {
         game->getZone().push_back(zone[i]);

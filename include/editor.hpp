@@ -6,7 +6,7 @@
 #include "util/widget_timer.hpp"
 #include "util/widget_selector.hpp"
 
-enum class DragMode {NONE, PLACE, SELECT_RECT, SELECT_BULK, REMOVE};
+enum class DragMode {NONE, PLACE, SELECT_RECT, SELECT_BULK, CONTROL_POINT, REMOVE};
 enum class SelectionMode {REPLACE, FLIP, ADD};
 
 /**
@@ -16,8 +16,12 @@ enum class SelectionMode {REPLACE, FLIP, ADD};
 class Editor : public Level {
 private:
     std::vector<Object::Ptr> selection;
+    std::vector<sf::CircleShape> zone_control_points;
+
     sf::Vector2i drag_start;
     sf::Vector2i drag_end;
+    int drag_control_point;
+
     DragMode drag_mode;
 
     WidgetTimer widget_timer;

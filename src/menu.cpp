@@ -1,3 +1,6 @@
+////////////////////////
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NE PAS COMMITTER AVEC CHGTS
+
 #include "menu.hpp"
 #include "editor.hpp"
 #include "game.hpp"
@@ -181,6 +184,7 @@ void Menu::loadRules() {
 
 void Menu::launchEditor() {
     std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(getManager()));
+    editor->load("level1.dat");
     getManager().setState(editor);
 }
 

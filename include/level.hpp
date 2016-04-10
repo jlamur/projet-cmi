@@ -30,7 +30,7 @@ private:
     std::string music;
 
     std::vector<Object::Ptr> objects;
-    std::vector<std::pair<float, float>> zone;
+    std::vector<sf::Vector2f> zone;
 
 protected:
 
@@ -153,12 +153,12 @@ public:
     /**
      * Récupère la zone du niveau
      */
-    std::vector<std::pair<float, float>>& getZone();
+    std::vector<sf::Vector2f>& getZone();
 
     /**
      * Récupère la zone du niveau (version constante)
      */
-    const std::vector<std::pair<float, float>>& getZone() const;
+    const std::vector<sf::Vector2f>& getZone() const;
 
     /**
      * Récupère la caméra actuelle
