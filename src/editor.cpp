@@ -10,10 +10,7 @@ const sf::Color SELECT_RECT_BORDER_COLOR = sf::Color(33, 33, 33, 127);
 
 const float WHEEL_SCROLL_SPEED = -7.f;
 const float POINTER_SCROLL_SPEED = 5.f;
-const float POINTER_SCROLL_MAX_SPEED = 10.f;
-const float POINTER_SCROLL_STEP = 64.f;
-const float ASSUME_TITLEBAR = 32.f;
-const int POINTER_SCROLL_PADDING = 5;
+const int POINTER_SCROLL_PADDING = 10;
 
 Editor::Editor(Manager& manager) : Level(manager), drag_mode(DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
@@ -205,31 +202,16 @@ void Editor::draw() {
         sf::View camera = getCamera();
         sf::Vector2i mouse = sf::Mouse::getPosition(window);
 
-        sf::Vector2f change;
-        float absolute_diff;
-
         // détection du dépassement sur un des 4 bords
-        if (mouse.x < POINTER_SCROLL_PADDING) {
-            absolute_diff = POINTER_SCROLL_PADDING - mouse.x;
-            change = sf::Vector2f(-POINTER_SCROLL_SPEED, 0);
-        } else if (mouse.x > window_size.x - POINTER_SCROLL_PADDING) {
-            absolute_diff = mouse.x - window_size.x + POINTER_SCROLL_PADDING;
-            change = sf::Vector2f(POINTER_SCROLL_SPEED, 0);
-        } else if (mouse.y < POINTER_SCROLL_PADDING) {
-            // on évite de scroller sur la barre de titre (c'est chiant)
-            if (mouse.y >= 0 || mouse.y < -ASSUME_TITLEBAR) {
-                absolute_diff = POINTER_SCROLL_PADDING - mouse.y;
-                change = sf::Vector2f(0, -POINTER_SCROLL_SPEED);
-            }
-        } else if (mouse.y > window_size.y - POINTER_SCROLL_PADDING) {
-            absolute_diff = mouse.y - window_size.y + POINTER_SCROLL_PADDING;
-            change = sf::Vector2f(0, POINTER_SCROLL_SPEED);
+        if (mouse.x < POINTER_SCROLL_PADDING && mouse.x >= -POINTER_SCROLL_PADDING) {
+            camera.move(sf::Vector2f(-POINTER_SCROLL_SPEED, 0));
+        } else if (mouse.x >= window_size.x - POINTER_SCROLL_PADDING && mouse.x < window_size.x + POINTER_SCROLL_PADDING) {
+            camera.move(sf::Vector2f(POINTER_SCROLL_SPEED, 0));
+        } else if (mouse.y < POINTER_SCROLL_PADDING && mouse.y >= -POINTER_SCROLL_PADDING) {
+            camera.move(sf::Vector2f(0, -POINTER_SCROLL_SPEED));
+        } else if (mouse.y >= window_size.y - POINTER_SCROLL_PADDING && mouse.y < window_size.y + POINTER_SCROLL_PADDING) {
+            camera.move(sf::Vector2f(0, POINTER_SCROLL_SPEED));
         }
-
-        camera.move(change * std::min(
-            1 + absolute_diff / POINTER_SCROLL_STEP,
-            POINTER_SCROLL_MAX_SPEED
-        ));
 
         setCamera(camera);
     }
