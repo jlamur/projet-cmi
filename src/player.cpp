@@ -9,8 +9,6 @@ const unsigned int Player::TYPE_ID = 1;
 Player::Player() : Object() {
     // déplacement de l'origine au centre de la balle
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
-    sprite.setRadius(getRadius());
-    sprite.setOutlineColor(sf::Color::Black);
     sprite.setOutlineThickness(1.5f);
 }
 
@@ -65,21 +63,24 @@ sf::Vector2f Player::getForces(const Level& level) const {
 
 void Player::draw(Level& level) {
     // utilisation de la texture
+    sprite.setRadius(getRadius());
 	sprite.setTexture(
         &level.getResourceManager().getTexture("player.tga")
     );
 
     // si le joueur est sélectionné, on met sa bordure en rouge
-    // if (isSelected()) {
-    //     sprite.setColor(sf::Color(255, 0, 0));
-    // } else {
+    if (isSelected()) {
+        sprite.setOutlineColor(sf::Color(255, 0, 0));
+    } else {
+        sprite.setOutlineColor(sf::Color::Black);
+
         // coloration du joueur en fonction de son numéro
         if (getPlayerNumber() == 0) {
             sprite.setFillColor(sf::Color(239, 83, 80));
         } else if (getPlayerNumber() == 1) {
             sprite.setFillColor(sf::Color(92, 107, 192));
         }
-    // }
+    }
 
     // déplacement du sprite à la position de la balle
     sprite.setPosition(getPosition());
@@ -100,12 +101,12 @@ void Player::updatePosition() {
     sprite.rotate((getPosition() - last_position).x * 3.f);
 }
 
-std::unique_ptr<sf::FloatRect> Player::getAABB() const {
-    return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
+sf::FloatRect Player::getAABB() const {
+    return sf::FloatRect(
         getPosition().x - getRadius(),
         getPosition().y - getRadius(),
         2 * getRadius(), 2 * getRadius()
-    ));
+    );
 }
 
 float Player::getRadius() const {

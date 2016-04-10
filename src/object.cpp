@@ -147,7 +147,7 @@ bool Object::detectCollision(const Object& obj, CollisionData& data) const {
 
     // si les deux boîtes englobantes des deux objets ne
     // s'intersectent pas, il ne risque pas d'y avoir de collision
-    if (!getAABB()->intersects(*obj.getAABB())) {
+    if (!getAABB().intersects(obj.getAABB())) {
         return false;
     }
 

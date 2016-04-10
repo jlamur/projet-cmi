@@ -38,50 +38,50 @@ ResourceManager::~ResourceManager() {
 sf::Texture& ResourceManager::getTexture(std::string name) {
     // si la texture est déjà chargée, on l'utilise directement
     if (textures.count(name) > 0) {
-        return textures[name];
+        return *textures[name];
     }
 
-    sf::Texture texture;
+    auto texture = std::unique_ptr<sf::Texture>(new sf::Texture);
 
     // tente de charger la texture dans le chemin "res/textures/name.png"
-    if (!texture.loadFromFile(resources_dir + SEP + "textures" + SEP + name)) {
+    if (!texture->loadFromFile(resources_dir + SEP + "textures" + SEP + name)) {
         throw std::runtime_error(
             "Impossible de charger l'image \"" + name + "\""
         );
     }
 
-    textures[name] = texture;
-    return textures[name];
+    textures[name] = std::move(texture);
+    return *textures[name];
 }
 
 sf::Font& ResourceManager::getFont(std::string name) {
     // si la police est déjà chargée, on l'utilise directement
     if (fonts.count(name) > 0) {
-        return fonts[name];
+        return *fonts[name];
     }
 
-    sf::Font font;
+    auto font = std::unique_ptr<sf::Font>(new sf::Font);
 
     // tente de charger la police depuis le dossier "res/fonts"
-    if (!font.loadFromFile(resources_dir + SEP + "fonts" + SEP + name)) {
+    if (!font->loadFromFile(resources_dir + SEP + "fonts" + SEP + name)) {
         throw std::runtime_error(
             "Impossible de charger la police \"" + name + "\""
         );
     }
 
-    fonts[name] = font;
-    return fonts[name];
+    fonts[name] = std::move(font);
+    return *fonts[name];
 }
 
-LevelReader ResourceManager::getLevelReader(std::string name) {
-    LevelReader reader = LevelReader(new std::ifstream);
-    reader->open(
+std::ifstream ResourceManager::getLevelReader(std::string name) {
+    std::ifstream reader;
+    reader.open(
         resources_dir + SEP + "levels" + SEP + name,
         std::ios::binary | std::ios::in
     );
 
     // on vérifie que le fichier ait correctement été ouvert en lecture
-    if (reader->fail()) {
+    if (reader.fail()) {
         throw std::runtime_error(
             "Impossible de charger le niveau \"" + name + "\" " +
             "(" + std::string(strerror(errno)) + ")"
@@ -91,15 +91,15 @@ LevelReader ResourceManager::getLevelReader(std::string name) {
     return reader;
 }
 
-LevelWriter ResourceManager::getLevelWriter(std::string name) {
-    LevelWriter writer = LevelWriter(new std::ofstream);
-    writer->open(
+std::ofstream ResourceManager::getLevelWriter(std::string name) {
+    std::ofstream writer;
+    writer.open(
         resources_dir + SEP + "levels" + SEP + name,
-        std::ios::binary | std::ios::in
+        std::ios::binary | std::ios::out
     );
 
     // on vérifie que le fichier ait correctement été ouvert en écriture
-    if (writer->fail()) {
+    if (writer.fail()) {
         throw std::runtime_error(
             "Impossible d'écrire le niveau '" + name + "' " +
             "(" + std::string(strerror(errno)) + ")"

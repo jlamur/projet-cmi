@@ -71,12 +71,12 @@ void Block::activated(Level& level, Object& object) {
     // aux activations
 }
 
-std::unique_ptr<sf::FloatRect> Block::getAABB() const {
-    return std::unique_ptr<sf::FloatRect>(new sf::FloatRect(
+sf::FloatRect Block::getAABB() const {
+    return sf::FloatRect(
         getPosition().x - Constants::GRID / 2,
         getPosition().y - Constants::GRID / 2,
         Constants::GRID, Constants::GRID
-    ));
+    );
 }
 
 float Block::getRadius() const {

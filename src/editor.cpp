@@ -248,7 +248,7 @@ ObjectPtr Editor::getObject(sf::Vector2f position) {
     std::vector<ObjectPtr>& objects = getObjects();
 
     for (unsigned int i = 0; i < objects.size(); i++) {
-        if (objects[i]->getAABB()->contains(position)) {
+        if (objects[i]->getAABB().contains(position)) {
             return objects[i];
         }
     }
@@ -274,7 +274,7 @@ ObjectPtr Editor::addObject(sf::Vector2f position) {
     float overlaps = false;
 
     for (unsigned int i = 0; i < objects.size(); i++) {
-        if (objects[i]->getAABB()->intersects(*object->getAABB())) {
+        if (objects[i]->getAABB().intersects(object->getAABB())) {
             overlaps = true;
         }
     }
@@ -354,7 +354,7 @@ void Editor::select(sf::Vector2f top_left, sf::Vector2f bottom_right) {
 
     // sélection des éléments intersectant le rectangle
     for (unsigned int i = 0; i < objects.size(); i++) {
-        if (objects[i]->getAABB()->intersects(selection_rect)) {
+        if (objects[i]->getAABB().intersects(selection_rect)) {
             select(objects[i], SelectionMode::ADD);
         }
     }

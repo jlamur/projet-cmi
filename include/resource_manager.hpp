@@ -8,15 +8,18 @@
 #include <fstream>
 #include <memory>
 
-typedef std::unique_ptr<std::ifstream> LevelReader;
-typedef std::unique_ptr<std::ofstream> LevelWriter;
-
+/**
+ * Gestionnaire de ressources du jeu. Conserve des
+ * références vers toutes les ressources pour éviter
+ * de les charger deux fois, permet l'accès uniforme
+ * aux ressources
+ */
 class ResourceManager {
 private:
     std::string resources_dir;
 
-    std::unordered_map<std::string, sf::Texture> textures;
-    std::unordered_map<std::string, sf::Font> fonts;
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    std::unordered_map<std::string, std::unique_ptr<sf::Font>> fonts;
 
     float music_volume;
     sf::Music music;
@@ -41,15 +44,13 @@ public:
 
     /**
      * Récupère un lecteur de fichier vers le niveau donné
-     * (penser à refermer après usage)
      */
-    LevelReader getLevelReader(std::string name);
+    std::ifstream getLevelReader(std::string name);
 
     /**
      * Récupère un jacob de fichier vers le niveau donné
-     * (penser à refermer après usage)
      */
-    LevelWriter getLevelWriter(std::string name);
+    std::ofstream getLevelWriter(std::string name);
 
     /**
      * Démarre la musique de fond donnée

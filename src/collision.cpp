@@ -18,26 +18,26 @@ bool circleToAABB(CollisionData& data) {
     // recherche du point le plus proche du centre du cercle
     // sur le rectangle. On regarde la position relative du cercle
     // par rapport au rectangle
-    std::unique_ptr<sf::FloatRect> box = aabb.getAABB();
+    sf::FloatRect box = aabb.getAABB();
     sf::Vector2f relpos = aabb.getPosition() - circle.getPosition();
     sf::Vector2f closest = relpos;
 
     // on restreint la position relative pour rester
     // à l'intérieur du rectangle
-    if (closest.x < -box->width / 2) {
-        closest.x = -box->width / 2;
+    if (closest.x < -box.width / 2) {
+        closest.x = -box.width / 2;
     }
 
-    if (closest.x > box->width / 2) {
-        closest.x = box->width / 2;
+    if (closest.x > box.width / 2) {
+        closest.x = box.width / 2;
     }
 
-    if (closest.y < -box->height / 2) {
-        closest.y = -box->height / 2;
+    if (closest.y < -box.height / 2) {
+        closest.y = -box.height / 2;
     }
 
-    if (closest.y > box->height / 2) {
-        closest.y = box->height / 2;
+    if (closest.y > box.height / 2) {
+        closest.y = box.height / 2;
     }
 
     // si la position n'a pas été changée, elle était déjà
@@ -50,15 +50,15 @@ bool circleToAABB(CollisionData& data) {
         // on se colle au bord le plus proche du rectangle
         if (std::abs(relpos.x) > std::abs(relpos.y)) {
             if (closest.x > 0) {
-                closest.x = box->width / 2;
+                closest.x = box.width / 2;
             } else {
-                closest.x = -box->width / 2;
+                closest.x = -box.width / 2;
             }
         } else {
             if (closest.y > 0) {
-                closest.y = box->height / 2;
+                closest.y = box.height / 2;
             } else {
-                closest.y = -box->height / 2;
+                closest.y = -box.height / 2;
             }
         }
     }
@@ -144,12 +144,12 @@ bool AABBToAABB(CollisionData& data) {
     Object& aabb_a = data.obj_a;
     Object& aabb_b = data.obj_b;
 
-    std::unique_ptr<sf::FloatRect> box_a = aabb_a.getAABB();
-    std::unique_ptr<sf::FloatRect> box_b = aabb_b.getAABB();
+    sf::FloatRect box_a = aabb_a.getAABB();
+    sf::FloatRect box_b = aabb_b.getAABB();
     sf::Vector2f relpos = aabb_b.getPosition() - aabb_a.getPosition();
 
-    float overlap_x = box_a->width / 2 + box_b->width / 2 - std::abs(relpos.x);
-    float overlap_y = box_a->height / 2 + box_b->height / 2 - std::abs(relpos.y);
+    float overlap_x = box_a.width / 2 + box_b.width / 2 - std::abs(relpos.x);
+    float overlap_y = box_a.height / 2 + box_b.height / 2 - std::abs(relpos.y);
 
     // si il n'y a pas de chauvauchement sur l'axe X et Y, pas de collision
     if (overlap_x <= 0 || overlap_y <= 0) {

@@ -28,7 +28,7 @@ public:
     /**
      * Récupère la boîte englobante du bloc
      */
-    virtual std::unique_ptr<sf::FloatRect> getAABB() const;
+    virtual sf::FloatRect getAABB() const;
 
     /**
      * Récupère le rayon du bloc

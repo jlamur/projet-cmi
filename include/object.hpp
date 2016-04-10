@@ -56,7 +56,7 @@ public:
     /**
      * Récupère la boîte englobante de l'objet
      */
-    virtual std::unique_ptr<sf::FloatRect> getAABB() const = 0;
+    virtual sf::FloatRect getAABB() const = 0;
 
     /**
      * Récupère le rayon de l'objet

@@ -30,12 +30,11 @@ std::map<unsigned int, std::function<ObjectPtr(std::ifstream&)>> object_type_map
     {GravityBlock::TYPE_ID, GravityBlock::load}
 };
 
-Level::Level(Manager& manager) : State(manager), camera_angle(180.f),
-    gravity_direction(GravityDirection::SOUTH) {}
+Level::Level(Manager& manager) : State(manager) {}
 Level::~Level() {}
 
 void Level::load(std::string name) {
-    LevelReader file = getResourceManager().getLevelReader(name);
+    std::ifstream file = getResourceManager().getLevelReader(name);
 
     // vidage du niveau précédent et positionnement
     // de la caméra au centre du niveau
@@ -44,7 +43,7 @@ void Level::load(std::string name) {
 
     // lecture de la signture du fichier ("BAR")
     char signature[3];
-    file->read(signature, sizeof(signature));
+    file.read(signature, sizeof(signature));
 
     if (strncmp(signature, "BAR", sizeof(signature)) != 0) {
         throw std::runtime_error(
@@ -54,7 +53,7 @@ void Level::load(std::string name) {
 
     // lecture de la version du fichier
     char file_version;
-    file->read(&file_version, 1);
+    file.read(&file_version, 1);
 
     if (file_version != 0) {
         throw std::runtime_error(
@@ -64,23 +63,23 @@ void Level::load(std::string name) {
 
     // lecture du nom du niveau
     std::string std_name;
-    std::getline(*file, std_name, '\0');
+    std::getline(file, std_name, '\0');
     name = sf::String(std_name);
 
     // lecture du temps total du niveau
-    file->read(reinterpret_cast<char*>(&total_time), sizeof(total_time));
+    file.read(reinterpret_cast<char*>(&total_time), sizeof(total_time));
     total_time = ntohl(total_time);
 
     // lecture de la zone de jeu
     char control_points;
-    file->read(&control_points, 1);
+    file.read(&control_points, 1);
     zone.clear();
 
     for (int i = 0; i < control_points; i++) {
         float pos_x, pos_y;
 
-        file->read(reinterpret_cast<char*>(&pos_x), sizeof(pos_x));
-        file->read(reinterpret_cast<char*>(&pos_y), sizeof(pos_y));
+        file.read(reinterpret_cast<char*>(&pos_x), sizeof(pos_x));
+        file.read(reinterpret_cast<char*>(&pos_y), sizeof(pos_y));
 
         pos_x *= Constants::GRID;
         pos_y *= Constants::GRID;
@@ -91,19 +90,19 @@ void Level::load(std::string name) {
     // lecture des chemins de la musique et du fond
     std::string background_name;
 
-    std::getline(*file, music_name, '\0');
-    std::getline(*file, background_name, '\0');
+    std::getline(file, music_name, '\0');
+    std::getline(file, background_name, '\0');
     background.setTexture(getResourceManager().getTexture(background_name));
 
     // lecture du nombre de blocs
     int block_count;
 
-    file->read(reinterpret_cast<char*>(&block_count), sizeof(block_count));
+    file.read(reinterpret_cast<char*>(&block_count), sizeof(block_count));
     block_count = ntohl(block_count);
 
     for (int i = 0; i < block_count; i++) {
         char block_type;
-        file->read(&block_type, 1);
+        file.read(&block_type, 1);
 
         // vérifie que le type est pris en charge
         // pour éviter une erreur de segmentation
@@ -113,23 +112,23 @@ void Level::load(std::string name) {
             );
         }
 
-        objects.push_back(object_type_map[block_type](*file));
+        objects.push_back(object_type_map[block_type](file));
     }
-
-    file->close();
 }
 
 void Level::save(std::string name) {
-    LevelWriter file = getResourceManager().getLevelWriter(name);
+    std::ofstream file = getResourceManager().getLevelWriter(name);
 
     // TODO: faire une fonction d'enregistrement
-
-    file->close();
 }
 
 void Level::begin() {
+    // TODO: ceci ne devrait pas être là
+    // (imaginons que l'on quitte et revienne à un niveau)
     camera = getWindow().getDefaultView();
     camera.setCenter(0, 0);
+    camera_angle = 180.f;
+    gravity_direction = GravityDirection::SOUTH;
 
     if (music_name != "") {
         getResourceManager().playMusic(music_name);
