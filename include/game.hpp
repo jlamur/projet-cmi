@@ -9,11 +9,18 @@
  * d'une partie de jeu
  */
 class Game : public Level {
+public:
+    /**
+     * Les différents modes de jeu
+     */
+    enum class Mode {NORMAL, PAUSED, WON, LOST};
+
 private:
     WidgetTimer widget_timer;
     sf::Time next_frame_time;
     bool test_mode;
     std::shared_ptr<State> return_state;
+    Mode mode;
 
     /**
      * Met à jour les objets du jeu pour
@@ -53,10 +60,25 @@ public:
     virtual void frame();
 
     /**
+     * Récupère si on est en mode test ou pas
+     */
+    bool getTestMode();
+
+    /**
      * Mise en mode test : l'appui sur espace renvoie
      * vers l'éditeur donné
      */
     void setTestMode(std::shared_ptr<State> set_return_state);
+
+    /**
+     * Récupère le mode actuel de jeu
+     */
+    Mode getMode();
+
+    /**
+     * Modifie le mode actuel de jeu
+     */
+    void setMode(Mode set_mode);
 };
 
 #endif

@@ -3,8 +3,6 @@
 #include "player.hpp"
 #include "constants.hpp"
 
-const float CAMERA_TOLERANCE_RATIO = 2.f / 3.f;
-
 Game::Game(Manager& manager) : Level(manager),
     widget_timer(manager, false),
     next_frame_time(manager.getCurrentTime()),
@@ -14,16 +12,31 @@ Game::~Game() {}
 
 void Game::begin() {
     Level::begin();
+
+    mode = Game::Mode::NORMAL;
     getWindow().setFramerateLimit(0);
 }
 
 void Game::processEvent(const sf::Event& event) {
     Level::processEvent(event);
 
-    // appui sur espace en mode test : retour à l'éditeur
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && test_mode) {
-        test_mode = false;
-        getManager().setState(return_state);
+    if (event.type == sf::Event::KeyPressed) {
+        // appui sur espace en mode test : retour à l'éditeur
+        if (event.key.code == sf::Keyboard::Space && test_mode) {
+            test_mode = false;
+            return_state = nullptr;
+
+            getManager().setState(return_state);
+        }
+
+        // appui sur échap : échange entre le mode pause et normal
+        if (event.key.code == sf::Keyboard::Escape) {
+            if (mode == Game::Mode::NORMAL) {
+                mode = Game::Mode::PAUSED;
+            } else if (mode == Game::Mode::PAUSED) {
+                mode = Game::Mode::NORMAL;
+            }
+        }
     }
 }
 
@@ -37,10 +50,13 @@ void Game::frame() {
         // on replanifie la prochaine frame
         next_frame_time += Constants::PHYSICS_TIME;
 
-        // on met à jour la physique d'un cran temporel
-        update();
+        // on met à jour la physique d'un cran temporel,
+        // si on est en mode normal
+        if (mode == Game::Mode::NORMAL) {
+            update();
+        }
 
-        // on s'assure que la caméré soit centrée sur nos joueurs
+        // on s'assure que la caméra soit centrée sur nos joueurs
         ensureCentered();
 
         // si on a encore suffisamment de temps, on dessine
@@ -125,7 +141,19 @@ void Game::update() {
     }
 }
 
+bool Game::getTestMode() {
+    return test_mode;
+}
+
 void Game::setTestMode(std::shared_ptr<State> set_return_state) {
     return_state = set_return_state;
     test_mode = true;
+}
+
+Game::Mode Game::getMode() {
+    return mode;
+}
+
+void Game::setMode(Game::Mode set_mode) {
+    mode = set_mode;
 }
