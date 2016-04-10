@@ -16,11 +16,11 @@ enum class SelectionMode {REPLACE, FLIP, ADD};
 class Editor : public Level {
 private:
     std::vector<Object::Ptr> selection;
-    std::vector<sf::CircleShape> zone_control_points;
+    std::vector<sf::CircleShape> control_points_circles;
 
     sf::Vector2i drag_start;
     sf::Vector2i drag_end;
-    int drag_control_point;
+    sf::Vector2f *drag_control_point;
 
     DragMode drag_mode;
 
@@ -34,6 +34,12 @@ private:
     Object::Ptr getObject(sf::Vector2f position);
 
     /**
+     * Renvoie le point de contrôle à la position donnée
+     * ou nullptr si aucun
+     */
+    sf::Vector2f* getControlPoint(sf::Vector2f position);
+
+    /**
      * Ajoute un objet du type actuel à la position donnée
      */
     Object::Ptr addObject(sf::Vector2f position);
@@ -43,6 +49,11 @@ private:
      */
     void removeObject(Object::Ptr object);
     void removeObject(sf::Vector2f position);
+
+    /**
+     * Supprime le point de contrôle passé par pointeur
+     */
+    void removeControlPoint(sf::Vector2f* control_point);
 
     /**
      * Ajoute l'objet/les objets donné(s) (par position, entre deux

@@ -27,7 +27,7 @@ inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
 }
 
 Editor::Editor(Manager& manager) : Level(manager),
-    drag_control_point(0), drag_mode(DragMode::NONE),
+    drag_control_point(nullptr), drag_mode(DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
     widget_selector(manager) {
 
@@ -56,6 +56,7 @@ void Editor::begin() {
     // TODO: on doit arrêter la musique car celle du
     // niveau est chargée par dessous dans level.. C'est sale
     getResourceManager().playMusic("editor.ogg");
+
     getWindow().setFramerateLimit(Manager::FPS);
 }
 
@@ -77,17 +78,14 @@ void Editor::processEvent(const sf::Event& event) {
         sf::Vector2i mouse_position(event.mouseButton.x, event.mouseButton.y);
         sf::Vector2f position = pixelToCoords(mouse_position);
         Object::Ptr pointed_object = getObject(position);
+        sf::Vector2f* control_point = getControlPoint(position);
 
         if (event.mouseButton.button == sf::Mouse::Left) {
-            std::vector<sf::Vector2f>& zone = getZone();
-
-            for (unsigned int i = 0; i < zone.size(); i++) {
-                // clic sur un point de contrôle : déplacement du point
-                if (zone_control_points[i].getGlobalBounds().contains(position)) {
-                    drag_control_point = i;
-                    drag_mode = DragMode::CONTROL_POINT;
-                    return;
-                }
+            // clic sur un point de contrôle : déplacement du point
+            if (control_point != nullptr) {
+                drag_control_point = control_point;
+                drag_mode = DragMode::CONTROL_POINT;
+                return;
             }
 
             // clic + shift : sélection par rectangle de sélection
@@ -122,6 +120,12 @@ void Editor::processEvent(const sf::Event& event) {
         }
 
         if (event.mouseButton.button == sf::Mouse::Right) {
+            // clic droit sur un point de contrôle : suppression de ce point
+            if (control_point != nullptr) {
+                removeControlPoint(control_point);
+                return;
+            }
+
             // clic droit sur un objet : démarrage de la suppression en drag&drop
             if (pointed_object != nullptr) {
                 drag_start = mouse_position;
@@ -144,8 +148,7 @@ void Editor::processEvent(const sf::Event& event) {
 
         // mode déplacement de point de contrôle
         if (drag_mode == DragMode::CONTROL_POINT) {
-            std::vector<sf::Vector2f>& zone = getZone();
-            zone[drag_control_point] = roundVectorToGrid(position);
+            *drag_control_point = roundVectorToGrid(position);
         }
 
         // mode placement d'objets
@@ -262,25 +265,25 @@ void Editor::draw() {
 
     // dessin de la zone de jeu
     const std::vector<sf::Vector2f>& zone = getZone();
-    sf::VertexArray zone_points(sf::LinesStrip);
-    zone_control_points.clear();
+    sf::VertexArray zone_polygon(sf::LinesStrip);
+    control_points_circles.clear();
 
     for (unsigned int i = 0; i < zone.size() + 1; i++) {
-        sf::CircleShape control_point(5);
+        sf::CircleShape circle(5);
         sf::Vector2f position = zone[i % zone.size()];
 
-        control_point.setOrigin(sf::Vector2f(5, 5));
-        control_point.setFillColor(ZONE_POINT_COLOR);
-        control_point.setPosition(position);
+        circle.setOrigin(sf::Vector2f(5, 5));
+        circle.setFillColor(ZONE_POINT_COLOR);
+        circle.setPosition(position);
 
-        zone_points.append(sf::Vertex(position, ZONE_BORDER_COLOR));
-        zone_control_points.push_back(control_point);
+        zone_polygon.append(sf::Vertex(position, ZONE_BORDER_COLOR));
+        control_points_circles.push_back(circle);
     }
 
-    window.draw(zone_points);
+    window.draw(zone_polygon);
 
     for (unsigned int i = 0; i < zone.size(); i++) {
-        window.draw(zone_control_points[i]);
+        window.draw(control_points_circles[i]);
     }
 
     // on passe au dessin d'éléments d'interface.
@@ -318,6 +321,18 @@ Object::Ptr Editor::getObject(sf::Vector2f position) {
     for (unsigned int i = 0; i < objects.size(); i++) {
         if (objects[i]->getAABB().contains(position)) {
             return objects[i];
+        }
+    }
+
+    return nullptr;
+}
+
+sf::Vector2f* Editor::getControlPoint(sf::Vector2f position) {
+    std::vector<sf::Vector2f>& zone = getZone();
+
+    for (unsigned i = 0; i < zone.size(); i++) {
+        if (control_points_circles[i].getGlobalBounds().contains(position)) {
+            return &zone[i];
         }
     }
 
@@ -368,6 +383,19 @@ void Editor::removeObject(Object::Ptr object) {
     objects.erase(std::remove(
         objects.begin(), objects.end(), object
     ), objects.end());
+}
+
+void Editor::removeControlPoint(sf::Vector2f* control_point) {
+    if (control_point == nullptr) {
+        return;
+    }
+
+    std::vector<sf::Vector2f>& zone = getZone();
+
+    // on supprime le point de la liste
+    zone.erase(std::remove(
+        zone.begin(), zone.end(), *control_point
+    ), zone.end());
 }
 
 void Editor::removeObject(sf::Vector2f position) {
