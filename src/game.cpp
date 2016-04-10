@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 #include "game.hpp"
 #include "player.hpp"
 #include "constants.hpp"

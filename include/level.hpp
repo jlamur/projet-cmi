@@ -163,9 +163,11 @@ public:
     const std::vector<Player::Ptr>& getPlayers() const;
 
     /**
-     * Ajoute un nouvel objet
+     * Ajoute un nouvel objet. Retourne l'objet
+     * si il a bien été ajouté, ou nullptr si l'ajout
+     * a été bloqué
      */
-    void addObject(Object::Ptr object);
+    Object::Ptr addObject(Object::Ptr object);
 
     /**
      * Supprime l'objet donné

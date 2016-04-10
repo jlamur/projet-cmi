@@ -2,11 +2,10 @@
 #include "level.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
-#include <iostream>
 #include <cmath>
 
 const unsigned int Object::PROP_MASS = 1;
-const float DEFAULT_MASS = 1.f;
+const float DEFAULT_MASS = 0.f;
 const unsigned int Object::PROP_CHARGE = 2;
 const float DEFAULT_CHARGE = 0.f;
 const unsigned int Object::PROP_RESTITUTION = 3;
@@ -338,9 +337,6 @@ float Object::getMassInvert() const {
 }
 
 void Object::setMass(float set_mass) {
-    if (getTypeId() == 1){
-        std::cout << "Change mass player from " << mass << " to " << set_mass << std::endl;
-    }
     mass = set_mass;
     inv_mass = -1.f;
 }

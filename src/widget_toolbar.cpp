@@ -37,7 +37,9 @@ Object::Ptr WidgetToolbar::createMovableBlock() {
 }
 
 Object::Ptr WidgetToolbar::createPlayer() {
-    return Object::Ptr(new Player);
+    Object::Ptr player = Object::Ptr(new Player);
+    player->setMass(1.f);
+    return player;
 }
 
 Object::Ptr WidgetToolbar::createGravityBlock(GravityDirection direction) {

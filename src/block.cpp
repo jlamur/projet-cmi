@@ -7,10 +7,6 @@
 const unsigned int Block::TYPE_ID = 2;
 
 Block::Block() : Object() {
-    // par défaut, les blocs ne sont pas déplaçables et ont
-    // donc une masse infinie, représentée par 0
-    setMass(0.f);
-
     // déplacement de l'origine au centre du bloc
     sprite.setOrigin(sf::Vector2f(23, 23));
     select_sprite.setOrigin(sf::Vector2f(23, 23));

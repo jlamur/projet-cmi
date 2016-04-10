@@ -1,4 +1,3 @@
-#include <iostream>
 #include "manager.hpp"
 
 const unsigned int Manager::FPS = 60;
