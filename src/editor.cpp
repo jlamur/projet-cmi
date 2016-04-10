@@ -38,7 +38,7 @@ void Editor::begin() {
     Level::begin();
 
     getResourceManager().playMusic("editor.ogg");
-    getWindow().setFramerateLimit(60);
+    getWindow().setFramerateLimit(Manager::FPS);
 }
 
 void Editor::processEvent(const sf::Event& event) {

@@ -30,6 +30,16 @@ public:
      */
     enum class Modifier {CONTROL, ALT, SHIFT, SYSTEM};
 
+    /**
+     * Taux maximal de frames par seconde
+     */
+    static const unsigned int FPS;
+
+    /**
+     * Temps idéal entre deux frames
+     */
+    static const sf::Time FRAME_TIME;
+
     Manager();
 
     /**

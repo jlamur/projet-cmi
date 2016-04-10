@@ -152,7 +152,7 @@ void Level::draw() {
     // animation de la rotation de la caméra
     float goal = std::fmod((float) gravity_direction * 90, 360);
     float diff = goal - camera_angle;
-    float speed = diff * Constants::PHYSICS_TIME.asSeconds() * 5;
+    float speed = diff * Manager::FRAME_TIME.asSeconds() * 5;
 
     if (std::abs(diff) < .05f) {
         camera_angle = goal;

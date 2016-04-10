@@ -1,5 +1,8 @@
 #include "manager.hpp"
 
+const unsigned int Manager::FPS = 60;
+const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);
+
 Manager::Manager() : window(
     sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
     sf::ContextSettings(0, 0, 2)

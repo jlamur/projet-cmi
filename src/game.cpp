@@ -48,7 +48,7 @@ void Game::frame() {
     if (current_time >= next_frame_time) {
         // si nous sommes en retard ou dans les temps
         // on replanifie la prochaine frame
-        next_frame_time += Constants::PHYSICS_TIME;
+        next_frame_time += Manager::FRAME_TIME;
 
         // on met à jour la physique d'un cran temporel,
         // si on est en mode normal

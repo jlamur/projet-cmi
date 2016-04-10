@@ -131,11 +131,11 @@ sf::Vector2f Object::getForces(const Level& level) const {
 
 void Object::updateVelocity(const Level& level) {
     acceleration = getForces(level) * getMassInvert();
-    velocity += acceleration * Constants::PHYSICS_TIME.asSeconds();
+    velocity += acceleration * Manager::FRAME_TIME.asSeconds();
 }
 
 void Object::updatePosition() {
-    position += velocity * Constants::PHYSICS_TIME.asSeconds();
+    position += velocity * Manager::FRAME_TIME.asSeconds();
 }
 
 bool Object::detectCollision(const Object& obj, CollisionData& data) const {

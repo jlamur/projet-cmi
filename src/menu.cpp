@@ -12,7 +12,7 @@ void Menu::begin() {
     loadMainMenu();
 
     getResourceManager().playMusic("menu.ogg");
-    getWindow().setFramerateLimit(60);
+    getWindow().setFramerateLimit(Manager::FPS);
 }
 
 void Menu::processEvent(const sf::Event& event) {
