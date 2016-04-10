@@ -189,8 +189,8 @@ void Editor::processEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         // appui sur suppr : suppression des blocs sélectionnés
         if (event.key.code == sf::Keyboard::Delete) {
-            for (unsigned int i = 0; i < selection.size(); i++) {
-                removeObject(selection[i]);
+            for (auto it = selection.begin(); it != selection.end();) {
+                removeObject(*it);
             }
 
             clearSelection();
@@ -247,9 +247,9 @@ void Editor::draw() {
     sf::VertexArray zone_polygon(sf::LinesStrip);
     control_points_circles.clear();
 
-    for (unsigned int i = 0; i < zone.size() + 1; i++) {
+    for (auto it = zone.begin(); it != zone.end(); it++) {
         sf::CircleShape circle(5);
-        sf::Vector2f position = zone[i % zone.size()];
+        sf::Vector2f position = *it;
 
         circle.setOrigin(sf::Vector2f(5, 5));
         circle.setFillColor(ZONE_POINT_COLOR);
@@ -259,10 +259,11 @@ void Editor::draw() {
         control_points_circles.push_back(circle);
     }
 
+    zone_polygon.append(sf::Vertex(zone[0], ZONE_BORDER_COLOR));
     window.draw(zone_polygon);
 
-    for (unsigned int i = 0; i < zone.size(); i++) {
-        window.draw(control_points_circles[i]);
+    for (auto it = control_points_circles.begin(); it != control_points_circles.end(); it++) {
+        window.draw(*it);
     }
 
     // on passe au dessin d'éléments d'interface.
@@ -297,9 +298,9 @@ void Editor::draw() {
 Object::Ptr Editor::getObject(sf::Vector2f position) {
     const std::vector<Object::Ptr>& objects = getObjects();
 
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        if (objects[i]->getAABB().contains(position)) {
-            return objects[i];
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        if ((*it)->getAABB().contains(position)) {
+            return *it;
         }
     }
 
@@ -335,8 +336,8 @@ Object::Ptr Editor::addObject(sf::Vector2f position) {
     // pas superposé à un autre
     float overlaps = false;
 
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        if (objects[i]->getAABB().intersects(object->getAABB())) {
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        if ((*it)->getAABB().intersects(object->getAABB())) {
             overlaps = true;
         }
     }
@@ -423,16 +424,16 @@ void Editor::select(sf::Vector2f top_left, sf::Vector2f bottom_right) {
     clearSelection();
 
     // sélection des éléments intersectant le rectangle
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        if (objects[i]->getAABB().intersects(selection_rect)) {
-            select(objects[i], Editor::SelectionMode::ADD);
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        if ((*it)->getAABB().intersects(selection_rect)) {
+            select(*it, Editor::SelectionMode::ADD);
         }
     }
 }
 
 void Editor::clearSelection() {
-    for (unsigned int i = 0; i < selection.size(); i++) {
-        selection[i]->setSelected(false);
+    for (auto it = selection.begin(); it != selection.end(); it++) {
+        (*it)->setSelected(false);
     }
 
     selection.clear();
@@ -441,9 +442,9 @@ void Editor::clearSelection() {
 void Editor::selectAll() {
     const std::vector<Object::Ptr>& objects = getObjects();
 
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        objects[i]->setSelected(true);
-        selection.push_back(objects[i]);
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        (*it)->setSelected(true);
+        selection.push_back(*it);
     }
 }
 
@@ -460,15 +461,15 @@ void Editor::test() {
     // copie des objets du niveau vers le jeu
     std::vector<Object::Ptr>& objects = getObjects();
 
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        game->addObject(objects[i]->clone());
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        game->addObject((*it)->clone());
     }
 
     // copie de la zone de jeu
     std::vector<sf::Vector2f>& zone = getZone();
 
-    for (unsigned int i = 0; i < zone.size(); i++) {
-        game->getZone().push_back(zone[i]);
+    for (auto it = zone.begin(); it != zone.end(); it++) {
+        game->getZone().push_back(*it);
     }
 
     // mise en mode test
