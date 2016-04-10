@@ -4,10 +4,7 @@
 #include <unordered_map>
 #include "level.hpp"
 #include "widget_timer.hpp"
-#include "widget_selector.hpp"
-
-enum class DragMode {NONE, PLACE, SELECT_RECT, SELECT_BULK, CONTROL_POINT, REMOVE};
-enum class SelectionMode {REPLACE, FLIP, ADD};
+#include "widget_toolbar.hpp"
 
 /**
  * La classe Editor permet l'édition de
@@ -15,6 +12,9 @@ enum class SelectionMode {REPLACE, FLIP, ADD};
  */
 class Editor : public Level {
 private:
+    enum class DragMode {NONE, PLACE, SELECT_RECT, SELECT_BULK, CONTROL_POINT, REMOVE};
+    enum class SelectionMode {REPLACE, FLIP, ADD};
+
     std::vector<Object::Ptr> selection;
     std::vector<sf::CircleShape> control_points_circles;
 
@@ -25,7 +25,7 @@ private:
     DragMode drag_mode;
 
     WidgetTimer widget_timer;
-    WidgetSelector widget_selector;
+    WidgetToolbar widget_toolbar;
 
     /**
      * Renvoie l'objet pointé à la position donnée

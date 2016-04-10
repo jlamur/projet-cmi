@@ -27,24 +27,12 @@ inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
 }
 
 Editor::Editor(Manager& manager) : Level(manager),
-    drag_control_point(nullptr), drag_mode(DragMode::NONE),
+    drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
-    widget_selector(manager) {
+    widget_toolbar(manager) {
 
     setName("Nouveau niveau");
     setTotalTime(30);
-
-    ResourceManager& resources = getResourceManager();
-
-    std::shared_ptr<SelectorCategory> basic_cat = widget_selector.addCategory("BASE");
-    basic_cat->addItem("Block", resources.getTexture("block.tga"));
-    basic_cat->addItem("Player", resources.getTexture("player.tga"));
-
-    std::shared_ptr<SelectorCategory> gravity_cat = widget_selector.addCategory(sf::String(L"GRAVITÉ"));
-    gravity_cat->addItem("GravityN", resources.getTexture("gravity_block_north.tga"));
-    gravity_cat->addItem("GravityE", resources.getTexture("gravity_block_east.tga"));
-    gravity_cat->addItem("GravityS", resources.getTexture("gravity_block_south.tga"));
-    gravity_cat->addItem("GravityW", resources.getTexture("gravity_block_west.tga"));
 }
 
 Editor::~Editor() {}
@@ -52,24 +40,20 @@ Editor::~Editor() {}
 void Editor::begin() {
     Level::begin();
 
-    getResourceManager().stopMusic();
-    // TODO: on doit arrêter la musique car celle du
-    // niveau est chargée par dessous dans level.. C'est sale
     getResourceManager().playMusic("editor.ogg");
-
     getWindow().setFramerateLimit(Manager::FPS);
 }
 
 void Editor::processEvent(const sf::Event& event) {
     Level::processEvent(event);
 
-    // traitement des événements du widget timer
+    // traitement des événements du widget chronomètre
     if (widget_timer.processEvent(event)) {
         return;
     }
 
-    // traitement des événements du widget selector
-    if (widget_selector.processEvent(event)) {
+    // traitement des événements du widget barre d'outils
+    if (widget_toolbar.processEvent(event)) {
         return;
     }
 
@@ -84,7 +68,7 @@ void Editor::processEvent(const sf::Event& event) {
             // clic sur un point de contrôle : déplacement du point
             if (control_point != nullptr) {
                 drag_control_point = control_point;
-                drag_mode = DragMode::CONTROL_POINT;
+                drag_mode = Editor::DragMode::CONTROL_POINT;
                 return;
             }
 
@@ -92,7 +76,7 @@ void Editor::processEvent(const sf::Event& event) {
             if (getManager().isKeyPressed(Manager::Modifier::SHIFT)) {
                 drag_start = mouse_position;
                 drag_end = mouse_position;
-                drag_mode = DragMode::SELECT_RECT;
+                drag_mode = Editor::DragMode::SELECT_RECT;
                 return;
             }
 
@@ -101,11 +85,11 @@ void Editor::processEvent(const sf::Event& event) {
                 if (getManager().isKeyPressed(Manager::Modifier::CONTROL)) {
                     drag_start = mouse_position;
                     drag_end = mouse_position;
-                    drag_mode = DragMode::SELECT_BULK;
+                    drag_mode = Editor::DragMode::SELECT_BULK;
 
-                    select(pointed_object, SelectionMode::ADD);
+                    select(pointed_object, Editor::SelectionMode::ADD);
                 } else {
-                    select(pointed_object, SelectionMode::FLIP);
+                    select(pointed_object, Editor::SelectionMode::FLIP);
                 }
 
                 return;
@@ -114,9 +98,9 @@ void Editor::processEvent(const sf::Event& event) {
             // clic gauche dans le vide : démarrage du placement en drag&drop
             drag_start = mouse_position;
             drag_end = mouse_position;
-            drag_mode = DragMode::PLACE;
+            drag_mode = Editor::DragMode::PLACE;
 
-            select(addObject(position), SelectionMode::REPLACE);
+            select(addObject(position), Editor::SelectionMode::REPLACE);
         }
 
         if (event.mouseButton.button == sf::Mouse::Right) {
@@ -130,7 +114,7 @@ void Editor::processEvent(const sf::Event& event) {
             if (pointed_object != nullptr) {
                 drag_start = mouse_position;
                 drag_end = mouse_position;
-                drag_mode = DragMode::REMOVE;
+                drag_mode = Editor::DragMode::REMOVE;
 
                 removeObject(pointed_object);
                 return;
@@ -147,23 +131,23 @@ void Editor::processEvent(const sf::Event& event) {
         drag_end = mouse_position;
 
         // mode déplacement de point de contrôle
-        if (drag_mode == DragMode::CONTROL_POINT) {
+        if (drag_mode == Editor::DragMode::CONTROL_POINT) {
             *drag_control_point = roundVectorToGrid(position);
         }
 
         // mode placement d'objets
-        if (drag_mode == DragMode::PLACE && pointed_object == nullptr) {
-            select(addObject(position), SelectionMode::ADD);
+        if (drag_mode == Editor::DragMode::PLACE && pointed_object == nullptr) {
+            select(addObject(position), Editor::SelectionMode::ADD);
         }
 
         // mode suppression d'objets
-        if (drag_mode == DragMode::REMOVE && pointed_object != nullptr) {
+        if (drag_mode == Editor::DragMode::REMOVE && pointed_object != nullptr) {
             removeObject(pointed_object);
         }
 
         // mode sélection libre : on l'objet à la sélection
-        if (drag_mode == DragMode::SELECT_BULK) {
-            select(position, SelectionMode::ADD);
+        if (drag_mode == Editor::DragMode::SELECT_BULK) {
+            select(position, Editor::SelectionMode::ADD);
         }
 
         return;
@@ -172,12 +156,11 @@ void Editor::processEvent(const sf::Event& event) {
     // lorsqu'on relâche un clic dans l'éditeur
     if (event.type == sf::Event::MouseButtonReleased) {
         // mode sélection rectangulaire : on applique la sélection
-        if (drag_mode == DragMode::SELECT_RECT) {
+        if (drag_mode == Editor::DragMode::SELECT_RECT) {
             select(pixelToCoords(drag_start), pixelToCoords(drag_end));
-            return;
         }
 
-        drag_mode = DragMode::NONE;
+        drag_mode = Editor::DragMode::NONE;
     }
 
     // lorsqu'on scrolle on déplace la vue
@@ -291,7 +274,7 @@ void Editor::draw() {
     getManager().resetDefaultView();
 
     // dessin du rectangle de sélection
-    if (drag_mode == DragMode::SELECT_RECT) {
+    if (drag_mode == Editor::DragMode::SELECT_RECT) {
         sf::Vector2f size = (sf::Vector2f) (drag_end - drag_start);
         sf::Vector2f pos = (sf::Vector2f) drag_start;
 
@@ -308,8 +291,8 @@ void Editor::draw() {
     widget_timer.setTimeLeft(getTotalTime());
     widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
 
-    // sélectionneur d'objet
-    widget_selector.draw(
+    // barre d'outils
+    widget_toolbar.draw(
         sf::Vector2f(window_size.x - 64, 0),
         sf::Vector2f(64, window_size.y)
     );
@@ -345,8 +328,7 @@ Object::Ptr Editor::addObject(sf::Vector2f position) {
     // on arrondit à l'unité de grille la plus proche
     position = roundVectorToGrid(position);
 
-    // TODO: ajouter un objet du type choisi, pas uniquement de bloc
-    Object::Ptr object = Object::Ptr(new Block);
+    Object::Ptr object = widget_toolbar.createObject();
     object->setPosition(position);
 
     // avant d'ajouter l'objet, on vérifie qu'il ne soit
@@ -402,7 +384,7 @@ void Editor::removeObject(sf::Vector2f position) {
     removeObject(getObject(position));
 }
 
-void Editor::select(Object::Ptr object, SelectionMode mode) {
+void Editor::select(Object::Ptr object, Editor::SelectionMode mode) {
     if (object == nullptr) {
         return;
     }
@@ -412,25 +394,25 @@ void Editor::select(Object::Ptr object, SelectionMode mode) {
     // dans les modes REPLACE et FLIP, on remplace l'ancienne sélection
     // pour REPLACE, on sélectionne forcément l'objet
     // pour FLIP, on le sélectionne s'il ne l'est pas, on le désélectionne sinon
-    if (mode == SelectionMode::REPLACE || mode == SelectionMode::FLIP) {
+    if (mode == Editor::SelectionMode::REPLACE || mode == Editor::SelectionMode::FLIP) {
         clearSelection();
 
         // on resélectionne l'objet ssi. on force la sélection
         // ou s'il n'était pas déjà sélectionné
-        if (!already_selected || mode == SelectionMode::REPLACE) {
+        if (!already_selected || mode == Editor::SelectionMode::REPLACE) {
             object->setSelected(true);
             selection.push_back(object);
         }
     }
 
     // dans le mode ADD, on rajoute juste l'objet à la sélection
-    if (mode == SelectionMode::ADD && !already_selected) {
+    if (mode == Editor::SelectionMode::ADD && !already_selected) {
         object->setSelected(true);
         selection.push_back(object);
     }
 }
 
-void Editor::select(sf::Vector2f position, SelectionMode mode) {
+void Editor::select(sf::Vector2f position, Editor::SelectionMode mode) {
     select(getObject(position), mode);
 }
 
@@ -448,7 +430,7 @@ void Editor::select(sf::Vector2f top_left, sf::Vector2f bottom_right) {
     // sélection des éléments intersectant le rectangle
     for (unsigned int i = 0; i < objects.size(); i++) {
         if (objects[i]->getAABB().intersects(selection_rect)) {
-            select(objects[i], SelectionMode::ADD);
+            select(objects[i], Editor::SelectionMode::ADD);
         }
     }
 }

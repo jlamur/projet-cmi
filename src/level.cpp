@@ -202,12 +202,6 @@ void Level::begin() {
     camera.setCenter(0, 0);
     camera_angle = 180.f;
     gravity_direction = GravityDirection::SOUTH;
-
-    if (music != "") {
-        getResourceManager().playMusic(music);
-    } else {
-        getResourceManager().stopMusic();
-    }
 }
 
 void Level::processEvent(const sf::Event& event) {

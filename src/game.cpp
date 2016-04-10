@@ -13,6 +13,12 @@ Game::~Game() {}
 void Game::begin() {
     Level::begin();
 
+    if (getMusic() != "") {
+        getResourceManager().playMusic(getMusic());
+    } else {
+        getResourceManager().stopMusic();
+    }
+
     mode = Game::Mode::NORMAL;
     getWindow().setFramerateLimit(0);
 }
