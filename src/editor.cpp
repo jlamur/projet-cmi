@@ -483,6 +483,7 @@ void Editor::test() {
 
     // copie des objets du niveau vers le jeu
     std::vector<Object::Ptr>& objects = getObjects();
+    game->getObjects().clear();
 
     for (auto it = objects.begin(); it != objects.end(); it++) {
         game->addObject((*it)->clone());
@@ -490,6 +491,7 @@ void Editor::test() {
 
     // copie de la zone de jeu
     std::vector<sf::Vector2f>& zone = getZone();
+    game->getZone().clear();
 
     for (auto it = zone.begin(); it != zone.end(); it++) {
         game->getZone().push_back(*it);
