@@ -1,5 +1,5 @@
-#ifndef __PTF_OBJECT_HPP__
-#define __PTF_OBJECT_HPP__
+#ifndef __SKIZZLE_OBJECT_HPP__
+#define __SKIZZLE_OBJECT_HPP__
 
 #include <SFML/Graphics.hpp>
 #include <fstream>

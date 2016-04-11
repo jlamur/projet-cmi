@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(ptf)
+project(skizzle)
 
 # Inclusion des fichiers d'en-tête et de source
 include_directories(include)
@@ -31,7 +31,7 @@ endif()
 
 # Recherche des librairies
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
-add_executable(ptf ${SOURCES})
+add_executable(skizzle ${SOURCES})
 
 find_package(SFML 2 REQUIRED system window graphics network audio)
 find_package(Boost 1.60.0 COMPONENTS system filesystem)
@@ -39,8 +39,8 @@ find_package(Boost 1.60.0 COMPONENTS system filesystem)
 include_directories(${SFML_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 
-target_link_libraries(ptf ${SFML_LIBRARIES})
-target_link_libraries(ptf ${Boost_LIBRARIES})
+target_link_libraries(skizzle ${SFML_LIBRARIES})
+target_link_libraries(skizzle ${Boost_LIBRARIES})
 
 # Installation de l'exécutable
-install(TARGETS ptf DESTINATION bin)
+install(TARGETS skizzle DESTINATION bin)

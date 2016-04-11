@@ -1,5 +1,5 @@
-#ifndef __PTF_UTIL_WIDGET_BUTTON_HPP__
-#define __PTF_UTIL_WIDGET_BUTTON_HPP__
+#ifndef __SKIZZLE_UTIL_WIDGET_BUTTON_HPP__
+#define __SKIZZLE_UTIL_WIDGET_BUTTON_HPP__
 
 #include <SFML/Graphics.hpp>
 #include <functional>

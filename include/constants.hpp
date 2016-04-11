@@ -1,5 +1,5 @@
-#ifndef __PTF_CONSTANTS_HPP__
-#define __PTF_CONSTANTS_HPP__
+#ifndef __SKIZZLE_CONSTANTS_HPP__
+#define __SKIZZLE_CONSTANTS_HPP__
 
 #include <SFML/System.hpp>
 

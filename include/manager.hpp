@@ -1,5 +1,5 @@
-#ifndef __PTF_MANAGER_HPP__
-#define __PTF_MANAGER_HPP__
+#ifndef __SKIZZLE_MANAGER_HPP__
+#define __SKIZZLE_MANAGER_HPP__
 
 #include "resource_manager.hpp"
 #include "state.hpp"

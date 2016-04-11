@@ -1,5 +1,5 @@
-#ifndef __PTF_STATE_HPP__
-#define __PTF_STATE_HPP__
+#ifndef __SKIZZLE_STATE_HPP__
+#define __SKIZZLE_STATE_HPP__
 
 #include <SFML/Graphics.hpp>
 

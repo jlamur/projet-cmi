@@ -1,5 +1,5 @@
-#ifndef __PTF_COLLISION_HPP__
-#define __PTF_COLLISION_HPP__
+#ifndef __SKIZZLE_COLLISION_HPP__
+#define __SKIZZLE_COLLISION_HPP__
 
 #include <SFML/Graphics.hpp>
 #include <memory>

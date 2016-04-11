@@ -1,5 +1,5 @@
-#ifndef __PTF_RESOURCE_MANAGER_HPP__
-#define __PTF_RESOURCE_MANAGER_HPP__
+#ifndef __SKIZZLE_RESOURCE_MANAGER_HPP__
+#define __SKIZZLE_RESOURCE_MANAGER_HPP__
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>

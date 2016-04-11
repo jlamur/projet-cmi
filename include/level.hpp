@@ -1,5 +1,5 @@
-#ifndef __PTF_LEVEL_HPP__
-#define __PTF_LEVEL_HPP__
+#ifndef __SKIZZLE_LEVEL_HPP__
+#define __SKIZZLE_LEVEL_HPP__
 
 #include <fstream>
 #include <vector>

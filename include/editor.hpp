@@ -1,5 +1,5 @@
-#ifndef __PTF_EDITOR_HPP__
-#define __PTF_EDITOR_HPP__
+#ifndef __SKIZZLE_EDITOR_HPP__
+#define __SKIZZLE_EDITOR_HPP__
 
 #include "level.hpp"
 #include "widget_timer.hpp"
