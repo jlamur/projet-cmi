@@ -127,9 +127,9 @@ void Game::update() {
 
     pending_kill.empty();
 
-    // détection des objets en dehors de la zone de jeu
+    // détection des objets déplaçables en dehors de la zone de jeu
     for (auto it = objects.begin(); it != objects.end(); it++) {
-        if (!isInZone(*it)) {
+        if (!isInZone(*it) && (*it)->getMass() != 0) {
             // l'objet est sorti de la zone, on le signale et on
             // planifie sa mort à la prochaine frame
             (*it)->kill(*this);
