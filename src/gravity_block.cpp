@@ -10,8 +10,7 @@ Object::Ptr GravityBlock::clone() const {
     return Object::Ptr(new GravityBlock(*this));
 }
 
-std::string GravityBlock::getTexture() {
-    // texturage et coloration du bloc selon ses propriétés
+void GravityBlock::prepareDraw(ResourceManager& resources) {
     std::string texture_name = "gravity_block_";
 
     switch (gravity_direction) {
@@ -32,7 +31,7 @@ std::string GravityBlock::getTexture() {
         break;
     }
 
-    return texture_name + ".tga";
+    sprite.setTexture(resources.getTexture(texture_name + ".tga"));
 }
 
 void GravityBlock::activate(Level& level, Object* object) {

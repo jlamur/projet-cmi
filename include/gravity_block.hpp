@@ -35,9 +35,9 @@ public:
     virtual Object::Ptr clone() const;
 
     /**
-     * Calcule la texture à afficher pour ce bloc
+     * Prépare les textures avant le dessin du bloc
      */
-    virtual std::string getTexture();
+    virtual void prepareDraw(ResourceManager& resources);
 
     /**
      * Appelé lorsque le bloc de gravité est activé par un objet

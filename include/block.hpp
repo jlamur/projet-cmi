@@ -46,9 +46,9 @@ public:
     virtual float getRadius() const;
 
     /**
-     * Calcule la texture à afficher pour ce bloc
+     * Prépare les textures avant le dessin du bloc
      */
-    virtual std::string getTexture();
+    virtual void prepareDraw(ResourceManager& resources);
 
     /**
      * Dessin du bloc dans la fenêtre donnée

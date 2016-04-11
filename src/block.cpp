@@ -6,12 +6,7 @@
 
 const unsigned int Block::TYPE_ID = 2;
 
-Block::Block() : Object() {
-    // déplacement de l'origine au centre du bloc
-    sprite.setOrigin(sf::Vector2f(23, 23));
-    select_sprite.setOrigin(sf::Vector2f(23, 23));
-}
-
+Block::Block() : Object() {}
 Block::~Block() {}
 
 Object::Ptr Block::clone() const {
@@ -34,18 +29,24 @@ void Block::save(std::ofstream& file) const {
     Object::save(file);
 }
 
-std::string Block::getTexture() {
+void Block::prepareDraw(ResourceManager& resources) {
+    std::string texture_name = "movable_block.tga";
+
     if (getMass() == 0) {
-        return "block.tga";
+        texture_name = "block.tga";
     }
 
-    return "movable_block.tga";
+    sprite.setTexture(resources.getTexture(texture_name));
+    sprite.setOrigin(sf::Vector2f(23, 23));
+
+    select_sprite.setTexture(resources.getTexture("block_select.tga"));
+    select_sprite.setOrigin(sf::Vector2f(23, 23));
 }
 
 void Block::draw(Level& level) {
     // utilisation de la texture
     sf::RenderWindow& window = level.getWindow();
-    sprite.setTexture(level.getResourceManager().getTexture(getTexture()));
+    prepareDraw(level.getResourceManager());
 
     // coloration du bloc selon sa charge
     if (getCharge() > 0) {
@@ -61,10 +62,6 @@ void Block::draw(Level& level) {
 
     if (isSelected()) {
         select_sprite.setPosition(getPosition());
-        select_sprite.setTexture(
-            level.getResourceManager().getTexture("block_select.tga")
-        );
-
         window.draw(select_sprite);
     }
 }

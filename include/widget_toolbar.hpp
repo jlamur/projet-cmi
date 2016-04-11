@@ -68,6 +68,16 @@ private:
     Object::Ptr createPlayer();
 
     /**
+     * Crée un objet de type FinishBlock
+     */
+    Object::Ptr createFinishBlock();
+
+    /**
+     * Crée un objet de type KillBlock
+     */
+    Object::Ptr createKillBlock();
+
+    /**
      * Crée un objet de type GravityBlock
      */
     Object::Ptr createGravityBlock(GravityDirection direction);

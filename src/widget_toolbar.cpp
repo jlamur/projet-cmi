@@ -2,6 +2,8 @@
 #include "block.hpp"
 #include "player.hpp"
 #include "gravity_block.hpp"
+#include "finish_block.hpp"
+#include "kill_block.hpp"
 #include <utility>
 
 const int PADDING = 8;
@@ -42,6 +44,14 @@ Object::Ptr WidgetToolbar::createPlayer() {
     return player;
 }
 
+Object::Ptr WidgetToolbar::createFinishBlock() {
+    return Object::Ptr(new FinishBlock);
+}
+
+Object::Ptr WidgetToolbar::createKillBlock() {
+    return Object::Ptr(new KillBlock);
+}
+
 Object::Ptr WidgetToolbar::createGravityBlock(GravityDirection direction) {
     GravityBlock::Ptr gravity_block = GravityBlock::Ptr(new GravityBlock);
     gravity_block->setGravityDirection(direction);
@@ -59,21 +69,34 @@ Object::Ptr WidgetToolbar::createObject() {
 WidgetToolbar::WidgetToolbar(Manager& manager) : manager(manager), selected(nullptr) {
     // catégorie des objets plaçables de base
     ResourceManager& resources = manager.getResourceManager();
-    ToolbarCategory::Ptr basic_cat = addCategory("BASE");
+    ToolbarCategory::Ptr block_cat = addCategory("BLOCS");
 
-    selected = basic_cat->addObject(
+    selected = block_cat->addObject(
         resources.getTexture("toolbar_block.tga"),
         std::bind(&WidgetToolbar::createBlock, this)
     );
 
-    basic_cat->addObject(
+    block_cat->addObject(
         resources.getTexture("toolbar_movable_block.tga"),
         std::bind(&WidgetToolbar::createMovableBlock, this)
     );
 
-    basic_cat->addObject(
+    // catégorie des blocs contrôlant les joueurs
+    ToolbarCategory::Ptr player_cat = addCategory("JOUEURS");
+
+    player_cat->addObject(
         resources.getTexture("toolbar_player.tga"),
         std::bind(&WidgetToolbar::createPlayer, this)
+    );
+
+    player_cat->addObject(
+        resources.getTexture("toolbar_kill_block.tga"),
+        std::bind(&WidgetToolbar::createKillBlock, this)
+    );
+
+    player_cat->addObject(
+        resources.getTexture("toolbar_finish_block.tga"),
+        std::bind(&WidgetToolbar::createFinishBlock, this)
     );
 
     // catégorie des blocs changeant la gravité
