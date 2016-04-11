@@ -62,7 +62,7 @@ public:
     /**
      * Appelé lorsque le bloc est activé par un objet
      */
-    virtual void activate(Game& game, Object* object);
+    virtual void activate(Game& game, Object::Ptr object);
 
     /**
      * Appelé lorsque le bloc a été tué. Si cette fonction

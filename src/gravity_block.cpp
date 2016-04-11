@@ -35,7 +35,7 @@ void GravityBlock::prepareDraw(ResourceManager& resources) {
     sprite.setTexture(resources.getTexture(texture_name + ".tga"));
 }
 
-void GravityBlock::activate(Game& game, Object* object) {
+void GravityBlock::activate(Game& game, Object::Ptr object) {
     Block::activate(game, object);
 
     // lorsque le bloc est activé, il transmet son

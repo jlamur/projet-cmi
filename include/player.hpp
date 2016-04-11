@@ -57,7 +57,7 @@ public:
     /**
      * Appelé lorsque le joueur est activé par un objet
      */
-    virtual void activate(Game& game, Object* object);
+    virtual void activate(Game& game, Object::Ptr object);
 
     /**
      * Appelé lorsque le jouer a été tué. Si cette fonction

@@ -42,7 +42,7 @@ public:
     /**
      * Appelé lorsque le bloc de gravité est activé par un objet
      */
-    virtual void activate(Game& game, Object* object);
+    virtual void activate(Game& game, Object::Ptr object);
 
     /**
      * Récupère l'identifiant de type des blocs de gravité

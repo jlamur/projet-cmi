@@ -15,9 +15,13 @@ void SwitchBlock::prepareDraw(ResourceManager& resources) {
     sprite.setTexture(resources.getTexture("switch_block.tga"));
 }
 
-void SwitchBlock::activate(Game& game, Object* object) {
+void SwitchBlock::activate(Game& game, Object::Ptr object) {
     Block::activate(game, object);
-    // TODO: implémenter le comportmeent des blocs changeurs
+
+    // on échange la polarité de l'objet en contact
+    if (object->getLastActivator().lock().get() != this) {
+        object->setCharge(-object->getCharge());
+    }
 }
 
 unsigned int SwitchBlock::getTypeId() const {

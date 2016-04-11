@@ -184,8 +184,7 @@ void Game::update() {
         // l'objet est sorti de la zone, on le signale et on
         // planifie sa mort à la prochaine frame
         if (!isInZone(obj_a) && obj_a->getMass() != 0) {
-            obj_a->kill(*this);
-            pending_kill.push_back(obj_a);
+            kill(obj_a);
         }
 
         // on regarde s'il est en collision avec
@@ -222,6 +221,11 @@ void Game::update() {
     for (auto it = colliding.begin(); it != colliding.end(); it++) {
         it->obj_a->positionalCorrection(it->obj_b, it->normal, it->depth);
     }
+}
+
+void Game::kill(Object::Ptr object) {
+    object->kill(*this);
+    pending_kill.push_back(object);
 }
 
 /**

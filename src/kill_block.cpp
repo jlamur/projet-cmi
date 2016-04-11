@@ -1,5 +1,6 @@
 #include "kill_block.hpp"
 #include "game.hpp"
+#include "player.hpp"
 
 const unsigned int KillBlock::TYPE_ID = 5;
 
@@ -15,9 +16,13 @@ void KillBlock::prepareDraw(ResourceManager& resources) {
     sprite.setTexture(resources.getTexture("kill_block.tga"));
 }
 
-void KillBlock::activate(Game& game, Object* object) {
+void KillBlock::activate(Game& game, Object::Ptr object) {
     Block::activate(game, object);
-    // TODO: implémenter le comportmeent des blocs tueurs
+
+    // si un joueur touche un bloc de mort, on le tue
+    if (object->getTypeId() == Player::TYPE_ID) {
+        game.kill(object);
+    }
 }
 
 unsigned int KillBlock::getTypeId() const {

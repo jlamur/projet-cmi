@@ -76,6 +76,11 @@ public:
     virtual void frame();
 
     /**
+     * Tue l'objet donné
+     */
+    void kill(Object::Ptr object);
+
+    /**
      * Récupère si on est en mode test ou pas
      */
     bool getTestMode();

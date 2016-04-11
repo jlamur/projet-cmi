@@ -233,16 +233,19 @@ void Object::solveCollision(Game& game, Object::Ptr obj, const sf::Vector2f& nor
     sf::Vector2f rel_velo = obj->getVelocity() - getVelocity();
     float dot_normal = rel_velo.x * normal.x + rel_velo.y * normal.y;
 
+    // en ce point, on est bertins qu'une collision a eu lieu.
+    // on peut donc activer les deux objets
+    activate(game, obj);
+    obj->activate(game, shared_from_this());
+
+    last_activator = obj;
+    obj->last_activator = shared_from_this();
+
     // si les directions sont divergentes, pas besoin
     // de résoudre la collision
     if (dot_normal > 0) {
         return;
     }
-
-    // en ce point, on est bertins qu'une collision a eu lieu.
-    // activation réciproque des deux objets
-    activate(game, obj.get());
-    obj->activate(game, this);
 
     // on utilise le plus petit coefficient de friction entre les
     // deux objets comme le coefficient de la collision
@@ -325,6 +328,10 @@ bool Object::isSelected() const {
 
 void Object::setSelected(bool set_selected) {
     selected = set_selected;
+}
+
+Object::WeakPtr Object::getLastActivator() {
+    return last_activator;
 }
 
 float Object::getMass() const {

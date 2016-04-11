@@ -16,7 +16,7 @@ void FinishBlock::prepareDraw(ResourceManager& resources) {
     sprite.setTexture(resources.getTexture("finish_block.tga"), true);
 }
 
-void FinishBlock::activate(Game& game, Object* object) {
+void FinishBlock::activate(Game& game, Object::Ptr object) {
     Block::activate(game, object);
     // TODO: implémenter le comportmeent des blocs d'arrivée
 }

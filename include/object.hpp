@@ -11,9 +11,10 @@
 class Level;
 class Game;
 
-class Object {
+class Object : public std::enable_shared_from_this<Object> {
 public:
     typedef std::shared_ptr<Object> Ptr;
+    typedef std::weak_ptr<Object> WeakPtr;
 
 private:
     sf::Vector2f acceleration;
@@ -21,6 +22,10 @@ private:
     sf::Vector2f position;
 
     bool selected;
+    Object::WeakPtr last_activator;
+
+    // propriétés internes, autorisées à être modifiées
+    // même par des méthodes constantes
     mutable float inv_mass;
 
     float mass;
@@ -35,6 +40,11 @@ protected:
      * Calcule les forces appliquées à l'objet
      */
     virtual sf::Vector2f getForces(const Game& game) const;
+
+    /**
+     * Appelé lorsque l'objet est activé par un autre
+     */
+    virtual void activate(Game& game, Object::Ptr object) = 0;
 
     /**
      * Initialisation des propriétés communes à tous les objets
@@ -75,11 +85,6 @@ public:
      * Dessine l'objet dans la fenêtre donnée
      */
     virtual void draw(Level& level) = 0;
-
-    /**
-     * Appelé lorsque l'objet est activé par un autre
-     */
-    virtual void activate(Game& game, Object* object) = 0;
 
     /**
      * Appelé lorsque l'objet a été tué. Si cette fonction
@@ -173,6 +178,11 @@ public:
      * Modifie si l'objet est sélectionné
      */
     void setSelected(bool set_selected);
+
+    /**
+     * Récupère le dernier object ayant activé cet objet
+     */
+    Object::WeakPtr getLastActivator();
 
     /**
      * Récupère la masse de l'objet

@@ -90,7 +90,7 @@ void Player::draw(Level& level) {
     level.getWindow().draw(sprite);
 }
 
-void Player::activate(Game& game, Object* object) {
+void Player::activate(Game& game, Object::Ptr object) {
     // ne rien faire si le joueur est activé.
     // en règle générale, c'est l'objet activé par le joueur
     // qui s'occupe de la réponse
