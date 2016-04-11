@@ -1,19 +1,20 @@
 #include "menu.hpp"
+#include "rules.hpp"
 #include "editor.hpp"
 #include "game.hpp"
 #include <cmath>
 
 const float MAX_WIDTH_PROPORTION = 1.f / 3.f;
 
-Menu::Menu(Manager& manager) : State(manager) {}
-Menu::~Menu() {}
-
-void Menu::begin() {
+Menu::Menu(Manager& manager) : State(manager) {
+    background.setTexture(getResourceManager().getTexture("bg_menu.tga"));
     loadMainMenu();
 
     getResourceManager().playMusic("menu.ogg");
     getWindow().setFramerateLimit(Manager::FPS);
 }
+
+Menu::~Menu() {}
 
 void Menu::processEvent(const sf::Event& event) {
     // gestion des touches
@@ -175,27 +176,22 @@ void Menu::loadLevelMenu() {
 }
 
 void Menu::loadRules() {
-    choices.clear();
-    getWindow().clear(sf::Color::Black);
-
-    sf::Texture& texture = getResourceManager().getTexture("regles_jeu.png");
-    background.setTexture(texture);
+    auto rules = std::unique_ptr<Rules>(new Rules(getManager()));
+    getManager().pushState(std::move(rules));
 }
 
 void Menu::launchEditor() {
-    std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(getManager()));
-
-    // TODO: charger dynamiquement le niveau dans l'éditeur
+    auto editor = std::unique_ptr<Editor>(new Editor(getManager()));
     editor->load(getResourceManager().getLevelPath("editor_result.dat"));
-    getManager().setState(editor);
+    getManager().pushState(std::move(editor));
 }
 
 void Menu::launchGame(std::string path) {
-    std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(getManager()));
+    auto game = std::unique_ptr<Game>(new Game(getManager()));
     game->load(path);
-    getManager().setState(game);
+    getManager().pushState(std::move(game));
 }
 
 void Menu::quit() {
-    getManager().quit();
+    getManager().popState();
 }

@@ -25,7 +25,6 @@ private:
     sf::Time next_frame_time;
     std::vector<Object::Ptr> pending_kill;
 
-    bool test_mode;
     float time_left;
 
     std::shared_ptr<Editor> return_state;
@@ -61,11 +60,6 @@ public:
     virtual ~Game();
 
     /**
-     * Appelé par le manager lorsque l'état est utilisé
-     */
-    virtual void begin();
-
-    /**
      * Traite l'événement donné
      */
     virtual void processEvent(const sf::Event& event);
@@ -79,17 +73,6 @@ public:
      * Tue l'objet donné
      */
     void kill(Object::Ptr object);
-
-    /**
-     * Récupère si on est en mode test ou pas
-     */
-    bool getTestMode();
-
-    /**
-     * Mise en mode test : l'appui sur espace renvoie
-     * vers l'éditeur donné
-     */
-    void setTestMode(std::shared_ptr<Editor> set_return_state);
 
     /**
      * Récupère le mode actuel de jeu

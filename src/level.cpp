@@ -146,7 +146,12 @@ void loadLevel(
 }
 
 Level::Level(Manager& manager) : State(manager) {
+    sf::Vector2u window_size = getWindow().getSize();
+    gravity_direction = GravityDirection::SOUTH;
+
+    camera.setSize(window_size.x, window_size.y);
     camera.setCenter(0, 0);
+    camera_angle = 180.f;
 }
 
 Level::~Level() {}
@@ -262,13 +267,6 @@ void Level::save(std::string path) {
 
 void Level::save() {
     save(current_path);
-}
-
-void Level::begin() {
-    sf::Vector2u window_size = getWindow().getSize();
-    camera.setSize(window_size.x, window_size.y);
-    camera_angle = 180.f;
-    gravity_direction = GravityDirection::SOUTH;
 }
 
 void Level::processEvent(const sf::Event& event) {

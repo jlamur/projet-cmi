@@ -3,7 +3,7 @@
 const unsigned int Manager::FPS = 60;
 const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);
 
-Manager::Manager() : title(sf::String(L"")), state(NULL), next_state(NULL), running(false) {
+Manager::Manager() : title(sf::String(L"")) {
     // préchargement des textures
     resource_manager.preload();
 
@@ -19,28 +19,16 @@ Manager::Manager() : title(sf::String(L"")), state(NULL), next_state(NULL), runn
 }
 
 void Manager::start() {
-    running = true;
-
-    while (running) {
+    while (!states.empty()) {
         sf::Event event;
-
-        // si un changement d'état a été demandé, on l'effectue maintenant
-        if (next_state != nullptr) {
-            state = next_state;
-            next_state->begin();
-            next_state = nullptr;
-        }
-
-        // vérification de sécurité
-        if (state == NULL) {
-            throw std::runtime_error("Aucun état à afficher pour le jeu");
-        }
 
         // traitement des évènements reçus
         while (window.pollEvent(event)) {
-            // fermeture de la fenêtre
+            // fermeture de la fenêtre : on dépile tous les états
             if (event.type == sf::Event::Closed) {
-                quit();
+                while (!states.empty()) {
+                    states.pop();
+                }
             }
 
             // redimensionnement de la vue par défaut
@@ -50,27 +38,31 @@ void Manager::start() {
                 ));
             }
 
-            state->processEvent(event);
+            // s'il n'y a plus d'état, on quitte
+            if (states.empty()) {
+                return;
+            }
+
+            states.top()->processEvent(event);
+        }
+        
+        // s'il n'y a plus d'état, on quitte
+        if (states.empty()) {
+            return;
         }
 
         // affichage de la prochaine frame
-        state->frame();
+        states.top()->frame();
         window.display();
     }
 }
 
-void Manager::quit() {
-    running = false;
+void Manager::pushState(std::unique_ptr<State> set_state) {
+    states.push(std::move(set_state));
 }
 
-std::shared_ptr<State> Manager::getState() {
-    return state;
-}
-
-void Manager::setState(std::shared_ptr<State> set_state) {
-    // on ne change pas immédiatement l'état, on attend
-    // la prochaine frame pour éviter toute erreur de segmentation
-    next_state = set_state;
+void Manager::popState() {
+    states.pop();
 }
 
 sf::RenderWindow& Manager::getWindow() {

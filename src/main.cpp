@@ -7,10 +7,10 @@
 
 int main() {
     Manager manager;
-    std::shared_ptr<Menu> menu = std::shared_ptr<Menu>(new Menu(manager));
+    auto menu = std::unique_ptr<Menu>(new Menu(manager));
 
     try {
-        manager.setState(menu);
+        manager.pushState(std::move(menu));
         manager.start();
     } catch (const std::exception& exception) {
         std::cerr << "Le programme a quitté après une erreur d'exécution." << std::endl;

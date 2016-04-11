@@ -19,11 +19,6 @@ public:
     virtual ~State();
 
     /**
-     * Appelé par le manager lorsque l'état est utilisé
-     */
-    virtual void begin() = 0;
-
-    /**
      * Traite l'événement donné
      */
     virtual void processEvent(const sf::Event& event) = 0;

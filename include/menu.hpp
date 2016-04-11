@@ -47,11 +47,6 @@ public:
     virtual ~Menu();
 
     /**
-     * Appelé par le manager lorsque l'état est utilisé
-     */
-    virtual void begin();
-
-    /**
      * Traite l'événement donné
      */
     virtual void processEvent(const sf::Event& event);

@@ -4,6 +4,7 @@
 #include "resource_manager.hpp"
 #include "state.hpp"
 #include <memory>
+#include <stack>
 
 /**
  * Gestionnaire principal de tous les états, vues et
@@ -18,10 +19,7 @@ private:
     sf::View gui_view;
     sf::String title;
 
-    std::shared_ptr<State> state;
-    std::shared_ptr<State> next_state;
-
-    bool running;
+    std::stack<std::unique_ptr<State>> states;
 
 public:
     /**
@@ -47,19 +45,14 @@ public:
     void start();
 
     /**
-     * Termine la boucle principale et quitte le jeu
+     * Empile l'état donné
      */
-    void quit();
+    void pushState(std::unique_ptr<State> set_state);
 
     /**
-     * Renvoie l'état actuel du jeu
+     * Dépile l'état actuel
      */
-    std::shared_ptr<State> getState();
-
-    /**
-     * Charge l'état donné dans le jeu
-     */
-    void setState(std::shared_ptr<State> set_state);
+    void popState();
 
     /**
      * Renvoie la fenêtre actuellement utilisée pour le dessin

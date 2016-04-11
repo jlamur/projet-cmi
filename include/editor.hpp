@@ -1,10 +1,11 @@
 #ifndef __PTF_EDITOR_HPP__
 #define __PTF_EDITOR_HPP__
 
-#include <unordered_map>
 #include "level.hpp"
 #include "widget_timer.hpp"
 #include "widget_toolbar.hpp"
+#include <unordered_map>
+#include <memory>
 
 /**
  * La classe Editor permet l'édition de
@@ -92,11 +93,6 @@ protected:
 public:
     Editor(Manager& manager);
     virtual ~Editor();
-
-    /**
-     * Appelé par le manager lorsque l'état est utilisé
-     */
-    virtual void begin();
 
     /**
      * Traite l'événement donné

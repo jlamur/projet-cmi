@@ -6,13 +6,7 @@
 
 Game::Game(Manager& manager) : Level(manager),
     widget_timer(manager, false),
-    next_frame_time(manager.getCurrentTime()),
-    test_mode(false), return_state(nullptr) {}
-
-Game::~Game() {}
-
-void Game::begin() {
-    Level::begin();
+    next_frame_time(manager.getCurrentTime()) {
 
     if (getMusic() != "") {
         getResourceManager().playMusic(getMusic());
@@ -27,19 +21,15 @@ void Game::begin() {
     getWindow().setFramerateLimit(0);
 }
 
+Game::~Game() {}
+
 void Game::processEvent(const sf::Event& event) {
     Level::processEvent(event);
 
     if (event.type == sf::Event::KeyPressed) {
-        // appui sur espace en mode test : retour à l'éditeur
-        if (event.key.code == sf::Keyboard::Space && test_mode) {
-            test_mode = false;
-
-            // on s'assure que la position de la caméra reste la même
-            return_state->setCamera(getCamera());
-
-            getManager().setState(return_state);
-            return_state = nullptr;
+        // appui sur espace : retour
+        if (event.key.code == sf::Keyboard::Space) {
+            getManager().popState();
         }
 
         // appui sur échap : échange entre le mode pause et normal
@@ -252,15 +242,6 @@ bool Game::isInZone(Object::Ptr object) {
     }
 
     return result;
-}
-
-bool Game::getTestMode() {
-    return test_mode;
-}
-
-void Game::setTestMode(std::shared_ptr<Editor> set_return_state) {
-    return_state = set_return_state;
-    test_mode = true;
 }
 
 Game::Mode Game::getMode() {
