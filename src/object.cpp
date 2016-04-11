@@ -227,7 +227,7 @@ void Object::solveCollision(Level& level, Object::Ptr obj, const sf::Vector2f& n
 
     // si les directions sont divergentes, pas besoin
     // de résoudre la collision
-    if (dot_normal >= 0) {
+    if (dot_normal > 0) {
         return;
     }
 
@@ -251,7 +251,8 @@ void Object::solveCollision(Level& level, Object::Ptr obj, const sf::Vector2f& n
     // on calcule le vecteur tangent qui porte la force de frottement.
     // les coefficients de friction utilisés sont les moyennes de ceux des deux objets
     rel_velo = obj->getVelocity() - getVelocity();
-
+    dot_normal = rel_velo.x * normal.x + rel_velo.y * normal.y;
+    
     sf::Vector2f tangent = rel_velo - dot_normal * normal;
     float tangent_length = std::sqrt(tangent.x * tangent.x + tangent.y * tangent.y);
 
