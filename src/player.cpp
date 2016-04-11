@@ -9,7 +9,6 @@ const unsigned int Player::TYPE_ID = 1;
 
 Player::Player() : Object() {
     // déplacement de l'origine au centre de la balle
-    sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
     sprite.setOutlineThickness(1.5f);
 }
 
@@ -67,6 +66,7 @@ sf::Vector2f Player::getForces(const Level& level) const {
 void Player::draw(Level& level) {
     // utilisation de la texture
     sprite.setRadius(getRadius());
+    sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
 	sprite.setTexture(
         &level.getResourceManager().getTexture("player.tga")
     );
