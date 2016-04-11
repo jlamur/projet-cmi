@@ -60,12 +60,6 @@ public:
     virtual void activate(Game& game, Object::Ptr object);
 
     /**
-     * Appelé lorsque le jouer a été tué. Si cette fonction
-     * est appelé, le joueur sera supprimé à la frame suivante
-     */
-    virtual void kill(Game& game);
-
-    /**
      * Récupère l'identifiant de type des joueurs
      */
     virtual unsigned int getTypeId() const;

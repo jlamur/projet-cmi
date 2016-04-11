@@ -87,12 +87,6 @@ public:
     virtual void draw(Level& level) = 0;
 
     /**
-     * Appelé lorsque l'objet a été tué. Si cette fonction
-     * est appelé, l'objet sera supprimé à la frame suivante
-     */
-    virtual void kill(Game& game) = 0;
-
-    /**
      * Récupère l'identifiant de type de cet objet
      */
     virtual unsigned int getTypeId() const = 0;

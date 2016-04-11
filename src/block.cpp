@@ -81,10 +81,6 @@ void Block::activate(Game& game, Object::Ptr object) {
     // aux activations
 }
 
-void Block::kill(Game& game) {
-    // rien à faire de plus si le bloc a été tué
-}
-
 sf::FloatRect Block::getAABB() const {
     sf::FloatRect transl_aabb = aabb;
     transl_aabb.left += getPosition().x;

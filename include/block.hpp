@@ -65,12 +65,6 @@ public:
     virtual void activate(Game& game, Object::Ptr object);
 
     /**
-     * Appelé lorsque le bloc a été tué. Si cette fonction
-     * est appelé, le bloc sera supprimé à la frame suivante
-     */
-    virtual void kill(Game& game);
-
-    /**
      * Récupère l'identifiant de type des blocs
      */
     virtual unsigned int getTypeId() const;

@@ -83,9 +83,6 @@ void Game::frame() {
                 std::cout << "<< Perdu : ";
 
                 switch (getDeathCause()) {
-                case Game::DeathCause::NONE:
-                    std::cout << "sans aucune raison";
-                    break;
                 case Game::DeathCause::OUT_OF_BOUNDS:
                     std::cout << "sortie du cadre";
                     break;
@@ -95,9 +92,12 @@ void Game::frame() {
                 case Game::DeathCause::TIME_OUT:
                     std::cout << "temps écoulé";
                     break;
+                case Game::DeathCause::NONE:
+                    std::cout << "sans aucune raison";
+                    break;
                 }
 
-                std::cout << " !" << std::endl;
+                std::cout << " ! >>" << std::endl;
                 break;
             }
         }
@@ -185,6 +185,12 @@ void Game::update() {
         // planifie sa mort à la prochaine frame
         if (!isInZone(obj_a) && obj_a->getMass() != 0) {
             kill(obj_a);
+
+            // si c'était un joueur, on a perdu
+            if (obj_a->getTypeId() == Player::TYPE_ID) {
+                setMode(Game::Mode::LOST);
+                setDeathCause(Game::DeathCause::OUT_OF_BOUNDS);
+            }
         }
 
         // on regarde s'il est en collision avec
@@ -224,7 +230,6 @@ void Game::update() {
 }
 
 void Game::kill(Object::Ptr object) {
-    object->kill(*this);
     pending_kill.push_back(object);
 }
 

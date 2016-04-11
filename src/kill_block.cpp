@@ -22,6 +22,8 @@ void KillBlock::activate(Game& game, Object::Ptr object) {
     // si un joueur touche un bloc de mort, on le tue
     if (object->getTypeId() == Player::TYPE_ID) {
         game.kill(object);
+        game.setMode(Game::Mode::LOST);
+        game.setDeathCause(Game::DeathCause::KILLED);
     }
 }
 

@@ -98,10 +98,6 @@ void Player::activate(Game& game, Object::Ptr object) {
     // qui s'occupe de la réponse
 }
 
-void Player::kill(Game& game) {
-    game.setMode(Game::Mode::LOST);
-}
-
 void Player::updatePosition() {
     // calcul de la différence de position pour connaître
     // (approximativement) la rotation de la balle
