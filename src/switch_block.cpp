@@ -18,8 +18,14 @@ void SwitchBlock::prepareDraw(ResourceManager& resources) {
 void SwitchBlock::activate(Game& game, Object::Ptr object) {
     Block::activate(game, object);
 
-    // on échange la polarité de l'objet en contact
-    if (object->getLastActivator().lock().get() != this) {
+    // on échange la polarité de l'objet en contact, si le dernier
+    // objet touché par la balle n'est pas ce bloc et si un temps
+    // d'une seconde est passé
+    sf::Time current_time = game.getManager().getCurrentTime();
+
+    if (current_time - last_activation >= sf::seconds(1) &&
+            object->getLastActivator().lock() != shared_from_this()) {
+        last_activation = current_time;
         object->setCharge(-object->getCharge());
     }
 }

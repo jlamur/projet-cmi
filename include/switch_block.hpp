@@ -18,6 +18,9 @@ protected:
     static void init(std::ifstream& file, Object::Ptr object);
 
 public:
+    sf::Time last_activation;
+
+public:
     /**
      * Identifiant unique du type "bloc changeur"
      */
