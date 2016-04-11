@@ -158,10 +158,10 @@ void Menu::loadMainMenu() {
     actions.push_back(std::bind(&Menu::loadLevelMenu, this));
 
     choices.push_back(sf::String(L"Règles du jeu"));
-    actions.push_back(std::bind(&Menu::loadRules, this));
+    actions.push_back(std::bind(&Menu::launchRules, this));
 
     choices.push_back(sf::String(L"Éditeur"));
-    actions.push_back(std::bind(&Menu::launchEditor, this));
+    actions.push_back(std::bind(&Menu::loadEditorMenu, this));
 
     choices.push_back(sf::String(L"Quitter"));
     actions.push_back(std::bind(&Menu::quit, this));
@@ -184,21 +184,47 @@ void Menu::loadLevelMenu() {
     actions.push_back(std::bind(&Menu::loadMainMenu, this));
 }
 
-void Menu::loadRules() {
-    auto rules = std::unique_ptr<Rules>(new Rules(getManager()));
-    getManager().pushState(std::move(rules));
-}
+void Menu::loadEditorMenu() {
+    choices.clear();
+    actions.clear();
+    selection = 0;
 
-void Menu::launchEditor() {
-    auto editor = std::unique_ptr<Editor>(new Editor(getManager()));
-    editor->load(getResourceManager().getLevelPath("editor_result.dat"));
-    getManager().pushState(std::move(editor));
+    std::vector<std::string> path_list = getResourceManager().getLevelList();
+    std::vector<std::string> name_list;
+
+    choices.push_back(L"Créer un nouveau niveau");
+    actions.push_back(std::bind(&Menu::launchEditor, this, ""));
+
+    for (auto it = path_list.begin(); it != path_list.end(); it++) {
+        choices.push_back(Level::getLevelName(*it));
+        actions.push_back(std::bind(&Menu::launchEditor, this, *it));
+    }
+
+    choices.push_back("Retour");
+    actions.push_back(std::bind(&Menu::loadMainMenu, this));
 }
 
 void Menu::launchGame(std::string path) {
     auto game = std::unique_ptr<Game>(new Game(getManager()));
     game->load(path);
     getManager().pushState(std::move(game));
+}
+
+void Menu::launchRules() {
+    auto rules = std::unique_ptr<Rules>(new Rules(getManager()));
+    getManager().pushState(std::move(rules));
+}
+
+void Menu::launchEditor(std::string path) {
+    auto editor = std::unique_ptr<Editor>(new Editor(getManager()));
+
+    if (path == "") {
+        editor->load();
+    } else {
+        editor->load(path);
+    }
+
+    getManager().pushState(std::move(editor));
 }
 
 void Menu::quit() {

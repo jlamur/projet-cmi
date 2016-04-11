@@ -22,14 +22,19 @@ private:
 
 protected:
     /**
-     * Affiche les règles du jeu
+     * Affiche le menu principal
      */
-    void loadRules();
+    void loadMainMenu();
 
     /**
-     * Démarre l'éditeur
+     * Affiche le menu de choix des niveaux
      */
-    void launchEditor();
+    void loadLevelMenu();
+
+    /**
+     * Affiche le menu de choix des niveaux
+     */
+    void loadEditorMenu();
 
     /**
      * Démarre le jeu avec le niveau dont le chemin
@@ -38,7 +43,19 @@ protected:
     void launchGame(std::string path);
 
     /**
-     * Quitte le jeu et le menu
+     * Démarre les règles
+     */
+    void launchRules();
+
+    /**
+     * Démarre l'éditeur avec le niveau dont le chemin
+     * complet absolu est donné en paramètre, ou bien
+     * en édition de nouveau niveau
+     */
+    void launchEditor(std::string path);
+
+    /**
+     * Quitte le menu
      */
     void quit();
 
@@ -55,16 +72,6 @@ public:
      * Demande le dessin d'une frame
      */
     virtual void frame();
-
-    /**
-     * Affiche le menu principal
-     */
-    void loadMainMenu();
-
-    /**
-     * Affiche le menu de choix des niveaux
-     */
-    void loadLevelMenu();
 };
 
 
