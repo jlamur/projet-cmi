@@ -31,8 +31,9 @@ void Game::processEvent(const sf::Event& event) {
             getManager().popState();
         }
 
-        // appui sur échap : échange entre le mode pause et normal
-        if (event.key.code == sf::Keyboard::Escape) {
+        // appui sur retour échap : échange entre le mode pause et normal
+        if (event.key.code == sf::Keyboard::Escape ||
+            event.key.code == sf::Keyboard::BackSpace) {
             if (getMode() == Game::Mode::NORMAL) {
                 setMode(Game::Mode::PAUSED);
             } else if (getMode() == Game::Mode::PAUSED) {

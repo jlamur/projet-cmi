@@ -37,9 +37,16 @@ void Menu::processEvent(const sf::Event& event) {
             }
         }
 
-        // touche entrée : on exécute le choix sélectionné
-        if (event.key.code == sf::Keyboard::Return) {
+        // touche entrée ou espace : on exécute le choix sélectionné
+        if (event.key.code == sf::Keyboard::Return ||
+            event.key.code == sf::Keyboard::Space) {
             actions[selection]();
+        }
+
+        // touche retour ou échap : on revient au menu principal
+        if (event.key.code == sf::Keyboard::BackSpace ||
+            event.key.code == sf::Keyboard::Escape) {
+            loadMainMenu();
         }
     }
 
@@ -82,11 +89,13 @@ void Menu::frame() {
     // dessin du fond
     window.clear(sf::Color::White);
 
+    // on met à l'échelle le fond de telle sorte qu'il soit toujours
+    // entièrement visible en largeur
     float bg_scale = size.x / background.getLocalBounds().width;
     background.setScale(bg_scale, bg_scale);
+
     background.setPosition(sf::Vector2f(
-        size.x / 2 - background.getGlobalBounds().width / 2,
-        size.y - background.getGlobalBounds().height
+        0, size.y - background.getGlobalBounds().height
     ));
 
     window.draw(background);
