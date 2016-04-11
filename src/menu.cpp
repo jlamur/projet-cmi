@@ -175,7 +175,11 @@ void Menu::loadLevelMenu() {
 }
 
 void Menu::loadRules() {
-    // TODO: coder l'affichage des règles
+    choices.clear();
+    getWindow().clear(sf::Color::Black);
+
+    sf::Texture& texture = getResourceManager().getTexture("regles_jeu.png");
+    background.setTexture(texture);
 }
 
 void Menu::launchEditor() {
