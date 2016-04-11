@@ -192,6 +192,11 @@ void Editor::processEvent(const sf::Event& event) {
             clearSelection();
         }
 
+        // appui sur Ctrl + S : sauvegarde du niveau
+        if (event.key.code == sf::Keyboard::S && event.key.control) {
+            save();
+        }
+
         // appui sur Ctrl + A : sélection de tous les objets
         if (event.key.code == sf::Keyboard::A && event.key.control) {
             selectAll();
