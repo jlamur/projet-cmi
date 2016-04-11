@@ -149,9 +149,25 @@ Level::Level(Manager& manager) : State(manager) {
     sf::Vector2u window_size = getWindow().getSize();
     gravity_direction = GravityDirection::SOUTH;
 
+    // positionnement par défaut de la caméra
     camera.setSize(window_size.x, window_size.y);
     camera.setCenter(0, 0);
     camera_angle = 180.f;
+
+    // métadonnées par défaut
+    name = sf::String("Nouveau niveau");
+    current_path = getResourceManager().getLevelPath("new_level.dat");
+    time_left = total_time = 30;
+
+    // zone de jeu par défaut
+    zone.push_back(sf::Vector2f(-128, -128));
+    zone.push_back(sf::Vector2f(128, -128));
+    zone.push_back(sf::Vector2f(128, 128));
+    zone.push_back(sf::Vector2f(-128, 128));
+
+    // ressources par défaut
+    music = "";
+    background = "";
 }
 
 Level::~Level() {}
@@ -167,34 +183,7 @@ sf::String Level::getLevelName(std::string path) {
     return name;
 }
 
-void Level::load() {
-    // métadonnées par défaut
-    name = sf::String("Nouveau niveau");
-    time_left = total_time = 30;
-
-    // zone de jeu par défaut
-    zone.clear();
-    zone.push_back(sf::Vector2f(-128, -128));
-    zone.push_back(sf::Vector2f(128, -128));
-    zone.push_back(sf::Vector2f(128, 128));
-    zone.push_back(sf::Vector2f(-128, 128));
-
-    // ressources par défaut
-    music = "";
-    background = "";
-
-    // objets par défaut
-    // TODO: ajouter quelques objets par défaut
-}
-
 void Level::load(std::string path) {
-    // si le fichier n'existe pas, on utilise le niveau par défaut
-    if (!boost::filesystem::exists(path)) {
-        load();
-        current_path = path;
-        return;
-    }
-
     loadLevel(
         path, name, total_time,
         zone, background, music,

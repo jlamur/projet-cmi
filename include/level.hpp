@@ -67,11 +67,6 @@ public:
     static sf::String getLevelName(std::string path);
 
     /**
-     * Charge le niveau par défaut
-     */
-    void load();
-
-    /**
      * Charge le niveau de jeu donné depuis le fichier
      * dont le chemin complet absolu est en paramètre
      */

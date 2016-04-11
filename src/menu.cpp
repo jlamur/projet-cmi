@@ -218,9 +218,7 @@ void Menu::launchRules() {
 void Menu::launchEditor(std::string path) {
     auto editor = std::unique_ptr<Editor>(new Editor(getManager()));
 
-    if (path == "") {
-        editor->load();
-    } else {
+    if (!path.empty()) {
         editor->load(path);
     }
 
