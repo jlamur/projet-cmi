@@ -64,12 +64,34 @@ sf::Vector2f Player::getForces(const Game& game) const {
 }
 
 void Player::draw(Level& level) {
-    // utilisation de la texture
+    // on charge la texture selon le numéro du joueur
+    std::string texture_name;
+
+    if (getPlayerNumber() == 0) {
+        texture_name = "player_1.tga";
+    } else {
+        texture_name = "player_2.tga";
+    }
+
+    sprite.setTexture(&level.getResourceManager().getTexture(texture_name));
     sprite.setRadius(getRadius());
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
-	sprite.setTexture(
-        &level.getResourceManager().getTexture("player.tga")
-    );
+    sprite.setPosition(getPosition());
+
+    shadow_sprite.setTexture(&level.getResourceManager().getTexture("player_shadow.tga"));
+    shadow_sprite.setRadius(getRadius() - 1);
+    shadow_sprite.setOrigin(sf::Vector2f(getRadius() - 1, getRadius() - 1));
+    shadow_sprite.setPosition(getPosition());
+
+    // on fait tourner le sprite selon la différence de position
+    if (previous_position != sf::Vector2f(0, 0)) {
+        sprite.rotate(
+            (getPosition() - previous_position).x *
+            level.getRightDirection().x * .015f
+        );
+    }
+
+    previous_position = getPosition();
 
     // si le joueur est sélectionné, on met sa bordure en rouge
     if (isSelected()) {
@@ -87,23 +109,15 @@ void Player::draw(Level& level) {
         sprite.setFillColor(sf::Color::Transparent);
     }
 
-    // déplacement du sprite à la position de la balle
-    sprite.setPosition(getPosition());
+    // dessin des sprites
     level.getWindow().draw(sprite);
+    level.getWindow().draw(shadow_sprite);
 }
 
 void Player::activate(Game& game, Object::Ptr object) {
     // ne rien faire si le joueur est activé.
     // en règle générale, c'est l'objet activé par le joueur
     // qui s'occupe de la réponse
-}
-
-void Player::updatePosition() {
-    // calcul de la différence de position pour connaître
-    // (approximativement) la rotation de la balle
-    sf::Vector2f last_position = getPosition();
-    Object::updatePosition();
-    sprite.rotate((getPosition() - last_position).x * 3.f);
 }
 
 sf::FloatRect Player::getAABB() const {

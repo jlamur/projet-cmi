@@ -11,6 +11,9 @@ public:
 
 private:
     mutable sf::CircleShape sprite;
+    sf::CircleShape shadow_sprite;
+
+    mutable sf::Vector2f previous_position;
     unsigned int player_number;
 
 protected:
@@ -78,12 +81,6 @@ public:
      * Sauvegarde le joueur dans le fichier donné
      */
     virtual void save(std::ofstream& file) const;
-
-    /**
-     * Met à jour la position de l'objet selon sa
-     * vitesse actuelle
-     */
-    virtual void updatePosition();
 
     /**
      * Renvoie le numéro du joueur
