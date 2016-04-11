@@ -3,7 +3,10 @@
 #include "player.hpp"
 #include "block.hpp"
 #include "gravity_block.hpp"
+#include "finish_block.hpp"
+#include "kill_block.hpp"
 #include <boost/filesystem.hpp>
+#include <iostream>
 #include <arpa/inet.h>
 #include <cstring>
 #include <functional>
@@ -32,7 +35,9 @@ const unsigned int VERSION_NUMBER = 0;
 std::map<unsigned int, std::function<Object::Ptr(std::ifstream&)>> object_type_map = {
     {Player::TYPE_ID, Player::load},
     {Block::TYPE_ID, Block::load},
-    {GravityBlock::TYPE_ID, GravityBlock::load}
+    {GravityBlock::TYPE_ID, GravityBlock::load},
+    {FinishBlock::TYPE_ID, FinishBlock::load},
+    {KillBlock::TYPE_ID, KillBlock::load}
 };
 
 /**
@@ -158,7 +163,6 @@ sf::String Level::getLevelName(std::string path) {
 void Level::load() {
     // métadonnées par défaut
     name = sf::String("Nouveau niveau");
-    current_file = "";
     total_time = 30;
 
     // zone de jeu par défaut
@@ -176,29 +180,25 @@ void Level::load() {
     // TODO: ajouter quelques objets par défaut
 }
 
-void Level::load(std::string filename) {
-    std::string full_path = getResourceManager().getLevelPath(filename);
-
+void Level::load(std::string path) {
     // si le fichier n'existe pas, on utilise le niveau par défaut
-    if (!boost::filesystem::exists(full_path)) {
+    if (!boost::filesystem::exists(path)) {
         load();
+        current_path = path;
         return;
     }
 
     loadLevel(
-        full_path, name, total_time,
+        path, name, total_time,
         zone, background, music,
         std::bind(&Level::addObject, this, std::placeholders::_1)
     );
-    current_file = filename;
+    current_path = path;
 }
 
-void Level::save(std::string filename) {
+void Level::save(std::string path) {
     std::ofstream file;
-    file.open(
-        getResourceManager().getLevelPath(filename),
-        std::ios::binary | std::ios::out
-    );
+    file.open(path, std::ios::binary | std::ios::out);
 
     // on vérifie que le fichier ait correctement été ouvert en lecture
     if (file.fail()) {
@@ -254,10 +254,12 @@ void Level::save(std::string filename) {
         // écriture de l'objet
         objects[i]->save(file);
     }
+
+    std::cout << "Sauvegardé : " << path << std::endl;
 }
 
 void Level::save() {
-    save(current_file);
+    save(current_path);
 }
 
 void Level::begin() {
