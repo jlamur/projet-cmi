@@ -12,5 +12,13 @@ https://sourceforge.net/projects/boost/files/latest/download?source=files
 * Compilation : cmake .
 		make
 
+Concernant les commandes de l'éditeur :
+- pour changer la polarité d'un objet : Ctrl+scroll
+- tout sélectionner : ctrl+A
+- placer plusieurs objets : clic+déplacement de la souris
+- supprimer des objets : clic droit ou sélection + suppr
+- sélectionner plusieurs objets : alt+clic+déplacement de la souris
+
+
 
 
