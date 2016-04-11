@@ -17,7 +17,7 @@ protected:
     /**
      * Calcule les forces appliquées au joueur
      */
-    virtual sf::Vector2f getForces(const Level& level) const;
+    virtual sf::Vector2f getForces(const Game& game) const;
 
     /**
      * Initialisation des propriétés du joueur donné
@@ -57,7 +57,7 @@ public:
     /**
      * Appelé lorsque le joueur est activé par un objet
      */
-    virtual void activate(Level& level, Object* object);
+    virtual void activate(Game& game, Object* object);
 
     /**
      * Appelé lorsque le jouer a été tué. Si cette fonction

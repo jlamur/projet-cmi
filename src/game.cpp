@@ -21,6 +21,8 @@ void Game::begin() {
     }
 
     mode = Game::Mode::NORMAL;
+    death_cause = Game::DeathCause::NONE;
+
     time_left = getTotalTime();
     getWindow().setFramerateLimit(0);
 }
@@ -65,6 +67,39 @@ void Game::frame() {
         // si on est en mode normal
         if (getMode() == Game::Mode::NORMAL) {
             update();
+        } else {
+            // TODO: pour le débogage affichage du mode actuel
+            switch (getMode()) {
+            case Game::Mode::NORMAL:
+                std::cout << "<< Reprise >>" << std::endl;
+                break;
+            case Game::Mode::PAUSED:
+                std::cout << "<< En pause >>" << std::endl;
+                break;
+            case Game::Mode::WON:
+                std::cout << "<< Gagné ! >>" << std::endl;
+                break;
+            case Game::Mode::LOST:
+                std::cout << "<< Perdu : ";
+
+                switch (getDeathCause()) {
+                case Game::DeathCause::NONE:
+                    std::cout << "sans aucune raison";
+                    break;
+                case Game::DeathCause::OUT_OF_BOUNDS:
+                    std::cout << "sortie du cadre";
+                    break;
+                case Game::DeathCause::KILLED:
+                    std::cout << "tué par bloc";
+                    break;
+                case Game::DeathCause::TIME_OUT:
+                    std::cout << "temps écoulé";
+                    break;
+                }
+
+                std::cout << " !" << std::endl;
+                break;
+            }
         }
 
         // on s'assure que la caméra soit centrée sur nos joueurs
@@ -129,6 +164,7 @@ void Game::update() {
     // on a perdu
     if (time_left <= 0) {
         setMode(Game::Mode::LOST);
+        setDeathCause(Game::DeathCause::TIME_OUT);
         return;
     } else {
         time_left -= Manager::FRAME_TIME.asSeconds();
@@ -222,23 +258,14 @@ Game::Mode Game::getMode() {
     return mode;
 }
 
+Game::DeathCause Game::getDeathCause() {
+    return death_cause;
+}
+
 void Game::setMode(Game::Mode set_mode) {
     mode = set_mode;
+}
 
-    // TODO: pour le débogage
-    // affichage du mode actuel
-    switch (set_mode) {
-    case Game::Mode::NORMAL:
-        std::cout << "<< Reprise >>" << std::endl;
-        break;
-    case Game::Mode::PAUSED:
-        std::cout << "<< En pause >>" << std::endl;
-        break;
-    case Game::Mode::WON:
-        std::cout << "<< Gagné ! >>" << std::endl;
-        break;
-    case Game::Mode::LOST:
-        std::cout << "<< Perdu ! >>" << std::endl;
-        break;
-    }
+void Game::setDeathCause(Game::DeathCause set_death_cause) {
+    death_cause = set_death_cause;
 }

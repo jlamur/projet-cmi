@@ -1,5 +1,5 @@
 #include "switch_block.hpp"
-#include "level.hpp"
+#include "game.hpp"
 
 const unsigned int SwitchBlock::TYPE_ID = 6;
 
@@ -15,8 +15,8 @@ void SwitchBlock::prepareDraw(ResourceManager& resources) {
     sprite.setTexture(resources.getTexture("switch_block.tga"));
 }
 
-void SwitchBlock::activate(Level& level, Object* object) {
-    Block::activate(level, object);
+void SwitchBlock::activate(Game& game, Object* object) {
+    Block::activate(game, object);
     // TODO: implémenter le comportmeent des blocs changeurs
 }
 

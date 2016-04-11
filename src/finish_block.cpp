@@ -1,5 +1,5 @@
 #include "finish_block.hpp"
-#include "level.hpp"
+#include "game.hpp"
 
 const unsigned int FinishBlock::TYPE_ID = 4;
 
@@ -16,8 +16,8 @@ void FinishBlock::prepareDraw(ResourceManager& resources) {
     sprite.setTexture(resources.getTexture("finish_block.tga"), true);
 }
 
-void FinishBlock::activate(Level& level, Object* object) {
-    Block::activate(level, object);
+void FinishBlock::activate(Game& game, Object* object) {
+    Block::activate(game, object);
     // TODO: implémenter le comportmeent des blocs d'arrivée
 }
 

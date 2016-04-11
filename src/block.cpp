@@ -1,5 +1,6 @@
 #include "block.hpp"
 #include "level.hpp"
+#include "game.hpp"
 #include "player.hpp"
 #include "constants.hpp"
 #include "resource_manager.hpp"
@@ -74,7 +75,7 @@ void Block::draw(Level& level) {
     }
 }
 
-void Block::activate(Level& level, Object* object) {
+void Block::activate(Game& game, Object* object) {
     // ne rien faire si le bloc est activé.
     // Ceci est un bloc de base qui n'a pas a réagir
     // aux activations

@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "block.hpp"
-#include "level.hpp"
+#include "game.hpp"
 
 class KillBlock : public Block {
 public:
@@ -39,7 +39,7 @@ public:
     /**
      * Appelé lorsque le bloc tueur est activé par un objet
      */
-    virtual void activate(Level& level, Object* object);
+    virtual void activate(Game& game, Object* object);
 
     /**
      * Récupère l'identifiant de type des blocs tueurs

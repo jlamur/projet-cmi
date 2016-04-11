@@ -1,5 +1,5 @@
 #include "gravity_block.hpp"
-#include "level.hpp"
+#include "game.hpp"
 
 const unsigned int GravityBlock::TYPE_ID = 3;
 
@@ -35,12 +35,12 @@ void GravityBlock::prepareDraw(ResourceManager& resources) {
     sprite.setTexture(resources.getTexture(texture_name + ".tga"));
 }
 
-void GravityBlock::activate(Level& level, Object* object) {
-    Block::activate(level, object);
+void GravityBlock::activate(Game& game, Object* object) {
+    Block::activate(game, object);
 
     // lorsque le bloc est activé, il transmet son
     // sens de gravité au niveau
-    level.setGravityDirection(gravity_direction);
+    game.setGravityDirection(gravity_direction);
 }
 
 unsigned int GravityBlock::getTypeId() const {

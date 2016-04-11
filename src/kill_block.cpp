@@ -1,5 +1,5 @@
 #include "kill_block.hpp"
-#include "level.hpp"
+#include "game.hpp"
 
 const unsigned int KillBlock::TYPE_ID = 5;
 
@@ -15,8 +15,8 @@ void KillBlock::prepareDraw(ResourceManager& resources) {
     sprite.setTexture(resources.getTexture("kill_block.tga"));
 }
 
-void KillBlock::activate(Level& level, Object* object) {
-    Block::activate(level, object);
+void KillBlock::activate(Game& game, Object* object) {
+    Block::activate(game, object);
     // TODO: implémenter le comportmeent des blocs tueurs
 }
 

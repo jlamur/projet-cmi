@@ -1,5 +1,5 @@
 #include "object.hpp"
-#include "level.hpp"
+#include "game.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
 #include <cmath>
@@ -145,12 +145,12 @@ void Object::save(std::ofstream& file) const {
     file.write(&null_byte, 1);
 }
 
-sf::Vector2f Object::getForces(const Level& level) const {
+sf::Vector2f Object::getForces(const Game& game) const {
     sf::Vector2f forces(0, 0);
-    const std::vector<Object::Ptr>& objects = level.getObjects();
+    const std::vector<Object::Ptr>& objects = game.getObjects();
 
     // force de gravité
-    forces += getMass() * level.getGravity();
+    forces += getMass() * game.getGravity();
 
     // force d'attraction entre objets chargés
     if (getCharge() != 0) {
@@ -188,8 +188,8 @@ sf::Vector2f Object::getForces(const Level& level) const {
     return forces;
 }
 
-void Object::updateVelocity(const Level& level) {
-    acceleration = getForces(level) * getMassInvert();
+void Object::updateVelocity(const Game& game) {
+    acceleration = getForces(game) * getMassInvert();
     velocity += acceleration * Manager::FRAME_TIME.asSeconds();
 }
 
@@ -221,7 +221,7 @@ bool Object::detectCollision(Object::Ptr obj, CollisionData& data) const {
     return getCollisionData(data);
 }
 
-void Object::solveCollision(Level& level, Object::Ptr obj, const sf::Vector2f& normal) {
+void Object::solveCollision(Game& game, Object::Ptr obj, const sf::Vector2f& normal) {
     // si les deux objets sont de masse infinie, réinitialisation
     // des vitesses en tant que collision
     if (getMassInvert() == 0 && obj->getMassInvert() == 0) {
@@ -241,8 +241,8 @@ void Object::solveCollision(Level& level, Object::Ptr obj, const sf::Vector2f& n
 
     // en ce point, on est bertins qu'une collision a eu lieu.
     // activation réciproque des deux objets
-    activate(level, obj.get());
-    obj->activate(level, this);
+    activate(game, obj.get());
+    obj->activate(game, this);
 
     // on utilise le plus petit coefficient de friction entre les
     // deux objets comme le coefficient de la collision

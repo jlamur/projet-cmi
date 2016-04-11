@@ -15,6 +15,11 @@ public:
      */
     enum class Mode {NORMAL, PAUSED, WON, LOST};
 
+    /**
+     * Les différentes raisons de mort
+     */
+    enum class DeathCause {NONE, OUT_OF_BOUNDS, KILLED, TIME_OUT};
+
 private:
     WidgetTimer widget_timer;
     sf::Time next_frame_time;
@@ -25,6 +30,7 @@ private:
 
     std::shared_ptr<Editor> return_state;
     Mode mode;
+    DeathCause death_cause;
 
     /**
      * Met à jour les objets du jeu pour
@@ -84,11 +90,13 @@ public:
      * Récupère le mode actuel de jeu
      */
     Mode getMode();
+    DeathCause getDeathCause();
 
     /**
      * Modifie le mode actuel de jeu
      */
     void setMode(Mode set_mode);
+    void setDeathCause(DeathCause set_death_cause);
 };
 
 #endif

@@ -5,6 +5,9 @@
 #include <memory>
 #include "object.hpp"
 
+class Game;
+class Level;
+
 class Block : public Object {
 public:
     typedef std::shared_ptr<Block> Ptr;
@@ -59,7 +62,7 @@ public:
     /**
      * Appelé lorsque le bloc est activé par un objet
      */
-    virtual void activate(Level& level, Object* object);
+    virtual void activate(Game& game, Object* object);
 
     /**
      * Appelé lorsque le bloc a été tué. Si cette fonction

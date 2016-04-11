@@ -1,6 +1,6 @@
 #include "player.hpp"
 #include "game.hpp"
-#include "level.hpp"
+#include "game.hpp"
 #include "block.hpp"
 #include "constants.hpp"
 #include <array>
@@ -36,27 +36,27 @@ void Player::save(std::ofstream& file) const {
     Object::save(file);
 }
 
-sf::Vector2f Player::getForces(const Level& level) const {
-    sf::Vector2f forces = Object::getForces(level);
+sf::Vector2f Player::getForces(const Game& game) const {
+    sf::Vector2f forces = Object::getForces(game);
 
     // déplacement de la balle après appui sur les touches de direction
     if (getPlayerNumber() == 0) {
-        if (level.getManager().isKeyPressed(sf::Keyboard::Left)) {
-            forces += level.getLeftDirection();
+        if (game.getManager().isKeyPressed(sf::Keyboard::Left)) {
+            forces += game.getLeftDirection();
         }
 
-        if (level.getManager().isKeyPressed(sf::Keyboard::Right)) {
-            forces += level.getRightDirection();
+        if (game.getManager().isKeyPressed(sf::Keyboard::Right)) {
+            forces += game.getRightDirection();
         }
     }
 
     if (getPlayerNumber() == 1) {
-        if (level.getManager().isKeyPressed(sf::Keyboard::Q)) {
-            forces += level.getLeftDirection();
+        if (game.getManager().isKeyPressed(sf::Keyboard::Q)) {
+            forces += game.getLeftDirection();
         }
 
-        if (level.getManager().isKeyPressed(sf::Keyboard::D)) {
-            forces += level.getRightDirection();
+        if (game.getManager().isKeyPressed(sf::Keyboard::D)) {
+            forces += game.getRightDirection();
         }
     }
 
@@ -90,7 +90,7 @@ void Player::draw(Level& level) {
     level.getWindow().draw(sprite);
 }
 
-void Player::activate(Level& level, Object* object) {
+void Player::activate(Game& game, Object* object) {
     // ne rien faire si le joueur est activé.
     // en règle générale, c'est l'objet activé par le joueur
     // qui s'occupe de la réponse

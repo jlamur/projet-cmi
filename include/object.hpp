@@ -34,7 +34,7 @@ protected:
     /**
      * Calcule les forces appliquées à l'objet
      */
-    virtual sf::Vector2f getForces(const Level& level) const;
+    virtual sf::Vector2f getForces(const Game& game) const;
 
     /**
      * Initialisation des propriétés communes à tous les objets
@@ -79,7 +79,7 @@ public:
     /**
      * Appelé lorsque l'objet est activé par un autre
      */
-    virtual void activate(Level& level, Object* object) = 0;
+    virtual void activate(Game& game, Object* object) = 0;
 
     /**
      * Appelé lorsque l'objet a été tué. Si cette fonction
@@ -106,7 +106,7 @@ public:
      * Met à jour la vitesse de l'objet selon les
      * forces qui lui sont appliquées
      */
-    virtual void updateVelocity(const Level& level);
+    virtual void updateVelocity(const Game& game);
 
     /**
      * Met à jour la position de l'objet selon sa
@@ -125,7 +125,7 @@ public:
      * et l'objet passé en paramètre selon la normale
      * donnée
      */
-    virtual void solveCollision(Level& level, Object::Ptr obj, const sf::Vector2f& normal);
+    virtual void solveCollision(Game& game, Object::Ptr obj, const sf::Vector2f& normal);
 
     /**
      * Application de la correction positionnelle sur
