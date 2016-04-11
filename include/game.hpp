@@ -29,6 +29,8 @@ private:
     Mode mode;
     DeathCause death_cause;
 
+    float time_left;
+
     /**
      * Met à jour les objets du jeu pour
      * qu'ils s'adaptent au nouvel état
@@ -83,6 +85,16 @@ public:
      */
     void setMode(Mode set_mode);
     void setDeathCause(DeathCause set_death_cause);
+
+    /**
+     * Modifie le temps total du niveau
+     */
+    virtual void setTotalTime(int set_total_time);
+
+    /**
+     * Modifie la musique du niveau
+     */
+    virtual void setMusic(std::string set_music);
 };
 
 #endif

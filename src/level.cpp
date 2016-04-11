@@ -116,6 +116,7 @@ void loadLevel(
     // lecture des chemins de la musique et du fond
     std::getline(file, music, '\0');
     std::getline(file, background, '\0');
+    std::cout << music << " " << background << std::endl;
 
     // lecture des objets si une callback a été fournie
     int object_count;
@@ -155,9 +156,9 @@ Level::Level(Manager& manager) : State(manager) {
     camera_angle = 180.f;
 
     // métadonnées par défaut
-    name = sf::String("Nouveau niveau");
+    setName(sf::String("Nouveau niveau"));
     current_path = getResourceManager().getLevelPath("new_level.dat");
-    time_left = total_time = 30;
+    setTotalTime(30);
 
     // zone de jeu par défaut
     zone.push_back(sf::Vector2f(-128, -128));
@@ -166,8 +167,8 @@ Level::Level(Manager& manager) : State(manager) {
     zone.push_back(sf::Vector2f(-128, 128));
 
     // ressources par défaut
-    music = "";
-    background = "";
+    setMusic("");
+    setBackground("");
 }
 
 Level::~Level() {}
@@ -190,7 +191,8 @@ void Level::load(std::string path) {
         std::bind(&Level::addObject, this, std::placeholders::_1)
     );
 
-    time_left = total_time;
+    setTotalTime(total_time);
+    setMusic(music);
     current_path = path;
 }
 
@@ -324,9 +326,7 @@ void Level::setTotalTime(int set_total_time) {
     // faisons rester le temps entre 10s et 59:59
     set_total_time = std::min(set_total_time, 3599);
     set_total_time = std::max(set_total_time, 10);
-
     total_time = set_total_time;
-    time_left = total_time;
 }
 
 std::string Level::getMusic() const {

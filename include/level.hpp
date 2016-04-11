@@ -37,8 +37,6 @@ private:
     std::vector<sf::Vector2f> zone;
 
 protected:
-    float time_left;
-
     /**
      * Dessine tous les objets et le fond à l'écran
      */
@@ -106,7 +104,7 @@ public:
     /**
      * Modifie le temps total du niveau
      */
-    void setTotalTime(int set_total_time);
+    virtual void setTotalTime(int set_total_time);
 
     /**
      * Récupère la musique du niveau
@@ -116,7 +114,7 @@ public:
     /**
      * Modifie la musique du niveau
      */
-    void setMusic(std::string set_music);
+    virtual void setMusic(std::string set_music);
 
     /**
      * Récupère le fond du niveau

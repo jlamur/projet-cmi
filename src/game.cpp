@@ -7,13 +7,6 @@
 Game::Game(Manager& manager) : Level(manager),
     widget_timer(manager, false),
     next_frame_time(manager.getCurrentTime()) {
-
-    if (getMusic() != "") {
-        getResourceManager().playMusic(getMusic());
-    } else {
-        getResourceManager().stopMusic();
-    }
-
     mode = Game::Mode::NORMAL;
     death_cause = Game::DeathCause::NONE;
 
@@ -248,6 +241,10 @@ Game::Mode Game::getMode() {
     return mode;
 }
 
+void Game::setDeathCause(Game::DeathCause set_death_cause) {
+    death_cause = set_death_cause;
+}
+
 Game::DeathCause Game::getDeathCause() {
     return death_cause;
 }
@@ -256,6 +253,19 @@ void Game::setMode(Game::Mode set_mode) {
     mode = set_mode;
 }
 
-void Game::setDeathCause(Game::DeathCause set_death_cause) {
-    death_cause = set_death_cause;
+void Game::setTotalTime(int set_total_time) {
+    Level::setTotalTime(set_total_time);
+    time_left = getTotalTime();
+}
+
+void Game::setMusic(std::string set_music) {
+    Level::setMusic(set_music);
+
+    // lorsqu'on change la musique, on commence à la jouer
+    // si toutefois il y en a une
+    if (getMusic() != "") {
+        getResourceManager().playMusic(getMusic());
+    } else {
+        getResourceManager().stopMusic();
+    }
 }
