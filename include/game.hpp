@@ -21,6 +21,8 @@ private:
     std::vector<Object::Ptr> pending_kill;
 
     bool test_mode;
+    float time_left;
+
     std::shared_ptr<Editor> return_state;
     Mode mode;
 

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cmath>
 #include "game.hpp"
 #include "player.hpp"
@@ -20,6 +21,7 @@ void Game::begin() {
     }
 
     mode = Game::Mode::NORMAL;
+    time_left = getTotalTime();
     getWindow().setFramerateLimit(0);
 }
 
@@ -40,10 +42,10 @@ void Game::processEvent(const sf::Event& event) {
 
         // appui sur échap : échange entre le mode pause et normal
         if (event.key.code == sf::Keyboard::Escape) {
-            if (mode == Game::Mode::NORMAL) {
-                mode = Game::Mode::PAUSED;
-            } else if (mode == Game::Mode::PAUSED) {
-                mode = Game::Mode::NORMAL;
+            if (getMode() == Game::Mode::NORMAL) {
+                setMode(Game::Mode::PAUSED);
+            } else if (getMode() == Game::Mode::PAUSED) {
+                setMode(Game::Mode::NORMAL);
             }
         }
     }
@@ -61,7 +63,7 @@ void Game::frame() {
 
         // on met à jour la physique d'un cran temporel,
         // si on est en mode normal
-        if (mode == Game::Mode::NORMAL) {
+        if (getMode() == Game::Mode::NORMAL) {
             update();
         }
 
@@ -90,7 +92,10 @@ void Game::draw() {
     getManager().useGUIView();
 
     // dessin du timer
-    widget_timer.setTimeLeft(getTotalTime());
+    widget_timer.setTimeLeft(
+        std::max(std::floor(time_left), 0.f)
+    );
+
     widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
 }
 
@@ -119,6 +124,15 @@ void Game::ensureCentered() {
 void Game::update() {
     std::vector<CollisionData> colliding;
     std::vector<Object::Ptr>& objects = getObjects();
+
+    // on décrémente le temps, si le temps est nul,
+    // on a perdu
+    if (time_left <= 0) {
+        setMode(Game::Mode::LOST);
+        return;
+    } else {
+        time_left -= Manager::FRAME_TIME.asSeconds();
+    }
 
     // on tue les objets qui étaient déjà planifiés pour mourir
     for (auto it = pending_kill.begin(); it != pending_kill.end(); it++) {
@@ -210,4 +224,21 @@ Game::Mode Game::getMode() {
 
 void Game::setMode(Game::Mode set_mode) {
     mode = set_mode;
+
+    // TODO: pour le débogage
+    // affichage du mode actuel
+    switch (set_mode) {
+    case Game::Mode::NORMAL:
+        std::cout << "<< Reprise >>" << std::endl;
+        break;
+    case Game::Mode::PAUSED:
+        std::cout << "<< En pause >>" << std::endl;
+        break;
+    case Game::Mode::WON:
+        std::cout << "<< Gagné ! >>" << std::endl;
+        break;
+    case Game::Mode::LOST:
+        std::cout << "<< Perdu ! >>" << std::endl;
+        break;
+    }
 }
