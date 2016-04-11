@@ -204,6 +204,14 @@ bool Object::detectCollision(Object::Ptr obj, CollisionData& data) const {
         return false;
     }
 
+    // si on a affaire à deux objets de masse infinie et
+    // de vitesse nulle, pas de collision
+    if (getMassInvert() == 0 && obj->getMassInvert() == 0 &&
+        getVelocity().x == 0 && getVelocity().y == 0 &&
+        obj->getVelocity().x == 0 && obj->getVelocity().y == 0) {
+        return false;
+    }
+
     // si les deux boîtes englobantes des deux objets ne
     // s'intersectent pas, il ne risque pas d'y avoir de collision
     if (!getAABB().intersects(obj->getAABB())) {
@@ -252,9 +260,9 @@ void Object::solveCollision(Level& level, Object::Ptr obj, const sf::Vector2f& n
     // les coefficients de friction utilisés sont les moyennes de ceux des deux objets
     rel_velo = obj->getVelocity() - getVelocity();
     dot_normal = rel_velo.x * normal.x + rel_velo.y * normal.y;
-    
+
     sf::Vector2f tangent = rel_velo - dot_normal * normal;
-    float tangent_length = std::sqrt(tangent.x * tangent.x + tangent.y * tangent.y);
+    float tangent_length = tangent.x * tangent.x + tangent.y * tangent.y;
 
     // la tangente est nulle : pas de frottement à générer
     // on évite ainsi une division par zéro
@@ -262,7 +270,7 @@ void Object::solveCollision(Level& level, Object::Ptr obj, const sf::Vector2f& n
         return;
     }
 
-    tangent /= tangent_length;
+    tangent /= std::sqrt(tangent_length);
 
     float magnitude = -(rel_velo.x * tangent.x + rel_velo.y * tangent.y) /
         (getMassInvert() + obj->getMassInvert());

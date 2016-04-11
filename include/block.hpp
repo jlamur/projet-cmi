@@ -14,6 +14,7 @@ private:
 
 protected:
     mutable sf::Sprite sprite;
+    sf::FloatRect aabb;
 
     /**
      * Initialisation des propriétés du bloc donné

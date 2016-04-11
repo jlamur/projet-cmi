@@ -180,24 +180,22 @@ bool AABBToAABB(CollisionData& data) {
     return true;
 }
 
-/**
- * Dictionnaire associant les types impliqués
- * dans une collision à leur fonction de résolution
- */
-std::map<
-    std::pair<CollisionType, CollisionType>,
-    std::function<bool(CollisionData&)>
-> collision_map = {
-    {std::make_pair(CollisionType::CIRCLE, CollisionType::CIRCLE), circleToCircle},
-    {std::make_pair(CollisionType::CIRCLE, CollisionType::AABB), circleToAABB},
-    {std::make_pair(CollisionType::AABB, CollisionType::AABB), AABBToAABB},
-    {std::make_pair(CollisionType::AABB, CollisionType::CIRCLE), AABBToCircle}
-};
-
 CollisionData::CollisionData() {}
 bool getCollisionData(CollisionData& data) {
-    return collision_map[std::make_pair(
-        data.obj_a->getCollisionType(),
-        data.obj_b->getCollisionType()
-    )](data);
+    CollisionType type_a = data.obj_a->getCollisionType();
+    CollisionType type_b = data.obj_b->getCollisionType();
+
+    if (type_a == CollisionType::CIRCLE && type_b == CollisionType::CIRCLE) {
+        return circleToCircle(data);
+    }
+
+    if (type_a == CollisionType::CIRCLE && type_b == CollisionType::AABB) {
+        return circleToAABB(data);
+    }
+
+    if (type_a == CollisionType::AABB && type_b == CollisionType::CIRCLE) {
+        return AABBToCircle(data);
+    }
+
+    return AABBToAABB(data);
 }

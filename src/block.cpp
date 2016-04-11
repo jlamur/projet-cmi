@@ -6,7 +6,15 @@
 
 const unsigned int Block::TYPE_ID = 2;
 
-Block::Block() : Object() {}
+Block::Block() : Object() {
+    aabb = sf::FloatRect(
+        -Constants::GRID / 2,
+        -Constants::GRID / 2,
+        Constants::GRID,
+        Constants::GRID
+    );
+}
+
 Block::~Block() {}
 
 Object::Ptr Block::clone() const {
@@ -77,11 +85,11 @@ void Block::kill(Game& game) {
 }
 
 sf::FloatRect Block::getAABB() const {
-    return sf::FloatRect(
-        getPosition().x - Constants::GRID / 2,
-        getPosition().y - Constants::GRID / 2,
-        Constants::GRID, Constants::GRID
-    );
+    sf::FloatRect transl_aabb = aabb;
+    transl_aabb.left += getPosition().x;
+    transl_aabb.top += getPosition().y;
+
+    return transl_aabb;
 }
 
 float Block::getRadius() const {

@@ -127,22 +127,21 @@ void Game::update() {
 
     pending_kill.empty();
 
-    // détection des objets déplaçables en dehors de la zone de jeu
-    for (auto it = objects.begin(); it != objects.end(); it++) {
-        if (!isInZone(*it) && (*it)->getMass() != 0) {
-            // l'objet est sorti de la zone, on le signale et on
-            // planifie sa mort à la prochaine frame
-            (*it)->kill(*this);
-            pending_kill.push_back(*it);
-        }
-    }
-
     // détection des objets en collision
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        Object::Ptr obj_a = objects[i];
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        Object::Ptr obj_a = *it;
 
-        for (unsigned int j = i + 1; j < objects.size(); j++) {
-            Object::Ptr obj_b = objects[j];
+        // l'objet est sorti de la zone, on le signale et on
+        // planifie sa mort à la prochaine frame
+        if (!isInZone(obj_a) && obj_a->getMass() != 0) {
+            obj_a->kill(*this);
+            pending_kill.push_back(obj_a);
+        }
+
+        // on regarde s'il est en collision avec
+        // d'autres objets
+        for (auto jt = it + 1; jt != objects.end(); jt++) {
+            Object::Ptr obj_b = *jt;
             CollisionData data;
 
             data.obj_a = obj_a;
@@ -154,28 +153,24 @@ void Game::update() {
         }
     }
 
-    // intégration des forces dans la vitesse (seconde moitié)
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        objects[i]->updateVelocity(*this);
+    // intégration des forces dans la vitesse
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        (*it)->updateVelocity(*this);
     }
 
     // résolution des collisions détectées
-    for (unsigned int i = 0; i < colliding.size(); i++) {
-        CollisionData& collided = colliding[i];
-        collided.obj_a->solveCollision(*this, collided.obj_b, collided.normal);
+    for (auto it = colliding.begin(); it != colliding.end(); it++) {
+        it->obj_a->solveCollision(*this, it->obj_b, it->normal);
     }
 
     // intégration de la vitesse dans la position
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        objects[i]->updatePosition();
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        (*it)->updatePosition();
     }
 
     // application de la correction positionnelle
-    for (unsigned int i = 0; i < colliding.size(); i++) {
-        CollisionData& collided = colliding[i];
-        collided.obj_a->positionalCorrection(
-            collided.obj_b, collided.normal, collided.depth
-        );
+    for (auto it = colliding.begin(); it != colliding.end(); it++) {
+        it->obj_a->positionalCorrection(it->obj_b, it->normal, it->depth);
     }
 }
 
