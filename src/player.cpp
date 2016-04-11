@@ -79,10 +79,12 @@ void Player::draw(Level& level) {
     }
 
     // coloration du joueur en fonction de son numéro
-    if (getPlayerNumber() == 0) {
-        sprite.setFillColor(sf::Color(239, 83, 80));
-    } else if (getPlayerNumber() == 1) {
+    if (getCharge() > 0) {
         sprite.setFillColor(sf::Color(92, 107, 192));
+    } else if (getCharge() < 0) {
+        sprite.setFillColor(sf::Color(239, 83, 80));
+    } else {
+        sprite.setFillColor(sf::Color::Transparent);
     }
 
     // déplacement du sprite à la position de la balle
