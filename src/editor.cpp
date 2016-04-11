@@ -29,11 +29,7 @@ inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
 Editor::Editor(Manager& manager) : Level(manager),
     drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
-    widget_toolbar(manager) {
-
-    setName("Nouveau niveau");
-    setTotalTime(30);
-}
+    widget_toolbar(manager) {}
 
 Editor::~Editor() {}
 

@@ -24,6 +24,7 @@ private:
     GravityDirection gravity_direction;
 
     sf::String name;
+    std::string current_file;
     int total_time;
 
     sf::Sprite background_sprite;
@@ -58,14 +59,24 @@ public:
     virtual ~Level();
 
     /**
-     * Charge un niveau de jeu avec le nom donné
+     * Charge le niveau par défaut
      */
-    virtual void load(std::string filename);
+    void load();
 
     /**
-     * Sauvegarde la configuration actuelle dans le niveau donné
+     * Charge le niveau de jeu donné
      */
-    virtual void save(std::string filename);
+    void load(std::string filename);
+
+    /**
+     * Écrase le niveau chargé avec les données en mémoire
+     */
+    void save();
+
+    /**
+     * Sauvegarde la configuration actuelle dans le fichier donné
+     */
+    void save(std::string filename);
 
     /**
      * Appelé par le manager lorsque l'état est utilisé

@@ -183,7 +183,7 @@ void Menu::launchEditor() {
     std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(getManager()));
 
     // TODO: charger dynamiquement le niveau
-    editor->load("level1.dat");
+    editor->load();
     getManager().setState(editor);
 }
 

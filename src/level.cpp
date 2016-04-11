@@ -3,6 +3,7 @@
 #include "player.hpp"
 #include "block.hpp"
 #include "gravity_block.hpp"
+#include <boost/filesystem.hpp>
 #include <arpa/inet.h>
 #include <cstring>
 #include <queue>
@@ -33,11 +34,44 @@ std::map<unsigned int, std::function<Object::Ptr(std::ifstream&)>> object_type_m
     {GravityBlock::TYPE_ID, GravityBlock::load}
 };
 
-Level::Level(Manager& manager) : State(manager) {}
+Level::Level(Manager& manager) : State(manager) {
+    camera.setCenter(0, 0);
+}
+
 Level::~Level() {}
+
+void Level::load() {
+    // métadonnées par défaut
+    name = sf::String("Nouveau niveau");
+    current_file = "";
+    total_time = 30;
+
+    // zone de jeu par défaut
+    zone.clear();
+    zone.push_back(sf::Vector2f(-128, -128));
+    zone.push_back(sf::Vector2f(128, -128));
+    zone.push_back(sf::Vector2f(128, 128));
+    zone.push_back(sf::Vector2f(-128, 128));
+
+    // ressources par défaut
+    music = "";
+    background = "";
+
+    // objets par défaut
+    // TODO: ajouter quelques objets par défaut
+}
 
 void Level::load(std::string filename) {
     std::ifstream file;
+    std::string full_path = getResourceManager().getLevelPath(filename);
+
+    // si le fichier n'existe pas, on utilise le niveau par défaut
+    if (!boost::filesystem::exists(full_path)) {
+        load();
+        return;
+    }
+
+    // sinon, on charge les propriétés depuis le fichier
     file.open(
         getResourceManager().getLevelPath(filename),
         std::ios::binary | std::ios::in
@@ -51,18 +85,15 @@ void Level::load(std::string filename) {
         );
     }
 
-    // vidage du niveau précédent et positionnement
-    // de la caméra au centre du niveau
-    objects.clear();
-    camera.setCenter(0, 0);
-
     // lecture de la signture du fichier ("BAR")
+    current_file = filename;
     char signature[3];
     file.read(signature, 3);
 
     if (strncmp(signature, "BAR", 3) != 0) {
         throw std::runtime_error(
-            "Impossible de lire le fichier : en-tête invalide"
+            "Impossible de charger le niveau \"" + name + "\" " +
+            "(en-tête invalide)"
         );
     }
 
@@ -72,7 +103,8 @@ void Level::load(std::string filename) {
 
     if (file_version != VERSION_NUMBER) {
         throw std::runtime_error(
-            "Impossible de lire le fichier : version non prise en charge"
+            "Impossible de charger le niveau \"" + name + "\" " +
+            "(version non prise en charge)"
         );
     }
 
@@ -120,7 +152,8 @@ void Level::load(std::string filename) {
         // pour éviter une erreur de segmentation
         if (object_type_map.count(object_type) == 0) {
             throw std::runtime_error(
-                "Impossible de lire le fichier : type d'objet inconnu"
+                "Impossible de charger le niveau \"" + name + "\" " +
+                "(type d'objet " + std::to_string(object_type) + " inconnu)"
             );
         }
 
@@ -192,11 +225,14 @@ void Level::save(std::string filename) {
     }
 }
 
+void Level::save() {
+    save(current_file);
+}
+
 void Level::begin() {
     sf::Vector2u window_size = getWindow().getSize();
     camera.setSize(window_size.x, window_size.y);
     camera_angle = 180.f;
-
     gravity_direction = GravityDirection::SOUTH;
 }
 
