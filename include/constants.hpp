@@ -9,7 +9,7 @@ namespace Constants {
      * pour le calcul de l'attraction coulombienne entre
      * deux objets
      */
-    static const float ATTRACTION = 2000000;
+    static const float ATTRACTION = 500000;
 
     /**
      * Correction positionnelle : pourcentage de correction

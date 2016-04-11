@@ -76,13 +76,13 @@ void Player::draw(Level& level) {
         sprite.setOutlineColor(sf::Color(255, 0, 0));
     } else {
         sprite.setOutlineColor(sf::Color::Black);
+    }
 
-        // coloration du joueur en fonction de son numéro
-        if (getPlayerNumber() == 0) {
-            sprite.setFillColor(sf::Color(239, 83, 80));
-        } else if (getPlayerNumber() == 1) {
-            sprite.setFillColor(sf::Color(92, 107, 192));
-        }
+    // coloration du joueur en fonction de son numéro
+    if (getPlayerNumber() == 0) {
+        sprite.setFillColor(sf::Color(239, 83, 80));
+    } else if (getPlayerNumber() == 1) {
+        sprite.setFillColor(sf::Color(92, 107, 192));
     }
 
     // déplacement du sprite à la position de la balle

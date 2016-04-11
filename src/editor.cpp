@@ -159,26 +159,52 @@ void Editor::processEvent(const sf::Event& event) {
         drag_mode = Editor::DragMode::NONE;
     }
 
-    // lorsqu'on scrolle on déplace la vue
+    // lorsqu'on scrolle on déplace la vue ou change la polarité
     if (event.type == sf::Event::MouseWheelScrolled) {
-        sf::View camera = getCamera();
+        // si on a Ctrl appuyé, on change la polarité
+        if (getManager().isKeyPressed(Manager::Modifier::CONTROL)) {
+            sf::Vector2i mouse_position(event.mouseWheelScroll.x, event.mouseWheelScroll.y);
+            sf::Vector2f position = pixelToCoords(mouse_position);
+            Object::Ptr pointed_object = getObject(position);
 
-        // la molette est horizontale ssi. elle l'est vraiment ou
-        // si on utilise la molette verticale et shift
-        bool horizontal = (
-            event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel ||
-            (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel &&
-            getManager().isKeyPressed(Manager::Modifier::SHIFT))
-        );
+            if (pointed_object != nullptr) {
+                float new_charge = pointed_object->getCharge() +
+                    event.mouseWheelScroll.delta;
 
-        if (horizontal) {
-            camera.move(sf::Vector2f(event.mouseWheelScroll.delta, 0) * WHEEL_SCROLL_SPEED);
-        } else {
-            camera.move(sf::Vector2f(0, event.mouseWheelScroll.delta) * WHEEL_SCROLL_SPEED);
+                if (new_charge != 0) {
+                    new_charge /= std::abs(new_charge);
+                }
+
+                pointed_object->setCharge(new_charge);
+            }
         }
 
-        setCamera(camera);
-        return;
+        // sinon, on déplace la vue
+        else {
+            sf::View camera = getCamera();
+
+            // la molette est horizontale ssi. elle l'est vraiment ou
+            // si on utilise la molette verticale et shift
+            bool horizontal = (
+                event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel ||
+                (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel &&
+                getManager().isKeyPressed(Manager::Modifier::SHIFT))
+            );
+
+            if (!horizontal) {
+                camera.move(
+                    sf::Vector2f(0, event.mouseWheelScroll.delta) *
+                    WHEEL_SCROLL_SPEED
+                );
+            } else {
+                camera.move(
+                    sf::Vector2f(event.mouseWheelScroll.delta, 0) *
+                    WHEEL_SCROLL_SPEED
+                );
+            }
+
+            setCamera(camera);
+        }
     }
 
     // gestion des touches
