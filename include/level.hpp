@@ -36,7 +36,6 @@ private:
     std::vector<sf::Vector2f> zone;
 
 protected:
-
     /**
      * Dessine tous les objets et le fond à l'écran
      */
@@ -57,6 +56,12 @@ protected:
 public:
     Level(Manager& manager);
     virtual ~Level();
+
+    /**
+     * Obtient le nom du niveau dont le chemin complet
+     * et absolu est en paramètre
+     */
+    static sf::String getLevelName(std::string path);
 
     /**
      * Charge le niveau par défaut

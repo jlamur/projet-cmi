@@ -6,6 +6,7 @@
 #include <boost/filesystem.hpp>
 #include <arpa/inet.h>
 #include <cstring>
+#include <functional>
 #include <queue>
 
 /**
@@ -34,48 +35,20 @@ std::map<unsigned int, std::function<Object::Ptr(std::ifstream&)>> object_type_m
     {GravityBlock::TYPE_ID, GravityBlock::load}
 };
 
-Level::Level(Manager& manager) : State(manager) {
-    camera.setCenter(0, 0);
-}
-
-Level::~Level() {}
-
-void Level::load() {
-    // métadonnées par défaut
-    name = sf::String("Nouveau niveau");
-    current_file = "";
-    total_time = 30;
-
-    // zone de jeu par défaut
-    zone.clear();
-    zone.push_back(sf::Vector2f(-128, -128));
-    zone.push_back(sf::Vector2f(128, -128));
-    zone.push_back(sf::Vector2f(128, 128));
-    zone.push_back(sf::Vector2f(-128, 128));
-
-    // ressources par défaut
-    music = "";
-    background = "";
-
-    // objets par défaut
-    // TODO: ajouter quelques objets par défaut
-}
-
-void Level::load(std::string filename) {
+/**
+ * Lecture du niveau dont le chemin absolu complet est en paramètre.
+ * Les métadonnées sont stockées dans les variables passées par référence.
+ * La callback object() est appelée séquentiellement avec les objets du niveau
+ */
+void loadLevel(
+    std::string path, sf::String& name, int& total_time,
+    std::vector<sf::Vector2f>& zone,
+    std::string& background, std::string& music,
+    std::function<Object::Ptr(Object::Ptr)> object_callback = {}
+) {
+    // ouverture du fichier
     std::ifstream file;
-    std::string full_path = getResourceManager().getLevelPath(filename);
-
-    // si le fichier n'existe pas, on utilise le niveau par défaut
-    if (!boost::filesystem::exists(full_path)) {
-        load();
-        return;
-    }
-
-    // sinon, on charge les propriétés depuis le fichier
-    file.open(
-        getResourceManager().getLevelPath(filename),
-        std::ios::binary | std::ios::in
-    );
+    file.open(path, std::ios::binary | std::ios::in);
 
     // on vérifie que le fichier ait correctement été ouvert en lecture
     if (file.fail()) {
@@ -85,8 +58,7 @@ void Level::load(std::string filename) {
         );
     }
 
-    // lecture de la signture du fichier ("BAR")
-    current_file = filename;
+    // lecture de la signature du fichier ("BAR")
     char signature[3];
     file.read(signature, 3);
 
@@ -138,8 +110,12 @@ void Level::load(std::string filename) {
     std::getline(file, music, '\0');
     std::getline(file, background, '\0');
 
-    // lecture des objets
+    // lecture des objets si une callback a été fournie
     int object_count;
+
+    if (!object_callback) {
+        return;
+    }
 
     file.read(reinterpret_cast<char*>(&object_count), 4);
     object_count = ntohl(object_count);
@@ -158,8 +134,63 @@ void Level::load(std::string filename) {
         }
 
         // lecture de l'objet
-        addObject(object_type_map[object_type](file));
+        object_callback(object_type_map[object_type](file));
     }
+}
+
+Level::Level(Manager& manager) : State(manager) {
+    camera.setCenter(0, 0);
+}
+
+Level::~Level() {}
+
+sf::String Level::getLevelName(std::string path) {
+    sf::String name;
+    int total_time;
+    std::vector<sf::Vector2f> zone;
+    std::string background;
+    std::string music;
+
+    loadLevel(path, name, total_time, zone, background, music);
+    return name;
+}
+
+void Level::load() {
+    // métadonnées par défaut
+    name = sf::String("Nouveau niveau");
+    current_file = "";
+    total_time = 30;
+
+    // zone de jeu par défaut
+    zone.clear();
+    zone.push_back(sf::Vector2f(-128, -128));
+    zone.push_back(sf::Vector2f(128, -128));
+    zone.push_back(sf::Vector2f(128, 128));
+    zone.push_back(sf::Vector2f(-128, 128));
+
+    // ressources par défaut
+    music = "";
+    background = "";
+
+    // objets par défaut
+    // TODO: ajouter quelques objets par défaut
+}
+
+void Level::load(std::string filename) {
+    std::string full_path = getResourceManager().getLevelPath(filename);
+
+    // si le fichier n'existe pas, on utilise le niveau par défaut
+    if (!boost::filesystem::exists(full_path)) {
+        load();
+        return;
+    }
+
+    loadLevel(
+        full_path, name, total_time,
+        zone, background, music,
+        std::bind(&Level::addObject, this, std::placeholders::_1)
+    );
+    current_file = filename;
 }
 
 void Level::save(std::string filename) {
