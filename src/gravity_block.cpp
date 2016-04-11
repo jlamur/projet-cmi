@@ -11,6 +11,7 @@ Object::Ptr GravityBlock::clone() const {
 }
 
 void GravityBlock::prepareDraw(ResourceManager& resources) {
+    Block::prepareDraw(resources);
     std::string texture_name = "gravity_block_";
 
     switch (gravity_direction) {
