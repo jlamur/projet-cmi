@@ -1,6 +1,6 @@
 #include "resource_manager.hpp"
 #include <iostream>
-#include <cstring>
+#include <algorithm>
 
 using dir_iter = boost::filesystem::directory_iterator;
 using fs_path = boost::filesystem::path;
@@ -88,7 +88,29 @@ sf::Font& ResourceManager::getFont(std::string name) {
 }
 
 std::string ResourceManager::getLevelPath(std::string name) {
-    return boost::filesystem::canonical(levels_path / name).string();
+    return (levels_path / name).string();
+}
+
+std::vector<std::string> ResourceManager::getLevelList() {
+    boost::filesystem::directory_iterator iter(levels_path);
+    std::vector<boost::filesystem::path> list;
+    std::vector<std::string> path_list;
+
+    // récupération de la liste de tous les niveaux
+    std::copy(
+        iter, boost::filesystem::directory_iterator(),
+        std::back_inserter(list)
+    );
+
+    // tri par ordre alphabétique
+    std::sort(list.begin(), list.end());
+
+    // conversion en chemins absolus
+    for (auto it = list.begin(); it != list.end(); it++) {
+        path_list.push_back((*it).string());
+    }
+
+    return path_list;
 }
 
 void ResourceManager::playMusic(std::string name) {

@@ -162,14 +162,13 @@ void Menu::loadLevelMenu() {
     actions.clear();
     selection = 0;
 
-    choices.push_back(sf::String(L"Tutoriel"));
-    actions.push_back(std::bind(&Menu::launchGame, this, "level1.dat"));
+    std::vector<std::string> path_list = getResourceManager().getLevelList();
+    std::vector<std::string> name_list;
 
-    choices.push_back(sf::String(L"Niveau 1"));
-    actions.push_back(std::bind(&Menu::launchGame, this, "level2.dat"));
-
-    choices.push_back(sf::String(L"Niveau 2"));
-    actions.push_back(std::bind(&Menu::launchGame, this, "level3.dat"));
+    for (auto it = path_list.begin(); it != path_list.end(); it++) {
+        choices.push_back(Level::getLevelName(*it));
+        actions.push_back(std::bind(&Menu::launchGame, this, *it));
+    }
 
     choices.push_back(sf::String(L"Retour"));
     actions.push_back(std::bind(&Menu::loadMainMenu, this));
@@ -182,14 +181,14 @@ void Menu::loadRules() {
 void Menu::launchEditor() {
     std::shared_ptr<Editor> editor = std::shared_ptr<Editor>(new Editor(getManager()));
 
-    // TODO: charger dynamiquement le niveau
-    editor->load();
+    // TODO: charger dynamiquement le niveau dans l'éditeur
+    editor->load(getResourceManager().getLevelPath("editor_result.dat"));
     getManager().setState(editor);
 }
 
-void Menu::launchGame(std::string name) {
+void Menu::launchGame(std::string path) {
     std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game(getManager()));
-    game->load(name);
+    game->load(path);
     getManager().setState(game);
 }
 

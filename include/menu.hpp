@@ -32,9 +32,10 @@ protected:
     void launchEditor();
 
     /**
-     * Démarre le jeu avec le niveau donné
+     * Démarre le jeu avec le niveau dont le chemin
+     * complet absolu est donné en paramètre
      */
-    void launchGame(std::string name);
+    void launchGame(std::string path);
 
     /**
      * Quitte le jeu et le menu

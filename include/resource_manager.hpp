@@ -55,6 +55,11 @@ public:
     std::string getLevelPath(std::string name);
 
     /**
+     * Récupère la liste de tous les niveaux
+     */
+    std::vector<std::string> getLevelList();
+
+    /**
      * Démarre la musique de fond donnée
      */
     void playMusic(std::string name);

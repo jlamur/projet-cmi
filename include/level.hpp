@@ -24,7 +24,7 @@ private:
     GravityDirection gravity_direction;
 
     sf::String name;
-    std::string current_file;
+    std::string current_path;
     int total_time;
 
     sf::Sprite background_sprite;
@@ -69,9 +69,10 @@ public:
     void load();
 
     /**
-     * Charge le niveau de jeu donné
+     * Charge le niveau de jeu donné depuis le fichier
+     * dont le chemin complet absolu est en paramètre
      */
-    void load(std::string filename);
+    void load(std::string path);
 
     /**
      * Écrase le niveau chargé avec les données en mémoire
@@ -80,8 +81,9 @@ public:
 
     /**
      * Sauvegarde la configuration actuelle dans le fichier donné
+     * dont le chemin complet absolu est donné en paramètre
      */
-    void save(std::string filename);
+    void save(std::string path);
 
     /**
      * Appelé par le manager lorsque l'état est utilisé
