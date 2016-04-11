@@ -18,7 +18,16 @@ void FinishBlock::prepareDraw(ResourceManager& resources) {
 
 void FinishBlock::activate(Game& game, Object::Ptr object) {
     Block::activate(game, object);
-    // TODO: implémenter le comportmeent des blocs d'arrivée
+
+    // si un joueur touche le bloc d'arrivée,
+    // on le tue et s'il ne reste plus de joueur, on a gagné
+    if (object->getTypeId() == Player::TYPE_ID) {
+        if (game.getPlayers().size() == 1) {
+            game.setMode(Game::Mode::WON);
+        }
+
+        game.kill(object);
+    }
 }
 
 unsigned int FinishBlock::getTypeId() const {
