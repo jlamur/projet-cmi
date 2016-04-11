@@ -116,7 +116,6 @@ void loadLevel(
     // lecture des chemins de la musique et du fond
     std::getline(file, music, '\0');
     std::getline(file, background, '\0');
-    std::cout << music << " " << background << std::endl;
 
     // lecture des objets si une callback a été fournie
     int object_count;
