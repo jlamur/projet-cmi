@@ -3,6 +3,7 @@
 #include "player.hpp"
 #include "block.hpp"
 #include "gravity_block.hpp"
+#include "switch_block.hpp"
 #include "finish_block.hpp"
 #include "kill_block.hpp"
 #include <boost/filesystem.hpp>
@@ -37,7 +38,8 @@ std::map<unsigned int, std::function<Object::Ptr(std::ifstream&)>> object_type_m
     {Block::TYPE_ID, Block::load},
     {GravityBlock::TYPE_ID, GravityBlock::load},
     {FinishBlock::TYPE_ID, FinishBlock::load},
-    {KillBlock::TYPE_ID, KillBlock::load}
+    {KillBlock::TYPE_ID, KillBlock::load},
+    {SwitchBlock::TYPE_ID, SwitchBlock::load}
 };
 
 /**

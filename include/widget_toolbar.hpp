@@ -68,6 +68,11 @@ private:
     Object::Ptr createPlayer();
 
     /**
+     * Crée un objet de type SwitchBlock
+     */
+    Object::Ptr createSwitchBlock();
+
+    /**
      * Crée un objet de type FinishBlock
      */
     Object::Ptr createFinishBlock();

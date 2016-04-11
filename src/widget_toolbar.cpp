@@ -2,6 +2,7 @@
 #include "block.hpp"
 #include "player.hpp"
 #include "gravity_block.hpp"
+#include "switch_block.hpp"
 #include "finish_block.hpp"
 #include "kill_block.hpp"
 #include <utility>
@@ -42,6 +43,10 @@ Object::Ptr WidgetToolbar::createPlayer() {
     Object::Ptr player = Object::Ptr(new Player);
     player->setMass(1.f);
     return player;
+}
+
+Object::Ptr WidgetToolbar::createSwitchBlock() {
+    return Object::Ptr(new SwitchBlock);
 }
 
 Object::Ptr WidgetToolbar::createFinishBlock() {
@@ -87,6 +92,11 @@ WidgetToolbar::WidgetToolbar(Manager& manager) : manager(manager), selected(null
     player_cat->addObject(
         resources.getTexture("toolbar_player.tga"),
         std::bind(&WidgetToolbar::createPlayer, this)
+    );
+
+    player_cat->addObject(
+        resources.getTexture("toolbar_switch_block.tga"),
+        std::bind(&WidgetToolbar::createSwitchBlock, this)
     );
 
     player_cat->addObject(
