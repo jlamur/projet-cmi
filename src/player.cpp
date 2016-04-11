@@ -3,6 +3,7 @@
 #include "game.hpp"
 #include "block.hpp"
 #include "constants.hpp"
+#include <iostream>
 #include <array>
 
 const unsigned int Player::TYPE_ID = 1;
@@ -85,10 +86,11 @@ void Player::draw(Level& level) {
 
     // on fait tourner le sprite selon la différence de position
     if (previous_position != sf::Vector2f(0, 0)) {
-        sprite.rotate(
-            (getPosition() - previous_position).x *
-            level.getRightDirection().x * .015f
-        );
+        sf::Vector2f right_dir = level.getRightDirection();
+        sf::Vector2f diff = getPosition() - previous_position;
+        
+        float rotate = (right_dir.x * diff.x + right_dir.y * diff.y) * 3 / 200;
+        sprite.rotate(rotate);
     }
 
     previous_position = getPosition();
