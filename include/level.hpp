@@ -25,6 +25,7 @@ private:
 
     sf::String name;
     std::string current_path;
+
     int total_time;
 
     sf::Sprite background_sprite;
@@ -36,6 +37,8 @@ private:
     std::vector<sf::Vector2f> zone;
 
 protected:
+    float time_left;
+
     /**
      * Dessine tous les objets et le fond à l'écran
      */

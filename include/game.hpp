@@ -25,8 +25,6 @@ private:
     sf::Time next_frame_time;
     std::vector<Object::Ptr> pending_kill;
 
-    float time_left;
-
     std::shared_ptr<Editor> return_state;
     Mode mode;
     DeathCause death_cause;

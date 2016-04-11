@@ -170,7 +170,7 @@ sf::String Level::getLevelName(std::string path) {
 void Level::load() {
     // métadonnées par défaut
     name = sf::String("Nouveau niveau");
-    total_time = 30;
+    time_left = total_time = 30;
 
     // zone de jeu par défaut
     zone.clear();
@@ -200,6 +200,8 @@ void Level::load(std::string path) {
         zone, background, music,
         std::bind(&Level::addObject, this, std::placeholders::_1)
     );
+
+    time_left = total_time;
     current_path = path;
 }
 
@@ -335,6 +337,7 @@ void Level::setTotalTime(int set_total_time) {
     set_total_time = std::max(set_total_time, 10);
 
     total_time = set_total_time;
+    time_left = total_time;
 }
 
 std::string Level::getMusic() const {

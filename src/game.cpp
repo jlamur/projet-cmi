@@ -17,7 +17,6 @@ Game::Game(Manager& manager) : Level(manager),
     mode = Game::Mode::NORMAL;
     death_cause = Game::DeathCause::NONE;
 
-    time_left = getTotalTime();
     getWindow().setFramerateLimit(0);
 }
 
@@ -118,7 +117,7 @@ void Game::draw() {
 
     // dessin du timer
     widget_timer.setTimeLeft(
-        std::max(std::floor(time_left), 0.f)
+        std::max(std::ceil(time_left), 0.f)
     );
 
     widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
