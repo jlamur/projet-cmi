@@ -229,6 +229,12 @@ void Editor::processEvent(const sf::Event& event) {
         if (event.key.code == sf::Keyboard::Space) {
             test();
         }
+
+        // touche retour ou échap : on quitte l'éditeur
+        if (event.key.code == sf::Keyboard::BackSpace ||
+            event.key.code == sf::Keyboard::Escape) {
+            getManager().popState();
+        }
     }
 }
 
