@@ -88,7 +88,7 @@ void Player::draw(Level& level) {
     if (previous_position != sf::Vector2f(0, 0)) {
         sf::Vector2f right_dir = level.getRightDirection();
         sf::Vector2f diff = getPosition() - previous_position;
-        
+
         float rotate = (right_dir.x * diff.x + right_dir.y * diff.y) * 3 / 200;
         sprite.rotate(rotate);
     }
@@ -108,7 +108,7 @@ void Player::draw(Level& level) {
     } else if (getCharge() < 0) {
         sprite.setFillColor(sf::Color(239, 83, 80));
     } else {
-        sprite.setFillColor(sf::Color::Transparent);
+        sprite.setFillColor(sf::Color::White);
     }
 
     // dessin des sprites
