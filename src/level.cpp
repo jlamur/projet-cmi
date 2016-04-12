@@ -292,14 +292,36 @@ void Level::draw() {
     camera.setRotation(camera_angle + 180);
     window.setView(camera);
 
-    // efface la scène précédente et dessine la couche de fond
+    // efface la scène précédente
     window.clear(sf::Color(66, 165, 245));
 
+    // dessin du fond s'il y en a un
     if (background != "") {
-        background_sprite.setTexture(getResourceManager().getTexture(background));
-    }
+        sf::Texture& bg_texture = getResourceManager().getTexture(background);
+        background_sprite.setTexture(bg_texture);
 
-    window.draw(background_sprite);
+        sf::Vector2f win_size = camera.getSize();
+        sf::Vector2i bg_size = (sf::Vector2i) bg_texture.getSize();
+        sf::Vector2f corner = camera.getCenter() - win_size / 2.f;
+
+        // on calcule le nombre de fois qu'il faut dessiner
+        // le fond, et où commencer à la dessiner, pour que
+        // l'écran soit couvert totalement et que le fond se déplace
+        int x_min = std::floor(corner.x / bg_size.x);
+        int y_min = std::floor(corner.y / bg_size.y);
+        int x_max = std::ceil((corner.x + win_size.x) / bg_size.x);
+        int y_max = std::ceil((corner.y + win_size.y) / bg_size.y);
+
+        for (int x = x_min; x < x_max; x++) {
+            for (int y = y_min; y < y_max; y++) {
+                background_sprite.setPosition(sf::Vector2f(
+                    x * (bg_size.x), y * (bg_size.y)
+                ));
+
+                window.draw(background_sprite);
+            }
+        }
+    }
 
     // chargement de la file d'affichage des objets
     std::priority_queue<Object::Ptr, std::vector<Object::Ptr>, ObjectCompare> display_queue;
