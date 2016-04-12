@@ -33,7 +33,7 @@ endif()
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
 add_executable(skizzle ${SOURCES})
 
-find_package(SFML 2 REQUIRED system window graphics network audio)
+find_package(SFML 2.3.2 REQUIRED system window graphics network audio)
 find_package(Boost 1.60.0 COMPONENTS system filesystem)
 
 include_directories(${SFML_INCLUDE_DIRS})
