@@ -1,3 +1,4 @@
+#include "manager.hpp"
 #include "widget_toolbar.hpp"
 #include "block.hpp"
 #include "player.hpp"
@@ -7,7 +8,14 @@
 #include "kill_block.hpp"
 #include <utility>
 
-const int PADDING = 8;
+
+/**
+ * Définition des variables et fonctions globales internes
+ * (accessibles uniquement dans ce fichier)
+ */
+namespace {
+    const int PADDING = 8;
+}
 
 ToolbarCategory::Ptr WidgetToolbar::addCategory(sf::String name) {
     auto cat = ToolbarCategory::Ptr(new ToolbarCategory);

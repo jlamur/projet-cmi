@@ -4,7 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <functional>
 #include "widget_button.hpp"
-#include "manager.hpp"
+
+class Manager;
 
 /**
  * Affiche le compteur de temps pouvant (ou non)

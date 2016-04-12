@@ -1,5 +1,5 @@
+#include "manager.hpp"
 #include "widget_timer.hpp"
-#include <cmath>
 
 WidgetTimer::WidgetTimer(Manager& manager, bool can_change, std::function<void(int)> time_left_cb) :
     manager(manager), can_change(can_change), time_left_cb(time_left_cb),

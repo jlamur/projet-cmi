@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cmath>
+#include "manager.hpp"
 #include "game.hpp"
 #include "player.hpp"
-#include "constants.hpp"
 
 Game::Game(Manager& manager) : Level(manager),
     widget_timer(manager, false),

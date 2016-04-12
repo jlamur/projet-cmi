@@ -3,7 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <functional>
-#include "manager.hpp"
+
+class Manager;
 
 /**
  * Affiche un bouton pouvant être cliqué

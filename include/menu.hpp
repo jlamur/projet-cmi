@@ -1,10 +1,11 @@
 #ifndef __PTF_MENU_HPP__
 #define __PTF_MENU_HPP__
 
-#include "manager.hpp"
 #include "state.hpp"
 #include <functional>
 #include <vector>
+
+class Manager;
 
 /**
  * La classe Menu charge le menu du jeu

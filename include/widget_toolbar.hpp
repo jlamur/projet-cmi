@@ -5,7 +5,8 @@
 #include <functional>
 #include "object.hpp"
 #include "level.hpp"
-#include "manager.hpp"
+
+class Manager;
 
 /**
  * Représente un objet plaçable depuis la barre d'outils

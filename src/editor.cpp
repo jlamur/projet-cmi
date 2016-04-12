@@ -1,28 +1,33 @@
+#include "manager.hpp"
 #include "editor.hpp"
 #include "game.hpp"
-#include "block.hpp"
-#include "constants.hpp"
 #include <cmath>
 #include <algorithm>
 
-const sf::Color SELECT_RECT_COLOR = sf::Color(33, 33, 33, 40);
-const sf::Color SELECT_RECT_BORDER_COLOR = sf::Color(33, 33, 33, 127);
-const sf::Color ZONE_POINT_COLOR = sf::Color(140, 15, 15, 255);
-const sf::Color ZONE_BORDER_COLOR = sf::Color(200, 15, 15, 255);
+/**
+ * Définition des variables et fonctions globales internes
+ * (accessibles uniquement dans ce fichier)
+ */
+namespace {
+    const sf::Color SELECT_RECT_COLOR = sf::Color(33, 33, 33, 40);
+    const sf::Color SELECT_RECT_BORDER_COLOR = sf::Color(33, 33, 33, 127);
+    const sf::Color ZONE_POINT_COLOR = sf::Color(140, 15, 15, 255);
+    const sf::Color ZONE_BORDER_COLOR = sf::Color(200, 15, 15, 255);
 
-const float WHEEL_SCROLL_SPEED = -7.f;
-const float POINTER_SCROLL_SPEED = 5.f;
-const int POINTER_SCROLL_PADDING = 10;
+    const float WHEEL_SCROLL_SPEED = -7.f;
+    const float POINTER_SCROLL_SPEED = 5.f;
+    const int POINTER_SCROLL_PADDING = 10;
+}
 
 /**
  * Arrondit le vecteur donné à une position
  * sur la grille
  */
 inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
-    input /= Constants::GRID;
+    input /= Manager::GRID;
     input.x = round(input.x);
     input.y = round(input.y);
-    input *= Constants::GRID;
+    input *= Manager::GRID;
     return input;
 }
 

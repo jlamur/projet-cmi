@@ -1,28 +1,60 @@
+#include "manager.hpp"
 #include "object.hpp"
 #include "game.hpp"
-#include "constants.hpp"
 #include "collision.hpp"
 #include <cmath>
 
-const unsigned int Object::PROP_MASS = 1;
-const float DEFAULT_MASS = 0.f;
-const unsigned int Object::PROP_CHARGE = 2;
-const float DEFAULT_CHARGE = 0.f;
-const unsigned int Object::PROP_RESTITUTION = 3;
-const float DEFAULT_RESTITUTION = 0.4f;
-const unsigned int Object::PROP_STATIC_FRICTION = 4;
-const float DEFAULT_STATIC_FRICTION = 0.4f;
-const unsigned int Object::PROP_DYNAMIC_FRICTION = 5;
-const float DEFAULT_DYNAMIC_FRICTION = 0.2f;
-const unsigned int Object::PROP_LAYER = 6;
-const int DEFAULT_LAYER = 0;
+/**
+ * Définition des variables et fonctions globales internes
+ * (accessibles uniquement dans ce fichier)
+ */
+namespace {
+    // identifiant de la propriété de masse et sa valeur par défaut
+    // (une masse de zéro représente une masse infinie)
+    const unsigned int PROP_MASS = 1;
+    const float DEFAULT_MASS = 0.f;
+
+    // identifiant de la propriété de charge et sa valeur par défaut
+    const unsigned int PROP_CHARGE = 2;
+    const float DEFAULT_CHARGE = 0.f;
+
+    // identifiant de la propriété de restitution et sa valeur par défaut
+    // (plus la restitution est forte, plus les objets rebondissent)
+    const unsigned int PROP_RESTITUTION = 3;
+    const float DEFAULT_RESTITUTION = 0.4f;
+
+    // identifiant du coefficient de frottement statique et sa valeur par défaut
+    // (coefficient proportionnel à la qté d'énergie nécessaire pour mettre
+    // en mouvement l'objet)
+    const unsigned int PROP_STATIC_FRICTION = 4;
+    const float DEFAULT_STATIC_FRICTION = 0.4f;
+
+    // identifiant du coefficient de frottement dynamique et sa valeur par défaut
+    // (coefficient proportionnel aux pertes d'énergie en mouvement)
+    const unsigned int PROP_DYNAMIC_FRICTION = 5;
+    const float DEFAULT_DYNAMIC_FRICTION = 0.2f;
+
+    // identifiant de la propriété calque et sa valeur par défaut
+    // (les objets sur deux calques différents n'entrent pas en collision,
+    // et les objets sont dessinés par ordre de calque)
+    const unsigned int PROP_LAYER = 6;
+    const int DEFAULT_LAYER = 0;
+
+    // coefficient d'attraction. Proportionnel à la quantité d'énergie
+    // fournie par un objet chargé
+    const float ATTRACTION = 500000;
+
+    // coefficients de correction positionnelle permettant de réduire
+    // la visibilité des erreurs d'arrondi des flottants. Le pourcentage
+    // de correction indique la proportion de correction par rapport à la
+    // vitesse et le seuil indique le minimum de correction appliqué
+    const float CORRECTION_PERCENTAGE = .5f;
+    const float CORRECTION_SLOP = .02f;
+}
 
 Object::Object() :
     acceleration(0, 0), velocity(0, 0), position(0, 0),
     selected(false), inv_mass(-1.f),
-
-    // valeurs par défaut pour les propriétés
-    // de tous les objets du jeu
     mass(DEFAULT_MASS),
     charge(DEFAULT_CHARGE),
     restitution(DEFAULT_RESTITUTION),
@@ -40,7 +72,7 @@ void Object::init(std::ifstream& file, Object::Ptr object) {
     file.read(reinterpret_cast<char*>(&pos_y), 4);
 
     object->setPosition(sf::Vector2f(
-        pos_x * Constants::GRID, pos_y * Constants::GRID
+        pos_x * Manager::GRID, pos_y * Manager::GRID
     ));
 
     // lecture des propriétés facultatives
@@ -48,37 +80,37 @@ void Object::init(std::ifstream& file, Object::Ptr object) {
 
     while (file.read(&prop_type, 1)) {
         switch (prop_type) {
-        case Object::PROP_MASS:
+        case PROP_MASS:
             float mass;
             file.read(reinterpret_cast<char*>(&mass), 4);
             object->setMass(mass);
             break;
 
-        case Object::PROP_CHARGE:
+        case PROP_CHARGE:
             float charge;
             file.read(reinterpret_cast<char*>(&charge), 4);
             object->setCharge(charge);
             break;
 
-        case Object::PROP_RESTITUTION:
+        case PROP_RESTITUTION:
             float restitution;
             file.read(reinterpret_cast<char*>(&restitution), 4);
             object->setRestitution(restitution);
             break;
 
-        case Object::PROP_STATIC_FRICTION:
+        case PROP_STATIC_FRICTION:
             float static_friction;
             file.read(reinterpret_cast<char*>(&static_friction), 4);
             object->setStaticFriction(static_friction);
             break;
 
-        case Object::PROP_DYNAMIC_FRICTION:
+        case PROP_DYNAMIC_FRICTION:
             float dynamic_friction;
             file.read(reinterpret_cast<char*>(&dynamic_friction), 4);
             object->setDynamicFriction(dynamic_friction);
             break;
 
-        case Object::PROP_LAYER:
+        case PROP_LAYER:
             char layer;
             file.read(&layer, 1);
             object->setLayer((int) layer - 127);
@@ -93,8 +125,8 @@ void Object::init(std::ifstream& file, Object::Ptr object) {
 
 void Object::save(std::ofstream& file) const {
     // écriture de la position de l'objet
-    float pos_x = getPosition().x / Constants::GRID;
-    float pos_y = getPosition().y / Constants::GRID;
+    float pos_x = getPosition().x / Manager::GRID;
+    float pos_y = getPosition().y / Manager::GRID;
 
     file.write(reinterpret_cast<const char*>(&pos_x), 4);
     file.write(reinterpret_cast<const char*>(&pos_y), 4);
@@ -103,37 +135,37 @@ void Object::save(std::ofstream& file) const {
     char prop_type;
 
     if (mass != DEFAULT_MASS) {
-        prop_type = Object::PROP_MASS;
+        prop_type = PROP_MASS;
         file.write(&prop_type, 1);
         file.write(reinterpret_cast<const char*>(&mass), 4);
     }
 
     if (charge != DEFAULT_CHARGE) {
-        prop_type = Object::PROP_CHARGE;
+        prop_type = PROP_CHARGE;
         file.write(&prop_type, 1);
         file.write(reinterpret_cast<const char*>(&charge), 4);
     }
 
     if (restitution != DEFAULT_RESTITUTION) {
-        prop_type = Object::PROP_RESTITUTION;
+        prop_type = PROP_RESTITUTION;
         file.write(&prop_type, 1);
         file.write(reinterpret_cast<const char*>(&restitution), 4);
     }
 
     if (static_friction != DEFAULT_STATIC_FRICTION) {
-        prop_type = Object::PROP_STATIC_FRICTION;
+        prop_type = PROP_STATIC_FRICTION;
         file.write(&prop_type, 1);
         file.write(reinterpret_cast<const char*>(&static_friction), 4);
     }
 
     if (dynamic_friction != DEFAULT_DYNAMIC_FRICTION) {
-        prop_type = Object::PROP_DYNAMIC_FRICTION;
+        prop_type = PROP_DYNAMIC_FRICTION;
         file.write(&prop_type, 1);
         file.write(reinterpret_cast<const char*>(&dynamic_friction), 4);
     }
 
     if (layer != DEFAULT_LAYER) {
-        prop_type = Object::PROP_LAYER;
+        prop_type = PROP_LAYER;
         file.write(&prop_type, 1);
 
         char write_layer = layer + 127;
@@ -176,7 +208,7 @@ sf::Vector2f Object::getForces(const Game& game) const {
             // normalisation du vecteur direction qui porte
             // la force d'attraction, puis application de la norme
             attraction /= std::sqrt(distance_squared);
-            attraction *= Constants::ATTRACTION * (
+            attraction *= ATTRACTION * (
                 (getCharge() * attractive->getCharge()) /
                 distance_squared
             );
@@ -294,9 +326,8 @@ void Object::solveCollision(Game& game, Object::Ptr obj, const sf::Vector2f& nor
 }
 
 void Object::positionalCorrection(Object::Ptr obj, const sf::Vector2f& normal, float depth) {
-    float position_correction = std::max(depth - Constants::CORRECTION_SLOP, 0.0f) /
-        (getMassInvert() + obj->getMassInvert()) *
-        Constants::CORRECTION_PERCENTAGE;
+    float position_correction = std::max(depth - CORRECTION_SLOP, 0.0f) /
+        (getMassInvert() + obj->getMassInvert()) * CORRECTION_PERCENTAGE;
 
     setPosition(getPosition() - getMassInvert() * position_correction * normal);
     obj->setPosition(obj->getPosition() + obj->getMassInvert() * position_correction * normal);

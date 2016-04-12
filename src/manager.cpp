@@ -1,7 +1,9 @@
+#include "state.hpp"
 #include "manager.hpp"
 
 const unsigned int Manager::FPS = 60;
 const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);
+const float Manager::GRID = 32;
 
 Manager::Manager() : title(sf::String(L"")) {
     // préchargement des textures
@@ -45,7 +47,7 @@ void Manager::start() {
 
             states.top()->processEvent(event);
         }
-        
+
         // s'il n'y a plus d'état, on quitte
         if (states.empty()) {
             return;

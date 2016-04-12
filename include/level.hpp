@@ -6,8 +6,8 @@
 #include "state.hpp"
 #include "object.hpp"
 #include "player.hpp"
-#include "manager.hpp"
-#include "resource_manager.hpp"
+
+class Manager;
 
 // liste des directions de la gravité
 enum class GravityDirection {NORTH, EAST, SOUTH, WEST};

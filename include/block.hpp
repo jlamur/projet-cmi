@@ -6,6 +6,7 @@
 #include "object.hpp"
 
 class Game;
+class ResourceManager;
 class Level;
 
 class Block : public Object {

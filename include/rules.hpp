@@ -1,8 +1,9 @@
 #ifndef __PTF_RULES_HPP__
 #define __PTF_RULES_HPP__
 
-#include "manager.hpp"
 #include "state.hpp"
+
+class Manager;
 
 /**
  * La classe Rules affiche les règles du jeu
@@ -25,6 +26,5 @@ public:
      */
     virtual void frame();
 };
-
 
 #endif

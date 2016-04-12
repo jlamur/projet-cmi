@@ -1,3 +1,4 @@
+#include "resource_manager.hpp"
 #include "gravity_block.hpp"
 #include "game.hpp"
 

@@ -4,7 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "block.hpp"
-#include "game.hpp"
+
+class Game;
+enum class GravityDirection;
 
 class GravityBlock : public Block {
 public:

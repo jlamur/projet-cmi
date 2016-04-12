@@ -2,7 +2,7 @@
 #define __PTF_GAME_HPP__
 
 #include "level.hpp"
-#include "editor.hpp"
+#include "widget_timer.hpp"
 
 /**
  * La classe Game gère l'affichage et les objets
@@ -25,7 +25,6 @@ private:
     sf::Time next_frame_time;
     std::vector<Object::Ptr> pending_kill;
 
-    std::shared_ptr<Editor> return_state;
     Mode mode;
     DeathCause death_cause;
 

@@ -1,3 +1,4 @@
+#include "manager.hpp"
 #include "switch_block.hpp"
 #include "game.hpp"
 

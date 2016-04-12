@@ -1,10 +1,9 @@
+#include "manager.hpp"
 #include "menu.hpp"
 #include "rules.hpp"
 #include "editor.hpp"
 #include "game.hpp"
 #include <cmath>
-
-const float MAX_WIDTH_PROPORTION = 1.f / 3.f;
 
 Menu::Menu(Manager& manager) : State(manager) {
     background.setTexture(getResourceManager().getTexture("bg_menu.tga"));

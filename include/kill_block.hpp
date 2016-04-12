@@ -4,7 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "block.hpp"
-#include "game.hpp"
+
+class Game;
 
 class KillBlock : public Block {
 public:

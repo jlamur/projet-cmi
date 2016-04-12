@@ -5,8 +5,6 @@
 #include <fstream>
 #include <memory>
 #include "collision.hpp"
-#include "manager.hpp"
-#include "resource_manager.hpp"
 
 class Level;
 class Game;
@@ -53,16 +51,6 @@ protected:
     static void init(std::ifstream& file, Object::Ptr object);
 
 public:
-    /**
-     * Identifiants uniques des propriétés communes modifiables
-     */
-    static const unsigned int PROP_MASS;
-    static const unsigned int PROP_CHARGE;
-    static const unsigned int PROP_RESTITUTION;
-    static const unsigned int PROP_STATIC_FRICTION;
-    static const unsigned int PROP_DYNAMIC_FRICTION;
-    static const unsigned int PROP_LAYER;
-
     Object();
     virtual ~Object();
 

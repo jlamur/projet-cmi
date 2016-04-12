@@ -2,17 +2,16 @@
 #include "level.hpp"
 #include "game.hpp"
 #include "player.hpp"
-#include "constants.hpp"
-#include "resource_manager.hpp"
+#include "manager.hpp"
 
 const unsigned int Block::TYPE_ID = 2;
 
 Block::Block() : Object() {
     aabb = sf::FloatRect(
-        -Constants::GRID / 2,
-        -Constants::GRID / 2,
-        Constants::GRID,
-        Constants::GRID
+        -Manager::GRID / 2,
+        -Manager::GRID / 2,
+        Manager::GRID,
+        Manager::GRID
     );
 }
 
@@ -90,7 +89,7 @@ sf::FloatRect Block::getAABB() const {
 }
 
 float Block::getRadius() const {
-    return Constants::GRID / 2;
+    return Manager::GRID / 2;
 }
 
 unsigned int Block::getTypeId() const {

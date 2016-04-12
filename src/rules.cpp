@@ -1,5 +1,5 @@
 #include "rules.hpp"
-#include <cmath>
+#include "manager.hpp"
 
 Rules::Rules(Manager& manager) : State(manager) {
     background.setTexture(getResourceManager().getTexture("bg_rules.png"));

@@ -1,3 +1,4 @@
+#include "resource_manager.hpp"
 #include "kill_block.hpp"
 #include "game.hpp"
 #include "player.hpp"

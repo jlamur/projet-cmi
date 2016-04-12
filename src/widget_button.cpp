@@ -1,12 +1,19 @@
+#include "manager.hpp"
 #include "widget_button.hpp"
 
 const unsigned int WidgetButton::ARROW_UP = 0;
 const unsigned int WidgetButton::ARROW_DOWN = 1;
 
-const sf::Color ARROW_COLOR = sf::Color(33, 33, 33);
-const sf::Color NORMAL_COLOR = sf::Color(230, 230, 230);
-const sf::Color HOVER_COLOR = sf::Color(220, 220, 220);
-const sf::Color ACTIVE_COLOR = sf::Color(190, 190, 190);
+/**
+ * Définition des variables et fonctions globales internes
+ * (accessibles uniquement dans ce fichier)
+ */
+namespace {
+    const sf::Color ARROW_COLOR = sf::Color(33, 33, 33);
+    const sf::Color NORMAL_COLOR = sf::Color(230, 230, 230);
+    const sf::Color HOVER_COLOR = sf::Color(220, 220, 220);
+    const sf::Color ACTIVE_COLOR = sf::Color(190, 190, 190);
+}
 
 WidgetButton::WidgetButton(
     Manager& manager, std::function<void(void)> click_cb,

@@ -2,9 +2,6 @@
 #include <iostream>
 #include <algorithm>
 
-using dir_iter = boost::filesystem::directory_iterator;
-using fs_path = boost::filesystem::path;
-
 ResourceManager::ResourceManager() : preloaded(false),
     music_volume(20), playing_state(false), current_music("") {
     // initialisation de la musique en bouclage et au volume par défaut
@@ -17,8 +14,8 @@ void ResourceManager::preload() {
         return;
     }
 
-    fs_path current = boost::filesystem::current_path();
-    dir_iter end;
+    boost::filesystem::path current = boost::filesystem::current_path();
+    boost::filesystem::directory_iterator end;
 
     // on garde une référence aux chemins des différentes ressources
     textures_path = current / "res/textures";
@@ -27,7 +24,7 @@ void ResourceManager::preload() {
     musics_path = current / "res/musics";
 
     // préchargement de toutes les textures
-    for (dir_iter it(textures_path); it != end; ++it) {
+    for (boost::filesystem::directory_iterator it(textures_path); it != end; ++it) {
         if (boost::filesystem::is_regular_file(it->path())) {
             std::string full_path = boost::filesystem::canonical(it->path()).string();
             std::string name = it->path().filename().string();
@@ -47,7 +44,7 @@ void ResourceManager::preload() {
     }
 
     // préchargement de toutes les polices
-    for (dir_iter it(fonts_path); it != end; ++it) {
+    for (boost::filesystem::directory_iterator it(fonts_path); it != end; ++it) {
         if (boost::filesystem::is_regular_file(it->path())) {
             std::string full_path = boost::filesystem::canonical(it->path()).string();
             std::string name = it->path().filename().string();

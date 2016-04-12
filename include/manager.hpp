@@ -2,9 +2,10 @@
 #define __SKIZZLE_MANAGER_HPP__
 
 #include "resource_manager.hpp"
-#include "state.hpp"
 #include <memory>
 #include <stack>
+
+class State;
 
 /**
  * Gestionnaire principal de tous les états, vues et
@@ -36,6 +37,11 @@ public:
      * Temps idéal entre deux frames
      */
     static const sf::Time FRAME_TIME;
+
+    /**
+     * Taille d'une case de la grille du jeu
+     */
+    static const float GRID;
 
     Manager();
 

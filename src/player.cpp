@@ -1,10 +1,6 @@
+#include "manager.hpp"
 #include "player.hpp"
 #include "game.hpp"
-#include "game.hpp"
-#include "block.hpp"
-#include "constants.hpp"
-#include <iostream>
-#include <array>
 
 const unsigned int Player::TYPE_ID = 1;
 

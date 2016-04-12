@@ -1,4 +1,4 @@
-#include "constants.hpp"
+#include "manager.hpp"
 #include "level.hpp"
 #include "player.hpp"
 #include "block.hpp"
@@ -14,134 +14,140 @@
 #include <queue>
 
 /**
- * Constante de gravité
+ * Définition des variables et fonctions globales internes
+ * (accessibles uniquement dans ce fichier)
  */
-const float GRAVITY = 235;
+namespace {
+    /**
+     * Constante de gravité
+     */
+    const float GRAVITY = 235;
 
-/**
- * Constante de déplacement des objets à déplacement manuel
- */
-const float MOVE = 200;
+    /**
+     * Constante de déplacement des objets à déplacement manuel
+     */
+    const float MOVE = 200;
 
-/**
- * Numéro actuel de version du format de fichier
- */
-const unsigned int VERSION_NUMBER = 0;
+    /**
+     * Numéro actuel de version du format de fichier
+     */
+    const unsigned int VERSION_NUMBER = 0;
 
-/**
- * Dictionnaire associant les types d'objets
- * à des instances qui seront utilisées pour la
- * construction d'autres objets de ces types
- */
-std::map<unsigned int, std::function<Object::Ptr(std::ifstream&)>> object_type_map = {
-    {Player::TYPE_ID, Player::load},
-    {Block::TYPE_ID, Block::load},
-    {GravityBlock::TYPE_ID, GravityBlock::load},
-    {FinishBlock::TYPE_ID, FinishBlock::load},
-    {KillBlock::TYPE_ID, KillBlock::load},
-    {SwitchBlock::TYPE_ID, SwitchBlock::load}
-};
+    /**
+     * Dictionnaire associant les types d'objets
+     * à des instances qui seront utilisées pour la
+     * construction d'autres objets de ces types
+     */
+    std::map<unsigned int, std::function<Object::Ptr(std::ifstream&)>> object_type_map = {
+        {Player::TYPE_ID, Player::load},
+        {Block::TYPE_ID, Block::load},
+        {GravityBlock::TYPE_ID, GravityBlock::load},
+        {FinishBlock::TYPE_ID, FinishBlock::load},
+        {KillBlock::TYPE_ID, KillBlock::load},
+        {SwitchBlock::TYPE_ID, SwitchBlock::load}
+    };
 
-/**
- * Lecture du niveau dont le chemin absolu complet est en paramètre.
- * Les métadonnées sont stockées dans les variables passées par référence.
- * La callback object() est appelée séquentiellement avec les objets du niveau
- */
-void loadLevel(
-    std::string path, sf::String& name, int& total_time,
-    std::vector<sf::Vector2f>& zone,
-    std::string& background, std::string& music,
-    std::function<Object::Ptr(Object::Ptr)> object_callback = {}
-) {
-    // ouverture du fichier
-    std::ifstream file;
-    file.open(path, std::ios::binary | std::ios::in);
+    /**
+     * Lecture du niveau dont le chemin absolu complet est en paramètre.
+     * Les métadonnées sont stockées dans les variables passées par référence.
+     * La callback object() est appelée séquentiellement avec les objets du niveau
+     */
+    void loadLevel(
+        std::string path, sf::String& name, int& total_time,
+        std::vector<sf::Vector2f>& zone,
+        std::string& background, std::string& music,
+        std::function<Object::Ptr(Object::Ptr)> object_callback = {}
+    ) {
+        // ouverture du fichier
+        std::ifstream file;
+        file.open(path, std::ios::binary | std::ios::in);
 
-    // on vérifie que le fichier ait correctement été ouvert en lecture
-    if (file.fail()) {
-        throw std::runtime_error(
-            "Impossible de charger le niveau \"" + name + "\" " +
-            "(" + std::string(strerror(errno)) + ")"
-        );
-    }
-
-    // lecture de la signature du fichier ("BAR")
-    char signature[3];
-    file.read(signature, 3);
-
-    if (strncmp(signature, "BAR", 3) != 0) {
-        throw std::runtime_error(
-            "Impossible de charger le niveau \"" + name + "\" " +
-            "(en-tête invalide)"
-        );
-    }
-
-    // lecture de la version du fichier
-    char file_version;
-    file.read(&file_version, 1);
-
-    if (file_version != VERSION_NUMBER) {
-        throw std::runtime_error(
-            "Impossible de charger le niveau \"" + name + "\" " +
-            "(version non prise en charge)"
-        );
-    }
-
-    // lecture du nom du niveau
-    std::string std_name;
-    std::getline(file, std_name, '\0');
-    name = sf::String(std_name);
-
-    // lecture du temps total du niveau
-    file.read(reinterpret_cast<char*>(&total_time), 4);
-    total_time = ntohl(total_time);
-
-    // lecture de la zone de jeu
-    char control_points;
-    file.read(&control_points, 1);
-    zone.clear();
-
-    for (int i = 0; i < control_points; i++) {
-        float pos_x, pos_y;
-
-        file.read(reinterpret_cast<char*>(&pos_x), 4);
-        file.read(reinterpret_cast<char*>(&pos_y), 4);
-
-        pos_x *= Constants::GRID;
-        pos_y *= Constants::GRID;
-
-        zone.push_back(sf::Vector2f(pos_x, pos_y));
-    }
-
-    // lecture des chemins de la musique et du fond
-    std::getline(file, music, '\0');
-    std::getline(file, background, '\0');
-
-    // lecture des objets si une callback a été fournie
-    int object_count;
-
-    if (!object_callback) {
-        return;
-    }
-
-    file.read(reinterpret_cast<char*>(&object_count), 4);
-    object_count = ntohl(object_count);
-
-    for (int i = 0; i < object_count; i++) {
-        char object_type;
-        file.read(&object_type, 1);
-
-        // vérifie que le type est pris en charge
-        // pour éviter une erreur de segmentation
-        if (object_type_map.count(object_type) == 0) {
+        // on vérifie que le fichier ait correctement été ouvert en lecture
+        if (file.fail()) {
             throw std::runtime_error(
                 "Impossible de charger le niveau \"" + name + "\" " +
-                "(type d'objet " + std::to_string(object_type) + " inconnu)"
+                "(" + std::string(strerror(errno)) + ")"
             );
         }
 
-        // lecture de l'objet
-        object_callback(object_type_map[object_type](file));
+        // lecture de la signature du fichier ("BAR")
+        char signature[3];
+        file.read(signature, 3);
+
+        if (strncmp(signature, "BAR", 3) != 0) {
+            throw std::runtime_error(
+                "Impossible de charger le niveau \"" + name + "\" " +
+                "(en-tête invalide)"
+            );
+        }
+
+        // lecture de la version du fichier
+        char file_version;
+        file.read(&file_version, 1);
+
+        if (file_version != VERSION_NUMBER) {
+            throw std::runtime_error(
+                "Impossible de charger le niveau \"" + name + "\" " +
+                "(version non prise en charge)"
+            );
+        }
+
+        // lecture du nom du niveau
+        std::string std_name;
+        std::getline(file, std_name, '\0');
+        name = sf::String(std_name);
+
+        // lecture du temps total du niveau
+        file.read(reinterpret_cast<char*>(&total_time), 4);
+        total_time = ntohl(total_time);
+
+        // lecture de la zone de jeu
+        char control_points;
+        file.read(&control_points, 1);
+        zone.clear();
+
+        for (int i = 0; i < control_points; i++) {
+            float pos_x, pos_y;
+
+            file.read(reinterpret_cast<char*>(&pos_x), 4);
+            file.read(reinterpret_cast<char*>(&pos_y), 4);
+
+            pos_x *= Manager::GRID;
+            pos_y *= Manager::GRID;
+
+            zone.push_back(sf::Vector2f(pos_x, pos_y));
+        }
+
+        // lecture des chemins de la musique et du fond
+        std::getline(file, music, '\0');
+        std::getline(file, background, '\0');
+
+        // lecture des objets si une callback a été fournie
+        int object_count;
+
+        if (!object_callback) {
+            return;
+        }
+
+        file.read(reinterpret_cast<char*>(&object_count), 4);
+        object_count = ntohl(object_count);
+
+        for (int i = 0; i < object_count; i++) {
+            char object_type;
+            file.read(&object_type, 1);
+
+            // vérifie que le type est pris en charge
+            // pour éviter une erreur de segmentation
+            if (object_type_map.count(object_type) == 0) {
+                throw std::runtime_error(
+                    "Impossible de charger le niveau \"" + name + "\" " +
+                    "(type d'objet " + std::to_string(object_type) + " inconnu)"
+                );
+            }
+
+            // lecture de l'objet
+            object_callback(object_type_map[object_type](file));
+        }
     }
 }
 
@@ -228,8 +234,8 @@ void Level::save(std::string path) {
     file.write(&control_points, 1);
 
     for (int i = 0; i < control_points; i++) {
-        float pos_x = zone[i].x / Constants::GRID;
-        float pos_y = zone[i].y / Constants::GRID;
+        float pos_x = zone[i].x / Manager::GRID;
+        float pos_y = zone[i].y / Manager::GRID;
 
         file.write(reinterpret_cast<char*>(&pos_x), 4);
         file.write(reinterpret_cast<char*>(&pos_y), 4);
