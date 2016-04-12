@@ -90,11 +90,6 @@ public:
      * Modifie le temps total du niveau
      */
     virtual void setTotalTime(int set_total_time);
-
-    /**
-     * Modifie la musique du niveau
-     */
-    virtual void setMusic(std::string set_music);
 };
 
 #endif

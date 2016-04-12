@@ -26,6 +26,8 @@ void Rules::frame() {
 
     // titre de la fenêtre
     getManager().setTitle(L"Règles");
+    getResourceManager().playMusic("menu.ogg");
+    getWindow().setFramerateLimit(Manager::FPS);
 
     // on s'assure d'être dans la vue par défaut (pas de zoom, 0x0 en haut gauche)
     getManager().useGUIView();

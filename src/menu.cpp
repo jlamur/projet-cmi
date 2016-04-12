@@ -9,9 +9,6 @@ const float MAX_WIDTH_PROPORTION = 1.f / 3.f;
 Menu::Menu(Manager& manager) : State(manager) {
     background.setTexture(getResourceManager().getTexture("bg_menu.tga"));
     loadMainMenu();
-
-    getResourceManager().playMusic("menu.ogg");
-    getWindow().setFramerateLimit(Manager::FPS);
 }
 
 Menu::~Menu() {}
@@ -77,6 +74,8 @@ void Menu::processEvent(const sf::Event& event) {
 void Menu::frame() {
     // titre de la fenêtre
     getManager().setTitle("");
+    getResourceManager().playMusic("menu.ogg");
+    getWindow().setFramerateLimit(Manager::FPS);
 
     // affichage du menu
     sf::RenderWindow& window = getWindow();

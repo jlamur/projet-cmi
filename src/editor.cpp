@@ -29,11 +29,7 @@ inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
 Editor::Editor(Manager& manager) : Level(manager),
     drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
-    widget_toolbar(manager) {
-
-    getResourceManager().playMusic("editor.ogg");
-    getWindow().setFramerateLimit(Manager::FPS);
-}
+    widget_toolbar(manager) {}
 
 Editor::~Editor() {}
 
@@ -241,6 +237,8 @@ void Editor::processEvent(const sf::Event& event) {
 void Editor::frame() {
     // titre de la fenêtre
     getManager().setTitle(sf::String(L"Édition de ") + getName());
+    getResourceManager().playMusic("editor.ogg");
+    getWindow().setFramerateLimit(Manager::FPS);
 
     // dessin de la frame
     draw();

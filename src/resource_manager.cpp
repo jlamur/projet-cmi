@@ -5,7 +5,8 @@
 using dir_iter = boost::filesystem::directory_iterator;
 using fs_path = boost::filesystem::path;
 
-ResourceManager::ResourceManager() : preloaded(false), music_volume(20) {
+ResourceManager::ResourceManager() : preloaded(false),
+    music_volume(20), playing_state(false), current_music("") {
     // initialisation de la musique en bouclage et au volume par défaut
     music.setLoop(true);
     music.setVolume(music_volume);
@@ -114,6 +115,17 @@ std::vector<std::string> ResourceManager::getLevelList() {
 }
 
 void ResourceManager::playMusic(std::string name) {
+    // si la musique est déjà chargée, on la relance si elle
+    // est en pause, sinon on ne fait rien
+    if (current_music == name) {
+        if (!playing_state) {
+            playing_state = true;
+            music.play();
+        }
+
+        return;
+    }
+
     // tente de charger la musique depuis le dossier "res/musics"
     std::string full_path = boost::filesystem::canonical(musics_path / name).string();
     std::cout << "Lecture de la musique " << name << "... ";
@@ -124,11 +136,17 @@ void ResourceManager::playMusic(std::string name) {
         std::cout << "OK!" << std::endl;
     }
 
+    current_music = name;
+    playing_state = true;
     music.play();
 }
 
 void ResourceManager::stopMusic() {
-    music.stop();
+    // on n'arrête la musique que si elle ne l'est pas déjà
+    if (playing_state) {
+        playing_state = false;
+        music.stop();
+    }
 }
 
 float ResourceManager::getMusicVolume() {

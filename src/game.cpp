@@ -9,8 +9,6 @@ Game::Game(Manager& manager) : Level(manager),
     next_frame_time(manager.getCurrentTime()) {
     mode = Game::Mode::NORMAL;
     death_cause = Game::DeathCause::NONE;
-
-    getWindow().setFramerateLimit(0);
 }
 
 Game::~Game() {}
@@ -39,6 +37,15 @@ void Game::processEvent(const sf::Event& event) {
 void Game::frame() {
     // titre de la fenêtre
     getManager().setTitle(getName());
+    getWindow().setFramerateLimit(0);
+
+    // si musique il y a, on la joue
+    if (getMusic() != "") {
+        getResourceManager().playMusic(getMusic());
+    } else {
+        getResourceManager().stopMusic();
+    }
+
     sf::Time current_time = getManager().getCurrentTime();
 
     if (current_time >= next_frame_time) {
@@ -256,16 +263,4 @@ void Game::setMode(Game::Mode set_mode) {
 void Game::setTotalTime(int set_total_time) {
     Level::setTotalTime(set_total_time);
     time_left = getTotalTime();
-}
-
-void Game::setMusic(std::string set_music) {
-    Level::setMusic(set_music);
-
-    // lorsqu'on change la musique, on commence à la jouer
-    // si toutefois il y en a une
-    if (getMusic() != "") {
-        getResourceManager().playMusic(getMusic());
-    } else {
-        getResourceManager().stopMusic();
-    }
 }

@@ -27,8 +27,10 @@ private:
     boost::filesystem::path levels_path;
 
     boost::filesystem::path musics_path;
-    float music_volume;
     sf::Music music;
+    float music_volume;
+    bool playing_state;
+    std::string current_music;
 
 public:
     ResourceManager();
