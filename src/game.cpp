@@ -4,12 +4,22 @@
 #include "game.hpp"
 #include "player.hpp"
 
-Game::Game(Manager& manager) : Level(manager),
-    widget_timer(manager, false),
-    next_frame_time(manager.getCurrentTime()) {
-    mode = Game::Mode::NORMAL;
-    death_cause = Game::DeathCause::NONE;
+/**
+ * Définition des variables et fonctions globales internes
+ * (accessibles uniquement dans ce fichier)
+ */
+namespace {
+    // nombre maximum de frames que l'on peut sauter
+    // en cas de charge CPU importante
+    const unsigned int MAX_FRAME_SKIP = 5;
 }
+
+Game::Game(Manager& manager) : Level(manager),
+    mode(Game::Mode::NORMAL),
+    next_frame_time(manager.getCurrentTime()),
+    skipped_frames(0),
+    death_cause(Game::DeathCause::NONE),
+    widget_timer(manager, false) {}
 
 Game::~Game() {}
 
@@ -95,9 +105,17 @@ void Game::frame() {
         // on s'assure que la caméra soit centrée sur nos joueurs
         ensureCentered();
 
-        // si on a encore suffisamment de temps, on dessine
-        if (current_time < next_frame_time) {
+        // si on a encore suffisamment de temps, ou si on a sauté
+        // trop de frames, on dessine
+        if (current_time < next_frame_time || skipped_frames >= MAX_FRAME_SKIP) {
             draw();
+        }
+
+        // sinon, on saute une frame de dessin. On stocke
+        // le nombre de frames sautées pour ne pas sauter plus que
+        // le maximum
+        else {
+            skipped_frames++;
         }
     } else {
         // si nous sommes en avance, on endort le processus

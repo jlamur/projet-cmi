@@ -21,13 +21,15 @@ public:
     enum class DeathCause {NONE, OUT_OF_BOUNDS, KILLED, TIME_OUT};
 
 private:
-    WidgetTimer widget_timer;
-    sf::Time next_frame_time;
-    std::vector<Object::Ptr> pending_kill;
-
     Mode mode;
+
+    sf::Time next_frame_time;
+    unsigned int skipped_frames;
+
+    std::vector<Object::Ptr> pending_kill;
     DeathCause death_cause;
 
+    WidgetTimer widget_timer;
     float time_left;
 
     /**
