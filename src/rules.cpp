@@ -24,10 +24,12 @@ void Rules::frame() {
     sf::RenderWindow& window = getWindow();
     sf::Vector2f size = (sf::Vector2f) window.getSize();
 
-    // titre de la fenêtre
+    // attributs de la fenêtre
     getManager().setTitle(L"Règles");
+    getManager().setFramerate(Manager::FPS);
+
+    // joue la musique du menu
     getResourceManager().playMusic("menu.ogg");
-    getWindow().setFramerateLimit(Manager::FPS);
 
     // on s'assure d'être dans la vue par défaut (pas de zoom, 0x0 en haut gauche)
     getManager().useGUIView();

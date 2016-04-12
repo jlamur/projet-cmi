@@ -71,10 +71,12 @@ void Menu::processEvent(const sf::Event& event) {
 }
 
 void Menu::frame() {
-    // titre de la fenêtre
+    // attributsde la fenêtre
     getManager().setTitle("");
+    getManager().setFramerate(Manager::FPS);
+
+    // joue la musique du menu
     getResourceManager().playMusic("menu.ogg");
-    getWindow().setFramerateLimit(Manager::FPS);
 
     // affichage du menu
     sf::RenderWindow& window = getWindow();

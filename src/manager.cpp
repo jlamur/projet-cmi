@@ -71,6 +71,18 @@ sf::RenderWindow& Manager::getWindow() {
     return window;
 }
 
+unsigned int Manager::getFramerate() {
+    return framerate;
+}
+
+void Manager::setFramerate(unsigned int set_framerate) {
+    // on ne modifie le framerate maximal que s'il a changé
+    if (set_framerate != framerate) {
+        window.setFramerateLimit(set_framerate);
+        framerate = set_framerate;
+    }
+}
+
 sf::Time Manager::getCurrentTime() const {
     return clock.getElapsedTime();
 }
@@ -88,16 +100,15 @@ sf::String Manager::getTitle() {
 }
 
 void Manager::setTitle(sf::String set_title) {
-    if (title == set_title) {
-        return;
-    }
+    if (title != set_title) {
+        title = set_title;
 
-    title = set_title;
-
-    if (title.isEmpty()) {
-        window.setTitle(sf::String(L"Skizzle"));
-    } else {
-        window.setTitle(sf::String(L"Skizzle ‒ ") + title);
+        // màj du titre selon le titre donné par l'état
+        if (title.isEmpty()) {
+            window.setTitle(sf::String(L"Skizzle"));
+        } else {
+            window.setTitle(sf::String(L"Skizzle ‒ ") + title);
+        }
     }
 }
 

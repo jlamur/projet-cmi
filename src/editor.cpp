@@ -240,10 +240,12 @@ void Editor::processEvent(const sf::Event& event) {
 }
 
 void Editor::frame() {
-    // titre de la fenêtre
+    // attributs de la fenêtre
     getManager().setTitle(sf::String(L"Édition de ") + getName());
+    getManager().setFramerate(Manager::FPS);
+
+    // joue la musique de l'éditeur
     getResourceManager().playMusic("editor.ogg");
-    getWindow().setFramerateLimit(Manager::FPS);
 
     // dessin de la frame
     draw();

@@ -14,6 +14,7 @@ class State;
 class Manager {
 private:
     sf::RenderWindow window;
+    unsigned int framerate;
     ResourceManager resource_manager;
 
     sf::Clock clock;
@@ -64,6 +65,16 @@ public:
      * Renvoie la fenêtre actuellement utilisée pour le dessin
      */
     sf::RenderWindow& getWindow();
+
+    /**
+     * Récupère le framerate (maximal) actuel
+     */
+    unsigned int getFramerate();
+
+    /**
+     * Modifie le framerate (maximal) actuel
+     */
+    void setFramerate(unsigned int set_framerate);
 
     /**
      * Renvoie le temps actuel du jeu

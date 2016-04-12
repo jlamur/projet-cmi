@@ -35,9 +35,9 @@ void Game::processEvent(const sf::Event& event) {
 }
 
 void Game::frame() {
-    // titre de la fenêtre
+    // attributs de la fenêtre
     getManager().setTitle(getName());
-    getWindow().setFramerateLimit(0);
+    getManager().setFramerate(0);
 
     // si musique il y a, on la joue
     if (getMusic() != "") {
