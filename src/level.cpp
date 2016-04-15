@@ -277,6 +277,7 @@ void Level::processEvent(const sf::Event& event) {
 
 void Level::draw() {
     sf::RenderWindow& window = getWindow();
+    sf::Vector2u window_size = window.getSize();
 
     // animation de la rotation de la caméra
     float goal = std::fmod((float) gravity_direction * 90, 360);
@@ -295,25 +296,42 @@ void Level::draw() {
     // efface la scène précédente
     window.clear(sf::Color(66, 165, 245));
 
-    // dessin du fond s'il y en a un
+    // on englobe la caméra dans un rectangle circonscrit, dans
+    // le cas où elle serait en rotation
+    sf::Vector2f camera_corners[] = {
+        pixelToCoords(sf::Vector2i(0, 0)),
+        pixelToCoords(sf::Vector2i(window_size.x, 0)),
+        pixelToCoords(sf::Vector2i(window_size.x, window_size.y)),
+        pixelToCoords(sf::Vector2i(0, window_size.y))
+    };
+
+    sf::Vector2f camera_topleft = camera_corners[0];
+    sf::Vector2f camera_botright = camera_corners[0];
+
+    for (unsigned int i = 0; i < 4; i++) {
+        camera_topleft.x = std::min(camera_topleft.x, camera_corners[i].x);
+        camera_topleft.y = std::min(camera_topleft.y, camera_corners[i].y);
+        camera_botright.x = std::max(camera_botright.x, camera_corners[i].x);
+        camera_botright.y = std::max(camera_botright.y, camera_corners[i].y);
+    }
+
+    // on dessine le fond s'il y en a un
     if (background != "") {
         sf::Texture& bg_texture = getResourceManager().getTexture(background);
+        sf::Vector2f bg_size = (sf::Vector2f) bg_texture.getSize();
+
         background_sprite.setTexture(bg_texture);
 
-        sf::Vector2f win_size = camera.getSize();
-        sf::Vector2i bg_size = (sf::Vector2i) bg_texture.getSize();
-        sf::Vector2f corner = camera.getCenter() - win_size / 2.f;
+        // on regarde la position du coin où il faut commencer à
+        // dessiner le fond, et la zone sur laquelle il faut le dessiner
+        int x_left = std::floor(camera_topleft.x / bg_size.x);
+        int y_top = std::floor(camera_topleft.y / bg_size.y);
+        int x_right = std::ceil(camera_botright.x / bg_size.x);
+        int y_bottom = std::ceil(camera_botright.y / bg_size.y);
 
-        // on calcule le nombre de fois qu'il faut dessiner
-        // le fond, et où commencer à la dessiner, pour que
-        // l'écran soit couvert totalement et que le fond se déplace
-        int x_min = std::floor(corner.x / bg_size.x);
-        int y_min = std::floor(corner.y / bg_size.y);
-        int x_max = std::ceil((corner.x + win_size.x) / bg_size.x);
-        int y_max = std::ceil((corner.y + win_size.y) / bg_size.y);
-
-        for (int x = x_min; x < x_max; x++) {
-            for (int y = y_min; y < y_max; y++) {
+        // et on dessine aux positions calculées
+        for (int x = x_left; x < x_right; x++) {
+            for (int y = y_top; y < y_bottom; y++) {
                 background_sprite.setPosition(sf::Vector2f(
                     x * (bg_size.x), y * (bg_size.y)
                 ));
@@ -323,17 +341,29 @@ void Level::draw() {
         }
     }
 
-    // chargement de la file d'affichage des objets
-    std::priority_queue<Object::Ptr, std::vector<Object::Ptr>, ObjectCompare> display_queue;
+    // tri des objets par ordre d'affichage
+    std::sort(
+        objects.begin(), objects.end(),
+        [](const Object::Ptr &a, const Object::Ptr &b) {
+            sf::Vector2f a_pos = a->getPosition();
+            sf::Vector2f b_pos = b->getPosition();
 
-    for (unsigned int i = 0; i < objects.size(); i++) {
-        display_queue.push(objects[i]);
-    }
+            return a_pos.x - a_pos.y + a->getLayer()
+                 < b_pos.x - b_pos.y + b->getLayer();
+        }
+    );
 
     // dessin des objets de la file d'affichage couche par couche
-    while (!display_queue.empty()) {
-        display_queue.top()->draw(*this);
-        display_queue.pop();
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        sf::Vector2i screen_pos = coordsToPixel((*it)->getPosition());
+        sf::FloatRect aabb = (*it)->getAABB();
+
+        // si l'objet est visible à l'écran, on le dessine
+        if (screen_pos.x >= -aabb.width && screen_pos.y >= -aabb.height &&
+            screen_pos.x <= window_size.x + aabb.width &&
+            screen_pos.y <= window_size.y + aabb.height) {
+            (*it)->draw(*this);
+        }
     }
 }
 
