@@ -186,7 +186,6 @@ namespace {
     }
 }
 
-CollisionData::CollisionData() {}
 bool getCollisionData(CollisionData& data) {
     CollisionType type_a = data.obj_a->getCollisionType();
     CollisionType type_b = data.obj_b->getCollisionType();

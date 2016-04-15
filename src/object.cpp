@@ -229,30 +229,6 @@ void Object::updatePosition() {
     position += velocity * Manager::FRAME_TIME.asSeconds();
 }
 
-bool Object::detectCollision(Object::Ptr obj, CollisionData& data) const {
-    // si les objets ne sont pas sur la même couche,
-    // ils ne peuvent pas entrer en collision
-    if (getLayer() != obj->getLayer()) {
-        return false;
-    }
-
-    // si on a affaire à deux objets de masse infinie et
-    // de vitesse nulle, pas de collision
-    if (getMassInvert() == 0 && obj->getMassInvert() == 0 &&
-        getVelocity().x == 0 && getVelocity().y == 0 &&
-        obj->getVelocity().x == 0 && obj->getVelocity().y == 0) {
-        return false;
-    }
-
-    // si les deux boîtes englobantes des deux objets ne
-    // s'intersectent pas, il ne risque pas d'y avoir de collision
-    if (!getAABB().intersects(obj->getAABB())) {
-        return false;
-    }
-
-    return getCollisionData(data);
-}
-
 void Object::solveCollision(Game& game, Object::Ptr obj, const sf::Vector2f& normal) {
     // si les deux objets sont de masse infinie, réinitialisation
     // des vitesses en tant que collision

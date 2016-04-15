@@ -102,12 +102,6 @@ public:
     virtual void updatePosition();
 
     /**
-     * Détecte s'il y a collision entre cet objet
-     * et l'objet passé en paramètre
-     */
-    virtual bool detectCollision(Object::Ptr obj, CollisionData& data) const;
-
-    /**
      * Résolution de la collision entre cet objet
      * et l'objet passé en paramètre selon la normale
      * donnée

@@ -191,7 +191,7 @@ void Game::update() {
 
         // l'objet est sorti de la zone, on le signale et on
         // planifie sa mort à la prochaine frame
-        if (!isInZone(obj_a) && obj_a->getMass() != 0) {
+        if (obj_a->getMass() != 0 && !isInZone(obj_a)) {
             kill(obj_a);
 
             // si c'était un joueur, on a perdu
@@ -205,12 +205,24 @@ void Game::update() {
         // d'autres objets
         for (auto jt = it + 1; jt != objects.end(); jt++) {
             Object::Ptr obj_b = *jt;
-            CollisionData data;
 
+            // si les objets ne sont pas sur la même couche,
+            // ils ne peuvent pas entrer en collision
+            if (obj_a->getLayer() != obj_b->getLayer()) {
+                continue;
+            }
+
+            // si les deux boîtes englobantes des deux objets ne
+            // s'intersectent pas, il ne risque pas d'y avoir de collision
+            if (!obj_a->getAABB().intersects(obj_b->getAABB())) {
+                continue;
+            }
+
+            CollisionData data;
             data.obj_a = obj_a;
             data.obj_b = obj_b;
 
-            if (obj_a->detectCollision(obj_b, data)) {
+            if (getCollisionData(data)) {
                 colliding.push_back(data);
             }
         }

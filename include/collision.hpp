@@ -22,8 +22,6 @@ struct CollisionData {
 
     std::shared_ptr<Object> obj_a;
     std::shared_ptr<Object> obj_b;
-
-    CollisionData();
 };
 
 /**
