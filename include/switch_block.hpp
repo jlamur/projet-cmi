@@ -1,5 +1,5 @@
-#ifndef __PTF_SWITCH_BLOCK_HPP__
-#define __PTF_SWITCH_BLOCK_HPP__
+#ifndef __SKIZZLE_SWITCH_BLOCK_HPP__
+#define __SKIZZLE_SWITCH_BLOCK_HPP__
 
 #include <SFML/Graphics.hpp>
 #include <memory>

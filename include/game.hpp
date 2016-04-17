@@ -1,5 +1,5 @@
-#ifndef __PTF_GAME_HPP__
-#define __PTF_GAME_HPP__
+#ifndef __SKIZZLE_GAME_HPP__
+#define __SKIZZLE_GAME_HPP__
 
 #include "level.hpp"
 #include "widget_timer.hpp"

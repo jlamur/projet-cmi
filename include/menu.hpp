@@ -1,5 +1,5 @@
-#ifndef __PTF_MENU_HPP__
-#define __PTF_MENU_HPP__
+#ifndef __SKIZZLE_MENU_HPP__
+#define __SKIZZLE_MENU_HPP__
 
 #include "state.hpp"
 #include <functional>

@@ -1,5 +1,5 @@
-#ifndef __PTF_PLAYER_HPP__
-#define __PTF_PLAYER_HPP__
+#ifndef __SKIZZLE_PLAYER_HPP__
+#define __SKIZZLE_PLAYER_HPP__
 
 #include <SFML/Graphics.hpp>
 #include <memory>

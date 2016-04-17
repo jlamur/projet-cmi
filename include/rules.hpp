@@ -1,5 +1,5 @@
-#ifndef __PTF_RULES_HPP__
-#define __PTF_RULES_HPP__
+#ifndef __SKIZZLE_RULES_HPP__
+#define __SKIZZLE_RULES_HPP__
 
 #include "state.hpp"
 
