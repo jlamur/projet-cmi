@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include "utility.hpp"
 #include "manager.hpp"
 #include "game.hpp"
 #include "player.hpp"
@@ -148,23 +149,29 @@ void Game::draw() {
 
 void Game::ensureCentered() {
     std::vector<Player::Ptr>& players = getPlayers();
-
-    sf::Vector2f total_position;
-    sf::View camera = getCamera();
     unsigned int player_count = players.size();
 
+    sf::View camera = getCamera();
+    sf::Vector2f previous_center = camera.getCenter();
+    sf::Vector2f position_sum, goal_center;
+
     for (unsigned int i = 0; i < player_count; i++) {
-        total_position += players[i]->getPosition();
+        position_sum += players[i]->getPosition();
     }
 
     if (player_count == 0) {
         // on évite la division par zéro
-        camera.setCenter(sf::Vector2f(0, 0));
+        goal_center = sf::Vector2f(0, 0);
     } else {
         // on place la caméra à la position médiane de tous les joueurs
-        camera.setCenter(total_position / (float) player_count);
+        goal_center = position_sum / (float) player_count;
     }
 
+    // on anime le centre vers la nouvelle position
+    previous_center.x = Utility::animateValue(previous_center.x, 5, goal_center.x);
+    previous_center.y = Utility::animateValue(previous_center.y, 5, goal_center.y);
+
+    camera.setCenter(previous_center);
     setCamera(camera);
 }
 
