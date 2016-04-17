@@ -4,7 +4,7 @@
 
 const unsigned int GravityBlock::TYPE_ID = 3;
 
-GravityBlock::GravityBlock() : Block() {}
+GravityBlock::GravityBlock() : Block(), used(false) {}
 GravityBlock::~GravityBlock() {}
 
 Object::Ptr GravityBlock::clone() const {
@@ -37,11 +37,17 @@ void GravityBlock::prepareDraw(ResourceManager& resources) {
 }
 
 void GravityBlock::activate(Game& game, Object::Ptr object) {
+    // on ne peut utiliser le bloc qu'une seule fois
+    if (used) {
+        return;
+    }
+
     Block::activate(game, object);
 
     // lorsque le bloc est activé, il transmet son
     // sens de gravité au niveau
     game.setGravityDirection(gravity_direction);
+    used = true;
 }
 
 unsigned int GravityBlock::getTypeId() const {

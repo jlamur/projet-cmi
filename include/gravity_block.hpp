@@ -14,6 +14,7 @@ public:
 
 private:
     GravityDirection gravity_direction;
+    bool used;
 
 protected:
     /**
