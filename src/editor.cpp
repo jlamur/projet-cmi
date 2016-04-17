@@ -38,6 +38,17 @@ Editor::Editor(Manager& manager) : Level(manager),
 
 Editor::~Editor() {}
 
+void Editor::enable() {
+    Level::enable();
+
+    // attributs de la fenêtre
+    getManager().setTitle(sf::String(L"Édition de ") + getName());
+    getManager().setFramerate(Manager::FPS);
+
+    // joue la musique de l'éditeur
+    getResourceManager().playMusic("editor.ogg");
+}
+
 void Editor::processEvent(const sf::Event& event) {
     Level::processEvent(event);
 
@@ -240,13 +251,6 @@ void Editor::processEvent(const sf::Event& event) {
 }
 
 void Editor::frame() {
-    // attributs de la fenêtre
-    getManager().setTitle(sf::String(L"Édition de ") + getName());
-    getManager().setFramerate(Manager::FPS);
-
-    // joue la musique de l'éditeur
-    getResourceManager().playMusic("editor.ogg");
-
     // dessin de la frame
     draw();
 }

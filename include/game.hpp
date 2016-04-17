@@ -61,6 +61,11 @@ public:
     virtual ~Game();
 
     /**
+     * Active l'état
+     */
+    virtual void enable();
+
+    /**
      * Traite l'événement donné
      */
     virtual void processEvent(const sf::Event& event);

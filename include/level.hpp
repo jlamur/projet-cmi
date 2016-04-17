@@ -59,6 +59,11 @@ public:
     virtual ~Level();
 
     /**
+     * Active l'état
+     */
+    virtual void enable();
+
+    /**
      * Obtient le nom du niveau dont le chemin complet
      * et absolu est en paramètre
      */

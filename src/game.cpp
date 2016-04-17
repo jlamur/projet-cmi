@@ -23,6 +23,21 @@ Game::Game(Manager& manager) : Level(manager),
 
 Game::~Game() {}
 
+void Game::enable() {
+    Level::enable();
+
+    // attributs de la fenêtre
+    getManager().setTitle(getName());
+    getManager().setFramerate(0);
+
+    // si musique il y a, on la joue
+    if (getMusic() != "") {
+        getResourceManager().playMusic(getMusic());
+    } else {
+        getResourceManager().stopMusic();
+    }
+}
+
 void Game::processEvent(const sf::Event& event) {
     Level::processEvent(event);
 
@@ -45,17 +60,6 @@ void Game::processEvent(const sf::Event& event) {
 }
 
 void Game::frame() {
-    // attributs de la fenêtre
-    getManager().setTitle(getName());
-    getManager().setFramerate(0);
-
-    // si musique il y a, on la joue
-    if (getMusic() != "") {
-        getResourceManager().playMusic(getMusic());
-    } else {
-        getResourceManager().stopMusic();
-    }
-
     sf::Time current_time = getManager().getCurrentTime();
 
     if (current_time >= next_frame_time) {

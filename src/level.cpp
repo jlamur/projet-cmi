@@ -152,13 +152,7 @@ namespace {
 }
 
 Level::Level(Manager& manager) : State(manager) {
-    sf::Vector2u window_size = getWindow().getSize();
     gravity_direction = GravityDirection::SOUTH;
-
-    // positionnement par défaut de la caméra
-    camera.setSize(window_size.x, window_size.y);
-    camera.setCenter(0, 0);
-    camera_angle = 180.f;
 
     // métadonnées par défaut
     setName(sf::String("Nouveau niveau"));
@@ -177,6 +171,15 @@ Level::Level(Manager& manager) : State(manager) {
 }
 
 Level::~Level() {}
+
+void Level::enable() {
+    // positionnement par défaut de la caméra
+    sf::Vector2u window_size = getWindow().getSize();
+
+    camera.setSize(window_size.x, window_size.y);
+    camera.setCenter(0, 0);
+    camera_angle = 180.f;
+}
 
 sf::String Level::getLevelName(std::string path) {
     sf::String name;

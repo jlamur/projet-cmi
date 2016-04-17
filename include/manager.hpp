@@ -21,6 +21,7 @@ private:
     sf::View gui_view;
     sf::String title;
 
+    State* previous_state;
     std::stack<std::unique_ptr<State>> states;
 
 public:

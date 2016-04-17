@@ -18,6 +18,11 @@ public:
     virtual ~State();
 
     /**
+     * Active l'état
+     */
+    virtual void enable() = 0;
+
+    /**
      * Traite l'événement donné
      */
     virtual void processEvent(const sf::Event& event) = 0;

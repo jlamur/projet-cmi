@@ -5,7 +5,7 @@ const unsigned int Manager::FPS = 60;
 const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);
 const float Manager::GRID = 32;
 
-Manager::Manager() : title(sf::String(L"")) {
+Manager::Manager() : title(sf::String(L"")), previous_state(nullptr) {
     // préchargement des textures
     resource_manager.preload();
 
@@ -53,7 +53,16 @@ void Manager::start() {
             return;
         }
 
-        // affichage de la prochaine frame
+        // si l'état que l'on va utiliser n'est pas le
+        // même que précédemment, on l'active
+        // Ceci permet un partage plus facile des
+        // ressources globales (vue, musique)
+        if (previous_state != states.top().get()) {
+            previous_state = states.top().get();
+            previous_state->enable();
+        }
+
+        // demande à l'état actuel d'afficher une frame
         states.top()->frame();
         window.display();
     }

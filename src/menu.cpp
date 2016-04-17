@@ -12,6 +12,15 @@ Menu::Menu(Manager& manager) : State(manager) {
 
 Menu::~Menu() {}
 
+void Menu::enable() {
+    // attributs de la fenêtre
+    getManager().setTitle("");
+    getManager().setFramerate(Manager::FPS);
+
+    // joue la musique du menu
+    getResourceManager().playMusic("menu.ogg");
+}
+
 void Menu::processEvent(const sf::Event& event) {
     // gestion des touches
     if (event.type == sf::Event::KeyPressed) {
@@ -71,13 +80,6 @@ void Menu::processEvent(const sf::Event& event) {
 }
 
 void Menu::frame() {
-    // attributsde la fenêtre
-    getManager().setTitle("");
-    getManager().setFramerate(Manager::FPS);
-
-    // joue la musique du menu
-    getResourceManager().playMusic("menu.ogg");
-
     // affichage du menu
     sf::RenderWindow& window = getWindow();
     sf::Vector2f size = (sf::Vector2f) window.getSize();

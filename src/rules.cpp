@@ -8,6 +8,15 @@ Rules::Rules(Manager& manager) : State(manager) {
 
 Rules::~Rules() {}
 
+void Rules::enable() {
+    // attributs de la fenêtre
+    getManager().setTitle(L"Règles");
+    getManager().setFramerate(Manager::FPS);
+
+    // joue la musique du menu
+    getResourceManager().playMusic("menu.ogg");
+}
+
 void Rules::processEvent(const sf::Event& event) {
     // appui sur échap, retour, entrée, espace : on dépile l'état
     if (event.type == sf::Event::KeyPressed) {
@@ -23,13 +32,6 @@ void Rules::processEvent(const sf::Event& event) {
 void Rules::frame() {
     sf::RenderWindow& window = getWindow();
     sf::Vector2f size = (sf::Vector2f) window.getSize();
-
-    // attributs de la fenêtre
-    getManager().setTitle(L"Règles");
-    getManager().setFramerate(Manager::FPS);
-
-    // joue la musique du menu
-    getResourceManager().playMusic("menu.ogg");
 
     // on s'assure d'être dans la vue par défaut (pas de zoom, 0x0 en haut gauche)
     getManager().useGUIView();
