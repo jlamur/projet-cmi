@@ -41,7 +41,7 @@ void GravityBlock::draw(Level& level) {
     Block::draw(level);
 
     // on anime l'opacité de l'icône
-    opacity = Utility::animateValue(opacity, 2, used ? 0 : 255);
+    opacity = Utility::animateValue(opacity, 5, used ? 0 : 255);
     icon_sprite.setColor(sf::Color(255, 255, 255, opacity));
 
     // on dessine l'icône

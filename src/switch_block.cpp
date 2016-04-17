@@ -1,34 +1,48 @@
 #include "manager.hpp"
+#include "utility.hpp"
 #include "switch_block.hpp"
 #include "game.hpp"
 
 const unsigned int SwitchBlock::TYPE_ID = 6;
 
-SwitchBlock::SwitchBlock() : Block() {}
+SwitchBlock::SwitchBlock() : Block(), opacity(255), used(false) {
+    icon_sprite.setOrigin(sf::Vector2f(23, 23));
+}
+
 SwitchBlock::~SwitchBlock() {}
 
 Object::Ptr SwitchBlock::clone() const {
     return Object::Ptr(new SwitchBlock(*this));
 }
 
-void SwitchBlock::prepareDraw(ResourceManager& resources) {
-    Block::prepareDraw(resources);
-    sprite.setTexture(resources.getTexture("switch_block.tga"));
+void SwitchBlock::draw(Level& level) {
+    // on dessine le bloc normal
+    Block::draw(level);
+
+    // on anime l'opacité de l'icône
+    opacity = Utility::animateValue(opacity, 5, used ? 0 : 255);
+    icon_sprite.setColor(sf::Color(255, 255, 255, opacity));
+
+    // on dessine l'icône
+    icon_sprite.setTexture(level.getResourceManager().getTexture(
+        "switch_block.tga"
+    ));
+
+    icon_sprite.setPosition(getPosition());
+    level.getWindow().draw(icon_sprite);
 }
 
 void SwitchBlock::activate(Game& game, Object::Ptr object) {
+    // on ne peut utiliser le bloc qu'une seule fois
+    if (used) {
+        return;
+    }
+
     Block::activate(game, object);
 
-    // on échange la polarité de l'objet en contact, si le dernier
-    // objet touché par la balle n'est pas ce bloc et si un temps
-    // d'une seconde est passé
-    sf::Time current_time = game.getManager().getCurrentTime();
-
-    if (current_time - last_activation >= sf::seconds(1) &&
-            object->getLastActivator().lock() != shared_from_this()) {
-        last_activation = current_time;
-        object->setCharge(-object->getCharge());
-    }
+    // on échange la polarité de l'objet en contact
+    object->setCharge(-object->getCharge());
+    used = true;
 }
 
 unsigned int SwitchBlock::getTypeId() const {

@@ -19,7 +19,9 @@ protected:
     static void init(std::ifstream& file, Object::Ptr object);
 
 public:
-    sf::Time last_activation;
+    sf::Sprite icon_sprite;
+    float opacity;
+    bool used;
 
 public:
     /**
@@ -38,7 +40,7 @@ public:
     /**
      * Prépare les textures avant le dessin du bloc
      */
-    virtual void prepareDraw(ResourceManager& resources);
+    virtual void draw(Level& level);
 
     /**
      * Appelé lorsque le bloc changeur est activé par un objet
