@@ -398,6 +398,8 @@ void Editor::removeObject(Object::Ptr object) {
         selection.begin(), selection.end(), object
     ), selection.end());
 
+    Level::removeObject(object);
+
     // si c'était un joueur, il faut renuméroter
     // les autres pour plus de convenance
     if (object->getTypeId() == Player::TYPE_ID) {
@@ -406,8 +408,6 @@ void Editor::removeObject(Object::Ptr object) {
             getPlayers()[i]->setPlayerNumber(i);
         }
     }
-
-    Level::removeObject(object);
 }
 
 void Editor::removeControlPoint(sf::Vector2f* control_point) {
