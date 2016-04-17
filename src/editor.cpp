@@ -398,6 +398,15 @@ void Editor::removeObject(Object::Ptr object) {
         selection.begin(), selection.end(), object
     ), selection.end());
 
+    // si c'était un joueur, il faut renuméroter
+    // les autres pour plus de convenance
+    if (object->getTypeId() == Player::TYPE_ID) {
+        // on réattribue les numéros de joueurs
+        for (unsigned int i = 0; i < getPlayers().size(); i++) {
+            getPlayers()[i]->setPlayerNumber(i);
+        }
+    }
+
     Level::removeObject(object);
 }
 

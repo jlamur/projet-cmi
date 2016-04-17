@@ -14,6 +14,8 @@ public:
 
 private:
     GravityDirection gravity_direction;
+    sf::Sprite icon_sprite;
+    float opacity;
     bool used;
 
 protected:
@@ -38,9 +40,9 @@ public:
     virtual Object::Ptr clone() const;
 
     /**
-     * Prépare les textures avant le dessin du bloc
+     * Dessin du bloc dans la fenêtre donnée
      */
-    virtual void prepareDraw(ResourceManager& resources);
+    virtual void draw(Level& level);
 
     /**
      * Appelé lorsque le bloc de gravité est activé par un objet

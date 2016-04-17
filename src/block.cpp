@@ -7,6 +7,9 @@
 const unsigned int Block::TYPE_ID = 2;
 
 Block::Block() : Object() {
+    sprite.setOrigin(sf::Vector2f(23, 23));
+    select_sprite.setOrigin(sf::Vector2f(23, 23));
+
     aabb = sf::FloatRect(
         -Manager::GRID / 2,
         -Manager::GRID / 2,
@@ -45,10 +48,7 @@ void Block::prepareDraw(ResourceManager& resources) {
     }
 
     sprite.setTexture(resources.getTexture(texture_name));
-    sprite.setOrigin(sf::Vector2f(23, 23));
-
     select_sprite.setTexture(resources.getTexture("block_select.tga"));
-    select_sprite.setOrigin(sf::Vector2f(23, 23));
 }
 
 void Block::draw(Level& level) {

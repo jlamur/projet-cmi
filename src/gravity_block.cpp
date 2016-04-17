@@ -1,18 +1,22 @@
-#include "resource_manager.hpp"
+#include "manager.hpp"
+#include "utility.hpp"
 #include "gravity_block.hpp"
 #include "game.hpp"
 
 const unsigned int GravityBlock::TYPE_ID = 3;
 
-GravityBlock::GravityBlock() : Block(), used(false) {}
+GravityBlock::GravityBlock() : Block(), opacity(255), used(false) {
+    icon_sprite.setOrigin(sf::Vector2f(23, 23));
+}
+
 GravityBlock::~GravityBlock() {}
 
 Object::Ptr GravityBlock::clone() const {
     return Object::Ptr(new GravityBlock(*this));
 }
 
-void GravityBlock::prepareDraw(ResourceManager& resources) {
-    Block::prepareDraw(resources);
+void GravityBlock::draw(Level& level) {
+    // sélectionne le sprite d'icône
     std::string texture_name = "gravity_block_";
 
     switch (gravity_direction) {
@@ -33,7 +37,20 @@ void GravityBlock::prepareDraw(ResourceManager& resources) {
         break;
     }
 
-    sprite.setTexture(resources.getTexture(texture_name + ".tga"));
+    // on dessine le bloc normal
+    Block::draw(level);
+
+    // on anime l'opacité de l'icône
+    opacity = Utility::animateValue(opacity, 2, used ? 0 : 255);
+    icon_sprite.setColor(sf::Color(255, 255, 255, opacity));
+
+    // on dessine l'icône
+    icon_sprite.setTexture(level.getResourceManager().getTexture(
+        texture_name + ".tga"
+    ));
+
+    icon_sprite.setPosition(getPosition());
+    level.getWindow().draw(icon_sprite);
 }
 
 void GravityBlock::activate(Game& game, Object::Ptr object) {
