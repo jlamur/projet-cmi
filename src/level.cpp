@@ -160,10 +160,12 @@ Level::Level(Manager& manager) : State(manager) {
     setTotalTime(30);
 
     // zone de jeu par défaut
-    zone.push_back(sf::Vector2f(-128, -128));
-    zone.push_back(sf::Vector2f(128, -128));
-    zone.push_back(sf::Vector2f(128, 128));
-    zone.push_back(sf::Vector2f(-128, 128));
+    int size = 8;
+
+    zone.push_back(sf::Vector2f(-size * Manager::GRID, -size * Manager::GRID));
+    zone.push_back(sf::Vector2f(size * Manager::GRID, -size * Manager::GRID));
+    zone.push_back(sf::Vector2f(size * Manager::GRID, size * Manager::GRID));
+    zone.push_back(sf::Vector2f(-size * Manager::GRID, size * Manager::GRID));
 
     // ressources par défaut
     setMusic("");
