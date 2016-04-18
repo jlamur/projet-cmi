@@ -1,51 +1,11 @@
 \begin{tikzpicture}
-    %%%%%%%%%%%%%%%%%%%%%%%
-    %% CLASSES GÉNÉRALES %%
-    %%%%%%%%%%%%%%%%%%%%%%%
-
-    % Spécifications du gestionnaire de jeu
-    \umlclass{Manager}{
-        window : fenêtre\\
-        resource\_manager : \texttt{ResourceManager}\\
-        clock : horloge\\
-        states : pile de \texttt{State}
-    }{
-        start() : vide\\
-        pushState(state : \texttt{State}) : vide\\
-        popState() : vide
-    }
-
-    % Spécifications du gestionnaire de ressources
-    \umlclass[x=4,y=-4.5]{ResourceManager}{
-        textures : dictionnaire \texttt{string -> texture}\\
-        fonts : dictionnaire \texttt{string -> police}
-        music : musique
-    }{
-        getTexture(name : string) : texture\\
-        getFont(name : string) : texture\\
-        getLevelPath(name : string) : string\\
-        playMusic(name : string) : vide\\
-        stopMusic() : vide
-    }
-    \umluniassoc{Manager}{ResourceManager}
-
-    % Spécfications d'un état de jeu
-    \umlabstract[x=-4,y=-4.5]{State}{
-        manager : \texttt{Manager}
-    }{
-        \umlvirt{enable() : vide}\\
-        \umlvirt{processEvent(event : événement) : vide}\\
-        \umlvirt{frame() : vide}
-    }
-    \umlunicompo{Manager}{State}
-
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% ÉTATS DE JEU PRINCIPAUX %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Spécifications de l'état de jeu abstrait "niveau"
     % qui est une collection d'objets
-    \umlabstract[y=-11]{Level}{
+    \umlabstract{Level}{
         name : string\\
         background : sprite\\
         music : string\\
@@ -57,7 +17,7 @@
         zone : \texttt{[vecteur]}
     }{
         enable() : vide\\
-        processEvent(event : événement) : vide\\
+        processEvent(event) : vide\\
         load(file : string) : vide\\
         save(file : string) : vide\\
         \umlvirt{frame() : vide}\\
@@ -65,15 +25,14 @@
         addObject(object : \texttt{Object})\\
         removeObject(object : \texttt{Object})
     }
-    \umlinherit{State}{Level}
 
     % Spécifications de l'état de jeu "éditeur" qui permet
     % de modifier des niveaux de jeu
-    \umlclass[x=-3.5,y=-18]{Editor}{
+    \umlclass[x=-6]{Editor}{
         selection : \texttt{[Object]}
     }{
         enable() : vide\\
-        processEvent(event : événement) : vide\\
+        processEvent(event) : vide\\
         frame() : vide\\
         select(objet: \texttt{Object}) : vide\\
         selectAll() : vide\\
@@ -83,14 +42,14 @@
 
     % Spécifications de l'état de jeu "jeu" qui permet
     % de jouer aux niveaux créés
-    \umlclass[x=3.5,y=-18]{Game}{
+    \umlclass[x=6]{Game}{
         mode : mode\\
         next\_frame\_time : temps\\
         pending\_kill : \texttt{[Object]}\\
         time\_left : flottant
     }{
         enable() : vide\\
-        processEvent(event : événement) : vide\\
+        processEvent(event) : vide\\
         frame() : vide\\
         update() : vide\\
         kill(objet : \texttt{Object}) : vide
@@ -98,31 +57,21 @@
     \umlinherit{Level}{Game}
 
     % Spécifications des objets du jeu
-    \umlabstract[y=-25]{Object}{
+    \umlabstract[y=-6.5]{Object}{
         acceleration : vecteur\\
         velocity : vecteur\\
         position : vecteur\\
-        mass : flottant\\
-        charge : flottant\\
-        restitution : flottant\\
-        static\_friction : flottant\\
-        dynamic\_friction : flottant\\
-        layer : entier
     }{
         \umlvirt{getForces(game : \texttt{Game}) : vecteur}\\
         \umlvirt{activate(game : \texttt{Game}, object : \texttt{Object}) : vecteur}\\
         \umlvirt{getAABB() : boîte}\\
         \umlvirt{getRadius() : flottant}\\
-        \umlvirt{draw(level : \texttt{Level}) : vide}\\
-        updateVelocity(game : \texttt{Game}) : vide\\
-        updatePosition() : vide\\
-        solveCollision(game : \texttt{Game}, object : \texttt{Object}, normal : vecteur) : vide\\
-        positionalCorrection(object : \texttt{Object}, normal : vecteur, depth : flottant) : vide\\
+        \umlvirt{draw(level : \texttt{Level}) : vide}
     }
     \umlunicompo{Level}{Object}
 
     % Spécifications de l'objet "joueur"
-    \umlclass[x=-4,y=-31.5]{Player}{
+    \umlclass[x=-4,y=-11]{Player}{
         player\_number : entier non-signé
     }{
         getForces(game : \texttt{Game}) : vecteur\\
@@ -134,7 +83,7 @@
     \umlinherit{Object}{Player}
 
     % Spécifications de l'objet "bloc"
-    \umlclass[x=4,y=-31.5]{Block}{}{
+    \umlclass[x=4,y=-11]{Block}{}{
         draw(level : \texttt{Level}) : vide\\
         prepareDraw(resources : \texttt{ResourceManager}) : vide\\
         activate(game : \texttt{Game}, object : \texttt{Object}) : vecteur\\
@@ -145,7 +94,7 @@
 
     % Spécifications de l'objet "bloc de fin" permettant
     % quand il est activé de terminer le niveau
-    \umlclass[x=0,y=-35]{FinishBlock}{}{
+    \umlclass[x=-2,y=-14]{FinishBlock}{}{
         prepareDraw(resources : \texttt{ResourceManager}) : vide\\
         activate(game : \texttt{Game}, object : \texttt{Object}) : vecteur
     }
@@ -153,7 +102,7 @@
 
     % Spécifications de l'objet "bloc de gravité" permettant
     % quand il est activé de réorienter la gravité du niveau
-    \umlclass[x=8,y=-35]{GravityBlock}{
+    \umlclass[x=6,y=-14]{GravityBlock}{
         gravity\_direction : direction
     }{
         prepareDraw(resources : \texttt{ResourceManager}) : vide\\
@@ -163,7 +112,7 @@
 
     % Spécifications de l'objet "bloc tueur" permettant
     % quand il est activé par un joueur de le tuer
-    \umlclass[x=0,y=-37.5]{KillBlock}{}{
+    \umlclass[x=-2,y=-16.5]{KillBlock}{}{
         prepareDraw(resources : \texttt{ResourceManager}) : vide\\
         activate(game : \texttt{Game}, object : \texttt{Object}) : vecteur
     }
@@ -171,45 +120,9 @@
 
     % Spécifications de l'objet "bloc d'échange" permettant
     % quand il est activé par un joueur d'échanger sa charge
-    \umlclass[x=8,y=-37.5]{SwitchBlock}{}{
+    \umlclass[x=6,y=-16.5]{SwitchBlock}{}{
         prepareDraw(resources : \texttt{ResourceManager}) : vide\\
         activate(game : \texttt{Game}, object : \texttt{Object}) : vecteur
     }
     \umlinherit{Block}{SwitchBlock}
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% ÉTATS DE JEU DU MENU %%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    % Spécifications de l'état de jeu "menu"
-    % qui est le premier état au démarrage et permet
-    % d'afficher les différents choix de jeu
-    \umlclass[x=-7,y=-11]{Menu}{
-        background : sprite\\
-        choices : \texttt{[string]}\\
-        actions : \texttt{[callback]}\\
-        selection : entier non-signé
-    }{
-        loadMainMenu() : vide\\
-        loadLevelMenu() : vide\\
-        loadEditorMenu() : vide\\
-        launchGame(path : string) : vide\\
-        launchEditor(path : string) : vide\\
-        launchRules() : vide\\
-        quit() : vide\\
-        enable() : vide\\
-        processEvent(event : événement) : vide\\
-        frame() : vide
-    }
-    \umlinherit{State}{Menu}
-
-    % Spécifications de l'état de jeu "règles" qui
-    % affiche l'image décrivant les règles
-    \umlclass[x=-14,y=-11]{Rules}{
-        background : sprite\\
-    }{
-        processEvent(event : événement) : vide\\
-        frame() : vide
-    }
-    \umlinherit{State}{Rules}
 \end{tikzpicture}

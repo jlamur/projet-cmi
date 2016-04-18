@@ -1,0 +1,88 @@
+\begin{tikzpicture}
+    %%%%%%%%%%%%%%%%%%%%%%%
+    %% CLASSES GÉNÉRALES %%
+    %%%%%%%%%%%%%%%%%%%%%%%
+
+    % Spécifications du gestionnaire de jeu
+    \umlclass{Manager}{
+        window : fenêtre\\
+        resource\_manager : \texttt{ResourceManager}\\
+        clock : horloge\\
+        states : pile de \texttt{State}
+    }{
+        start() : vide\\
+        pushState(state : \texttt{State}) : vide\\
+        popState() : vide
+    }
+
+    % Spécifications du gestionnaire de ressources
+    \umlclass[x=4,y=-4.5]{ResourceManager}{
+        textures : dictionnaire \texttt{string -> texture}\\
+        fonts : dictionnaire \texttt{string -> police}
+        music : musique
+    }{
+        getTexture(name : string) : texture\\
+        getFont(name : string) : texture\\
+        getLevelPath(name : string) : string\\
+        playMusic(name : string) : vide\\
+        stopMusic() : vide
+    }
+    \umluniassoc{Manager}{ResourceManager}
+
+    % Spécfications d'un état de jeu
+    \umlabstract[x=-4,y=-4.5]{State}{
+        manager : \texttt{Manager}
+    }{
+        \umlvirt{enable() : vide}\\
+        \umlvirt{processEvent(event : événement) : vide}\\
+        \umlvirt{frame() : vide}
+    }
+    \umlunicompo{Manager}{State}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% ÉTATS DE JEU PRINCIPAUX %%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    % Spécifications de l'état de jeu abstrait "niveau"
+    % qui est une collection d'objets
+    \umlabstract[x=7,y=-11]{Level}{}{
+        \emph{Voir la figure suivante}
+    }
+    \umlinherit{State}{Level}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% ÉTATS DE JEU DU MENU %%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    % Spécifications de l'état de jeu "menu"
+    % qui est le premier état au démarrage et permet
+    % d'afficher les différents choix de jeu
+    \umlclass[y=-11]{Menu}{
+        background : sprite\\
+        choices : \texttt{[string]}\\
+        actions : \texttt{[callback]}\\
+        selection : entier non-signé
+    }{
+        loadMainMenu() : vide\\
+        loadLevelMenu() : vide\\
+        loadEditorMenu() : vide\\
+        launchGame(path : string) : vide\\
+        launchEditor(path : string) : vide\\
+        launchRules() : vide\\
+        quit() : vide\\
+        enable() : vide\\
+        processEvent(event : événement) : vide\\
+        frame() : vide
+    }
+    \umlinherit{State}{Menu}
+
+    % Spécifications de l'état de jeu "règles" qui
+    % affiche l'image décrivant les règles
+    \umlclass[x=-7,y=-11]{Rules}{
+        background : sprite\\
+    }{
+        processEvent(event : événement) : vide\\
+        frame() : vide
+    }
+    \umlinherit{State}{Rules}
+\end{tikzpicture}
