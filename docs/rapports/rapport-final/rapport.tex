@@ -1,19 +1,30 @@
 \documentclass{report}
 
-% Packages basiques
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage[french]{babel}
-\usepackage{hyperref}
-
 % Graphismes
 \usepackage[pdftex]{graphicx}
 \usepackage{lmodern}
 \usepackage{tikz}
-\usepackage{gantt}
+\usepackage{tikz-uml}
+\usepackage{pgfgantt}
 \usepackage{lscape}
 \usepackage{rotating}
+
+% Couleurs personnalisées
+\definecolor{matred}{RGB}{239,83,80}
+\definecolor{matgreen}{RGB}{156,204,101}
+\definecolor{matblue}{RGB}{41,182,246}
+\definecolor{matyellow}{RGB}{255,235,59}
+\definecolor{matblack}{RGB}{33,33,33}
+\definecolor{matgray}{RGB}{224,224,224}
+\definecolor{matbrown}{RGB}{78,52,46}
+
+% Packages basiques
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage[french]{babel}
+\usepackage{hyperref}
 
 % Noms personnalisés
 \addto{\captionsfrench}{\renewcommand{\bibname}{Webographie}}

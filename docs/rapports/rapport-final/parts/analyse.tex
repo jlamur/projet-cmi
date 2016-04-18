@@ -1,1 +1,58 @@
 \chapter{Analyse du projet}
+
+\section{Découpage du projet}
+
+Le jeu est constitué d'une suite de niveaux organisés de manière
+semblable à ceux d'un jeu de plateformes. Ces niveaux contiennent des entités.
+
+Les entités du jeu sont multiples : blocs, blocs spéciaux, joueurs,
+éléments de décor. Ces entités -- ou objets, interagissent entre eux
+par un certain nombre de phénomènes physiques « naturels ». Pour répondre
+à ce besoin, un moteur physique est nécessaire. Le moteur physique est
+chargé de gérer les forces s'appliquant aux objets du jeu, de répondre
+aux collisions entre objets et de faire évoluer les objets en conséquence
+des forces qui leur sont appliquées.
+
+Plusieurs moteurs physiques en 2D existent déjà dans le langage que nous
+avons choisi, notamment Box2D. Nous avons choisi d'implémenter le moteur
+physique du jeu par nous-mêmes pour répondre aux besoins particuliers
+(notamment la force d'attraction) et car cela nous permet de mettre en
+pratique les savoirs acquis au premier semestre dans le module
+de physique générale.
+
+Les niveaux du jeu sont constitués de ces entités et d'autres
+métadonnées. Pour pouvoir éditer les niveaux, les sauvegarder et
+y rejouer plus tard, il est nécessaire de pouvoir les stocker
+en dehors de la mémoire. Nous avons pour ce faire choisi de définir
+un format de fichier binaire permettant leur stockage sur le disque.
+Des fonctions pour coder et décoder ce format devront être écrites.
+
+Skizzle propose différents états de jeu, notamment, on peut à tout moment
+se trouver dans l'éditeur, dans le jeu en lui-même ou sur la vue des règles.
+Pour pouvoir accéder à ces états, nous devons créer un menu. L'ensemble
+des états du jeu doit être abstrait pour pouvoir être géré dans la classe
+principale. Certains états du jeu proposeront des éléments interactifs
+(boutons, barres d'outils, zones de texte) qui doivent être implémentés.
+
+Enfin, les différents objets du jeu sont représentés à l'écran en
+dessinant des textures. Nous avons également choisi d'ajouter des musiques
+au jeu pour le rendre plus convivial. D'autres éléments graphiques doivent
+être créés, par exemple le fond du menu. Tous ces éléments sont regroupés
+dans l'univers graphique du jeu.
+
+\section{Découpage du code}
+
+\begin{figure}[p!]
+    \scalebox{0.56}{\input{figures/analyse-uml.tex}}
+    \caption{
+        Diagramme de la répartition des tâches. En vert, les tâches
+        affectées à Maëlle~; en cyan, les tâches affectées à Rémi~;
+        en rouge, les tâches affectées à Mattéo~; en noir, les
+        tâches résolues en groupe
+    }
+    \label{fig:analyse-uml}
+\end{figure}
+
+\subsection{Moteur physique}
+\subsection{Niveaux}
+\subsection{Interface}
