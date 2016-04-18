@@ -1,0 +1,48 @@
+\begin{gantt}{32}{32}
+    \begin{ganttitle}
+        \titleelement{Semaine 1 : 04/03 - 10/03}{4}
+        \titleelement{Semaine 2 : 11/03 - 17/03}{4}
+        \titleelement{Semaine 3 : 18/03 - 24/03}{4}
+        \titleelement{Semaine 4 : 25/03 - 31/03}{4}
+        \titleelement{Semaine 5 : 01/04 - 08/04}{4}
+        \titleelement{Semaine 6 : 09/04 - 15/04}{4}
+        \titleelement{Semaine 7 : 16/04 - 22/04}{4}
+        \titleelement{Semaine 8 : 23/04 - 29/04}{4}
+    \end{ganttitle}
+
+    \ganttgroup{Moteur physique}{0}{14}
+    \ganttbar[color=red]{Organisation des classes}{0}{6}
+    \ganttbar[color=green]{Gestion de l'affichage}{0}{8}
+    \ganttbar[color=red]{Implémentation des forces}{0}{8}
+    \ganttbar[color=red]{Gestion des collisions}{4}{10}
+    \ganttbar[color=cyan]{Tests du moteur}{4}{10}
+
+    \ganttgroup{Niveaux du jeu}{6}{26}
+    \ganttbar[color=cyan]{Définition du format de fichier}{6}{2}
+    \ganttbar[color=red]{Lecture et écriture du format}{12}{4}
+    \ganttbar[color=red]{Création de l'éditeur}{16}{5}
+    \ganttbar[color=red]{Blocs spécialisés}{18}{3}
+    \ganttbar[color=cyan]{Niveau de test}{19}{2}
+    \ganttbar{Conception des niveaux}{19}{13}
+    \ganttbar{Tests des niveaux}{19}{13}
+
+    \ganttgroup{Interface du jeu}{10}{22}
+    \ganttbar[color=red]{Découpage en états de jeu}{10}{4}
+    \ganttbar[color=green]{Création du menu}{12}{6}
+    \ganttbar[color=red]{Interface de l'éditeur}{16}{5}
+    \ganttbar[color=red]{Menus gagné, perdu, pause}{24}{8}
+
+    \ganttgroup{Univers graphique}{8}{20}
+    \ganttbar[color=green]{Création des musiques}{8}{8}
+    \ganttbar{Fond du menu}{12}{8}
+    \ganttbar{Décor}{14}{7}
+    \ganttbar[color=cyan]{Textures blocs}{18}{3}
+    \ganttbar[color=red]{Implémentation décor}{24}{4}
+
+    \ganttgroup{Gestion de projet}{21}{11}
+    \ganttmilestone{Rendu du code}{21}
+    \ganttbar{Rédaction du rapport}{21}{4}
+    \ganttmilestone{Rendu du rapport}{25}
+    \ganttbar{Tests pré-présentation}{25}{7}
+    \ganttmilestone{Présentation du jeu}{32}
+\end{gantt}
