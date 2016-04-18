@@ -5,7 +5,9 @@ const unsigned int Manager::FPS = 60;
 const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);
 const float Manager::GRID = 32;
 
-Manager::Manager() : title(sf::String(L"")), previous_state(nullptr) {
+Manager::Manager() : previous_time(sf::seconds(0)), title(sf::String(L"")),
+    previous_state(nullptr) {
+
     // préchargement des textures
     resource_manager.preload();
 
@@ -40,6 +42,9 @@ void Manager::start() {
                 ));
             }
 
+            // événements de l'interface
+            desktop.HandleEvent(event);
+
             // s'il n'y a plus d'état, on quitte
             if (states.empty()) {
                 return;
@@ -53,17 +58,33 @@ void Manager::start() {
             return;
         }
 
-        // si l'état que l'on va utiliser n'est pas le
-        // même que précédemment, on l'active
-        // Ceci permet un partage plus facile des
-        // ressources globales (vue, musique)
+        // si l'état que l'on va utiliser n'est pas le même que précédemment,
+        // on l'active. Ceci permet un partage plus facile des ressources
+        // globales (vue, musique)
         if (previous_state != states.top().get()) {
             previous_state = states.top().get();
+
+            // on vide l'interface de l'état précédent
+            desktop.RemoveAll();
+
+            // on initialise le nouvel état
             previous_state->enable();
         }
 
-        // demande à l'état actuel d'afficher une frame
+        // demande à l'état actuel de dessiner une frame
         states.top()->frame();
+
+        // dessin de l'interface
+        sf::View normal_view = window.getView();
+        useGUIView();
+
+        desktop.Update((getCurrentTime() - previous_time).asSeconds());
+        previous_time = getCurrentTime();
+		sfgui.Display(window);
+
+        window.setView(normal_view);
+
+        // envoi à l'écran pour affichage
         window.display();
     }
 }
@@ -102,6 +123,10 @@ ResourceManager& Manager::getResourceManager() {
 
 void Manager::useGUIView() {
     window.setView(gui_view);
+}
+
+sfg::Desktop& Manager::getDesktop() {
+    return desktop;
 }
 
 sf::String Manager::getTitle() {

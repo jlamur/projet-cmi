@@ -35,12 +35,15 @@ add_executable(skizzle ${SOURCES})
 
 find_package(SFML 2.3.2 REQUIRED system window graphics network audio)
 find_package(Boost 1.60.0 COMPONENTS system filesystem)
+find_package(SFGUI 0.2.3 REQUIRED)
 
 include_directories(${SFML_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${SFGUI_INCLUDE_DIR})
 
 target_link_libraries(skizzle ${SFML_LIBRARIES})
 target_link_libraries(skizzle ${Boost_LIBRARIES})
+target_link_libraries(skizzle ${SFGUI_LIBRARY})
 
 # Installation de l'exécutable
 install(TARGETS skizzle DESTINATION bin)

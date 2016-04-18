@@ -2,6 +2,9 @@
 #define __SKIZZLE_MANAGER_HPP__
 
 #include "resource_manager.hpp"
+#include <SFGUI/SFGUI.hpp>
+#include <SFGUI/Widgets.hpp>
+#include <SFML/Graphics.hpp>
 #include <memory>
 #include <stack>
 
@@ -14,6 +17,10 @@ class State;
 class Manager {
 private:
     sf::RenderWindow window;
+    sf::Time previous_time;
+    sfg::SFGUI sfgui;
+    sfg::Desktop desktop;
+
     unsigned int framerate;
     ResourceManager resource_manager;
 
@@ -90,8 +97,14 @@ public:
     /**
      * Passage en vue de l'interface
      * (coin en haut à gauche, zoom 1:1)
+     * @deprecated
      */
     void useGUIView();
+
+    /**
+     * Renvoie le bureau pour l'affichage de l'interface
+     */
+    sfg::Desktop& getDesktop();
 
     /**
      * Renvoie le titre actuel de la fenêtre
