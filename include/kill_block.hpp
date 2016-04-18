@@ -7,6 +7,10 @@
 
 class Game;
 
+/**
+ * Le bloc tueur est un bloc spécial qui tue les joueurs
+ * qui arrivent dessus et fait perdre la partie
+ */
 class KillBlock : public Block {
 public:
     typedef std::shared_ptr<KillBlock> Ptr;

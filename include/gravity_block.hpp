@@ -8,6 +8,12 @@
 class Game;
 enum class GravityDirection;
 
+/**
+ * Le bloc de gravité est un bloc spécial qui change l'orientation
+ * de la gravité dans une direction prédéfinie lorsqu'il est
+ * activé par n'importe quel objet. Ce bloc ne peut être utilisé
+ * qu'une seule fois par partie
+ */
 class GravityBlock : public Block {
 public:
     typedef std::shared_ptr<GravityBlock> Ptr;

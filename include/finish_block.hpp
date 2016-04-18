@@ -7,6 +7,11 @@
 
 class Game;
 
+/**
+ * Le bloc d'arrivée est un bloc spécial qui tue les joueurs
+ * qui arrivent dessus et fait gagner le niveau lorsqu'il n'y a
+ * plus de joueurs
+ */
 class FinishBlock : public Block {
 public:
     typedef std::shared_ptr<FinishBlock> Ptr;

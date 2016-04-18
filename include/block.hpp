@@ -9,6 +9,12 @@ class Game;
 class ResourceManager;
 class Level;
 
+/**
+ * Un bloc est un objet du jeu à boîte englobante carrée.
+ * Il permet de réaliser des structures simples encadrant
+ * les joueurs. Il sert de base aux blocs réalisant des
+ * actions lorsqu'ils sont activés
+ */
 class Block : public Object {
 public:
     typedef std::shared_ptr<Block> Ptr;

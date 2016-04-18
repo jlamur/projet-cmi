@@ -7,6 +7,11 @@
 
 class Game;
 
+/**
+ * Le bloc changeur est un bloc spécial qui inverse la polarité
+ * des joueurs qui passent dessus. Ce bloc ne peut être utilisé
+ * qu'une seule fois par partie
+ */
 class SwitchBlock : public Block {
 public:
     typedef std::shared_ptr<SwitchBlock> Ptr;

@@ -5,6 +5,11 @@
 #include <memory>
 #include "object.hpp"
 
+/**
+ * Le joueur est un objet du jeu qui peut être déplacé au clavier
+ * et interagit avec les autres objets. Il possède un statut particulier
+ * au sein du niveau car il détermine si l'on gagne ou on perd la partie
+ */
 class Player : public Object {
 public:
     typedef std::shared_ptr<Player> Ptr;

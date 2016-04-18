@@ -9,6 +9,11 @@
 class Level;
 class Game;
 
+/**
+ * Représente de manière abstraite un des objets du jeu.
+ * Les classes descendantes doivent notamment implémenter la
+ * méthode d'activation, de dessin et de boîte englobante
+ */
 class Object : public std::enable_shared_from_this<Object> {
 public:
     typedef std::shared_ptr<Object> Ptr;
