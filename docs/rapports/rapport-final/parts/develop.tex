@@ -1,1 +1,80 @@
 \chapter{Développement}
+
+\section{Moteur physique}
+
+Cette partie du projet est basée sur l'algorithme du pré-rapport.
+La première tâche fut l'organisation des classes, réalisée par Mattéo
+à partir du diagramme de classe. Lors de cette première étape, le projet
+était constitué de trois classes : la classe Engine, contenant le moteur
+physique et gérant l'affichage du jeu, la classe Ball qui contenait les
+propriétés de l'objet ball, ainsi que la classe Block qui contenait les
+propriétés des blocs. Des classes furent rajoutées plus tard dans le
+développement du projet afin de mieux répondre aux besoins d'affichage
+et de moteur physique.
+
+L'affichage fut géré par des fonctions draw() permettant de boucler
+sur les différents objets afin de mettre à jour le dessin affiché en
+fonction de leur position. Il fallut également gérer la caméra avec
+l'objet view de la SFML, et l'adapter au redimensionnement de la
+fenêtre. Enfin, pour un meilleur rendu graphique, nous avons chargé
+et appliqué des textures aux objets (textures provisoires lors de
+cette étape). Pour cela, nous avons décidé de créer la classe
+ResourceManager afin de permettre de charger les ressources depuis
+tout dossier où se trouverait l'exécutable.
+
+Lors de l'implémentation des forces et des collisions, nous avons
+rencontré quelques difficultés, notamment au niveau des collisions.
+En effet, grâce aux tests du moteur dans différentes situations,
+nous avons pu repérer des erreurs de collisions. Cela mena à la
+création d'une nouvelle classe Object réunissant les balles et les
+blocs dans un même tableau et définissant les propriétés communes
+des objets. Nous avons donc passé plus de temps que prévu sur cette
+partie du projet.
+
+\section{Niveaux du jeu}
+
+Tout d'abord, il fallut définir le format des fichiers de niveaux,
+puis lire et écrire le format. Afin de pouvoir créer des niveaux
+plus facilement, mais également permettre aux utilisateurs de jouer
+à leurs propres niveaux, nous avons choisi de créer un éditeur de
+niveau en mode graphique. Cela nous prit plus de temps que prévu,
+c'est pourquoi il nous restait peu de temps pour la création de
+niveaux. Nous avons donc réfléchi à des niveaux courts mais
+demandant de la réflexion afin de les rendre intéressants
+malgré le manque de temps.
+
+\section{Interface du jeu}
+
+Afin de mieux gérer l'affichage entre les menus, l'éditeur et les
+niveaux, nous avons décidé de découper le jeu en états. Nous avons
+créé une classe abstraite gérant tous ces états, ainsi qu'une
+classe par état : Menu pour le menu principal, Rules pour les
+règles du jeu, Editor pour l'éditeur de niveaux et Game pour
+le jeu, ainsi qu'une classe abstraite Level pour gérer les niveaux.
+
+Le menu principal se basait ainsi sur ce découpage. Chaque option
+renvoyait à un état différent ou modifiait l'état du menu si cela
+envoyait sur un autre menu (choix de niveaux).
+
+Interface de l'éditeur ?
+
+Menus pause, gagné, perdu ?
+
+\section{Univers graphique}
+
+Nous avons décidé d'ajouter des musiques au jeu afin de le rendre
+plus vivant. Pour cela, nous avons fait appel à un étudiant de
+l'IUT de Montpellier, Maxime \textsc{Petitjean}, pour aider Maëlle
+à créer des musiques pour chaque niveau ainsi que pour le menu
+à l'aide du logiciel Ableton.
+
+Nous avons également décidé de créer nos propres textures pour un
+rendu du jeu plus personnel. Après les dessins préalablement
+réalisés par Maëlle sur papier, Rémi s'est chargé de les numériser
+en repassant les contours pour créer une image vectorielle sur
+Inkscape. Puis Maëlle les a colorées avec le même logiciel,
+pendant que Rémi se chargeait des textures des blocs que nous
+avions au préalable définies à l'oral en groupe.
+
+Nous n'avons pas eu le temps d'implémenter le décor avant le rendu
+du code, mais il est prévu que cela soit fait avant le passage à l'oral.
