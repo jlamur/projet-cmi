@@ -12,6 +12,14 @@ Manager::Manager() : previous_time(sf::seconds(0)), title(sf::String(L"")),
     // préchargement des textures
     resource_manager.preload();
 
+    // ajout des polices
+    desktop.GetEngine().GetResourceManager().
+        AddFont("overpass", resource_manager.getFont("overpass.ttf"));
+    desktop.GetEngine().GetResourceManager().
+        AddFont("overpass-bold", resource_manager.getFont("overpass-bold.ttf"));
+    desktop.GetEngine().GetResourceManager().
+        AddFont("monoid", resource_manager.getFont("monoid.ttf"));
+
     // chargement du thème du desktop
     desktop.LoadThemeFromFile("res/gui.theme");
 
