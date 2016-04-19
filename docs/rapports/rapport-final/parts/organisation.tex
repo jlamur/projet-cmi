@@ -1,0 +1,62 @@
+\chapter{Organisation du projet}
+
+\section{Organisation du travail}
+
+Lors de la réunion initiale les tâches ont été réparties selon les capacités
+de chacun. En dehors des réunions, chaque membre du groupe a travaillé en
+autonomie, en communiquant son avancement au reste du groupe.
+
+Les réunions suivantes étaient consacrées au passage en revue des modifications
+effectuées par chacun, à l'analyse des tâches restant à effectuer et à leur
+distribution entre les membres du groupe, toujours selon leurs capacités
+et leur disponibilité.
+La répartition finale des tâches telles qu'elles sont été accomplies
+est présentée dans la figure \ref{fig:organisation-gantt}.
+
+Certaines parties du développement nécessitaient plusieurs personnes et
+étaient ainsi partagées entre certains membres du groupe. La conception
+et les tests des niveaux, le fond des menus ainsi que les décors furent
+réalisés par Rémi et Maëlle, et la gestion de projet par tout le groupe.
+
+Tout au long de la réalisation du projet, nous communiquions par Skype
+afin de s'informer de l'avancement et réfléchir à des solutions lorsqu'un
+problème était rencontré.
+
+\newgeometry{left=2cm,top=1.5cm,bottom=1.5cm,right=2cm}
+\thispagestyle{empty}
+\begin{figure}[p!]
+    \centering
+    \input{figures/organisation-gantt.tex}
+    \caption{
+        Diagramme de la répartition des tâches. En vert, les tâches
+        affectées à Maëlle~; en bleu, les tâches affectées à Rémi~;
+        en rouge, les tâches affectées à Mattéo~; en gris, les
+        tâches résolues en groupe
+    }
+    \label{fig:organisation-gantt}
+\end{figure}
+\restoregeometry
+
+\section{Outils de développement}
+
+Tout le code du programme est centralisé sur un dépôt GitHub et les membres
+du groupe utilisent Git pour synchroniser leur travail, travailler
+indépendamment, vérifier le travail des autres ou récupérer
+d'anciennes versions.
+\cite{organisation-github-skizzle}
+
+Pour le développement du jeu, nous avons choisi le C++ car il s'agit du
+langage que nous apprenons cette année~: d'une part, nous possédons
+donc des acquis avec de langage, et d'autre part ce projet nous permet
+de fixer nos connaissances du C++. Une autre raison est la quantité
+importante de documentation sur le web, de nombreuses bibliothèques
+et d'une communauté importante.
+
+Nous avons fait le choix de la SFML comme librairie graphique et d'utiliser
+la spécification C++11 qui apporte des fonctionnalités non-négligeables
+(notamment concernant la gestion de la mémoire avec les pointeurs intelligents).
+\cite{organisation-smartptr}
+
+Pour écrire le code, nous avons utilisé différents éditeurs de texte
+(atom et gedit). Nous compilons notre programme avec le compilateur g++.
+Pour faciliter la compilation, nous avons utilisé CMake.

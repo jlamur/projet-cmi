@@ -1,0 +1,113 @@
+\documentclass{report}
+
+% Graphismes
+\usepackage[pdftex]{graphicx}
+\usepackage{lmodern}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\usepackage{pgfgantt}
+\usepackage{lscape}
+\usepackage{rotating}
+
+% Couleurs personnalisées
+\definecolor{matred}{RGB}{239,83,80}
+\definecolor{matgreen}{RGB}{156,204,101}
+\definecolor{matblue}{RGB}{41,182,246}
+\definecolor{matyellow}{RGB}{255,235,59}
+\definecolor{matblack}{RGB}{33,33,33}
+\definecolor{matgray}{RGB}{224,224,224}
+\definecolor{matbrown}{RGB}{78,52,46}
+
+% Packages basiques
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{wrapfig}
+\usepackage[french]{babel}
+\usepackage{hyperref}
+
+% Noms personnalisés
+\addto{\captionsfrench}{\renewcommand{\bibname}{Webographie}}
+
+% En-têtes et pieds de pages personnalisés
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Maëlle \textsc{Beuret}, Rémi \textsc{Cérès}, Mattéo \textsc{Delabre}}
+\rhead{Projet L1 -- C.M.I.}
+\cfoot{\thepage}
+
+\begin{document}
+
+% Page de garde
+\begin{titlepage}
+    \centering
+
+    % Titre de la formation
+    \textsc{\LARGE Projet L1 -- C.M.I.}\\
+    \vspace{.25cm}
+    {\Large Spécialité informatique}
+    \vspace{3cm}
+
+    % Titre du projet
+    \rule{\linewidth}{0.5mm}\\
+    \vspace{.4cm}
+    {\huge\bfseries Skizzle}\\
+    \vspace{.2cm}
+    \rule{\linewidth}{0.5mm}
+    \vspace{2cm}
+
+    % Author and supervisor
+    \begin{minipage}{0.495\textwidth}
+        \begin{flushleft}\large
+            Maëlle \textsc{Beuret}\\
+            Rémi \textsc{Cérès}\\
+            Mattéo \textsc{Delabre}
+        \end{flushleft}
+    \end{minipage}
+    \begin{minipage}{0.495\textwidth}
+        \begin{flushright}\large
+            \textbf{Année :} 2015 -- 2016\\
+            \textbf{Soutenu le :} 29/04/2016
+        \end{flushright}
+    \end{minipage}
+
+    \vfill
+
+    % Logos
+    \newcommand{\logo}[2]{
+        \raisebox{-.5\height}{
+            \includegraphics[scale=#2]{#1}
+        }
+    }
+
+    \logo{figures/frontpage-logo-um.png}{0.5}
+    \logo{figures/frontpage-logo-fds.png}{0.25}
+    \logo{figures/frontpage-logo-cgi.png}{0.05}
+    \logo{figures/frontpage-logo-figure.png}{1}
+\end{titlepage}
+
+% Table des matières
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\setlength{\parskip}{0.4cm plus4mm minus3mm}
+
+% Sous-parties
+\include{./parts/intro}
+\include{./parts/organisation}
+\include{./parts/analyse}
+\include{./parts/develop}
+\include{./parts/manuel}
+\include{./parts/conclu}
+
+% Bibliographie
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Webographie}
+\bibliographystyle{unsrt}
+\bibliography{rapport}
+
+\end{document}

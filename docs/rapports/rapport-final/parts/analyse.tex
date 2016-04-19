@@ -1,0 +1,160 @@
+\chapter{Analyse du projet}
+
+\section{Découpage du projet}
+
+Le jeu est constitué d'une suite de niveaux organisés de manière
+semblable à ceux d'un jeu de plateformes. Ces niveaux contiennent des entités.
+
+Les entités du jeu sont multiples : blocs, blocs spéciaux, joueurs,
+éléments de décor. Ces entités -- ou objets, interagissent entre elles
+par un certain nombre de phénomènes physiques « naturels ». Pour répondre
+à ce besoin, \textbf{un moteur physique} est nécessaire. Le moteur physique est
+chargé de gérer les forces s'appliquant aux objets du jeu, de répondre
+aux collisions entre objets et de faire évoluer les objets en conséquence
+des forces qui leur sont appliquées.
+
+Plusieurs moteurs physiques en 2D existent déjà dans le langage que nous
+avons choisi, notamment Box2D. \cite{analyse-box2d}
+Nous avons choisi d'implémenter le moteur
+physique du jeu par nous-mêmes pour répondre aux besoins particuliers
+(notamment la force d'attraction) et car cela nous permet de mettre en
+pratique les savoirs acquis au premier semestre dans le module
+de physique générale.
+
+Les \textbf{niveaux du jeu} sont constitués de ces entités et d'autres
+métadonnées. Pour pouvoir éditer les niveaux, les sauvegarder et
+y rejouer plus tard, il est nécessaire de pouvoir les stocker
+en dehors de la mémoire. Nous avons pour ce faire choisi de définir
+un format de fichier binaire permettant leur stockage sur le disque.
+Des fonctions pour coder et décoder ce format devront être écrites.
+
+Skizzle propose différents \textbf{états de jeu}, notamment, on peut à tout moment
+se trouver dans l'éditeur, dans le jeu en lui-même ou sur la vue des règles.
+Pour pouvoir accéder à ces états, nous devons créer un menu. L'ensemble
+des états du jeu doit être abstrait pour pouvoir être géré dans la classe
+principale. Certains états du jeu proposeront des éléments interactifs
+(boutons, barres d'outils, zones de texte) qui doivent être implémentés.
+
+Enfin, les différents \textbf{objets du jeu} sont représentés à l'écran en
+dessinant des textures. Nous avons également choisi d'ajouter des musiques
+au jeu pour le rendre plus convivial. D'autres éléments graphiques doivent
+être créés, par exemple le fond du menu. Tous ces éléments sont regroupés
+dans l'univers graphique du jeu.
+
+\section{Découpage du code}
+
+Nous avons choisi d'organiser notre code selon le paradigme objet. La plupart
+du code est sorti en dehors du \texttt{main}, dont la seule fonction est d'instancier
+la classe \texttt{Manager} qui gère de manière abstraite le jeu et de démarrer
+le premier état du jeu~: le menu.
+
+\subsection{États, gestion des états et des ressources}
+
+Un état du jeu modélise un écran pouvant être affiché. Une classe
+abstraite \texttt{State} chapeaute toutes les classes d'états et permet
+de requérir l'implémentation d'une interface commune~:
+
+\begin{itemize}
+    \item \texttt{enable()}~: cette méthode initialise l'état avant qu'il
+    commence à être affiché. L'état implémentant cette méthode doit
+    mettre en place les ressources globales utilisées comme la lecture
+    de la musique, le titre de la fenêtre, les éléments de l'interface
+    quand cette méthode est appelée~;
+
+    \item \texttt{processEvent(event)}~: cette méthode est appelée avec
+    un événement lorsque celui-ci est extrait par la SFML lors de la boucle
+    principale. L'état est censé décider s'il souhaite traiter cet événement
+    et, si oui, modifier ses variables en conséquence~;
+
+    \item \texttt{frame()}~: cette méthode est appelée lorsque l'état
+    doit dessiner une frame à l'écran. Pour éviter d'encombrer la boucle
+    principale, l'état doit dessiner sa frame le plus rapidement possible.
+\end{itemize}
+
+Les états suivants sont implémentés et descendent de la classe \texttt{State}~:
+\texttt{Rules} pour afficher les règles du jeu, \texttt{Menu} pour afficher
+le menu du jeu, \texttt{Level} pour afficher les niveaux (soit l'éditeur,
+soit le jeu en lui-même).
+
+On définit \texttt{Manager} la classe qui gère les éléments principaux du jeu.
+Notamment, \texttt{Manager} maintient une pile d'états qui est initialisée
+contenant une seule instance de la classe \texttt{Menu} et peut être
+empilée ou dépilée par les états. Par exemple, le menu peut empiler
+un nouvel état instance de \texttt{Rules} pour « démarrer » la vue affichant
+les règles. En tout temps, l'état en haut de la pile est celui qui est actif
+(il reçoit les événements et est dessiné).
+
+La librairie SFML permet de charger les ressources comme la musique,
+les images et les polices. Cependant, recharger ces ressources à chaque
+utilisation serait inefficace. La classe \texttt{ResourceManager} permet
+de mutualiser ces ressources~: les états lui demandent les ressources
+à obtenir et le gestionnaire de ressources s'arrange pour ne charger
+la ressource qu'à la première demande et à la garder en mémoire par la suite.
+Le gestionnaire des ressources mutualise l'accès aux polices, textures
+et à la lecture de la musique.
+
+La figure \ref{fig:analyse-uml-state} résume les classes de gestion
+d'états et de ressources présentées.
+
+\newgeometry{left=1cm,top=2cm,bottom=2cm,right=1cm}
+\thispagestyle{empty}
+\begin{figure}[p!]
+    \centering
+    \input{figures/analyse-uml-state.tex}
+    \caption{Gestion des états et des ressources dans le jeu}
+    \label{fig:analyse-uml-state}
+\end{figure}
+\restoregeometry
+
+\subsection{Niveau et objets}
+
+La classe \texttt{Level} définit les niveaux, qui sont des collections
+d'objets. Elle définit la méthode pour dessiner tous les objets d'un niveau,
+le charger, le sauvegarder dans un fichier, ajouter ou supprimer des objets.
+Elle ne définit pas la méthode \texttt{frame()} que tous les états doivent
+implémenter, elle n'est donc pas un état en tant que tel.
+
+Deux classes dérivent de \texttt{Level} : \texttt{Game} pour jouer aux
+niveaux et \texttt{Editor} pour les éditer. L'abstraction en
+\texttt{Level} permet d'éviter la duplication de code notamment en
+ce qui concerne la gestion des objets contenus.
+
+Les classes de niveaux manipulent des collections d'objets. Les objets
+modélisent toutes les entités du jeu : les joueurs, les blocs et les
+blocs spéciaux. Une classe abstrait les fonctionnalités de tous les objets,
+\texttt{Object}.
+
+Les classes \texttt{Block}, définissant l'apparence et le comportement
+des blocs, et \texttt{Player}, définissant l'apparence et le comportement
+des joueurs, descendent directement d'\texttt{Object}. Enfin, on définit
+des blocs spéciaux, qui peuvent réaliser des actions particulières~:
+
+\begin{itemize}
+    \item le bloc de gravité modifie la direction de la gravité
+    dans un niveau lorsqu'une entité entre en contact avec lui.
+    Il ne peut être activé qu'une seule fois par partie~;
+
+    \item le bloc changeur échange la polarité de l'entité
+    entrant en contact avec lui. Il ne peut être activé qu'une seule
+    fois par partie~;
+
+    \item le bloc tueur tue le joueur entrant en contact avec lui
+    et fait perdre la partie (le niveau passe en mode « perdu »)~;
+
+    \item le bloc d'arrivée tue le joueur entrant en contact et lorsqu'il
+    ne reste plus de joueurs fait gagner la partie (le niveau passe
+    en mode « gagné »).
+\end{itemize}
+
+La figure \ref{fig:analyse-uml-level} résume les classes de niveaux
+et d'objets.
+
+\newgeometry{left=1cm,top=2cm,bottom=2cm,right=1cm}
+\thispagestyle{empty}
+\begin{figure}[p!]
+    \centering
+    \input{figures/analyse-uml-level.tex}
+    \caption{Classes du niveau}
+    \label{fig:analyse-uml-level}
+\end{figure}
+\restoregeometry

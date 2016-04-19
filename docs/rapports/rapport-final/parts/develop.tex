@@ -1,0 +1,89 @@
+\chapter{Développement}
+
+\section{Moteur physique}
+
+Cette partie du projet est basée en partie sur les algorithmes du pré-rapport.
+L'affichage est géré par des fonctions draw() permettant de boucler
+sur les différents objets afin de mettre à jour le dessin affiché en
+fonction de leur position. Il fallut également gérer la caméra avec
+l'objet view de la SFML, et l'adapter au redimensionnement de la
+fenêtre. Enfin, pour un meilleur rendu graphique, nous avons chargé
+et appliqué des textures aux objets (textures provisoires lors de
+cette étape).
+
+Lors de l'implémentation des forces et des collisions, nous avons
+rencontré quelques difficultés, notamment au niveau des collisions.
+En effet, grâce aux tests du moteur dans différentes situations,
+nous avons pu repérer des erreurs de collisions. Cela mena à la
+création d'une nouvelle classe Object réunissant les balles et les
+blocs dans un même tableau et définissant les propriétés communes
+des objets. L'implémentation des collisions est basée sur un
+solveur de collisions discret. Nous avons finalement passé plus de
+temps que prévu sur cette partie du projet.
+\cite{develop-collision-solver,develop-collision-stability,develop-game-loop}
+
+\section{Niveaux du jeu}
+
+Tout d'abord, il fallut définir le format des fichiers de niveaux. Pour cela, nous avons au préalable fait des recherches sur les normes de base, puis nous avons listé tout ce qu'il fallait sauvegarder dans le niveau. Il fallut ensuite lire et écrire le format. Afin de pouvoir créer des niveaux
+plus facilement, mais également permettre aux utilisateurs de jouer
+à leurs propres niveaux, nous avons choisi de créer un éditeur de
+niveaux en mode graphique. Cela nous prit plus de temps que prévu,
+c'est pourquoi il nous restait peu de temps pour la création de
+niveaux. Nous avons donc réfléchi à des niveaux courts mais
+demandant de la réflexion afin de les rendre intéressants
+malgré le manque de temps.
+
+\section{Interface du jeu}
+
+Afin de mieux gérer l'affichage entre les menus, l'éditeur et les
+niveaux, nous avons décidé de découper le jeu en états. Nous avons
+créé une classe abstraite gérant tous ces états, ainsi qu'une
+classe par état : Menu pour le menu principal, Rules pour les
+règles du jeu, Editor pour l'éditeur de niveaux et Game pour
+le jeu, ainsi qu'une classe abstraite Level pour gérer les niveaux.
+
+Le menu principal se base ainsi sur ce découpage. Chaque option
+renvoie à un état différent ou modifie l'état du menu si cela
+envoie sur un autre menu (choix de niveaux).
+
+L'éditeur est la partie la plus interactive du jeu. En sus des
+nombreux raccourcis clavier et souris décrits dans le manuel
+d'utilisation, une boîte à outils est présente sur le côté
+et permet de sélectionner le type d'objet à placer dans le niveau.
+
+Cependant, il reste certaines lacunes au niveau de l'interface,
+notamment au niveau des composants interfaçant avec l'utilisateur.
+Par exemple, faute de temps, nous n'avons pas pu implémenter de
+moyen de modifier le nom du niveau modifié depuis l'éditeur,
+de modifier la texture de fond ou la musique jouée. Ces modifications
+doivent être faites « à la main » dans le fichier du niveau.
+
+Par ailleurs, lorsque l'on gagne, perd ou met en pause le niveau,
+cet état est bien sauvegardé mais aucun élément d'interface n'a
+pu être implémenté à temps pour permettre à l'utilisateur par
+exemple de passer au niveau suivant ou de recommencer. Pour le moment,
+l'état est affiché en texte dans la console pour s'assurer
+que le changement d'état est bien fonctionnel.
+
+Nous espérons pouvoir ajouter ces fonctionnalités en nous basant
+sur la librairie SFGUI d'ici à la soutenance, car elles nous
+paraissent importantes. \cite{develop-sfgui}
+
+\section{Univers graphique}
+
+Nous avons décidé d'ajouter des musiques au jeu afin de le rendre
+plus vivant. Pour cela, nous avons fait appel à un étudiant de
+l'IUT de Montpellier, Maxime \textsc{Petitjean}, pour aider Maëlle
+à créer des musiques pour chaque niveau ainsi que pour le menu
+à l'aide du logiciel \emph{Ableton.}
+
+Nous avons également décidé de créer nos propres textures pour un
+rendu du jeu plus personnel. Après les dessins préalablement
+réalisés par Maëlle sur papier, Rémi s'est chargé de les numériser
+en repassant les contours pour créer une image vectorielle sur
+Inkscape. Puis Maëlle les a colorées avec le même logiciel,
+pendant que Rémi se chargeait des textures des blocs que nous
+avions au préalable définies à l'oral en groupe.
+
+Nous n'avons pas eu le temps d'implémenter le décor avant le rendu
+du code, mais il est prévu que cela soit fait avant le passage à l'oral.

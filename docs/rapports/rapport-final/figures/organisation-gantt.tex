@@ -1,0 +1,72 @@
+\begin{ganttchart}[
+    x unit=.4cm,
+    y unit title=0.5cm,
+    title height=1,
+    y unit chart=.6cm,
+    vgrid=true
+]{0}{32}
+    % raccourci pour changer le style des barres
+    \newcommand{\ganttbstyle}[1]{\ganttset{bar/.append style={fill=#1}}}
+
+    \gantttitle{Développement du projet}{20}
+    \gantttitle{Rapport}{4}
+    \gantttitle{Préparation soutenance}{9}\\
+    \gantttitle{04/03}{4}
+    \gantttitle{11/03}{4}
+    \gantttitle{18/03}{4}
+    \gantttitle{25/03}{4}
+    \gantttitle{01/04}{4}
+    \gantttitle{09/04}{4}
+    \gantttitle{16/04}{4}
+    \gantttitle{23/04}{5}\\
+
+    \ganttgroup{Moteur physique}{0}{14}\\
+    \ganttbstyle{matred}
+    \ganttbar{Organisation des classes}{0}{6}\\
+    \ganttbstyle{matgreen}
+    \ganttbar{Gestion de l'affichage}{0}{8}\\
+    \ganttbstyle{matred}
+    \ganttbar{Implémentation des forces}{0}{8}\\
+    \ganttbar{Gestion des collisions}{4}{14}\\
+    \ganttbstyle{matblue}
+    \ganttbar{Tests du moteur}{4}{14}\\
+
+    \ganttgroup{Niveaux du jeu}{6}{32}\\
+    \ganttbstyle{matblue}
+    \ganttbar{Définition du format de fichier}{6}{8}\\
+    \ganttbstyle{matred}
+    \ganttbar{Lecture et écriture du format}{12}{16}\\
+    \ganttbar{Création de l'éditeur}{16}{21}\\
+    \ganttbar{Blocs spécialisés}{18}{21}\\
+    \ganttbstyle{matblue}
+    \ganttbar{Niveau de test}{19}{21}\\
+    \ganttbstyle{matgray}
+    \ganttbar{Conception des niveaux}{19}{32}\\
+    \ganttbar{Tests des niveaux}{19}{32}\\
+
+    \ganttgroup{Interface du jeu}{10}{32}\\
+    \ganttbstyle{matred}
+    \ganttbar{Découpage en états de jeu}{10}{14}\\
+    \ganttbstyle{matgreen}
+    \ganttbar{Création du menu}{12}{18}\\
+    \ganttbstyle{matred}
+    \ganttbar{Interface de l'éditeur}{16}{21}\\
+    \ganttbar{Menus gagné, perdu, pause}{24}{32}\\
+
+    \ganttgroup{Univers graphique}{8}{28}\\
+    \ganttbstyle{matgreen}
+    \ganttbar{Création des musiques}{8}{16}\\
+    \ganttbstyle{matgray}
+    \ganttbar{Fond du menu}{12}{20}\\
+    \ganttbar{Décor}{14}{21}\\
+    \ganttbstyle{matblue}
+    \ganttbar{Textures blocs}{18}{21}\\
+    \ganttbstyle{matred}
+    \ganttbar{Implémentation décor}{24}{28}\\
+
+    \ganttgroup{Gestion de projet}{21}{32}\\
+    \ganttbstyle{matgray}
+    \ganttbar{Rédaction du rapport}{21}{25}\\
+    \ganttbar{Tests pré-présentation}{25}{32}\\
+    \ganttmilestone{Présentation du jeu}{32}
+\end{ganttchart}
