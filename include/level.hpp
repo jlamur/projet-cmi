@@ -24,7 +24,7 @@ private:
     GravityDirection gravity_direction;
 
     sf::String name;
-    std::string current_path;
+    std::string path;
 
     int total_time;
 
@@ -64,27 +64,24 @@ public:
     virtual void enable();
 
     /**
-     * Obtient le nom du niveau dont le chemin complet
-     * et absolu est en paramètre
+     * Charge le niveau de jeu donné depuis le fichier actuel
      */
-    static sf::String getLevelName(std::string path);
+    void load();
 
     /**
-     * Charge le niveau de jeu donné depuis le fichier
-     * dont le chemin complet absolu est en paramètre
-     */
-    void load(std::string path);
-
-    /**
-     * Écrase le niveau chargé avec les données en mémoire
+     * Sauvegarde la configuration actuelle dans le fichier actuel
      */
     void save();
 
     /**
-     * Sauvegarde la configuration actuelle dans le fichier donné
-     * dont le chemin complet absolu est donné en paramètre
+     * Récupère le chemin actuel du fichier du niveau
      */
-    void save(std::string path);
+    std::string getPath();
+
+    /**
+     * Modifie le chemin actuel du fichier du niveau
+     */
+    void setPath(std::string set_path);
 
     /**
      * Traite l'événement donné

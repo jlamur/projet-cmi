@@ -8,7 +8,6 @@
 #include "finish_block.hpp"
 #include "kill_block.hpp"
 #include <boost/filesystem.hpp>
-#include <iostream>
 #include <arpa/inet.h>
 #include <cstring>
 #include <functional>
@@ -47,109 +46,6 @@ namespace {
         {KillBlock::TYPE_ID, KillBlock::load},
         {SwitchBlock::TYPE_ID, SwitchBlock::load}
     };
-
-    /**
-     * Lecture du niveau dont le chemin absolu complet est en paramètre.
-     * Les métadonnées sont stockées dans les variables passées par référence.
-     * La callback object() est appelée séquentiellement avec les objets du niveau
-     */
-    void loadLevel(
-        std::string path, sf::String& name, int& total_time,
-        std::vector<sf::Vector2f>& zone,
-        std::string& background, std::string& music,
-        std::function<Object::Ptr(Object::Ptr)> object_callback = {}
-    ) {
-        // ouverture du fichier
-        std::ifstream file;
-        file.open(path, std::ios::binary | std::ios::in);
-
-        // on vérifie que le fichier ait correctement été ouvert en lecture
-        if (file.fail()) {
-            throw std::runtime_error(
-                "Impossible de charger le niveau \"" + name + "\" " +
-                "(" + std::string(strerror(errno)) + ")"
-            );
-        }
-
-        // lecture de la signature du fichier ("BAR")
-        char signature[3];
-        file.read(signature, 3);
-
-        if (strncmp(signature, "BAR", 3) != 0) {
-            throw std::runtime_error(
-                "Impossible de charger le niveau \"" + name + "\" " +
-                "(en-tête invalide)"
-            );
-        }
-
-        // lecture de la version du fichier
-        char file_version;
-        file.read(&file_version, 1);
-
-        if (file_version != VERSION_NUMBER) {
-            throw std::runtime_error(
-                "Impossible de charger le niveau \"" + name + "\" " +
-                "(version non prise en charge)"
-            );
-        }
-
-        // lecture du nom du niveau
-        std::string std_name;
-        std::getline(file, std_name, '\0');
-        name = sf::String(std_name);
-
-        // lecture du temps total du niveau
-        file.read(reinterpret_cast<char*>(&total_time), 4);
-        total_time = ntohl(total_time);
-
-        // lecture de la zone de jeu
-        char control_points;
-        file.read(&control_points, 1);
-        zone.clear();
-
-        for (int i = 0; i < control_points; i++) {
-            float pos_x, pos_y;
-
-            file.read(reinterpret_cast<char*>(&pos_x), 4);
-            file.read(reinterpret_cast<char*>(&pos_y), 4);
-
-            pos_x *= Manager::GRID;
-            pos_y *= Manager::GRID;
-
-            zone.push_back(sf::Vector2f(pos_x, pos_y));
-        }
-
-        // lecture des chemins de la musique et du fond
-        std::getline(file, music, '\0');
-        std::getline(file, background, '\0');
-
-        // lecture des objets si une callback a été fournie
-        int object_count;
-
-        if (!object_callback) {
-            return;
-        }
-
-        file.read(reinterpret_cast<char*>(&object_count), 4);
-        object_count = ntohl(object_count);
-
-        for (int i = 0; i < object_count; i++) {
-            char object_type;
-            file.read(&object_type, 1);
-
-            // vérifie que le type est pris en charge
-            // pour éviter une erreur de segmentation
-            if (object_type_map.count(object_type) == 0) {
-                throw std::runtime_error(
-                    "Impossible de charger le niveau \"" + name + "\" " +
-                    "(type d'objet " + std::to_string(object_type) + " inconnu)"
-                );
-            }
-
-            // lecture de l'objet
-            object_callback(object_type_map[object_type](file));
-        }
-    }
 }
 
 Level::Level(Manager& manager) : State(manager) {
@@ -157,7 +53,7 @@ Level::Level(Manager& manager) : State(manager) {
 
     // métadonnées par défaut
     setName(sf::String("Nouveau niveau"));
-    current_path = getResourceManager().getLevelPath("new_level.dat");
+    setPath(getResourceManager().getLevelPath("new_level.dat"));
     setTotalTime(30);
 
     // zone de jeu par défaut
@@ -184,30 +80,102 @@ void Level::enable() {
     camera_angle = 180.f;
 }
 
-sf::String Level::getLevelName(std::string path) {
-    sf::String name;
-    int total_time;
-    std::vector<sf::Vector2f> zone;
-    std::string background;
-    std::string music;
+void Level::load() {
+    // ouverture du fichier
+    std::ifstream file;
+    file.open(path, std::ios::binary | std::ios::in);
 
-    loadLevel(path, name, total_time, zone, background, music);
-    return name;
+    // on vérifie que le fichier ait correctement été ouvert en lecture
+    if (file.fail()) {
+        throw std::runtime_error(
+            "Impossible de charger le niveau \"" + name + "\" " +
+            "(" + std::string(strerror(errno)) + ")"
+        );
+    }
+
+    // lecture de la signature du fichier ("BAR")
+    char read_signature[3];
+    file.read(read_signature, 3);
+
+    if (strncmp(read_signature, "BAR", 3) != 0) {
+        throw std::runtime_error(
+            "Impossible de charger le niveau \"" + name + "\" " +
+            "(en-tête invalide)"
+        );
+    }
+
+    // lecture de la version du fichier
+    char read_file_version;
+    file.read(&read_file_version, 1);
+
+    if (read_file_version != VERSION_NUMBER) {
+        throw std::runtime_error(
+            "Impossible de charger le niveau \"" + name + "\" " +
+            "(version non prise en charge)"
+        );
+    }
+
+    // lecture du nom du niveau
+    std::string read_name;
+    std::getline(file, read_name, '\0');
+    setName(read_name);
+
+    // lecture du temps total du niveau
+    int read_total_time;
+    file.read(reinterpret_cast<char*>(&read_total_time), 4);
+    setTotalTime(ntohl(read_total_time));
+
+    // lecture de la zone de jeu
+    char read_control_points;
+    file.read(&read_control_points, 1);
+    zone.clear();
+
+    for (int i = 0; i < read_control_points; i++) {
+        float read_pos_x, read_pos_y;
+
+        file.read(reinterpret_cast<char*>(&read_pos_x), 4);
+        file.read(reinterpret_cast<char*>(&read_pos_y), 4);
+
+        read_pos_x *= Manager::GRID;
+        read_pos_y *= Manager::GRID;
+
+        zone.push_back(sf::Vector2f(read_pos_x, read_pos_y));
+    }
+
+    // lecture des chemins de la musique et du fond
+    std::string read_music;
+    std::string read_background;
+
+    std::getline(file, read_music, '\0');
+    std::getline(file, read_background, '\0');
+
+    setMusic(read_music);
+    setBackground(read_background);
+
+    // lecture des objets si une callback a été fournie
+    int read_object_count;
+    file.read(reinterpret_cast<char*>(&read_object_count), 4);
+    read_object_count = ntohl(read_object_count);
+
+    for (int i = 0; i < read_object_count; i++) {
+        char read_object_type;
+        file.read(&read_object_type, 1);
+
+        // vérifie que le type est pris en charge
+        // pour éviter une erreur de segmentation
+        if (object_type_map.count(read_object_type) == 0) {
+            throw std::runtime_error(
+                "Impossible de charger le niveau \"" + name + "\" " +
+                "(type d'objet " + std::to_string(read_object_type) + " inconnu)"
+            );
+        }
+
+        // lecture de l'objet
+        addObject(object_type_map[read_object_type](file));
+    }
 }
 
-void Level::load(std::string path) {
-    loadLevel(
-        path, name, total_time,
-        zone, background, music,
-        std::bind(&Level::addObject, this, std::placeholders::_1)
-    );
-
-    setTotalTime(total_time);
-    setMusic(music);
-    current_path = path;
-}
-
-void Level::save(std::string path) {
+void Level::save() {
     std::ofstream file;
     file.open(path, std::ios::binary | std::ios::out);
 
@@ -220,31 +188,31 @@ void Level::save(std::string path) {
     }
 
     // écriture de la signture du fichier ("BAR")
-    char signature[3] = {'B', 'A', 'R'};
-    file.write(signature, 3);
+    char write_signature[3] = {'B', 'A', 'R'};
+    file.write(write_signature, 3);
 
     // écriture de la version du fichier
-    char file_version = VERSION_NUMBER;
-    file.write(&file_version, 1);
+    char write_file_version = VERSION_NUMBER;
+    file.write(&write_file_version, 1);
 
     // écriture du nom du niveau
     char *write_name = (char*) name.toAnsiString().data();
     file.write(write_name, name.getSize() + 1);
 
     // écriture du temps total du niveau
-    int conv_total_time = htonl(total_time);
-    file.write(reinterpret_cast<char*>(&conv_total_time), 4);
+    int write_total_time = htonl(total_time);
+    file.write(reinterpret_cast<char*>(&write_total_time), 4);
 
     // écriture de la zone de jeu
-    char control_points = (char) zone.size();
-    file.write(&control_points, 1);
+    char write_control_points = (char) zone.size();
+    file.write(&write_control_points, 1);
 
-    for (int i = 0; i < control_points; i++) {
-        float pos_x = zone[i].x / Manager::GRID;
-        float pos_y = zone[i].y / Manager::GRID;
+    for (int i = 0; i < write_control_points; i++) {
+        float write_pos_x = zone[i].x / Manager::GRID;
+        float write_pos_y = zone[i].y / Manager::GRID;
 
-        file.write(reinterpret_cast<char*>(&pos_x), 4);
-        file.write(reinterpret_cast<char*>(&pos_y), 4);
+        file.write(reinterpret_cast<char*>(&write_pos_x), 4);
+        file.write(reinterpret_cast<char*>(&write_pos_y), 4);
     }
 
     // écriture des noms de la musique et du fond
@@ -255,22 +223,24 @@ void Level::save(std::string path) {
     file.write(write_background, background.size() + 1);
 
     // écriture des objets
-    int object_count = htonl(objects.size());
-    file.write(reinterpret_cast<char*>(&object_count), 4);
+    int write_object_count = htonl(objects.size());
+    file.write(reinterpret_cast<char*>(&write_object_count), 4);
 
     for (unsigned int i = 0; i < objects.size(); i++) {
-        char object_type = objects[i]->getTypeId();
-        file.write(&object_type, 1);
+        char write_object_type = objects[i]->getTypeId();
+        file.write(&write_object_type, 1);
 
         // écriture de l'objet
         objects[i]->save(file);
     }
-
-    std::cout << "Sauvegardé : " << path << std::endl;
 }
 
-void Level::save() {
-    save(current_path);
+std::string Level::getPath() {
+    return path;
+}
+
+void Level::setPath(std::string set_path ){
+    path = set_path;
 }
 
 void Level::processEvent(const sf::Event& event) {
