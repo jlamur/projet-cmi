@@ -2,19 +2,22 @@
 
 \section{Organisation du travail}
 
-Chaque membre du groupe a travaillé en autonomie. Les réunions lors des séances
-prévues étaient consacrées aux explications sur le travail de chacun ainsi qu'à
-la répartition des tâches pour la semaine suivante.
+Lors de la réunion initiale les tâches ont été réparties selon les capacités
+de chacun. En dehors des réunions, chaque membre du groupe a travaillé en
+autonomie, en communiquant son avancement au reste du groupe.
 
-Chacun d'entre nous était chargé de tâches spécifiques (voir figure 2.1).
+Les réunions suivantes étaient consacrées au passage en revue des modifications
+effectuées par chacun, à l'analyse des tâches restant à effectuer et à leur
+distribution entre les membres du groupe, toujours selon leurs capacités
+et leur disponibilité.
+
+La répartition finale des tâches telles qu'elles sont été accomplies
+est présentée dans la figure \ref{fig:organisation-gantt}.
+
 Certaines parties du développement nécessitaient plusieurs personnes et
 étaient ainsi partagées entre certains membres du groupe. La conception
 et les tests des niveaux, le fond des menus ainsi que les décors furent
 réalisés par Rémi et Maëlle, et la gestion de projet par tout le groupe.
-
-Tout au long de la réalisation du projet, nous communiquions par Skype
-afin de s'informer de l'avancement et réfléchir à des solutions lorsqu'un
-problème était rencontré.
 
 \newgeometry{left=2cm,top=1.5cm,bottom=1.5cm,right=2cm}
 \begin{figure}[p!]
@@ -32,17 +35,24 @@ problème était rencontré.
 
 \section{Outils de développement}
 
-Nous avons choisi le C++ tout d'abord car il s'agit du langage que nous
-apprenons cette année, ensuite car il possède de nombreuses bibliothèques.
-C'est un langage très utilisé dont le code est élégant. Parmi les bibliothèques
-graphiques, nous avons choisi la SFML car son utilisation est simple et
-elle correspondait bien à nos besoins.
+Tout le code du programme est centralisé sur un dépôt GitHub et les membres
+du groupe utilisent Git pour synchroniser leur travail, travailler
+indépendamment, vérifier le travail des autres ou récupérer
+d'anciennes versions.
+\cite{organisation-github-skizzle}
+
+Pour le développement du jeu, nous avons choisi le C++ car il s'agit du
+langage que nous apprenons cette année~: d'une part, nous possédons
+donc des acquis avec de langage, et d'autre part ce projet nous permet
+de fixer nos connaissances du C++. Une autre raison est la quantité
+importante de documentation sur le web, de nombreuses bibliothèques
+et d'une communauté importante.
+
+Nous avons fait le choix de la SFML comme librairie graphique et d'utiliser
+la spécification C++11 qui apporte des fonctionnalités non-négligeables
+(notamment concernant la gestion de la mémoire avec les pointeurs intelligents).
+\cite{organisation-smartptr}
 
 Pour écrire le code, nous avons utilisé différents éditeurs de texte
-(atom et gedit). Nous compilions notre programme avec g++. Pour faciliter
-la compilation, nous avons utilisé CMake.
-
-Git nous a permis de gérer les versions du programme, avec le gestionnaire
-de projet GitHub, où nous déposions le code ainsi que les documents tels
-que le diagramme UML de classes permettant de s'y retrouver plus facilement
-dans les nombreuses classes que nous avons créées.
+(atom et gedit). Nous compilons notre programme avec le compilateur g++.
+Pour faciliter la compilation, nous avons utilisé CMake.
