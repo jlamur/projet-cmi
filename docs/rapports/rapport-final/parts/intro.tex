@@ -1,96 +1,84 @@
 \chapter{Introduction}
 
-\section {Généralités}
-
-Dans le cadre du module Projet C.M.I du second semestre de licence 1,
+Dans le cadre du module Projet C.M.I. du second semestre de L1,
 nous avons développé en équipe un jeu vidéo nommé « Skizzle ».
-Notre groupe est composé de trois personnes, Mattéo Delabre, Maëlle Beuret
-et Rémi Cérès.
+Notre groupe est composé de trois personnes~: Maëlle \textsc{Beuret},
+Rémi \textsc{Cérès} et Mattéo \textsc{Delabre}.
 
-L'objectif principal de ce projet est la création d'un jeu vidéo fonctionnel. Le jeu utilise les bases d'algorithmique apprises au premier semestre ainsi que nos connaissances et
-recherches personnelles.\\
-La création de ce jeu nous a permis d'acquérir des notions de gestion de projet, ainsi que le travail en collaboration et l'apprentissage de la
-communication au sein d'une équipe.
-\\
+L'objectif de ce projet est la création d'un jeu vidéo fonctionnel.
+Le jeu mobilise les bases d'algorithmique apprises au premier semestre ainsi
+que nos connaissances et recherches personnelles. La création de ce jeu nous
+a permis de renforcer nos capacités de travail en collaboration, en
+communication et en gestion de projet en général.
 
-Le développement du projet s'est déroulé sur une période d'un mois et une semaine,
-soit du vendredi 4 mars 2016 au lundi 11 avril 2016 inclus.\\
-Chaque vendredi,
-lors de la séance de trois heures consacrée au projet C.M.I, un point était réalisé avec chaque membre de l'équipe.
-Une répartition des tâches et des objectifs
-à atteindre pour la semaine suivante étaient déterminés. De plus, durant la semaine nous avons communiqué afin de faciliter l'organisation, de nous coordonner et de nous entraider.\\
+Le développement du projet s'est déroulé sur une période d'un mois
+et une semaine~: du vendredi 4 mars 2016 au lundi 11 avril 2016 inclus.
+Chaque vendredi, lors de la séance de trois heures consacrée au projet,
+les trois membres de l'équipe se réunissent pour résumer le travail effectué
+la semaine passée et planifier celui de la semaine à venir.
 
+\section{Choix du jeu}
 
-\section {Sujet}
-Le projet a pour sujet la réalisation d'un jeu vidéo
-fonctionnel en groupe ou en individuel.\\
-Le choix du jeu et du langage de programmation est libre; cela peut être une création ou bien un jeu existant.\\
+Nous avons d'abord réalisé une étude comparative entre trois jeux
+vidéos possibles. Pour ces jeux vidéos, le choix était libre. Notre choix
+s'est porté sur un jeu avec un principe original inspiré des jeux de
+plates-formes, de coopération et de réflexion. Nous l'avons appelé
+« Skizzle », à mi-chemin entre l'anglais \emph{skill} et \emph{puzzle.}
 
-Notre choix s'est porté sur un jeu avec un principe original inspiré des jeux de
-plates-formes, de coopération et de réflexion. Nous l'avons appelé "Skizzle".\\
+Le jeu se joue à deux joueurs. Chaque joueur est affecté à une balle qu'il
+contrôle par le clavier. Le but est pour ces joueurs de faire traverser leur
+balle à travers des niveaux prédéfinis. Pour ce faire, les joueurs doivent
+utiliser différents phénomènes physiques et constructions mises en place
+à la fois dans le niveau et dans le moteur physique du jeu.
 
-Il s’agit pour deux joueurs de faire traverser deux
-balles à travers un niveau.
-La conception du jeu s’appuie sur des éléments physiques pour proposer des
-niveaux sous forme de casse-têtes, dans lesquels les deux participants doivent
-s’entraider et réfléchir pour parvenir à la fin.
+Les niveaux se présentent sous la forme de casse-têtes courts à difficulté
+progressive. Les deux joueurs doivent souvent réfléchir et s'entraider
+pour pouvoir parvenir à la fin. Ce n'est que lorsque les deux joueurs
+franchissent la ligne d'arrivée que la partie est gagnée.
 
-%Skizzle est constitué d'une suite de niveaux dont le but est de tous les
-%terminer. Chaque niveaux est composé de bloc pouvant avoir des interaction avec
-%les balle ou sur la physique du jeu, comme par exemple modifié le sens de
-%la gravité.\\
-%Le ou les deux joueurs contrôle chacun une balle qu'ils peuvent uniquement
-%déplacer vers la droite et la gauche de l'écran. Tous les élément du jeux,
-%c'est a dire les blocs et les balles peuvent être aimantés.\\
-%
-%Dans chaque niveaux le ou les joueurs doivent réfléchir et d’entraidé en
-%s’appuyant sur les différentes interaction possible avec la physique du jeu
-%pour parvenir a la fin.
 \section{Cahier des charges}
 
+Le jeu doit fonctionner sur tous les systèmes courants (Linux, OS X, Windows).
+À l'ouverture du jeu, un menu doit permettre d'orienter le joueur vers
+les différents états de jeu disponibles, notamment le jeu ou l'éditeur.
+Avant d'ouvrir le jeu, on doit pouvoir choisir le niveau à jouer. Avant
+d'ouvrir l'éditeur, on doit pouvoir choisir le niveau à éditer ou si l'on
+veut créer un nouveau niveau.
 
-\subsection{Généralités}
+Le jeu se joue à deux joueurs qui incarnent chacun une balle contrôlable au clavier.
+Une partie doit se présenter sous la forme d'un niveau où les joueurs
+ont une position initiale et une position à atteindre pour gagner.
+Chaque partie est limitée en temps. La durée limite est définie selon le niveau.
 
-\begin{itemize}
-    \item \textbf{Fonctionnalités}
-    \begin{itemize}
-        \item Divertir et faire réfléchir les utilisateurs.
-        \item Multi-plateformes (Linux, OS X, Windows).
-    \end{itemize}
+Les mécanismes physiques à implémenter sont la force d'attraction chargée
+(coulombienne), la force de gravité, les forces de frottement et les
+collisions entre objets. La force de gravité est appliquée selon un vecteur
+de norme constante mais de direction et sens modifiables selon les
+conditions du niveau.
 
-    \item \textbf{Contraintes}
-    \begin{itemize}
-        \item Interface pas adaptée au tactile.
-        \item Présence de deux joueurs.
-    \end{itemize}
-\end{itemize}
+La caméra des joueurs doit être centrée sur la position intermédiaire
+des deux joueurs et doit s'orienter dans la direction inverse
+de la direction actuelle de la gravité, en tout temps.
 
-\subsection{Menu}
+Chaque niveau est composé d'objets. Chaque objet possède une masse,
+un coefficient de frottement statique et dynamique, un coefficient
+de restitution, une charge, une position, une vitesse et un calque d'affichage
+(couche). Un objet est soit une balle d'un joueur soit un bloc. Un bloc
+peut être neutre ou posséder une particularité.
+Les blocs particuliers sont définis complètement dans la section
+\ref{sec:manuel-objets}.
 
-\begin{itemize}
-    \item Permet à l'utilisateur de choisir son mode de jeu (éditer/jouer).
-    \item Permet d'afficher la liste des niveaux de manière dynamique et automatique.
-    \item Possibilité d'utiliser aussi bien la souris que le clavier.
-\end{itemize}
+Dans chaque niveau est définie une zone de jeu. Cette zone est un polygone
+contrôlé par un nombre arbitraire de points. Si un objet avec une masse
+non-infinie se trouve en dehors de cette zone (notamment un joueur
+ou bien un bloc déplaçable), il doit être immédiatement tué. S'il s'agissait
+d'un joueur, la partie se termine.
 
-\subsection{Moteur physique}
-
-\begin{itemize}
-    \item Gestion de la force d'attraction.
-    \item Gestion de la force de gravité.
-    \item Gestion des forces de frottement.
-    \item Gestion des collisions.
-\end{itemize}
-
-\subsection{Éditeur}
-
-\begin{itemize}
-    \item Permet de créer un niveau.
-    \item Permet de modifier un niveau existant.
-    \item Permet de placer tous les types d'objets.
-    \item Permet de placer la position initiale des joueurs.
-    \item Permet de modifier la polarité des objets.
-    \item Permet de sauvegarder un niveau modifié ou créé.
-    \item Permet de tester le niveau créé directement dans l'éditeur.
-    \item Permet de modifier la taille et la forme de la zone jouable.
-\end{itemize}
+Les niveaux doivent être éditables par un éditeur. L'éditeur permet
+de créer un nouveau niveau ou d'éditer un niveau existant. Il permet
+de placer des objets prédéfinis sélectionables depuis la barre d'outils.
+Il permet notamment de situer les positions initiales des joueurs
+et du(des) bloc(s) d'arrivée. On doit pouvoir modifier la polarité des objets
+depuis l'éditeur. Le niveau modifié doit pouvoir être sauvegardé. On doit
+pouvoir tester le niveau en cours d'édition depuis l'éditeur sans perdre
+son travail. On doit pouvoir modifier la taille de la zone de jeu.
