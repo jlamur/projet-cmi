@@ -29,8 +29,12 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     toolbar_box->PackEnd(save_button);
 
     // ajout des créateurs de blocs
+	sfg::Alignment::Ptr spacer = sfg::Alignment::Create();
+	spacer->SetRequisition(sf::Vector2f(1, 5));
+
+    toolbar_box->PackEnd(spacer);
+    toolbar_box->PackEnd(sfg::Label::Create(L"Choix de l'objet"));
     toolbar_box->PackEnd(sfg::Separator::Create());
-    toolbar_box->PackEnd(sfg::Label::Create(L"Type d'objet à placer"));
 
     addCreator(L"Bloc normal", std::bind(&Toolbar::createBlock, this));
     addCreator(L"Caisse", std::bind(&Toolbar::createMovableBlock, this));
@@ -54,6 +58,9 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     addCreator(L"Bloc de gravité ouest", std::bind(
         &Toolbar::createGravityBlock, this, GravityDirection::WEST
     ));
+
+    // on sélectionne le premier créateur par défaut
+    creators.begin()->first->SetActive(true);
 
     // création de la fenêtre de la barre d'outils
     scrolled_zone = sfg::ScrolledWindow::Create();

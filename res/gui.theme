@@ -1,28 +1,49 @@
+/**
+ * Feuille de style pour l'interface de Skizzle
+ */
+
+* {
+    FontName: overpass;
+    FontSize: 14;
+    Color: #111111ff;
+}
+
 Window {
-	BackgroundColor: #FFFFFFff;
+    BackgroundColor: #FFFFFFff;
     BorderWidth: 0;
 }
 
 ScrolledWindow {
     BorderWidth: 0;
+    ScrollbarWidth: 0;
 }
 
-Button {
-    Color: #000000ff;
+Scrollbar {
     BorderWidth: 0;
-    BackgroundColor: #E6E6E6ff;
+    SliderColor: #B4B4B4ff;
+    TroughColor: #E6E6E6ff;
+    StepperArrowColor: #111111ff;
+    StepperBackgroundColor: #B4B4B4ff;
 }
 
-Button:PRELIGHT {
+Button, RadioButton {
+    Color: #000000ff;
+    BackgroundColor: #E6E6E6ff;
+
+    BorderWidth: 0;
+    Spacing: 10;
+}
+
+Button:PRELIGHT, RadioButton:PRELIGHT {
     Color: #000000ff;
     BackgroundColor: #D2D2D2ff;
 }
 
-Button:ACTIVE {
+Button:ACTIVE, RadioButton:ACTIVE {
     Color: #000000ff;
     BackgroundColor: #B4B4B4ff;
 }
 
-* {
-    Color: #000000ff;
+Separator {
+    Color: #D2D2D2ff;
 }
