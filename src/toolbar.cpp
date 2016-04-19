@@ -126,5 +126,5 @@ sfg::Window::Ptr Toolbar::getWindow() {
 }
 
 float Toolbar::getWidth() {
-    return scrolled_zone->GetRequisition().x;
+    return toolbar_window->GetRequisition().x;
 }
