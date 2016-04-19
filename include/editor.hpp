@@ -78,11 +78,6 @@ private:
      */
     void selectAll();
 
-    /**
-     * Lance le test du niveau
-     */
-    void test();
-
 protected:
     /**
      * Dessine tous les objets, le fond et
@@ -108,6 +103,11 @@ public:
      * Demande le dessin d'une frame
      */
     virtual void frame();
+
+    /**
+     * Lance le test du niveau
+     */
+    void test();
 };
 
 #endif
