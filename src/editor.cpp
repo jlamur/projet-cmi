@@ -330,10 +330,9 @@ void Editor::draw() {
     widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
 
     // on redimensionne la toolbar pour qu'elle occupe l'espace droite
-    const sfg::Window::Ptr& toolbar_window = toolbar.getWindow();
-    toolbar_window->SetAllocation(sf::FloatRect(
-        window_size.x - 200, 0,
-        200, window_size.y
+    toolbar.getWindow()->SetAllocation(sf::FloatRect(
+        window_size.x - toolbar.getWidth(), 0,
+        toolbar.getWidth(), window_size.y
     ));
 }
 

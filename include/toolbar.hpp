@@ -49,6 +49,11 @@ public:
      * Récupère la fenêtre de la barre d'outils
      */
     sfg::Window::Ptr getWindow();
+
+    /**
+     * Récupère la taille désirée par la barre d'outils
+     */
+    float getWidth();
 };
 
 #endif

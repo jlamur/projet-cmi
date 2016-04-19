@@ -29,6 +29,9 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     toolbar_box->PackEnd(save_button);
 
     // ajout des créateurs de blocs
+    toolbar_box->PackEnd(sfg::Separator::Create());
+    toolbar_box->PackEnd(sfg::Label::Create(L"Type d'objet à placer"));
+
     addCreator(L"Bloc normal", std::bind(&Toolbar::createBlock, this));
     addCreator(L"Caisse", std::bind(&Toolbar::createMovableBlock, this));
     addCreator(L"Joueur", std::bind(&Toolbar::createPlayer, this));
@@ -54,16 +57,15 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
 
     // création de la fenêtre de la barre d'outils
     scrolled_zone = sfg::ScrolledWindow::Create();
+    toolbar_window = sfg::Window::Create(sfg::Window::Style::BACKGROUND);
+
     scrolled_zone->SetScrollbarPolicy(
         sfg::ScrolledWindow::ScrollbarPolicy::VERTICAL_AUTOMATIC |
         sfg::ScrolledWindow::ScrollbarPolicy::HORIZONTAL_NEVER
     );
 
     scrolled_zone->AddWithViewport(toolbar_box);
-
-	toolbar_window = sfg::Window::Create(sfg::Window::Style::BACKGROUND);
     toolbar_window->Add(scrolled_zone);
-    toolbar_window->SetPosition(sf::Vector2f(0, 0));
 }
 
 void Toolbar::addCreator(sf::String label, std::function<Object::Ptr()> creator) {
@@ -121,4 +123,8 @@ Object::Ptr Toolbar::createObject() {
 
 sfg::Window::Ptr Toolbar::getWindow() {
     return toolbar_window;
+}
+
+float Toolbar::getWidth() {
+    return scrolled_zone->GetRequisition().x;
 }
