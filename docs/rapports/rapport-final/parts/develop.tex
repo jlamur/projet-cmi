@@ -2,25 +2,14 @@
 
 \section{Moteur physique}
 
-Cette partie du projet est basée sur l'algorithme du pré-rapport.
-La première tâche fut l'organisation des classes, réalisée par Mattéo
-à partir du diagramme de classe. Lors de cette première étape, le projet
-était constitué de trois classes : la classe Engine, contenant le moteur
-physique et gérant l'affichage du jeu, la classe Ball qui contenait les
-propriétés de l'objet ball, ainsi que la classe Block qui contenait les
-propriétés des blocs. Des classes furent rajoutées plus tard dans le
-développement du projet afin de mieux répondre aux besoins d'affichage
-et de moteur physique.
-
-L'affichage fut géré par des fonctions draw() permettant de boucler
+Cette partie du projet est basée en partie sur les algorithmes du pré-rapport.
+L'affichage est géré par des fonctions draw() permettant de boucler
 sur les différents objets afin de mettre à jour le dessin affiché en
 fonction de leur position. Il fallut également gérer la caméra avec
 l'objet view de la SFML, et l'adapter au redimensionnement de la
 fenêtre. Enfin, pour un meilleur rendu graphique, nous avons chargé
 et appliqué des textures aux objets (textures provisoires lors de
-cette étape). Pour cela, nous avons décidé de créer la classe
-ResourceManager afin de permettre de charger les ressources depuis
-tout dossier où se trouverait l'exécutable.
+cette étape).
 
 Lors de l'implémentation des forces et des collisions, nous avons
 rencontré quelques difficultés, notamment au niveau des collisions.
@@ -28,8 +17,10 @@ En effet, grâce aux tests du moteur dans différentes situations,
 nous avons pu repérer des erreurs de collisions. Cela mena à la
 création d'une nouvelle classe Object réunissant les balles et les
 blocs dans un même tableau et définissant les propriétés communes
-des objets. Nous avons donc passé plus de temps que prévu sur cette
-partie du projet.
+des objets. L'implémentation des collisions est basée sur un
+solveur de collisions discret. Nous avons finalement passé plus de
+temps que prévu sur cette partie du projet.
+\cite{develop-collision-solver,develop-collision-stability,develop-game-loop}
 
 \section{Niveaux du jeu}
 
@@ -51,11 +42,32 @@ classe par état : Menu pour le menu principal, Rules pour les
 règles du jeu, Editor pour l'éditeur de niveaux et Game pour
 le jeu, ainsi qu'une classe abstraite Level pour gérer les niveaux.
 
-Le menu principal se basait ainsi sur ce découpage. Chaque option
-renvoyait à un état différent ou modifiait l'état du menu si cela
-envoyait sur un autre menu (choix de niveaux).
+Le menu principal se base ainsi sur ce découpage. Chaque option
+renvoie à un état différent ou modifie l'état du menu si cela
+envoie sur un autre menu (choix de niveaux).
 
-Interface de l'éditeur ?
+L'éditeur est la partie la plus interactive du jeu. En sus des
+nombreux raccourcis clavier et souris décrits dans le manuel
+d'utilisation, une boîte à outils est présente sur le côté
+et permet de sélectionner le type d'objet à placer dans le niveau.
+
+Cependant, il reste certaines lacunes au niveau de l'interface,
+notamment au niveau des composants interfaçant avec l'utilisateur.
+Par exemple, faute de temps, nous n'avons pas pu implémenter de
+moyen de modifier le nom du niveau modifié depuis l'éditeur,
+de modifier la texture de fond ou la musique jouée. Ces modifications
+doivent être faites « à la main » dans le fichier du niveau.
+
+Par ailleurs, lorsque l'on gagne, perd ou met en pause le niveau,
+cet état est bien sauvegardé mais aucun élément d'interface n'a
+pu être implémenté à temps pour permettre à l'utilisateur par
+exemple de passer au niveau suivant ou de recommencer. Pour le moment,
+l'état est affiché en texte dans la console pour s'assurer
+que le changement d'état est bien fonctionnel.
+
+Nous espérons pouvoir ajouter ces fonctionnalités en nous basant
+sur la librairie SFGUI d'ici à la soutenance, car elles nous
+paraissent importantes. \cite{develop-sfgui}
 
 \section{Univers graphique}
 
@@ -63,7 +75,7 @@ Nous avons décidé d'ajouter des musiques au jeu afin de le rendre
 plus vivant. Pour cela, nous avons fait appel à un étudiant de
 l'IUT de Montpellier, Maxime \textsc{Petitjean}, pour aider Maëlle
 à créer des musiques pour chaque niveau ainsi que pour le menu
-à l'aide du logiciel Ableton.
+à l'aide du logiciel \emph{Ableton.}
 
 Nous avons également décidé de créer nos propres textures pour un
 rendu du jeu plus personnel. Après les dessins préalablement
