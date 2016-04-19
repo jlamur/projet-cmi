@@ -26,7 +26,7 @@ Scrollbar {
     StepperBackgroundColor: #B4B4B4ff;
 }
 
-Button, RadioButton {
+Button, RadioButton, ComboBox, Entry {
     Color: #000000ff;
     BackgroundColor: #E6E6E6ff;
 
@@ -34,12 +34,21 @@ Button, RadioButton {
     Spacing: 10;
 }
 
-Button:PRELIGHT, RadioButton:PRELIGHT {
+Entry {
+    BackgroundColor: #D2D2D2ff;
+}
+
+ComboBox {
+    ArrowColor: #111111ff;
+    HighlightedColor: #B4B4B4ff;
+}
+
+Button:PRELIGHT, RadioButton:PRELIGHT, ComboBox:PRELIGHT, ComboBox:ACTIVE {
     Color: #000000ff;
     BackgroundColor: #D2D2D2ff;
 }
 
-Button:ACTIVE, RadioButton:ACTIVE {
+Button:ACTIVE, RadioButton:ACTIVE, Entry:ACTIVE {
     Color: #000000ff;
     BackgroundColor: #B4B4B4ff;
 }
