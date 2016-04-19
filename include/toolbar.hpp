@@ -20,8 +20,13 @@ private:
 
     // widgets de la barre
     sfg::Window::Ptr toolbar_window;
-    sfg::ScrolledWindow::Ptr scrolled_zone;
     sfg::Box::Ptr toolbar_box;
+
+    // zones de texte pour les métadonnées
+    sfg::Entry::Ptr name_entry;
+    sfg::Entry::Ptr path_entry;
+    sfg::ComboBox::Ptr background_combo;
+    sfg::ComboBox::Ptr music_combo;
 
     // types d'objets de la barre d'outils
     sfg::RadioButtonGroup::Ptr objects_group;

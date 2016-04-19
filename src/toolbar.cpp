@@ -28,11 +28,33 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     toolbar_box->PackEnd(test_button);
     toolbar_box->PackEnd(save_button);
 
-    // ajout des créateurs de blocs
-	sfg::Alignment::Ptr spacer = sfg::Alignment::Create();
-	spacer->SetRequisition(sf::Vector2f(1, 5));
+    // ajout des zones de textes pour les métadonnées
+	sfg::Alignment::Ptr info_spacer = sfg::Alignment::Create();
+	info_spacer->SetRequisition(sf::Vector2f(1, 5));
 
-    toolbar_box->PackEnd(spacer);
+    toolbar_box->PackEnd(info_spacer);
+    toolbar_box->PackEnd(sfg::Label::Create(L"Informations"));
+    toolbar_box->PackEnd(sfg::Separator::Create());
+
+    name_entry = sfg::Entry::Create("nom niveau test");
+    path_entry = sfg::Entry::Create("chemin niveau test");
+
+    background_combo = sfg::ComboBox::Create();
+    background_combo->AppendItem("background niveau test");
+
+    music_combo = sfg::ComboBox::Create();
+    music_combo->AppendItem("music niveau test");
+
+    toolbar_box->PackEnd(name_entry);
+    toolbar_box->PackEnd(path_entry);
+    toolbar_box->PackEnd(background_combo);
+    toolbar_box->PackEnd(music_combo);
+
+    // ajout des créateurs de blocs
+	sfg::Alignment::Ptr creators_spacer = sfg::Alignment::Create();
+	creators_spacer->SetRequisition(sf::Vector2f(1, 5));
+
+    toolbar_box->PackEnd(creators_spacer);
     toolbar_box->PackEnd(sfg::Label::Create(L"Choix de l'objet"));
     toolbar_box->PackEnd(sfg::Separator::Create());
 
@@ -63,7 +85,7 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     creators.begin()->first->SetActive(true);
 
     // création de la fenêtre de la barre d'outils
-    scrolled_zone = sfg::ScrolledWindow::Create();
+    sfg::ScrolledWindow::Ptr scrolled_zone = sfg::ScrolledWindow::Create();
     toolbar_window = sfg::Window::Create(sfg::Window::Style::BACKGROUND);
 
     scrolled_zone->SetScrollbarPolicy(
