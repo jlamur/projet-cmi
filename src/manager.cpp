@@ -76,7 +76,6 @@ void Manager::start() {
 
         // dessin de l'interface
         sf::View normal_view = window.getView();
-        useGUIView();
 
         desktop.Update((getCurrentTime() - previous_time).asSeconds());
         previous_time = getCurrentTime();
