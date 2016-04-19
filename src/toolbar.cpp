@@ -13,20 +13,29 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     toolbar_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
     objects_group = sfg::RadioButtonGroup::Create();
 
-    // catégorie des blocs de base
-    toolbar_box->PackEnd(sfg::Label::Create(L"BLOCS"));
+    // ajout des boutons de contrôle
+    sfg::Button::Ptr test_button = sfg::Button::Create(L"Tester");
+    sfg::Button::Ptr save_button = sfg::Button::Create(L"Sauvegarder");
+
+    test_button->GetSignal(sfg::Widget::OnLeftClick).Connect(
+        std::bind(&Editor::test, &editor)
+    );
+
+    save_button->GetSignal(sfg::Widget::OnLeftClick).Connect(
+        std::bind(&Editor::save, &editor)
+    );
+
+    toolbar_box->PackEnd(test_button);
+    toolbar_box->PackEnd(save_button);
+
+    // ajout des créateurs de blocs
     addCreator(L"Bloc normal", std::bind(&Toolbar::createBlock, this));
     addCreator(L"Caisse", std::bind(&Toolbar::createMovableBlock, this));
-
-    // catégorie des blocs contrôlant les joueurs
-    toolbar_box->PackEnd(sfg::Label::Create(L"JOUEURS"));
     addCreator(L"Joueur", std::bind(&Toolbar::createPlayer, this));
     addCreator(L"Bloc changeur", std::bind(&Toolbar::createSwitchBlock, this));
     addCreator(L"Bloc de fin", std::bind(&Toolbar::createFinishBlock, this));
     addCreator(L"Bloc tueur", std::bind(&Toolbar::createKillBlock, this));
 
-    // catégorie des blocs changeant la gravité
-    toolbar_box->PackEnd(sfg::Label::Create(L"GRAVITÉ"));
     addCreator(L"Bloc de gravité nord", std::bind(
         &Toolbar::createGravityBlock, this, GravityDirection::NORTH
     ));
@@ -49,7 +58,7 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
         sfg::ScrolledWindow::ScrollbarPolicy::VERTICAL_AUTOMATIC |
         sfg::ScrolledWindow::ScrollbarPolicy::HORIZONTAL_NEVER
     );
-    
+
     scrolled_zone->AddWithViewport(toolbar_box);
 
 	toolbar_window = sfg::Window::Create(sfg::Window::Style::BACKGROUND);
