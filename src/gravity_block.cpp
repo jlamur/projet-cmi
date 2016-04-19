@@ -45,7 +45,7 @@ void GravityBlock::draw(Level& level) {
     icon_sprite.setColor(sf::Color(255, 255, 255, opacity));
 
     // on dessine l'icône
-    icon_sprite.setTexture(level.getResourceManager().getTexture(
+    icon_sprite.setTexture(*level.getResourceManager().getTexture(
         texture_name + ".tga"
     ));
 

@@ -24,9 +24,9 @@ private:
     boost::filesystem::path levels_path;
     boost::filesystem::path musics_path;
 
-    std::unordered_map<std::string, std::unique_ptr<sf::Image>> images;
-    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
-    std::unordered_map<std::string, std::unique_ptr<sf::Font>> fonts;
+    std::unordered_map<std::string, std::shared_ptr<sf::Image>> images;
+    std::unordered_map<std::string, std::shared_ptr<sf::Texture>> textures;
+    std::unordered_map<std::string, std::shared_ptr<sf::Font>> fonts;
     sf::Music music;
 
     float music_volume;
@@ -44,17 +44,17 @@ public:
     /**
      * Récupère une image préchargée
      */
-    sf::Image& getImage(std::string name);
+    std::shared_ptr<sf::Image> getImage(std::string name);
 
     /**
      * Récupère une texture préchargée
      */
-    sf::Texture& getTexture(std::string name);
+    std::shared_ptr<sf::Texture> getTexture(std::string name);
 
     /**
      * Récupère une police préchargée
      */
-    sf::Font& getFont(std::string name);
+    std::shared_ptr<sf::Font> getFont(std::string name);
 
     /**
      * Récupère le chemin vers le fichier du niveau portant le

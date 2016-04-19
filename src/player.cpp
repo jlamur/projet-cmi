@@ -70,12 +70,12 @@ void Player::draw(Level& level) {
         texture_name = "player_2.tga";
     }
 
-    sprite.setTexture(&level.getResourceManager().getTexture(texture_name));
+    sprite.setTexture(level.getResourceManager().getTexture(texture_name).get());
     sprite.setRadius(getRadius());
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
     sprite.setPosition(getPosition());
 
-    shadow_sprite.setTexture(&level.getResourceManager().getTexture("player_shadow.tga"));
+    shadow_sprite.setTexture(level.getResourceManager().getTexture("player_shadow.tga").get());
     shadow_sprite.setRadius(getRadius() - 1);
     shadow_sprite.setOrigin(sf::Vector2f(getRadius() - 1, getRadius() - 1));
     shadow_sprite.setPosition(getPosition());

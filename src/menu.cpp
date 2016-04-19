@@ -27,7 +27,7 @@ namespace {
 }
 
 Menu::Menu(Manager& manager) : State(manager) {
-    background.setTexture(getResourceManager().getTexture("bg_menu.tga"));
+    background.setTexture(*getResourceManager().getTexture("bg_menu.tga"));
     loadMainMenu();
 }
 
@@ -104,7 +104,7 @@ void Menu::frame() {
     // affichage du menu
     sf::RenderWindow& window = getWindow();
     sf::Vector2f size = (sf::Vector2f) window.getSize();
-    sf::Font font = getResourceManager().getFont("raleway.ttf");
+    std::shared_ptr<sf::Font> font = getResourceManager().getFont("raleway.ttf");
 
     // on s'assure d'être dans la vue par défaut (pas de zoom, 0x0 en haut gauche)
     getManager().useGUIView();
@@ -137,7 +137,7 @@ void Menu::frame() {
     labels.clear();
 
     for (unsigned int i = 0; i < choices.size(); i++) {
-        sf::Text label(choices[i], font, font_size);
+        sf::Text label(choices[i], *font, font_size);
         sf::FloatRect text_size = label.getLocalBounds();
 
         sf::Vector2f base_position(
@@ -172,10 +172,6 @@ void Menu::loadMainMenu() {
     choices.clear();
     actions.clear();
     selection = 0;
-
-    sf::Texture& texture = getResourceManager().getTexture("bg_menu.tga");
-    texture.setSmooth(true);
-    background.setTexture(texture);
 
     choices.push_back(sf::String(L"Jouer"));
     actions.push_back(std::bind(&Menu::loadLevelMenu, this));

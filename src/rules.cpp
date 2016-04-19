@@ -2,7 +2,7 @@
 #include "manager.hpp"
 
 Rules::Rules(Manager& manager) : State(manager) {
-    background.setTexture(getResourceManager().getTexture("bg_rules.png"));
+    background.setTexture(*getResourceManager().getTexture("bg_rules.png"));
     getWindow().setFramerateLimit(Manager::FPS);
 }
 

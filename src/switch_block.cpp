@@ -24,7 +24,7 @@ void SwitchBlock::draw(Level& level) {
     icon_sprite.setColor(sf::Color(255, 255, 255, opacity));
 
     // on dessine l'icône
-    icon_sprite.setTexture(level.getResourceManager().getTexture(
+    icon_sprite.setTexture(*level.getResourceManager().getTexture(
         "switch_block.tga"
     ));
 

@@ -14,7 +14,7 @@ Object::Ptr FinishBlock::clone() const {
 void FinishBlock::prepareDraw(ResourceManager& resources) {
     Block::prepareDraw(resources);
     sprite.setOrigin(sf::Vector2f(23, 41));
-    sprite.setTexture(resources.getTexture("finish_block.tga"), true);
+    sprite.setTexture(*resources.getTexture("finish_block.tga"), true);
 }
 
 void FinishBlock::activate(Game& game, Object::Ptr object) {

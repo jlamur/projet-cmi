@@ -8,16 +8,16 @@ WidgetTimer::WidgetTimer(Manager& manager, bool can_change, std::function<void(i
     timer_down(manager, std::bind(&WidgetTimer::subtractTime, this), sf::Vector2f(30, 16), WidgetButton::ARROW_DOWN) {
 
     // initialisation des formes
-    timer_seconds_text.setFont(manager.getResourceManager().getFont("monoid.ttf"));
+    timer_seconds_text.setFont(*manager.getResourceManager().getFont("monoid.ttf"));
     timer_seconds_text.setCharacterSize(18);
     timer_seconds_text.setColor(sf::Color::Black);
 
     timer_sep_text.setString(":");
-    timer_sep_text.setFont(manager.getResourceManager().getFont("monoid.ttf"));
+    timer_sep_text.setFont(*manager.getResourceManager().getFont("monoid.ttf"));
     timer_sep_text.setCharacterSize(18);
     timer_sep_text.setColor(sf::Color::Black);
 
-    timer_minutes_text.setFont(manager.getResourceManager().getFont("monoid.ttf"));
+    timer_minutes_text.setFont(*manager.getResourceManager().getFont("monoid.ttf"));
     timer_minutes_text.setCharacterSize(18);
     timer_minutes_text.setColor(sf::Color::Black);
 }

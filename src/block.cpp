@@ -47,8 +47,8 @@ void Block::prepareDraw(ResourceManager& resources) {
         texture_name = "block.tga";
     }
 
-    sprite.setTexture(resources.getTexture(texture_name));
-    select_sprite.setTexture(resources.getTexture("block_select.tga"));
+    sprite.setTexture(*resources.getTexture(texture_name));
+    select_sprite.setTexture(*resources.getTexture("block_select.tga"));
 }
 
 void Block::draw(Level& level) {

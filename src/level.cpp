@@ -288,10 +288,10 @@ void Level::draw() {
 
     // on dessine le fond s'il y en a un
     if (background != "") {
-        sf::Texture& bg_texture = getResourceManager().getTexture(background);
-        sf::Vector2f bg_size = (sf::Vector2f) bg_texture.getSize();
+        auto bg_texture = getResourceManager().getTexture(background);
+        sf::Vector2f bg_size = (sf::Vector2f) bg_texture->getSize();
 
-        background_sprite.setTexture(bg_texture);
+        background_sprite.setTexture(*bg_texture);
 
         // on regarde la position du coin où il faut commencer à
         // dessiner le fond, et la zone sur laquelle il faut le dessiner

@@ -29,8 +29,8 @@ void ResourceManager::preload() {
             std::string full_path = boost::filesystem::canonical(it->path()).string();
             std::string name = it->path().filename().string();
 
-            auto image = std::unique_ptr<sf::Image>(new sf::Image);
-            auto texture = std::unique_ptr<sf::Texture>(new sf::Texture);
+            auto image = std::shared_ptr<sf::Image>(new sf::Image);
+            auto texture = std::shared_ptr<sf::Texture>(new sf::Texture);
             texture->setSmooth(true);
 
             std::cout << "Chargement de l'image " << name << "... ";
@@ -60,7 +60,7 @@ void ResourceManager::preload() {
             std::string full_path = boost::filesystem::canonical(it->path()).string();
             std::string name = it->path().filename().string();
 
-            auto font = std::unique_ptr<sf::Font>(new sf::Font);
+            auto font = std::shared_ptr<sf::Font>(new sf::Font);
             std::cout << "Chargement de la police " << name << "... ";
 
             if (!font->loadFromFile(full_path)) {
@@ -76,34 +76,34 @@ void ResourceManager::preload() {
     preloaded = true;
 }
 
-sf::Image& ResourceManager::getImage(std::string name) {
+std::shared_ptr<sf::Image> ResourceManager::getImage(std::string name) {
     if (images.count(name) == 0) {
         throw std::runtime_error(
             "Impossible de récupérer l'image inexistante : " + name
         );
     }
 
-    return *images[name];
+    return images[name];
 }
 
-sf::Texture& ResourceManager::getTexture(std::string name) {
+std::shared_ptr<sf::Texture> ResourceManager::getTexture(std::string name) {
     if (textures.count(name) == 0) {
         throw std::runtime_error(
             "Impossible de récupérer la texture inexistante : " + name
         );
     }
 
-    return *textures[name];
+    return textures[name];
 }
 
-sf::Font& ResourceManager::getFont(std::string name) {
+std::shared_ptr<sf::Font> ResourceManager::getFont(std::string name) {
     if (fonts.count(name) == 0) {
         throw std::runtime_error(
             "Impossible de récupérer la police inexistante : " + name
         );
     }
 
-    return *fonts[name];
+    return fonts[name];
 }
 
 std::string ResourceManager::getLevelPath(std::string name) {
