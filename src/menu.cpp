@@ -5,6 +5,27 @@
 #include "game.hpp"
 #include <cmath>
 
+/**
+ * Définition des variables et fonctions globales internes
+ * (accessibles uniquement dans ce fichier)
+ */
+namespace {
+    /**
+     * Récupère le nom du niveau dont le fichier est donné
+     */
+    sf::String getLevelName(Manager& manager, std::string path) {
+        // pour ce faire, on crée une instance temporaire de
+        // Game que l'on charge avec le chemin donné puis on
+        // extrait son nom
+        Game temporary_game(manager);
+
+        temporary_game.setPath(path);
+        temporary_game.load();
+
+        return temporary_game.getName();
+    }
+}
+
 Menu::Menu(Manager& manager) : State(manager) {
     background.setTexture(getResourceManager().getTexture("bg_menu.tga"));
     loadMainMenu();
@@ -178,7 +199,7 @@ void Menu::loadLevelMenu() {
     std::vector<std::string> name_list;
 
     for (auto it = path_list.begin(); it != path_list.end(); it++) {
-        choices.push_back(Level::getLevelName(*it));
+        choices.push_back(getLevelName(getManager(), *it));
         actions.push_back(std::bind(&Menu::launchGame, this, *it));
     }
 
@@ -198,7 +219,7 @@ void Menu::loadEditorMenu() {
     actions.push_back(std::bind(&Menu::launchEditor, this, ""));
 
     for (auto it = path_list.begin(); it != path_list.end(); it++) {
-        choices.push_back(Level::getLevelName(*it));
+        choices.push_back(getLevelName(getManager(), *it));
         actions.push_back(std::bind(&Menu::launchEditor, this, *it));
     }
 
@@ -208,7 +229,8 @@ void Menu::loadEditorMenu() {
 
 void Menu::launchGame(std::string path) {
     auto game = std::unique_ptr<Game>(new Game(getManager()));
-    game->load(path);
+    game->setPath(path);
+    game->load();
     getManager().pushState(std::move(game));
 }
 
@@ -221,7 +243,8 @@ void Menu::launchEditor(std::string path) {
     auto editor = std::unique_ptr<Editor>(new Editor(getManager()));
 
     if (!path.empty()) {
-        editor->load(path);
+        editor->setPath(path);
+        editor->load();
     }
 
     getManager().pushState(std::move(editor));
