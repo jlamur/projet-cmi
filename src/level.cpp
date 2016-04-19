@@ -88,7 +88,7 @@ void Level::load() {
     // on vérifie que le fichier ait correctement été ouvert en lecture
     if (file.fail()) {
         throw std::runtime_error(
-            "Impossible de charger le niveau \"" + name + "\" " +
+            "Impossible de charger le niveau \"" + path + "\" " +
             "(" + std::string(strerror(errno)) + ")"
         );
     }
@@ -99,7 +99,7 @@ void Level::load() {
 
     if (strncmp(read_signature, "BAR", 3) != 0) {
         throw std::runtime_error(
-            "Impossible de charger le niveau \"" + name + "\" " +
+            "Impossible de charger le niveau \"" + path + "\" " +
             "(en-tête invalide)"
         );
     }
@@ -110,7 +110,7 @@ void Level::load() {
 
     if (read_file_version != VERSION_NUMBER) {
         throw std::runtime_error(
-            "Impossible de charger le niveau \"" + name + "\" " +
+            "Impossible de charger le niveau \"" + path + "\" " +
             "(version non prise en charge)"
         );
     }
@@ -165,7 +165,7 @@ void Level::load() {
         // pour éviter une erreur de segmentation
         if (object_type_map.count(read_object_type) == 0) {
             throw std::runtime_error(
-                "Impossible de charger le niveau \"" + name + "\" " +
+                "Impossible de charger le niveau \"" + path + "\" " +
                 "(type d'objet " + std::to_string(read_object_type) + " inconnu)"
             );
         }
@@ -182,7 +182,7 @@ void Level::save() {
     // on vérifie que le fichier ait correctement été ouvert en lecture
     if (file.fail()) {
         throw std::runtime_error(
-            "Impossible d'enregistrer le niveau \"" + name + "\" " +
+            "Impossible d'enregistrer le niveau \"" + path + "\" " +
             "(" + std::string(strerror(errno)) + ")"
         );
     }
