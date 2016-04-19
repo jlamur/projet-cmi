@@ -1,0 +1,28 @@
+Window {
+	BackgroundColor: #FFFFFFff;
+    BorderWidth: 0;
+}
+
+ScrolledWindow {
+    BorderWidth: 0;
+}
+
+Button {
+    Color: #000000ff;
+    BorderWidth: 0;
+    BackgroundColor: #E6E6E6ff;
+}
+
+Button:PRELIGHT {
+    Color: #000000ff;
+    BackgroundColor: #D2D2D2ff;
+}
+
+Button:ACTIVE {
+    Color: #000000ff;
+    BackgroundColor: #B4B4B4ff;
+}
+
+* {
+    Color: #000000ff;
+}

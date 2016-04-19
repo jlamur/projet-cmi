@@ -12,6 +12,9 @@ Manager::Manager() : previous_time(sf::seconds(0)), title(sf::String(L"")),
     // préchargement des textures
     resource_manager.preload();
 
+    // chargement du thème du desktop
+    desktop.LoadThemeFromFile("res/gui.theme");
+
     // création de la fenêtre (après avoir préchargé les ressources,
     // on évite ainsi tout lag pendant le traitement des événements)
     window.create(
