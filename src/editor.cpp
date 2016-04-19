@@ -34,9 +34,13 @@ inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
 Editor::Editor(Manager& manager) : Level(manager),
     drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
-    toolbar(*this) {}
+    toolbar(*this) {
+    getManager().addWidget(toolbar.getWindow());
+}
 
-Editor::~Editor() {}
+Editor::~Editor() {
+    getManager().removeWidget(toolbar.getWindow());
+}
 
 void Editor::enable() {
     Level::enable();
@@ -48,8 +52,8 @@ void Editor::enable() {
     // joue la musique de l'éditeur
     getResourceManager().playMusic("editor.ogg");
 
-    // ajout de la toolbar à la liste des widgets
-    getManager().getDesktop().Add(toolbar.getWindow());
+    // on affiche la toolbar de l'éditeur
+    toolbar.getWindow()->Show(true);
 }
 
 void Editor::processEvent(const sf::Event& event) {

@@ -1,5 +1,6 @@
 #include "state.hpp"
 #include "manager.hpp"
+#include <algorithm>
 
 const unsigned int Manager::FPS = 60;
 const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);
@@ -20,6 +21,11 @@ Manager::Manager() : previous_time(sf::seconds(0)), title(sf::String(L"")),
 
     // récupération de la vue par défaut comme vue du gui
     gui_view = window.getDefaultView();
+}
+
+Manager::~Manager() {
+    widgets.clear();
+    desktop.RemoveAll();
 }
 
 void Manager::start() {
@@ -64,8 +70,10 @@ void Manager::start() {
         if (previous_state != states.top().get()) {
             previous_state = states.top().get();
 
-            // on vide l'interface de l'état précédent
-            desktop.RemoveAll();
+            // on masque tous les widgets de l'interface
+            for (const auto &widget : widgets) {
+                widget->Show(false);
+            }
 
             // on initialise le nouvel état
             previous_state->enable();
@@ -124,8 +132,16 @@ void Manager::useGUIView() {
     window.setView(gui_view);
 }
 
-sfg::Desktop& Manager::getDesktop() {
-    return desktop;
+void Manager::addWidget(sfg::Widget::Ptr widget) {
+    widgets.push_back(widget);
+    desktop.Add(widget);
+}
+
+void Manager::removeWidget(sfg::Widget::Ptr widget) {
+    desktop.Remove(widget);
+    widgets.erase(std::remove(
+        widgets.begin(), widgets.end(), widget
+    ), widgets.end());
 }
 
 sf::String Manager::getTitle() {

@@ -18,8 +18,10 @@ class Manager {
 private:
     sf::RenderWindow window;
     sf::Time previous_time;
+
     sfg::SFGUI sfgui;
     sfg::Desktop desktop;
+    std::vector<sfg::Widget::Ptr> widgets;
 
     unsigned int framerate;
     ResourceManager resource_manager;
@@ -53,6 +55,7 @@ public:
     static const float GRID;
 
     Manager();
+    ~Manager();
 
     /**
      * Démarre la boucle principale du jeu
@@ -102,9 +105,14 @@ public:
     void useGUIView();
 
     /**
-     * Renvoie le bureau pour l'affichage de l'interface
+     * Ajoute un nouveau widget à l'interface
      */
-    sfg::Desktop& getDesktop();
+    void addWidget(sfg::Widget::Ptr widget);
+
+    /**
+     * Supprime un widget de l'interface
+     */
+    void removeWidget(sfg::Widget::Ptr widget);
 
     /**
      * Renvoie le titre actuel de la fenêtre
