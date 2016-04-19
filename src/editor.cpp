@@ -34,7 +34,7 @@ inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
 Editor::Editor(Manager& manager) : Level(manager),
     drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE),
     widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
-    widget_toolbar(manager) {}
+    toolbar(*this) {}
 
 Editor::~Editor() {}
 
@@ -47,6 +47,9 @@ void Editor::enable() {
 
     // joue la musique de l'éditeur
     getResourceManager().playMusic("editor.ogg");
+
+    // ajout de la toolbar à la liste des widgets
+    getManager().getDesktop().Add(toolbar.getWindow());
 }
 
 void Editor::processEvent(const sf::Event& event) {
@@ -54,11 +57,6 @@ void Editor::processEvent(const sf::Event& event) {
 
     // traitement des événements du widget chronomètre
     if (widget_timer.processEvent(event)) {
-        return;
-    }
-
-    // traitement des événements du widget barre d'outils
-    if (widget_toolbar.processEvent(event)) {
         return;
     }
 
@@ -327,11 +325,12 @@ void Editor::draw() {
     widget_timer.setTimeLeft(getTotalTime());
     widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
 
-    // barre d'outils
-    widget_toolbar.draw(
-        sf::Vector2f(window_size.x - 64, 0),
-        sf::Vector2f(64, window_size.y)
-    );
+    // on redimensionne la toolbar pour qu'elle occupe l'espace droite
+    const sfg::Window::Ptr& toolbar_window = toolbar.getWindow();
+    toolbar_window->SetAllocation(sf::FloatRect(
+        window_size.x - 200, 0,
+        200, window_size.y
+    ));
 }
 
 Object::Ptr Editor::getObject(sf::Vector2f position) {
@@ -359,33 +358,27 @@ sf::Vector2f* Editor::getControlPoint(sf::Vector2f position) {
 }
 
 Object::Ptr Editor::addObject(sf::Vector2f position) {
-    const std::vector<Object::Ptr>& objects = getObjects();
-
     // on arrondit à l'unité de grille la plus proche
     position = roundVectorToGrid(position);
-    Object::Ptr object = widget_toolbar.createObject();
+    Object::Ptr created_object = toolbar.createObject();
 
-    if (object == nullptr) {
+    if (created_object == nullptr) {
         return nullptr;
     }
 
-    object->setPosition(position);
+    created_object->setPosition(position);
 
     // avant d'ajouter l'objet, on vérifie qu'il ne soit
-    // pas superposé à un autre
-    float overlaps = false;
-
-    for (auto it = objects.begin(); it != objects.end(); it++) {
-        if ((*it)->getAABB().intersects(object->getAABB())) {
-            overlaps = true;
+    // pas superposé à un autre. Si c'est le cas, on annule
+    // la procédure
+    for (auto const &object : getObjects()) {
+        if (object->getAABB().intersects(created_object->getAABB())) {
+            return nullptr;
         }
     }
 
-    if (!overlaps) {
-        return Level::addObject(object);
-    }
-
-    return nullptr;
+    // sinon, on ajoute l'objet
+    return Level::addObject(created_object);
 }
 
 void Editor::removeObject(Object::Ptr object) {

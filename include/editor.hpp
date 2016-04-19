@@ -3,7 +3,7 @@
 
 #include "level.hpp"
 #include "widget_timer.hpp"
-#include "widget_toolbar.hpp"
+#include "toolbar.hpp"
 #include <unordered_map>
 #include <memory>
 
@@ -26,7 +26,7 @@ private:
     DragMode drag_mode;
 
     WidgetTimer widget_timer;
-    WidgetToolbar widget_toolbar;
+    Toolbar toolbar;
 
     /**
      * Renvoie l'objet pointé à la position donnée
