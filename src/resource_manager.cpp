@@ -29,16 +29,27 @@ void ResourceManager::preload() {
             std::string full_path = boost::filesystem::canonical(it->path()).string();
             std::string name = it->path().filename().string();
 
+            auto image = std::unique_ptr<sf::Image>(new sf::Image);
             auto texture = std::unique_ptr<sf::Texture>(new sf::Texture);
             texture->setSmooth(true);
-            std::cout << "Chargement de la texture " << name << "... ";
 
-            if (!texture->loadFromFile(full_path)) {
+            std::cout << "Chargement de l'image " << name << "... ";
+
+            if (!image->loadFromFile(full_path)) {
                 std::cerr << "ERREUR!" << std::endl;
             } else {
                 std::cout << "OK!" << std::endl;
             }
 
+            std::cout << "Mise en mémoire de la texture " << name << "... ";
+
+            if (!texture->loadFromImage(*image)) {
+                std::cerr << "ERREUR!" << std::endl;
+            } else {
+                std::cout << "OK!" << std::endl;
+            }
+
+            images[name] = std::move(image);
             textures[name] = std::move(texture);
         }
     }
@@ -65,10 +76,20 @@ void ResourceManager::preload() {
     preloaded = true;
 }
 
+sf::Image& ResourceManager::getImage(std::string name) {
+    if (images.count(name) == 0) {
+        throw std::runtime_error(
+            "Impossible de récupérer l'image inexistante : " + name
+        );
+    }
+
+    return *images[name];
+}
+
 sf::Texture& ResourceManager::getTexture(std::string name) {
     if (textures.count(name) == 0) {
         throw std::runtime_error(
-            "Impossible de charger la texture inexistante : " + name
+            "Impossible de récupérer la texture inexistante : " + name
         );
     }
 
@@ -78,7 +99,7 @@ sf::Texture& ResourceManager::getTexture(std::string name) {
 sf::Font& ResourceManager::getFont(std::string name) {
     if (fonts.count(name) == 0) {
         throw std::runtime_error(
-            "Impossible de charger la police inexistante : " + name
+            "Impossible de récupérer la police inexistante : " + name
         );
     }
 

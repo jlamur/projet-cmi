@@ -20,14 +20,15 @@ private:
     bool preloaded;
 
     boost::filesystem::path textures_path;
-    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
     boost::filesystem::path fonts_path;
-    std::unordered_map<std::string, std::unique_ptr<sf::Font>> fonts;
-
     boost::filesystem::path levels_path;
-
     boost::filesystem::path musics_path;
+
+    std::unordered_map<std::string, std::unique_ptr<sf::Image>> images;
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    std::unordered_map<std::string, std::unique_ptr<sf::Font>> fonts;
     sf::Music music;
+
     float music_volume;
     bool playing_state;
     std::string current_music;
@@ -39,6 +40,11 @@ public:
      * Précharge toutes les ressources préchargeables
      */
     void preload();
+
+    /**
+     * Récupère une image préchargée
+     */
+    sf::Image& getImage(std::string name);
 
     /**
      * Récupère une texture préchargée
