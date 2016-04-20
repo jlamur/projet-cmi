@@ -5,7 +5,7 @@
 * {
     FontName: overpass;
     FontSize: 14;
-    Color: #111111ff;
+    Color: #141414ff;
 }
 
 Window {
@@ -22,7 +22,7 @@ Scrollbar {
     BorderWidth: 0;
     SliderColor: #B4B4B4ff;
     TroughColor: #E6E6E6ff;
-    StepperArrowColor: #111111ff;
+    StepperArrowColor: #141414ff;
     StepperBackgroundColor: #B4B4B4ff;
 }
 
@@ -39,7 +39,7 @@ Entry {
 }
 
 ComboBox {
-    ArrowColor: #111111ff;
+    ArrowColor: #141414ff;
     HighlightedColor: #B4B4B4ff;
 }
 
