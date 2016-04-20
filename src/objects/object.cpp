@@ -1,8 +1,8 @@
-#include "manager.hpp"
-#include "object.hpp"
-#include "game.hpp"
-#include "collision.hpp"
 #include <cmath>
+#include "manager.hpp"
+#include "states/game.hpp"
+#include "objects/collision.hpp"
+#include "objects/object.hpp"
 
 /**
  * Définition des variables et fonctions globales internes

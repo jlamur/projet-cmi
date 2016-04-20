@@ -1,7 +1,7 @@
-#include "state.hpp"
-#include "manager.hpp"
-#include "resource_manager.hpp"
 #include <algorithm>
+#include "states/state.hpp"
+#include "resource_manager.hpp"
+#include "manager.hpp"
 
 const unsigned int Manager::FPS = 60;
 const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);

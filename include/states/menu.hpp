@@ -1,10 +1,10 @@
 #ifndef __SKIZZLE_MENU_HPP__
 #define __SKIZZLE_MENU_HPP__
 
-#include "state.hpp"
 #include <functional>
 #include <vector>
 #include <memory>
+#include "state.hpp"
 
 class Manager;
 

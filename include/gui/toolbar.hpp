@@ -5,9 +5,9 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <functional>
-#include "object.hpp"
+#include "../objects/object.hpp"
+#include "../states/level.hpp"
 #include "object_button.hpp"
-#include "level.hpp"
 
 class Editor;
 

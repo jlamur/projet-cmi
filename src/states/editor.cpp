@@ -1,9 +1,9 @@
-#include "manager.hpp"
-#include "resource_manager.hpp"
-#include "editor.hpp"
-#include "game.hpp"
 #include <cmath>
 #include <algorithm>
+#include "manager.hpp"
+#include "resource_manager.hpp"
+#include "states/game.hpp"
+#include "states/editor.hpp"
 
 /**
  * Définition des variables et fonctions globales internes

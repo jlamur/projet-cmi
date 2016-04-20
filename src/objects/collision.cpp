@@ -1,11 +1,6 @@
-#include "collision.hpp"
-#include "player.hpp"
-#include "block.hpp"
-#include "gravity_block.hpp"
-#include "object.hpp"
-#include <functional>
-#include <utility>
 #include <cmath>
+#include "objects/object.hpp"
+#include "objects/collision.hpp"
 
 /**
  * Définition des variables et fonctions globales internes

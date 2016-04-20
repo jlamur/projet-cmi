@@ -1,6 +1,6 @@
-#include "resource_manager.hpp"
 #include <iostream>
 #include <utility>
+#include "resource_manager.hpp"
 
 namespace fs = boost::filesystem;
 

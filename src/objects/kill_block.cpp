@@ -1,8 +1,8 @@
 #include "manager.hpp"
 #include "resource_manager.hpp"
-#include "kill_block.hpp"
-#include "game.hpp"
-#include "player.hpp"
+#include "states/game.hpp"
+#include "objects/player.hpp"
+#include "objects/kill_block.hpp"
 
 const unsigned int KillBlock::TYPE_ID = 5;
 

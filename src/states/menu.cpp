@@ -1,11 +1,11 @@
-#include "manager.hpp"
-#include "resource_manager.hpp"
-#include "menu.hpp"
-#include "rules.hpp"
-#include "editor.hpp"
-#include "game.hpp"
 #include <boost/filesystem.hpp>
 #include <cmath>
+#include "manager.hpp"
+#include "resource_manager.hpp"
+#include "states/rules.hpp"
+#include "states/editor.hpp"
+#include "states/game.hpp"
+#include "states/menu.hpp"
 
 /**
  * Définition des variables et fonctions globales internes

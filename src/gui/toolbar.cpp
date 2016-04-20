@@ -1,12 +1,12 @@
 #include "resource_manager.hpp"
-#include "editor.hpp"
-#include "toolbar.hpp"
-#include "block.hpp"
-#include "player.hpp"
-#include "switch_block.hpp"
-#include "gravity_block.hpp"
-#include "kill_block.hpp"
-#include "finish_block.hpp"
+#include "states/editor.hpp"
+#include "objects/block.hpp"
+#include "objects/player.hpp"
+#include "objects/switch_block.hpp"
+#include "objects/gravity_block.hpp"
+#include "objects/kill_block.hpp"
+#include "objects/finish_block.hpp"
+#include "gui/toolbar.hpp"
 
 const int Toolbar::CREATORS_TABLE_WIDTH = 3;
 

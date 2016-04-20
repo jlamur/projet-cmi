@@ -1,7 +1,7 @@
 #include "manager.hpp"
 #include "resource_manager.hpp"
-#include "player.hpp"
-#include "game.hpp"
+#include "states/game.hpp"
+#include "objects/player.hpp"
 
 const unsigned int Player::TYPE_ID = 1;
 

@@ -1,8 +1,8 @@
 #include "manager.hpp"
 #include "resource_manager.hpp"
 #include "utility.hpp"
-#include "gravity_block.hpp"
-#include "game.hpp"
+#include "states/game.hpp"
+#include "objects/gravity_block.hpp"
 
 const unsigned int GravityBlock::TYPE_ID = 3;
 

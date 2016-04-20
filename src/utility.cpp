@@ -1,6 +1,6 @@
-#include "utility.hpp"
-#include "manager.hpp"
 #include <cmath>
+#include "manager.hpp"
+#include "utility.hpp"
 
 float Utility::animateValue(float current, float speed, float goal) {
     float gap = goal - current;

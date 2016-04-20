@@ -3,7 +3,7 @@
 #include <SFGUI/Renderer.hpp>
 #include <SFGUI/RenderQueue.hpp>
 #include <cmath>
-#include "object_button.hpp"
+#include "gui/object_button.hpp"
 
 ObjectButton::Ptr ObjectButton::Create(
     sfg::Image::Ptr image,

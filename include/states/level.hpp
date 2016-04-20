@@ -3,9 +3,9 @@
 
 #include <fstream>
 #include <vector>
+#include "../objects/object.hpp"
+#include "../objects/player.hpp"
 #include "state.hpp"
-#include "object.hpp"
-#include "player.hpp"
 
 class Manager;
 

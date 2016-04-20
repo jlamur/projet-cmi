@@ -1,9 +1,9 @@
-#include "rules.hpp"
 #include "manager.hpp"
 #include "resource_manager.hpp"
+#include "states/rules.hpp"
 
 Rules::Rules(Manager& manager) : State(manager) {
-    background.setTexture(*ResourceManager::get().getTexture("rules.png"));
+    background.setTexture(*ResourceManager::get().getTexture("rules.tga"));
 }
 
 Rules::~Rules() {}

@@ -1,9 +1,8 @@
-#include "manager.hpp"
-#include "editor.hpp"
-#include "menu.hpp"
-#include "game.hpp"
 #include <iostream>
 #include <memory>
+#include <utility>
+#include "manager.hpp"
+#include "states/menu.hpp"
 
 int main() {
     // le gestionnaire du jeu gère la pile d'états

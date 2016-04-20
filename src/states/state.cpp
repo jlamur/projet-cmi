@@ -1,5 +1,5 @@
-#include "state.hpp"
 #include "manager.hpp"
+#include "states/state.hpp"
 
 State::State(Manager& manager) : manager(manager) {}
 State::~State() {}

@@ -1,18 +1,17 @@
-#include "manager.hpp"
-#include "resource_manager.hpp"
-#include "level.hpp"
-#include "player.hpp"
-#include "block.hpp"
-#include "utility.hpp"
-#include "gravity_block.hpp"
-#include "switch_block.hpp"
-#include "finish_block.hpp"
-#include "kill_block.hpp"
 #include <boost/filesystem.hpp>
 #include <arpa/inet.h>
 #include <cstring>
 #include <functional>
-#include <queue>
+#include "manager.hpp"
+#include "resource_manager.hpp"
+#include "utility.hpp"
+#include "objects/player.hpp"
+#include "objects/block.hpp"
+#include "objects/gravity_block.hpp"
+#include "objects/switch_block.hpp"
+#include "objects/finish_block.hpp"
+#include "objects/kill_block.hpp"
+#include "states/level.hpp"
 
 /**
  * Définition des variables et fonctions globales internes

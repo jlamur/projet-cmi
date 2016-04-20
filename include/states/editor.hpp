@@ -1,10 +1,8 @@
 #ifndef __SKIZZLE_EDITOR_HPP__
 #define __SKIZZLE_EDITOR_HPP__
 
+#include "../gui/toolbar.hpp"
 #include "level.hpp"
-#include "toolbar.hpp"
-#include <unordered_map>
-#include <memory>
 
 /**
  * La classe Editor permet l'édition de

@@ -1,9 +1,8 @@
-#include "block.hpp"
-#include "level.hpp"
-#include "game.hpp"
-#include "player.hpp"
 #include "manager.hpp"
 #include "resource_manager.hpp"
+#include "states/game.hpp"
+#include "objects/player.hpp"
+#include "objects/block.hpp"
 
 const unsigned int Block::TYPE_ID = 2;
 

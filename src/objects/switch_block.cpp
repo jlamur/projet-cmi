@@ -1,8 +1,8 @@
 #include "manager.hpp"
 #include "resource_manager.hpp"
 #include "utility.hpp"
-#include "switch_block.hpp"
-#include "game.hpp"
+#include "states/game.hpp"
+#include "objects/switch_block.hpp"
 
 const unsigned int SwitchBlock::TYPE_ID = 6;
 

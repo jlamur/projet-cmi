@@ -1,7 +1,7 @@
 #include "manager.hpp"
 #include "resource_manager.hpp"
-#include "finish_block.hpp"
-#include "game.hpp"
+#include "states/game.hpp"
+#include "objects/finish_block.hpp"
 
 const unsigned int FinishBlock::TYPE_ID = 4;
 

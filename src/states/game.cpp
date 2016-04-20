@@ -1,10 +1,10 @@
 #include <iostream>
 #include <cmath>
-#include "utility.hpp"
 #include "manager.hpp"
 #include "resource_manager.hpp"
-#include "game.hpp"
-#include "player.hpp"
+#include "utility.hpp"
+#include "objects/player.hpp"
+#include "states/game.hpp"
 
 /**
  * Définition des variables et fonctions globales internes

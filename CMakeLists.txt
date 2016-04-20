@@ -3,7 +3,7 @@ project(skizzle)
 
 # Inclusion des fichiers d'en-tête et de source
 include_directories(include)
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 # Affichage de tous les avertisements
 if(MSVC)
