@@ -238,8 +238,13 @@ void Toolbar::updateEditorMusic() {
 }
 
 void Toolbar::update() {
-    name_entry->SetText(editor.getName());
-    path_entry->SetText(editor.getPath());
+    if (name_entry->GetText() != editor.getName()) {
+        name_entry->SetText(editor.getName());
+    }
+
+    if (path_entry->GetText().toAnsiString() != editor.getPath()) {
+        path_entry->SetText(editor.getPath());
+    }
 
     for (int i = 0; i < background_combo->GetItemCount(); i++) {
         if (background_combo->GetItem(i).toAnsiString() == editor.getBackground()) {
