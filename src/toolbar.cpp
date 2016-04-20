@@ -8,10 +8,12 @@
 #include "kill_block.hpp"
 #include "finish_block.hpp"
 
+const int Toolbar::CREATORS_TABLE_WIDTH = 3;
+
 Toolbar::Toolbar(Editor& editor) : editor(editor) {
     // création de la boîte de la barre d'outils
     toolbar_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
-    objects_group = sfg::RadioButtonGroup::Create();
+    creators_group = sfg::RadioButtonGroup::Create();
 
     // ajout des boutons de contrôle
     sfg::Button::Ptr test_button = sfg::Button::Create(L"Tester");
@@ -40,17 +42,17 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     path_entry = sfg::Entry::Create("chemin niveau test");
 
     background_combo = sfg::ComboBox::Create();
-    background_combo->AppendItem("background niveau test");
+    background_combo->AppendItem("background");
 
     music_combo = sfg::ComboBox::Create();
-    music_combo->AppendItem("music niveau test");
+    music_combo->AppendItem("music");
 
     toolbar_box->PackEnd(name_entry);
     toolbar_box->PackEnd(path_entry);
     toolbar_box->PackEnd(background_combo);
     toolbar_box->PackEnd(music_combo);
 
-    // ajout des créateurs de blocs
+    // mise en place de la liste des créateurs d'objets
 	sfg::Alignment::Ptr creators_spacer = sfg::Alignment::Create();
 	creators_spacer->SetRequisition(sf::Vector2f(1, 5));
 
@@ -58,28 +60,35 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     toolbar_box->PackEnd(sfg::Label::Create(L"Choix de l'objet"));
     toolbar_box->PackEnd(sfg::Separator::Create());
 
-    addCreator(L"Bloc normal", std::bind(&Toolbar::createBlock, this));
-    addCreator(L"Caisse", std::bind(&Toolbar::createMovableBlock, this));
-    addCreator(L"Joueur", std::bind(&Toolbar::createPlayer, this));
-    addCreator(L"Bloc changeur", std::bind(&Toolbar::createSwitchBlock, this));
-    addCreator(L"Bloc de fin", std::bind(&Toolbar::createFinishBlock, this));
-    addCreator(L"Bloc tueur", std::bind(&Toolbar::createKillBlock, this));
+    creators_table = sfg::Table::Create();
+    creators_table_pos_x = creators_table_pos_y = 0;
 
-    addCreator(L"Bloc de gravité nord", std::bind(
+    addCreator("player", std::bind(&Toolbar::createPlayer, this));
+
+    addCreator("block", std::bind(&Toolbar::createBlock, this));
+    addCreator("movable_block", std::bind(&Toolbar::createMovableBlock, this));
+    addCreator("switch_block", std::bind(&Toolbar::createSwitchBlock, this));
+    addCreator("finish_block", std::bind(&Toolbar::createFinishBlock, this));
+    addCreator("kill_block", std::bind(&Toolbar::createKillBlock, this));
+
+    addCreator("gravity_block_north", std::bind(
         &Toolbar::createGravityBlock, this, GravityDirection::NORTH
     ));
 
-    addCreator(L"Bloc de gravité est", std::bind(
+    addCreator("gravity_block_east", std::bind(
         &Toolbar::createGravityBlock, this, GravityDirection::EAST
     ));
 
-    addCreator(L"Bloc de gravité sud", std::bind(
+    addCreator("gravity_block_south", std::bind(
         &Toolbar::createGravityBlock, this, GravityDirection::SOUTH
     ));
 
-    addCreator(L"Bloc de gravité ouest", std::bind(
+    addCreator("gravity_block_west", std::bind(
         &Toolbar::createGravityBlock, this, GravityDirection::WEST
     ));
+
+    // attachement de la liste des créateurs à l'interface
+    toolbar_box->PackEnd(creators_table);
 
     // on sélectionne le premier créateur par défaut
     creators.begin()->first->SetActive(true);
@@ -97,10 +106,27 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     toolbar_window->Add(scrolled_zone);
 }
 
-void Toolbar::addCreator(sf::String label, std::function<Object::Ptr()> creator) {
-    sfg::RadioButton::Ptr radio = sfg::RadioButton::Create(label, objects_group);
-    creators[radio] = creator;
-    toolbar_box->PackEnd(radio);
+void Toolbar::addCreator(std::string path, std::function<Object::Ptr()> creator) {
+    // on crée un bouton d'objet correspondant au créateur donné
+    ObjectButton::Ptr button = ObjectButton::Create(
+        sfg::Image::Create(
+            *editor.getResourceManager().getImage("toolbar_" + path + ".tga")
+        ), creators_group
+    );
+
+    creators[button] = creator;
+
+    // on ajoute le bouton d'objet à la liste des créateurs
+    creators_table->Attach(button, sf::Rect<sf::Uint32>(
+        creators_table_pos_x, creators_table_pos_y, 1, 1
+    ));
+
+    creators_table_pos_x++;
+
+    if (creators_table_pos_x >= Toolbar::CREATORS_TABLE_WIDTH) {
+        creators_table_pos_x = 0;
+        creators_table_pos_y++;
+    }
 }
 
 Object::Ptr Toolbar::createBlock() {

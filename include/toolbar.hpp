@@ -2,11 +2,11 @@
 #define __SKIZZLE_TOOLBAR_HPP__
 
 #include <SFGUI/Widgets.hpp>
-#include <SFGUI/RadioButtonGroup.hpp>
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <functional>
 #include "object.hpp"
+#include "object_button.hpp"
 #include "level.hpp"
 
 class Editor;
@@ -29,10 +29,23 @@ private:
     sfg::ComboBox::Ptr music_combo;
 
     // types d'objets de la barre d'outils
-    sfg::RadioButtonGroup::Ptr objects_group;
-    std::map<sfg::RadioButton::Ptr, std::function<Object::Ptr()>> creators;
+    sfg::RadioButtonGroup::Ptr creators_group;
+    sfg::Table::Ptr creators_table;
+    std::map<ObjectButton::Ptr, std::function<Object::Ptr()>> creators;
 
-    void addCreator(sf::String label, std::function<Object::Ptr()> creator);
+    int creators_table_pos_x, creators_table_pos_y;
+
+    /**
+     * Nombre d'objets en largeur dans la liste des
+     * créateurs
+     */
+    static const int CREATORS_TABLE_WIDTH;
+
+    /**
+     * Ajoute un nouveau créateur d'objet au dictionnaire
+     * des créateurs et ajoute son image à l'interface
+     */
+    void addCreator(std::string path, std::function<Object::Ptr()> creator);
 
     Object::Ptr createBlock();
     Object::Ptr createMovableBlock();
