@@ -16,19 +16,6 @@ class SwitchBlock : public Block {
 public:
     typedef std::shared_ptr<SwitchBlock> Ptr;
 
-protected:
-    /**
-     * Initialisation des propriétés du bloc changeur donné
-     * depuis le fichier donné
-     */
-    static void init(std::ifstream& file, Object::Ptr object);
-
-public:
-    sf::Sprite icon_sprite;
-    float opacity;
-    bool used;
-
-public:
     /**
      * Identifiant unique du type "bloc changeur"
      */
@@ -43,7 +30,7 @@ public:
     virtual Object::Ptr clone() const;
 
     /**
-     * Prépare les textures avant le dessin du bloc
+     * Dessine le bloc
      */
     virtual void draw(Level& level);
 
@@ -66,6 +53,18 @@ public:
      * Sauvegarde le bloc changeur dans le fichier donné
      */
     virtual void save(std::ofstream& file) const;
+
+protected:
+    /**
+     * Initialisation des propriétés du bloc changeur donné
+     * depuis le fichier donné
+     */
+    static void init(std::ifstream& file, Object::Ptr object);
+
+private:
+    sf::Sprite icon_sprite;
+    float opacity;
+    bool used;
 };
 
 #endif
