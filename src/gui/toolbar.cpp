@@ -100,10 +100,9 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     creators_table = sfg::Table::Create();
     creators_table_pos_x = creators_table_pos_y = 0;
 
-    addCreator("player", std::bind(&Toolbar::createPlayer, this));
-
     addCreator("block", std::bind(&Toolbar::createBlock, this));
     addCreator("movable_block", std::bind(&Toolbar::createMovableBlock, this));
+    addCreator("player", std::bind(&Toolbar::createPlayer, this));
     addCreator("switch_block", std::bind(&Toolbar::createSwitchBlock, this));
     addCreator("finish_block", std::bind(&Toolbar::createFinishBlock, this));
     addCreator("kill_block", std::bind(&Toolbar::createKillBlock, this));
