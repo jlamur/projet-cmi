@@ -24,12 +24,12 @@ private:
     boost::filesystem::path musics_path;
 
     std::unordered_map<
-        boost::filesystem::path,
+        std::string,
         std::shared_ptr<sf::Image>
     > images_cache;
 
     std::unordered_map<
-        boost::filesystem::path,
+        std::string,
         std::shared_ptr<sf::Texture>
     > textures_cache;
 
