@@ -116,7 +116,7 @@ public:
     /**
      * Modifie la musique du niveau
      */
-    virtual void setMusic(std::string set_music);
+    void setMusic(std::string set_music);
 
     /**
      * Récupère le fond du niveau

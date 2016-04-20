@@ -88,17 +88,17 @@ public:
     /**
      * Active l'état
      */
-    virtual void enable();
+    void enable() override;
 
     /**
      * Traite l'événement donné
      */
-    virtual void processEvent(const sf::Event& event);
+    void processEvent(const sf::Event& event) override;
 
     /**
      * Demande le dessin d'une frame
      */
-    virtual void frame();
+    void frame() override;
 
     /**
      * Lance le test du niveau

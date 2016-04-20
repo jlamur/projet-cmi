@@ -1,3 +1,4 @@
+#include <boost/filesystem.hpp>
 #include "resource_manager.hpp"
 #include "states/editor.hpp"
 #include "objects/block.hpp"
@@ -38,17 +39,53 @@ Toolbar::Toolbar(Editor& editor) : editor(editor) {
     toolbar_box->PackEnd(sfg::Label::Create(L"Informations"));
     toolbar_box->PackEnd(sfg::Separator::Create());
 
-    name_entry = sfg::Entry::Create("nom niveau test");
-    path_entry = sfg::Entry::Create("chemin niveau test");
+    name_entry = sfg::Entry::Create();
+    path_entry = sfg::Entry::Create();
 
-    background_combo = sfg::ComboBox::Create();
-    background_combo->AppendItem("background");
+    name_entry->GetSignal(sfg::Entry::OnTextChanged).Connect(
+        std::bind(&Toolbar::updateEditorName, this)
+    );
 
-    music_combo = sfg::ComboBox::Create();
-    music_combo->AppendItem("music");
+    path_entry->GetSignal(sfg::Entry::OnTextChanged).Connect(
+        std::bind(&Toolbar::updateEditorPath, this)
+    );
 
     toolbar_box->PackEnd(name_entry);
     toolbar_box->PackEnd(path_entry);
+
+    // construction des choix de fonds et musiques pour le niveau
+    ResourceManager& res = ResourceManager::get();
+    std::vector<boost::filesystem::path> backgrounds_list =
+        res.getFiles(res.getTexturesPath() / "levels");
+    std::vector<boost::filesystem::path> musics_list =
+        res.getFiles(res.getMusicsPath() / "levels");
+
+    background_combo = sfg::ComboBox::Create();
+    music_combo = sfg::ComboBox::Create();
+
+    background_combo->AppendItem("Aucun fond");
+    background_combo->SelectItem(0);
+    music_combo->AppendItem("Aucune musique");
+    music_combo->SelectItem(0);
+
+    for (const auto &background_path : backgrounds_list) {
+        std::string choice_value = background_path.filename().string();
+        background_combo->AppendItem(choice_value);
+    }
+
+    for (const auto &music_path : musics_list) {
+        std::string choice_value = music_path.filename().string();
+        music_combo->AppendItem(choice_value);
+    }
+
+    background_combo->GetSignal(sfg::ComboBox::OnSelect).Connect(
+        std::bind(&Toolbar::updateEditorBackground, this)
+    );
+
+    music_combo->GetSignal(sfg::ComboBox::OnSelect).Connect(
+        std::bind(&Toolbar::updateEditorMusic, this)
+    );
+
     toolbar_box->PackEnd(background_combo);
     toolbar_box->PackEnd(music_combo);
 
@@ -174,6 +211,47 @@ Object::Ptr Toolbar::createObject() {
 
     // on n'a aucun bouton actif, on renvoie nullptr
     return nullptr;
+}
+
+void Toolbar::updateEditorName() {
+    editor.setName(name_entry->GetText());
+}
+
+void Toolbar::updateEditorPath() {
+    editor.setPath(path_entry->GetText());
+}
+
+void Toolbar::updateEditorBackground() {
+    if (background_combo->GetSelectedItem() == 0) {
+        editor.setBackground("");
+    } else {
+        editor.setBackground(background_combo->GetSelectedText().toAnsiString());
+    }
+}
+
+void Toolbar::updateEditorMusic() {
+    if (music_combo->GetSelectedItem() == 0) {
+        editor.setMusic("");
+    } else {
+        editor.setMusic(music_combo->GetSelectedText().toAnsiString());
+    }
+}
+
+void Toolbar::update() {
+    name_entry->SetText(editor.getName());
+    path_entry->SetText(editor.getPath());
+
+    for (int i = 0; i < background_combo->GetItemCount(); i++) {
+        if (background_combo->GetItem(i).toAnsiString() == editor.getBackground()) {
+            background_combo->SelectItem(i);
+        }
+    }
+
+    for (int i = 0; i < music_combo->GetItemCount(); i++) {
+        if (music_combo->GetItem(i).toAnsiString() == editor.getMusic()) {
+            music_combo->SelectItem(i);
+        }
+    }
 }
 
 sfg::Window::Ptr Toolbar::getWindow() {

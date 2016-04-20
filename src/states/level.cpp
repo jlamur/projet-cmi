@@ -239,7 +239,7 @@ std::string Level::getPath() {
     return path;
 }
 
-void Level::setPath(std::string set_path ){
+void Level::setPath(std::string set_path) {
     path = set_path;
 }
 

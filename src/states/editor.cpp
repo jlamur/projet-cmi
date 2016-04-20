@@ -53,6 +53,7 @@ void Editor::enable() {
     ResourceManager::get().playMusic("editor.ogg");
 
     // on affiche la toolbar de l'éditeur
+    toolbar.update();
     toolbar.getWindow()->Show(true);
 }
 
@@ -250,6 +251,9 @@ void Editor::processEvent(const sf::Event& event) {
 void Editor::frame() {
     // dessin de la frame
     draw();
+
+    // màj du titre de la fenêtre
+    getManager().setTitle(sf::String(L"Édition de ") + getName());
 }
 
 void Editor::draw() {

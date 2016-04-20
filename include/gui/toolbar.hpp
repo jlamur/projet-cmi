@@ -25,8 +25,19 @@ private:
     // zones de texte pour les métadonnées
     sfg::Entry::Ptr name_entry;
     sfg::Entry::Ptr path_entry;
+
+    // listes de sélection pour le fond et la musique
     sfg::ComboBox::Ptr background_combo;
     sfg::ComboBox::Ptr music_combo;
+
+    /**
+     * Mise à jour de l'éditeur selon les modifications
+     * faites dans l'interface
+     */
+    void updateEditorName();
+    void updateEditorPath();
+    void updateEditorBackground();
+    void updateEditorMusic();
 
     // types d'objets de la barre d'outils
     sfg::RadioButtonGroup::Ptr creators_group;
@@ -67,6 +78,11 @@ public:
      * Récupère la fenêtre de la barre d'outils
      */
     sfg::Window::Ptr getWindow();
+
+    /**
+     * Met à jour l'état de la toolbar selon l'état de l'éditeur
+     */
+    void update();
 
     /**
      * Récupère la taille désirée par la barre d'outils
