@@ -6,48 +6,83 @@
 #include <boost/filesystem.hpp>
 #include <unordered_map>
 #include <string>
-#include <fstream>
 #include <memory>
 
 /**
- * Gestionnaire de ressources du jeu. Conserve des
- * références vers toutes les ressources pour éviter
- * de les charger deux fois, permet l'accès uniforme
- * aux ressources
+ * Gestionnaire de ressources du jeu. La classe agit comme une interface
+ * avec le dossier res/. Elle permet de précharger les ressources gourmandes
+ * telles que les textures ou les polices
  */
 class ResourceManager {
 private:
-    bool preloaded;
-
+    /**
+     * Chemins vers les différents dossiers de ressources
+     */
     boost::filesystem::path textures_path;
     boost::filesystem::path fonts_path;
     boost::filesystem::path levels_path;
     boost::filesystem::path musics_path;
 
-    std::unordered_map<std::string, std::shared_ptr<sf::Image>> images;
-    std::unordered_map<std::string, std::shared_ptr<sf::Texture>> textures;
-    std::unordered_map<std::string, std::shared_ptr<sf::Font>> fonts;
-    sf::Music music;
+    std::unordered_map<
+        boost::filesystem::path,
+        std::shared_ptr<sf::Image>
+    > images_cache;
 
+    std::unordered_map<
+        boost::filesystem::path,
+        std::shared_ptr<sf::Texture>
+    > textures_cache;
+
+    boost::filesystem::path current_music_path;
+    bool is_playing;
+    sf::Music current_music;
     float music_volume;
-    bool playing_state;
-    std::string current_music;
 
-public:
+    /**
+     * Construit le gestionnaire de ressources. Comme on ne
+     * veut qu'une seule instance du gestionnaire, c'est privé
+     */
     ResourceManager();
 
+public:
     /**
-     * Précharge toutes les ressources préchargeables
+     * Renvoie l'unique instance du singleton gestionnaire de ressources
      */
-    void preload();
+    static ResourceManager& get();
 
     /**
-     * Récupère une image préchargée
+     * Récupère la liste des fichiers dans le dossier donné
+     */
+    std::vector<boost::filesystem::path> getFiles(boost::filesystem::path dir) const;
+
+    /**
+     * Récupère le chemin vers le dossier des textures
+     */
+    const boost::filesystem::path& getTexturesPath() const;
+
+    /**
+     * Récupère le chemin vers le dossier des polices
+     */
+    const boost::filesystem::path& getFontsPath() const;
+
+    /**
+     * Récupère le chemin vers le dossier des niveaux
+     */
+    const boost::filesystem::path& getLevelsPath() const;
+
+    /**
+     * Récupère le chemin vers le dossier des musiques
+     */
+    const boost::filesystem::path& getMusicsPath() const;
+
+    /**
+     * Charge l'image dont le chemin est donné en paramètre
      */
     std::shared_ptr<sf::Image> getImage(std::string name);
 
     /**
-     * Récupère une texture préchargée
+     * Charge l'image dont le chemin est donné en paramètre
+     * et la charge vers le GPU en tant que texture
      */
     std::shared_ptr<sf::Texture> getTexture(std::string name);
 
@@ -57,18 +92,7 @@ public:
     std::shared_ptr<sf::Font> getFont(std::string name);
 
     /**
-     * Récupère le chemin vers le fichier du niveau portant le
-     * nom passé en argument
-     */
-    std::string getLevelPath(std::string name);
-
-    /**
-     * Récupère la liste de tous les niveaux
-     */
-    std::vector<std::string> getLevelList();
-
-    /**
-     * Démarre la musique de fond donnée
+     * Joue la musique de fond donnée en paramètre
      */
     void playMusic(std::string name);
 
@@ -80,7 +104,7 @@ public:
     /**
      * Récupère le volume de la musique de fond
      */
-    float getMusicVolume();
+    float getMusicVolume() const;
 
     /**
      * Modifie le volume de la musique de fond

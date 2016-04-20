@@ -1,143 +1,141 @@
 #include "resource_manager.hpp"
 #include <iostream>
-#include <algorithm>
+#include <utility>
+
+namespace fs = boost::filesystem;
+
+ResourceManager::get() {
+    static ResourceManager manager;
+    return manager;
+}
 
 ResourceManager::ResourceManager() : preloaded(false),
     music_volume(20), playing_state(false), current_music("") {
+
+    // mise en mémoire des chemins vers les dossiers de ressources
+    fs::path res_path = fs::current_path() / "res";
+
+    textures_path = res_path / "textures";
+    fonts_path = res_path / "fonts";
+    levels_path = res_path / "levels";
+    musics_path = res_path / "musics";
+
     // initialisation de la musique en bouclage et au volume par défaut
     music.setLoop(true);
     music.setVolume(music_volume);
 }
 
-void ResourceManager::preload() {
-    if (preloaded) {
-        return;
-    }
+std::vector<fs::path> ResourceManager::getFiles(fs::path dir) const {
+    fs::recursive_directory_iterator dir(path), end;
+    std::vector<fs::path> result;
 
-    boost::filesystem::path current = boost::filesystem::current_path();
-    boost::filesystem::directory_iterator end;
-
-    // on garde une référence aux chemins des différentes ressources
-    textures_path = current / "res/textures";
-    fonts_path = current / "res/fonts";
-    levels_path = current / "res/levels";
-    musics_path = current / "res/musics";
-
-    // préchargement de toutes les textures
-    for (boost::filesystem::directory_iterator it(textures_path); it != end; ++it) {
-        if (boost::filesystem::is_regular_file(it->path())) {
-            std::string full_path = boost::filesystem::canonical(it->path()).string();
-            std::string name = it->path().filename().string();
-
-            auto image = std::shared_ptr<sf::Image>(new sf::Image);
-            auto texture = std::shared_ptr<sf::Texture>(new sf::Texture);
-            texture->setSmooth(true);
-
-            std::cout << "Chargement de l'image " << name << "... ";
-
-            if (!image->loadFromFile(full_path)) {
-                std::cerr << "ERREUR!" << std::endl;
-            } else {
-                std::cout << "OK!" << std::endl;
-            }
-
-            std::cout << "Mise en mémoire de la texture " << name << "... ";
-
-            if (!texture->loadFromImage(*image)) {
-                std::cerr << "ERREUR!" << std::endl;
-            } else {
-                std::cout << "OK!" << std::endl;
-            }
-
-            images[name] = std::move(image);
-            textures[name] = std::move(texture);
+    // on boucle sur tous les fichiers du dossier
+    // et de ses sous-dossiers et on les garde en mémoire
+    while (dir != end) {
+        if (fs::is_regular_file(dir->path())) {
+            result.push_back(dir->path());
         }
+
+        ++dir;
     }
 
-    // préchargement de toutes les polices
-    for (boost::filesystem::directory_iterator it(fonts_path); it != end; ++it) {
-        if (boost::filesystem::is_regular_file(it->path())) {
-            std::string full_path = boost::filesystem::canonical(it->path()).string();
-            std::string name = it->path().filename().string();
+    return result;
+}
 
-            auto font = std::shared_ptr<sf::Font>(new sf::Font);
-            std::cout << "Chargement de la police " << name << "... ";
+const fs::path& getTexturesPath() const {
+    return textures_path;
+}
 
-            if (!font->loadFromFile(full_path)) {
-                std::cerr << "ERREUR!" << std::endl;
-            } else {
-                std::cout << "OK!" << std::endl;
-            }
+const fs::path& getFontsPath() const {
+    return fonts_path;
+}
 
-            fonts[name] = std::move(font);
-        }
-    }
+const fs::path& getLevelsPath() const {
+    return levels_path;
+}
 
-    preloaded = true;
+const fs::path& getMusicsPath() const {
+    return musics_path;
 }
 
 std::shared_ptr<sf::Image> ResourceManager::getImage(std::string name) {
-    if (images.count(name) == 0) {
-        throw std::runtime_error(
-            "Impossible de récupérer l'image inexistante : " + name
-        );
+    // si l'image a déjà été chargée, on retourne la
+    // version en cache mémoire
+    if (images_cache.count(name) > 0) {
+        return images_cache[name];
     }
 
-    return images[name];
+    fs::path image_path = textures_path / name;
+    std::string full_path = fs::canonical(image_path).string();
+
+    // on tente de charger l'image depuis son emplacement
+    auto image = std::shared_ptr<sf::Image>(new sf::Image);
+    std::cout << "Chargement de l'image " << name << " : ";
+
+    if (image->loadFromFile(full_path)) {
+        std::cout << "OK!" << std::endl;
+    } else {
+        std::cerr << "ERR!" << std::endl;
+    }
+
+    // on met en cache l'image pour les requêtes suivantes
+    // puis on la renvoie
+    images_cache[name] = std::move(image);
+    return images_cache[name];
 }
 
 std::shared_ptr<sf::Texture> ResourceManager::getTexture(std::string name) {
-    if (textures.count(name) == 0) {
-        throw std::runtime_error(
-            "Impossible de récupérer la texture inexistante : " + name
-        );
+    // si la texture est déjà dans le GPU, on renvoie son pointeur
+    if (textures_cache.count(name) > 0) {
+        return textures_cache[name];
     }
 
-    return textures[name];
+    // on récupère l'image depuis le disque
+    std::shared_ptr<sf::Image> image = getImage(name);
+
+    // on transfère l'image vers le GPU
+    auto texture = std::shared_ptr<sf::Texture>(new sf::Texture);
+    std::cout << "Création de la texture " << name << " : ";
+
+    if (texture->loadFromImage(*image)) {
+        std::cout << "OK!" << std::endl;
+    } else {
+        std::cerr << "ERR!" << std::endl;
+    }
+
+    // on met en cache la texture pour les requêtes suivantes
+    // puis on la renvoie
+    textures_cache[name] = std::move(texture);
+    return textures_cache[name];
 }
 
 std::shared_ptr<sf::Font> ResourceManager::getFont(std::string name) {
-    if (fonts.count(name) == 0) {
-        throw std::runtime_error(
-            "Impossible de récupérer la police inexistante : " + name
-        );
+    // on ne maintient pas de cache pour les polices, car ceci
+    // est géré par la librairie du GUI (SFGUI). On tente de
+    // charger la police depuis le disque
+    fs::path font_path = fonts_path / name;
+    std::string full_path = fs::canonical(font_path).string();
+
+    auto font = std::shared_ptr<sf::Font>(new sf::Font);
+    std::cout << "Chargement de la police " << name << ": ";
+
+    if (font->loadFromFile(full_path)) {
+        std::cout << "OK!" << std::endl;
+    } else {
+        std::cerr << "ERR!" << std::endl;
     }
 
-    return fonts[name];
-}
-
-std::string ResourceManager::getLevelPath(std::string name) {
-    return (levels_path / name).string();
-}
-
-std::vector<std::string> ResourceManager::getLevelList() {
-    boost::filesystem::directory_iterator iter(levels_path);
-    std::vector<boost::filesystem::path> list;
-    std::vector<std::string> path_list;
-
-    // récupération de la liste de tous les niveaux
-    std::copy(
-        iter, boost::filesystem::directory_iterator(),
-        std::back_inserter(list)
-    );
-
-    // tri par ordre alphabétique
-    std::sort(list.begin(), list.end());
-
-    // conversion en chemins absolus
-    for (auto it = list.begin(); it != list.end(); it++) {
-        path_list.push_back((*it).string());
-    }
-
-    return path_list;
+    return font;
 }
 
 void ResourceManager::playMusic(std::string name) {
+    fs::path music_path = musics_path / name;
+
     // si la musique est déjà chargée, on la relance si elle
     // est en pause, sinon on ne fait rien
-    if (current_music == name) {
-        if (!playing_state) {
-            playing_state = true;
+    if (current_music_path == music_path) {
+        if (!is_playing) {
+            is_playing = true;
             music.play();
         }
 
@@ -145,29 +143,26 @@ void ResourceManager::playMusic(std::string name) {
     }
 
     // tente de charger la musique depuis le dossier "res/musics"
-    std::string full_path = boost::filesystem::canonical(musics_path / name).string();
+    std::string full_path = fs::canonical(music_path).string();
     std::cout << "Lecture de la musique " << name << "... ";
 
-    if (!music.openFromFile(full_path)) {
-        std::cerr << "ERREUR!" << std::endl;
-    } else {
+    if (music.openFromFile(full_path)) {
         std::cout << "OK!" << std::endl;
+    } else {
+        std::cerr << "ERR!" << std::endl;
     }
 
-    current_music = name;
-    playing_state = true;
+    current_music_path = music_path;
+    is_playing = true;
     music.play();
 }
 
 void ResourceManager::stopMusic() {
-    // on n'arrête la musique que si elle ne l'est pas déjà
-    if (playing_state) {
-        playing_state = false;
-        music.stop();
-    }
+    is_playing = false;
+    music.stop();
 }
 
-float ResourceManager::getMusicVolume() {
+float ResourceManager::getMusicVolume() const {
     return music_volume;
 }
 
