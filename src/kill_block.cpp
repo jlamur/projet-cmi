@@ -1,3 +1,4 @@
+#include "manager.hpp"
 #include "resource_manager.hpp"
 #include "kill_block.hpp"
 #include "game.hpp"
@@ -5,16 +6,26 @@
 
 const unsigned int KillBlock::TYPE_ID = 5;
 
-KillBlock::KillBlock() : Block() {}
+KillBlock::KillBlock() : Block() {
+    icon_sprite.setOrigin(sf::Vector2f(23, 23));
+    icon_sprite.setTexture(*ResourceManager::get().getTexture(
+        "objects/kill_block.tga"
+    ));
+}
+
 KillBlock::~KillBlock() {}
 
 Object::Ptr KillBlock::clone() const {
     return Object::Ptr(new KillBlock(*this));
 }
 
-void KillBlock::prepareDraw() {
-    Block::prepareDraw();
-    sprite.setTexture(*ResourceManager::get().getTexture("objects/kill_block.tga"));
+void KillBlock::draw(Level& level) {
+    // on dessine le bloc normal
+    Block::draw(level);
+
+    // on dessine l'icône
+    icon_sprite.setPosition(getPosition());
+    level.getManager().getWindow().draw(icon_sprite);
 }
 
 void KillBlock::activate(Game& game, Object::Ptr object) {
