@@ -93,6 +93,8 @@ std::shared_ptr<sf::Texture> ResourceManager::getTexture(std::string name) {
 
     // on transfère l'image vers le GPU
     auto texture = std::shared_ptr<sf::Texture>(new sf::Texture);
+    texture->setSmooth(true);
+
     std::cout << "Création de la texture " << name << " : ";
 
     if (texture->loadFromImage(*image)) {

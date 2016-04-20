@@ -28,7 +28,10 @@ Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
     desktop.LoadThemeFromFile("res/gui.theme");
 
     // création de la fenêtre du jeu
-    window.create(sf::VideoMode(704, 480), "Skizzle", sf::Style::Default);
+    window.create(
+        sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
+        sf::ContextSettings(0, 0, 1)
+    );
 
     // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci
     // récupération de la vue par défaut comme vue du gui
