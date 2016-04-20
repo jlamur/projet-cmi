@@ -147,7 +147,7 @@ void Editor::processEvent(const sf::Event& event) {
             removeObject(pointed_object);
         }
 
-        // mode sélection libre : on l'objet à la sélection
+        // mode sélection libre : on ajoute l'objet à la sélection
         if (drag_mode == Editor::DragMode::SELECT_BULK) {
             select(position, Editor::SelectionMode::ADD);
         }
@@ -302,14 +302,10 @@ void Editor::draw() {
         window.draw(*it);
     }
 
-    // on passe au dessin d'éléments d'interface.
-    // Changement de vue sur la vue par défaut
-    getManager().useGUIView();
-
     // dessin du rectangle de sélection
     if (drag_mode == Editor::DragMode::SELECT_RECT) {
-        sf::Vector2f size = (sf::Vector2f) (drag_end - drag_start);
-        sf::Vector2f pos = (sf::Vector2f) drag_start;
+        sf::Vector2f size = pixelToCoords(drag_end) - pixelToCoords(drag_start);
+        sf::Vector2f pos = pixelToCoords(drag_start);
 
         sf::RectangleShape selection_rect(size);
         selection_rect.setPosition(pos);
