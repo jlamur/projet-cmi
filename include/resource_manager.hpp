@@ -78,23 +78,31 @@ public:
     /**
      * Charge l'image dont le chemin est donné en paramètre
      */
+    std::shared_ptr<sf::Image> getImage(boost::filesystem::path path);
     std::shared_ptr<sf::Image> getImage(std::string name);
+    std::shared_ptr<sf::Image> getImage(const char* name);
 
     /**
      * Charge l'image dont le chemin est donné en paramètre
      * et la charge vers le GPU en tant que texture
      */
+    std::shared_ptr<sf::Texture> getTexture(boost::filesystem::path path);
     std::shared_ptr<sf::Texture> getTexture(std::string name);
+    std::shared_ptr<sf::Texture> getTexture(const char* name);
 
     /**
      * Récupère une police préchargée
      */
+    std::shared_ptr<sf::Font> getFont(boost::filesystem::path path);
     std::shared_ptr<sf::Font> getFont(std::string name);
+    std::shared_ptr<sf::Font> getFont(const char* name);
 
     /**
      * Joue la musique de fond donnée en paramètre
      */
+    void playMusic(boost::filesystem::path path);
     void playMusic(std::string name);
+    void playMusic(const char* name);
 
     /**
      * Arrête la musique de fond

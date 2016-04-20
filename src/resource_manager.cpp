@@ -56,84 +56,97 @@ const fs::path& ResourceManager::getMusicsPath() const {
     return musics_path;
 }
 
-std::shared_ptr<sf::Image> ResourceManager::getImage(std::string name) {
+std::shared_ptr<sf::Image> ResourceManager::getImage(fs::path path) {
+    std::string path_str = path.string();
+
     // si l'image a déjà été chargée, on retourne la
     // version en cache mémoire
-    if (images_cache.count(name) > 0) {
-        return images_cache[name];
+    if (images_cache.count(path_str) > 0) {
+        return images_cache[path_str];
     }
-
-    fs::path image_path = textures_path / name;
-    std::string full_path = fs::canonical(image_path).string();
 
     // on tente de charger l'image depuis son emplacement
     auto image = std::shared_ptr<sf::Image>(new sf::Image);
-    std::cout << "Chargement de l'image " << name << " : ";
 
-    if (image->loadFromFile(full_path)) {
-        std::cout << "OK!" << std::endl;
-    } else {
-        std::cerr << "ERR!" << std::endl;
+    if (!image->loadFromFile(path_str)) {
+        std::cerr << "Impossible de charger l'image :" << std::endl;
+        std::cerr << path_str << std::endl << std::endl;
     }
 
     // on met en cache l'image pour les requêtes suivantes
     // puis on la renvoie
-    images_cache[name] = std::move(image);
-    return images_cache[name];
+    images_cache[path_str] = std::move(image);
+    return images_cache[path_str];
 }
 
-std::shared_ptr<sf::Texture> ResourceManager::getTexture(std::string name) {
+std::shared_ptr<sf::Image> ResourceManager::getImage(std::string name) {
+    return getImage(textures_path / name);
+}
+
+std::shared_ptr<sf::Image> ResourceManager::getImage(const char* name) {
+    return getImage(std::string(name));
+}
+
+std::shared_ptr<sf::Texture> ResourceManager::getTexture(fs::path path) {
+    std::string path_str = path.string();
+
     // si la texture est déjà dans le GPU, on renvoie son pointeur
-    if (textures_cache.count(name) > 0) {
-        return textures_cache[name];
+    if (textures_cache.count(path_str) > 0) {
+        return textures_cache[path_str];
     }
 
     // on récupère l'image depuis le disque
-    std::shared_ptr<sf::Image> image = getImage(name);
+    std::shared_ptr<sf::Image> image = getImage(path);
 
     // on transfère l'image vers le GPU
     auto texture = std::shared_ptr<sf::Texture>(new sf::Texture);
     texture->setSmooth(true);
 
-    std::cout << "Création de la texture " << name << " : ";
-
-    if (texture->loadFromImage(*image)) {
-        std::cout << "OK!" << std::endl;
-    } else {
-        std::cerr << "ERR!" << std::endl;
+    if (!texture->loadFromImage(*image)) {
+        std::cerr << "Impossible de créer la texture :" << std::endl;
+        std::cerr << path_str << std::endl << std::endl;
     }
 
     // on met en cache la texture pour les requêtes suivantes
     // puis on la renvoie
-    textures_cache[name] = std::move(texture);
-    return textures_cache[name];
+    textures_cache[path_str] = std::move(texture);
+    return textures_cache[path_str];
 }
 
-std::shared_ptr<sf::Font> ResourceManager::getFont(std::string name) {
+std::shared_ptr<sf::Texture> ResourceManager::getTexture(std::string name) {
+    return getTexture(textures_path / name);
+}
+
+std::shared_ptr<sf::Texture> ResourceManager::getTexture(const char* name) {
+    return getTexture(std::string(name));
+}
+
+std::shared_ptr<sf::Font> ResourceManager::getFont(fs::path path) {
     // on ne maintient pas de cache pour les polices, car ceci
     // est géré par la librairie du GUI (SFGUI). On tente de
     // charger la police depuis le disque
-    fs::path font_path = fonts_path / name;
-    std::string full_path = fs::canonical(font_path).string();
-
     auto font = std::shared_ptr<sf::Font>(new sf::Font);
-    std::cout << "Chargement de la police " << name << ": ";
 
-    if (font->loadFromFile(full_path)) {
-        std::cout << "OK!" << std::endl;
-    } else {
-        std::cerr << "ERR!" << std::endl;
+    if (!font->loadFromFile(path.string())) {
+        std::cerr << "Impossible de charger la police :" << std::endl;
+        std::cerr << path.string() << std::endl << std::endl;
     }
 
     return font;
 }
 
-void ResourceManager::playMusic(std::string name) {
-    fs::path music_path = musics_path / name;
+std::shared_ptr<sf::Font> ResourceManager::getFont(std::string name) {
+    return getFont(fonts_path / name);
+}
 
+std::shared_ptr<sf::Font> ResourceManager::getFont(const char* name) {
+    return getFont(std::string(name));
+}
+
+void ResourceManager::playMusic(fs::path path) {
     // si la musique est déjà chargée, on la relance si elle
     // est en pause, sinon on ne fait rien
-    if (current_music_path == music_path) {
+    if (current_music_path == path) {
         if (!is_playing) {
             is_playing = true;
             current_music.play();
@@ -143,18 +156,22 @@ void ResourceManager::playMusic(std::string name) {
     }
 
     // tente de charger la musique depuis le dossier "res/musics"
-    std::string full_path = fs::canonical(music_path).string();
-    std::cout << "Lecture de la musique " << name << "... ";
-
-    if (current_music.openFromFile(full_path)) {
-        std::cout << "OK!" << std::endl;
-    } else {
-        std::cerr << "ERR!" << std::endl;
+    if (!current_music.openFromFile(path.string())) {
+        std::cerr << "Impossible de lire la musique :" << std::endl;
+        std::cerr << path.string() << std::endl << std::endl;
     }
 
-    current_music_path = music_path;
+    current_music_path = path;
     is_playing = true;
     current_music.play();
+}
+
+void ResourceManager::playMusic(std::string name) {
+    playMusic(musics_path / name);
+}
+
+void ResourceManager::playMusic(const char* name) {
+    playMusic(std::string(name));
 }
 
 void ResourceManager::stopMusic() {
