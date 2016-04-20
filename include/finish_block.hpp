@@ -40,7 +40,7 @@ public:
     /**
      * Prépare les textures avant le dessin du bloc
      */
-    virtual void prepareDraw(ResourceManager& resources);
+    virtual void prepareDraw();
 
     /**
      * Appelé lorsque le bloc d'arrivée est activé par un objet

@@ -1,4 +1,5 @@
 #include "manager.hpp"
+#include "resource_manager.hpp"
 #include "editor.hpp"
 #include "game.hpp"
 #include <cmath>
@@ -33,7 +34,6 @@ inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
 
 Editor::Editor(Manager& manager) : Level(manager),
     drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE),
-    widget_timer(manager, true, std::bind(&Editor::setTotalTime, this, std::placeholders::_1)),
     toolbar(*this) {
     getManager().addWidget(toolbar.getWindow());
 }
@@ -47,10 +47,10 @@ void Editor::enable() {
 
     // attributs de la fenêtre
     getManager().setTitle(sf::String(L"Édition de ") + getName());
-    getManager().setFramerate(Manager::FPS);
+    getManager().getWindow().setFramerateLimit(Manager::FPS);
 
     // joue la musique de l'éditeur
-    getResourceManager().playMusic("editor.ogg");
+    ResourceManager::get().playMusic("editor.ogg");
 
     // on affiche la toolbar de l'éditeur
     toolbar.getWindow()->Show(true);
@@ -58,11 +58,6 @@ void Editor::enable() {
 
 void Editor::processEvent(const sf::Event& event) {
     Level::processEvent(event);
-
-    // traitement des événements du widget chronomètre
-    if (widget_timer.processEvent(event)) {
-        return;
-    }
 
     // lorsque l'on clique dans l'éditeur
     if (event.type == sf::Event::MouseButtonPressed) {
@@ -258,7 +253,7 @@ void Editor::frame() {
 }
 
 void Editor::draw() {
-    sf::RenderWindow& window = getWindow();
+    sf::RenderWindow& window = getManager().getWindow();
     sf::Vector2i window_size = (sf::Vector2i) window.getSize();
 
     // scroll de la caméra lorsque la souris se situe sur les bords
@@ -324,10 +319,6 @@ void Editor::draw() {
 
         window.draw(selection_rect);
     }
-
-    // dessin du widget timer
-    widget_timer.setTimeLeft(getTotalTime());
-    widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
 
     // on redimensionne la toolbar pour qu'elle occupe l'espace droite
     toolbar.getWindow()->SetAllocation(sf::FloatRect(

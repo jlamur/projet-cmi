@@ -12,9 +12,9 @@ Object::Ptr KillBlock::clone() const {
     return Object::Ptr(new KillBlock(*this));
 }
 
-void KillBlock::prepareDraw(ResourceManager& resources) {
-    Block::prepareDraw(resources);
-    sprite.setTexture(*resources.getTexture("kill_block.tga"));
+void KillBlock::prepareDraw() {
+    Block::prepareDraw();
+    sprite.setTexture(*ResourceManager::get().getTexture("objects/kill_block.tga"));
 }
 
 void KillBlock::activate(Game& game, Object::Ptr object) {

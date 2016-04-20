@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-class ResourceManager;
 class Manager;
 
 /**
@@ -41,26 +40,6 @@ public:
      * Récupère le gestionnaire (version constante)
      */
     const Manager& getManager() const;
-
-    /**
-     * Récupère le gestionnaire de ressources
-     */
-    ResourceManager& getResourceManager();
-
-    /**
-     * Récupère le gestionnaire de ressources (version constante)
-     */
-    const ResourceManager& getResourceManager() const;
-
-    /**
-     * Récupère la fenêtre
-     */
-    sf::RenderWindow& getWindow();
-
-    /**
-     * Récupère la fenêtre (version constante)
-     */
-    const sf::RenderWindow& getWindow() const;
 };
 
 #endif

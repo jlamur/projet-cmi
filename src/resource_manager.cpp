@@ -4,14 +4,12 @@
 
 namespace fs = boost::filesystem;
 
-ResourceManager::get() {
+ResourceManager& ResourceManager::get() {
     static ResourceManager manager;
     return manager;
 }
 
-ResourceManager::ResourceManager() : preloaded(false),
-    music_volume(20), playing_state(false), current_music("") {
-
+ResourceManager::ResourceManager() : is_playing(false), music_volume(20) {
     // mise en mémoire des chemins vers les dossiers de ressources
     fs::path res_path = fs::current_path() / "res";
 
@@ -21,11 +19,11 @@ ResourceManager::ResourceManager() : preloaded(false),
     musics_path = res_path / "musics";
 
     // initialisation de la musique en bouclage et au volume par défaut
-    music.setLoop(true);
-    music.setVolume(music_volume);
+    current_music.setLoop(true);
+    current_music.setVolume(music_volume);
 }
 
-std::vector<fs::path> ResourceManager::getFiles(fs::path dir) const {
+std::vector<fs::path> ResourceManager::getFiles(fs::path path) const {
     fs::recursive_directory_iterator dir(path), end;
     std::vector<fs::path> result;
 
@@ -42,19 +40,19 @@ std::vector<fs::path> ResourceManager::getFiles(fs::path dir) const {
     return result;
 }
 
-const fs::path& getTexturesPath() const {
+const fs::path& ResourceManager::getTexturesPath() const {
     return textures_path;
 }
 
-const fs::path& getFontsPath() const {
+const fs::path& ResourceManager::getFontsPath() const {
     return fonts_path;
 }
 
-const fs::path& getLevelsPath() const {
+const fs::path& ResourceManager::getLevelsPath() const {
     return levels_path;
 }
 
-const fs::path& getMusicsPath() const {
+const fs::path& ResourceManager::getMusicsPath() const {
     return musics_path;
 }
 
@@ -136,7 +134,7 @@ void ResourceManager::playMusic(std::string name) {
     if (current_music_path == music_path) {
         if (!is_playing) {
             is_playing = true;
-            music.play();
+            current_music.play();
         }
 
         return;
@@ -146,7 +144,7 @@ void ResourceManager::playMusic(std::string name) {
     std::string full_path = fs::canonical(music_path).string();
     std::cout << "Lecture de la musique " << name << "... ";
 
-    if (music.openFromFile(full_path)) {
+    if (current_music.openFromFile(full_path)) {
         std::cout << "OK!" << std::endl;
     } else {
         std::cerr << "ERR!" << std::endl;
@@ -154,12 +152,12 @@ void ResourceManager::playMusic(std::string name) {
 
     current_music_path = music_path;
     is_playing = true;
-    music.play();
+    current_music.play();
 }
 
 void ResourceManager::stopMusic() {
     is_playing = false;
-    music.stop();
+    current_music.stop();
 }
 
 float ResourceManager::getMusicVolume() const {
@@ -168,5 +166,5 @@ float ResourceManager::getMusicVolume() const {
 
 void ResourceManager::setMusicVolume(float set_music_volume) {
     music_volume = set_music_volume;
-    music.setVolume(music_volume);
+    current_music.setVolume(music_volume);
 }

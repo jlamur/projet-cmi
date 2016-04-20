@@ -39,7 +39,7 @@ public:
     /**
      * Prépare les textures avant le dessin du bloc
      */
-    virtual void prepareDraw(ResourceManager& resources);
+    virtual void prepareDraw();
 
     /**
      * Appelé lorsque le bloc tueur est activé par un objet

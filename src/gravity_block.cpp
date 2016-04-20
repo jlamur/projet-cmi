@@ -1,4 +1,5 @@
 #include "manager.hpp"
+#include "resource_manager.hpp"
 #include "utility.hpp"
 #include "gravity_block.hpp"
 #include "game.hpp"
@@ -16,27 +17,6 @@ Object::Ptr GravityBlock::clone() const {
 }
 
 void GravityBlock::draw(Level& level) {
-    // sélectionne le sprite d'icône
-    std::string texture_name = "gravity_block_";
-
-    switch (gravity_direction) {
-    case GravityDirection::NORTH:
-        texture_name += "north";
-        break;
-
-    case GravityDirection::EAST:
-        texture_name += "east";
-        break;
-
-    case GravityDirection::SOUTH:
-        texture_name += "south";
-        break;
-
-    case GravityDirection::WEST:
-        texture_name += "west";
-        break;
-    }
-
     // on dessine le bloc normal
     Block::draw(level);
 
@@ -45,12 +25,8 @@ void GravityBlock::draw(Level& level) {
     icon_sprite.setColor(sf::Color(255, 255, 255, opacity));
 
     // on dessine l'icône
-    icon_sprite.setTexture(*level.getResourceManager().getTexture(
-        texture_name + ".tga"
-    ));
-
     icon_sprite.setPosition(getPosition());
-    level.getWindow().draw(icon_sprite);
+    level.getManager().getWindow().draw(icon_sprite);
 }
 
 void GravityBlock::activate(Game& game, Object::Ptr object) {
@@ -104,4 +80,29 @@ GravityDirection GravityBlock::getGravityDirection() const {
 
 void GravityBlock::setGravityDirection(GravityDirection set_gravity_direction) {
     gravity_direction = set_gravity_direction;
+
+    // sélectionne le sprite d'icône selon la direction
+    std::string texture;
+
+    switch (gravity_direction) {
+    case GravityDirection::NORTH:
+        texture = "north";
+        break;
+
+    case GravityDirection::EAST:
+        texture = "east";
+        break;
+
+    case GravityDirection::SOUTH:
+        texture = "south";
+        break;
+
+    case GravityDirection::WEST:
+        texture = "west";
+        break;
+    }
+
+    icon_sprite.setTexture(*ResourceManager::get().getTexture(
+        "objects/gravity_block_" + texture + ".tga"
+    ));
 }

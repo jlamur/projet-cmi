@@ -1,4 +1,5 @@
 #include "manager.hpp"
+#include "resource_manager.hpp"
 #include "player.hpp"
 #include "game.hpp"
 
@@ -70,12 +71,12 @@ void Player::draw(Level& level) {
         texture_name = "player_2.tga";
     }
 
-    sprite.setTexture(level.getResourceManager().getTexture(texture_name).get());
+    sprite.setTexture(ResourceManager::get().getTexture("objects/" + texture_name).get());
     sprite.setRadius(getRadius());
     sprite.setOrigin(sf::Vector2f(getRadius(), getRadius()));
     sprite.setPosition(getPosition());
 
-    shadow_sprite.setTexture(level.getResourceManager().getTexture("player_shadow.tga").get());
+    shadow_sprite.setTexture(ResourceManager::get().getTexture("objects/player_shadow.tga").get());
     shadow_sprite.setRadius(getRadius() - 1);
     shadow_sprite.setOrigin(sf::Vector2f(getRadius() - 1, getRadius() - 1));
     shadow_sprite.setPosition(getPosition());
@@ -108,8 +109,8 @@ void Player::draw(Level& level) {
     }
 
     // dessin des sprites
-    level.getWindow().draw(sprite);
-    level.getWindow().draw(shadow_sprite);
+    level.getManager().getWindow().draw(sprite);
+    level.getManager().getWindow().draw(shadow_sprite);
 }
 
 void Player::activate(Game& game, Object::Ptr object) {

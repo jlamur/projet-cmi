@@ -1,35 +1,36 @@
 #include "state.hpp"
 #include "manager.hpp"
+#include "resource_manager.hpp"
 #include <algorithm>
 
 const unsigned int Manager::FPS = 60;
 const sf::Time Manager::FRAME_TIME = sf::seconds(1.f / Manager::FPS);
 const float Manager::GRID = 32;
 
-Manager::Manager() : previous_time(sf::seconds(0)), title(sf::String(L"")),
+Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
     previous_state(nullptr) {
 
-    // préchargement des textures
-    resource_manager.preload();
-
-    // ajout des polices
-    desktop.GetEngine().GetResourceManager().
-        AddFont("overpass", resource_manager.getFont("overpass.ttf"));
-    desktop.GetEngine().GetResourceManager().
-        AddFont("overpass-bold", resource_manager.getFont("overpass-bold.ttf"));
-    desktop.GetEngine().GetResourceManager().
-        AddFont("monoid", resource_manager.getFont("monoid.ttf"));
-
-    // chargement du thème du desktop
-    desktop.LoadThemeFromFile("res/gui.theme");
-
-    // création de la fenêtre (après avoir préchargé les ressources,
-    // on évite ainsi tout lag pendant le traitement des événements)
-    window.create(
-        sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
-        sf::ContextSettings(0, 0, 2)
+    // ajout des polices dans le gestionnaire de ressources
+    // de la librairie pour l'interface
+    desktop.GetEngine().GetResourceManager().AddFont(
+        "overpass", ResourceManager::get().getFont("overpass.ttf")
     );
 
+    desktop.GetEngine().GetResourceManager().AddFont(
+        "overpass-bold", ResourceManager::get().getFont("overpass-bold.ttf")
+    );
+
+    desktop.GetEngine().GetResourceManager().AddFont(
+        "monoid", ResourceManager::get().getFont("monoid.ttf")
+    );
+
+    // chargement du thème de l'interface
+    desktop.LoadThemeFromFile("res/gui.theme");
+
+    // création de la fenêtre du jeu
+    window.create(sf::VideoMode(704, 480), "Skizzle", sf::Style::Default);
+
+    // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci
     // récupération de la vue par défaut comme vue du gui
     gui_view = window.getDefaultView();
 }
@@ -52,12 +53,14 @@ void Manager::start() {
                 }
             }
 
+            // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci
             // redimensionnement de la vue par défaut
             if (event.type == sf::Event::Resized) {
                 gui_view = sf::View(sf::FloatRect(
                     0, 0, event.size.width, event.size.height
                 ));
             }
+            ///////////////////////////
 
             // événements de l'interface
             desktop.HandleEvent(event);
@@ -119,34 +122,6 @@ void Manager::popState() {
     states.pop();
 }
 
-sf::RenderWindow& Manager::getWindow() {
-    return window;
-}
-
-unsigned int Manager::getFramerate() {
-    return framerate;
-}
-
-void Manager::setFramerate(unsigned int set_framerate) {
-    // on ne modifie le framerate maximal que s'il a changé
-    if (set_framerate != framerate) {
-        window.setFramerateLimit(set_framerate);
-        framerate = set_framerate;
-    }
-}
-
-sf::Time Manager::getCurrentTime() const {
-    return clock.getElapsedTime();
-}
-
-ResourceManager& Manager::getResourceManager() {
-    return resource_manager;
-}
-
-void Manager::useGUIView() {
-    window.setView(gui_view);
-}
-
 bool Manager::isInsideGUI(const sf::Event& event) {
     sf::Vector2f check_point;
     bool should_check_point = false;
@@ -182,6 +157,20 @@ bool Manager::isInsideGUI(const sf::Event& event) {
 
     return false;
 }
+
+sf::Time Manager::getCurrentTime() const {
+    return clock.getElapsedTime();
+}
+
+sf::RenderWindow& Manager::getWindow() {
+    return window;
+}
+
+// FIXME: à supprimer après avoir supprimé ::useGUIView()
+void Manager::useGUIView() {
+    window.setView(gui_view);
+}
+///////////////////////////
 
 void Manager::addWidget(sfg::Widget::Ptr widget) {
     widgets.push_back(widget);

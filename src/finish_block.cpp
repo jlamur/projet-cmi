@@ -11,10 +11,10 @@ Object::Ptr FinishBlock::clone() const {
     return Object::Ptr(new FinishBlock(*this));
 }
 
-void FinishBlock::prepareDraw(ResourceManager& resources) {
-    Block::prepareDraw(resources);
+void FinishBlock::prepareDraw() {
+    Block::prepareDraw();
     sprite.setOrigin(sf::Vector2f(23, 41));
-    sprite.setTexture(*resources.getTexture("finish_block.tga"), true);
+    sprite.setTexture(*ResourceManager::get().getTexture("objects/finish_block.tga"), true);
 }
 
 void FinishBlock::activate(Game& game, Object::Ptr object) {

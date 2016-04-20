@@ -1,4 +1,5 @@
 #include "manager.hpp"
+#include "resource_manager.hpp"
 #include "utility.hpp"
 #include "switch_block.hpp"
 #include "game.hpp"
@@ -7,6 +8,9 @@ const unsigned int SwitchBlock::TYPE_ID = 6;
 
 SwitchBlock::SwitchBlock() : Block(), opacity(255), used(false) {
     icon_sprite.setOrigin(sf::Vector2f(23, 23));
+    icon_sprite.setTexture(*ResourceManager::get().getTexture(
+        "objects/switch_block.tga"
+    ));
 }
 
 SwitchBlock::~SwitchBlock() {}
@@ -24,12 +28,8 @@ void SwitchBlock::draw(Level& level) {
     icon_sprite.setColor(sf::Color(255, 255, 255, opacity));
 
     // on dessine l'icône
-    icon_sprite.setTexture(*level.getResourceManager().getTexture(
-        "switch_block.tga"
-    ));
-
     icon_sprite.setPosition(getPosition());
-    level.getWindow().draw(icon_sprite);
+    level.getManager().getWindow().draw(icon_sprite);
 }
 
 void SwitchBlock::activate(Game& game, Object::Ptr object) {

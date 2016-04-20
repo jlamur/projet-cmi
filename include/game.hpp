@@ -2,7 +2,6 @@
 #define __SKIZZLE_GAME_HPP__
 
 #include "level.hpp"
-#include "widget_timer.hpp"
 
 /**
  * La classe Game gère l'affichage et les objets
@@ -29,7 +28,6 @@ private:
     std::vector<Object::Ptr> pending_kill;
     DeathCause death_cause;
 
-    WidgetTimer widget_timer;
     float time_left;
 
     /**

@@ -3,6 +3,7 @@
 #include "game.hpp"
 #include "player.hpp"
 #include "manager.hpp"
+#include "resource_manager.hpp"
 
 const unsigned int Block::TYPE_ID = 2;
 
@@ -40,21 +41,21 @@ void Block::save(std::ofstream& file) const {
     Object::save(file);
 }
 
-void Block::prepareDraw(ResourceManager& resources) {
+void Block::prepareDraw() {
     std::string texture_name = "movable_block.tga";
 
     if (getMass() == 0) {
         texture_name = "block.tga";
     }
 
-    sprite.setTexture(*resources.getTexture(texture_name));
-    select_sprite.setTexture(*resources.getTexture("block_select.tga"));
+    sprite.setTexture(*ResourceManager::get().getTexture("objects/" + texture_name));
+    select_sprite.setTexture(*ResourceManager::get().getTexture("objects/block_select.tga"));
 }
 
 void Block::draw(Level& level) {
     // utilisation de la texture
-    sf::RenderWindow& window = level.getWindow();
-    prepareDraw(level.getResourceManager());
+    sf::RenderWindow& window = level.getManager().getWindow();
+    prepareDraw();
 
     // coloration du bloc selon sa charge
     if (getCharge() > 0) {

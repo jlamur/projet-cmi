@@ -6,7 +6,6 @@
 #include "object.hpp"
 
 class Game;
-class ResourceManager;
 class Level;
 
 /**
@@ -59,7 +58,7 @@ public:
     /**
      * Prépare les textures avant le dessin du bloc
      */
-    virtual void prepareDraw(ResourceManager& resources);
+    virtual void prepareDraw();
 
     /**
      * Dessin du bloc dans la fenêtre donnée

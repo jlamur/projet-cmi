@@ -1,4 +1,5 @@
 #include "manager.hpp"
+#include "resource_manager.hpp"
 #include "level.hpp"
 #include "player.hpp"
 #include "block.hpp"
@@ -53,7 +54,7 @@ Level::Level(Manager& manager) : State(manager) {
 
     // métadonnées par défaut
     setName(sf::String("Nouveau niveau"));
-    setPath(getResourceManager().getLevelPath("new_level.dat"));
+    setPath((ResourceManager::get().getLevelsPath() / "new_level.dat").string());
     setTotalTime(30);
 
     // zone de jeu par défaut
@@ -73,7 +74,7 @@ Level::~Level() {}
 
 void Level::enable() {
     // positionnement par défaut de la caméra
-    sf::Vector2u window_size = getWindow().getSize();
+    sf::Vector2u window_size = getManager().getWindow().getSize();
 
     camera.setSize(window_size.x, window_size.y);
     camera.setCenter(0, 0);
@@ -252,7 +253,7 @@ void Level::processEvent(const sf::Event& event) {
 }
 
 void Level::draw() {
-    sf::RenderWindow& window = getWindow();
+    sf::RenderWindow& window = getManager().getWindow();
     sf::Vector2u window_size = window.getSize();
 
     // animation de la rotation de la caméra
@@ -288,7 +289,7 @@ void Level::draw() {
 
     // on dessine le fond s'il y en a un
     if (background != "") {
-        auto bg_texture = getResourceManager().getTexture(background);
+        auto bg_texture = ResourceManager::get().getTexture("levels/" + background);
         sf::Vector2f bg_size = (sf::Vector2f) bg_texture->getSize();
 
         background_sprite.setTexture(*bg_texture);
@@ -484,7 +485,7 @@ sf::View Level::getCamera() const {
 }
 
 sf::Vector2f Level::pixelToCoords(sf::Vector2i pixel) {
-    sf::RenderWindow& window = getWindow();
+    sf::RenderWindow& window = getManager().getWindow();
     sf::View old_view = window.getView();
 
     window.setView(camera);
@@ -495,7 +496,7 @@ sf::Vector2f Level::pixelToCoords(sf::Vector2i pixel) {
 }
 
 sf::Vector2i Level::coordsToPixel(sf::Vector2f coords) {
-    sf::RenderWindow& window = getWindow();
+    sf::RenderWindow& window = getManager().getWindow();
     sf::View old_view = window.getView();
 
     window.setView(camera);

@@ -4,6 +4,7 @@
 #include "state.hpp"
 #include <functional>
 #include <vector>
+#include <memory>
 
 class Manager;
 
@@ -15,6 +16,7 @@ class Manager;
 class Menu : public State {
 private:
     sf::Sprite background;
+    std::shared_ptr<sf::Font> font;
 
     std::vector<sf::String> choices;
     std::vector<sf::Text> labels;

@@ -2,7 +2,6 @@
 #define __SKIZZLE_EDITOR_HPP__
 
 #include "level.hpp"
-#include "widget_timer.hpp"
 #include "toolbar.hpp"
 #include <unordered_map>
 #include <memory>
@@ -25,7 +24,6 @@ private:
 
     DragMode drag_mode;
 
-    WidgetTimer widget_timer;
     Toolbar toolbar;
 
     /**

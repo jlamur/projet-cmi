@@ -1,8 +1,10 @@
 #include "manager.hpp"
+#include "resource_manager.hpp"
 #include "menu.hpp"
 #include "rules.hpp"
 #include "editor.hpp"
 #include "game.hpp"
+#include <boost/filesystem.hpp>
 #include <cmath>
 
 /**
@@ -27,7 +29,9 @@ namespace {
 }
 
 Menu::Menu(Manager& manager) : State(manager) {
-    background.setTexture(*getResourceManager().getTexture("bg_menu.tga"));
+    background.setTexture(*ResourceManager::get().getTexture("menu.tga"));
+    font = ResourceManager::get().getFont("overpass.ttf");
+
     loadMainMenu();
 }
 
@@ -36,10 +40,10 @@ Menu::~Menu() {}
 void Menu::enable() {
     // attributs de la fenêtre
     getManager().setTitle("");
-    getManager().setFramerate(Manager::FPS);
+    getManager().getWindow().setFramerateLimit(Manager::FPS);
 
     // joue la musique du menu
-    getResourceManager().playMusic("menu.ogg");
+    ResourceManager::get().playMusic("menu.ogg");
 }
 
 void Menu::processEvent(const sf::Event& event) {
@@ -102,9 +106,8 @@ void Menu::processEvent(const sf::Event& event) {
 
 void Menu::frame() {
     // affichage du menu
-    sf::RenderWindow& window = getWindow();
+    sf::RenderWindow& window = getManager().getWindow();
     sf::Vector2f size = (sf::Vector2f) window.getSize();
-    std::shared_ptr<sf::Font> font = getResourceManager().getFont("raleway.ttf");
 
     // on s'assure d'être dans la vue par défaut (pas de zoom, 0x0 en haut gauche)
     getManager().useGUIView();
@@ -191,12 +194,12 @@ void Menu::loadLevelMenu() {
     actions.clear();
     selection = 0;
 
-    std::vector<std::string> path_list = getResourceManager().getLevelList();
-    std::vector<std::string> name_list;
+    std::vector<boost::filesystem::path> path_list =
+        ResourceManager::get().getFiles(ResourceManager::get().getLevelsPath());
 
     for (auto it = path_list.begin(); it != path_list.end(); it++) {
-        choices.push_back(getLevelName(getManager(), *it));
-        actions.push_back(std::bind(&Menu::launchGame, this, *it));
+        choices.push_back(getLevelName(getManager(), boost::filesystem::canonical(*it).string()));
+        actions.push_back(std::bind(&Menu::launchGame, this, boost::filesystem::canonical(*it).string()));
     }
 
     choices.push_back(sf::String(L"Retour"));
@@ -208,15 +211,15 @@ void Menu::loadEditorMenu() {
     actions.clear();
     selection = 0;
 
-    std::vector<std::string> path_list = getResourceManager().getLevelList();
-    std::vector<std::string> name_list;
+    std::vector<boost::filesystem::path> path_list =
+        ResourceManager::get().getFiles(ResourceManager::get().getLevelsPath());
 
     choices.push_back(L"Créer un nouveau niveau");
     actions.push_back(std::bind(&Menu::launchEditor, this, ""));
 
     for (auto it = path_list.begin(); it != path_list.end(); it++) {
-        choices.push_back(getLevelName(getManager(), *it));
-        actions.push_back(std::bind(&Menu::launchEditor, this, *it));
+        choices.push_back(getLevelName(getManager(), boost::filesystem::canonical(*it).string()));
+        actions.push_back(std::bind(&Menu::launchEditor, this, boost::filesystem::canonical(*it).string()));
     }
 
     choices.push_back("Retour");

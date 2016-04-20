@@ -53,7 +53,7 @@ public:
     /**
      * Récupère la liste des fichiers dans le dossier donné
      */
-    std::vector<boost::filesystem::path> getFiles(boost::filesystem::path dir) const;
+    std::vector<boost::filesystem::path> getFiles(boost::filesystem::path path) const;
 
     /**
      * Récupère le chemin vers le dossier des textures

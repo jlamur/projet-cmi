@@ -1,7 +1,6 @@
 #ifndef __SKIZZLE_MANAGER_HPP__
 #define __SKIZZLE_MANAGER_HPP__
 
-#include "resource_manager.hpp"
 #include <SFGUI/SFGUI.hpp>
 #include <SFGUI/Widgets.hpp>
 #include <SFML/Graphics.hpp>
@@ -16,28 +15,28 @@ class State;
  */
 class Manager {
 private:
+    sf::String title;
     sf::RenderWindow window;
+
+    sf::Clock clock;
     sf::Time previous_time;
 
     sfg::SFGUI sfgui;
     sfg::Desktop desktop;
     std::vector<sfg::Widget::Ptr> widgets;
 
-    unsigned int framerate;
-    ResourceManager resource_manager;
-
-    sf::Clock clock;
-    sf::View gui_view;
-    sf::String title;
-
-    State* previous_state;
-    std::stack<std::unique_ptr<State>> states;
-
     /**
      * Détermine si l'événement donné s'est passé à l'intérieur
      * de l'interface et doit être ignoré pour la suite ou non
      */
     bool isInsideGUI(const sf::Event& event);
+
+    // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci
+    sf::View gui_view;
+    //////////////////////////////
+
+    State* previous_state;
+    std::stack<std::unique_ptr<State>> states;
 
 public:
     /**
@@ -79,19 +78,13 @@ public:
     void popState();
 
     /**
-     * Renvoie la fenêtre actuellement utilisée pour le dessin
+     * /!\ DÉPRÉCIÉ : UTILISER LA LIBRAIRIE SFGUI À LA PLACE
+     * @deprecated
+     *
+     * Passage en vue de l'interface
+     * (coin en haut à gauche, zoom 1:1)
      */
-    sf::RenderWindow& getWindow();
-
-    /**
-     * Récupère le framerate (maximal) actuel
-     */
-    unsigned int getFramerate();
-
-    /**
-     * Modifie le framerate (maximal) actuel
-     */
-    void setFramerate(unsigned int set_framerate);
+    void useGUIView();
 
     /**
      * Renvoie le temps actuel du jeu
@@ -99,16 +92,9 @@ public:
     sf::Time getCurrentTime() const;
 
     /**
-     * Renvoie le gestionnaire de ressources
+     * Renvoie la fenêtre actuellement utilisée pour le dessin
      */
-    ResourceManager& getResourceManager();
-
-    /**
-     * Passage en vue de l'interface
-     * (coin en haut à gauche, zoom 1:1)
-     * @deprecated
-     */
-    void useGUIView();
+    sf::RenderWindow& getWindow();
 
     /**
      * Ajoute un nouveau widget à l'interface
@@ -121,12 +107,12 @@ public:
     void removeWidget(sfg::Widget::Ptr widget);
 
     /**
-     * Renvoie le titre actuel de la fenêtre
+     * Récupère le titre du jeu
      */
     sf::String getTitle();
 
     /**
-     * Modifie le titre actuel de la fenêtre
+     * Modifie le titre du jeu
      */
     void setTitle(sf::String set_title);
 

@@ -2,6 +2,7 @@
 #include <cmath>
 #include "utility.hpp"
 #include "manager.hpp"
+#include "resource_manager.hpp"
 #include "game.hpp"
 #include "player.hpp"
 
@@ -19,8 +20,7 @@ Game::Game(Manager& manager) : Level(manager),
     mode(Game::Mode::NORMAL),
     next_frame_time(manager.getCurrentTime()),
     skipped_frames(0),
-    death_cause(Game::DeathCause::NONE),
-    widget_timer(manager, false) {}
+    death_cause(Game::DeathCause::NONE) {}
 
 Game::~Game() {}
 
@@ -29,13 +29,13 @@ void Game::enable() {
 
     // attributs de la fenêtre
     getManager().setTitle(getName());
-    getManager().setFramerate(0);
+    getManager().getWindow().setFramerateLimit(0);
 
     // si musique il y a, on la joue
     if (getMusic() != "") {
-        getResourceManager().playMusic(getMusic());
+        ResourceManager::get().playMusic("levels/" + getMusic());
     } else {
-        getResourceManager().stopMusic();
+        ResourceManager::get().stopMusic();
     }
 }
 
@@ -130,21 +130,8 @@ void Game::frame() {
 }
 
 void Game::draw() {
-    sf::Vector2i window_size = (sf::Vector2i) getWindow().getSize();
-
     // dessin des objets du niveau
     Level::draw();
-
-    // on passe au dessin d'éléments d'interface.
-    // Changement de vue sur la vue par défaut
-    getManager().useGUIView();
-
-    // dessin du timer
-    widget_timer.setTimeLeft(
-        std::max(std::ceil(time_left), 0.f)
-    );
-
-    widget_timer.draw(sf::Vector2f(window_size.x / 2 - 50, 0));
 }
 
 void Game::ensureCentered() {

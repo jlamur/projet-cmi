@@ -110,7 +110,7 @@ void Toolbar::addCreator(std::string path, std::function<Object::Ptr()> creator)
     // on crée un bouton d'objet correspondant au créateur donné
     ObjectButton::Ptr button = ObjectButton::Create(
         sfg::Image::Create(
-            *editor.getResourceManager().getImage("toolbar_" + path + ".tga")
+            *ResourceManager::get().getImage("toolbar/" + path + ".tga")
         ), creators_group
     );
 
