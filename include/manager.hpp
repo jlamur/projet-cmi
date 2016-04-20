@@ -33,6 +33,12 @@ private:
     State* previous_state;
     std::stack<std::unique_ptr<State>> states;
 
+    /**
+     * Détermine si l'événement donné s'est passé à l'intérieur
+     * de l'interface et doit être ignoré pour la suite ou non
+     */
+    bool isInsideGUI(const sf::Event& event);
+
 public:
     /**
      * Énumération des modificateurs

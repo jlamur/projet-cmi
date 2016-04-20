@@ -67,7 +67,11 @@ void Manager::start() {
                 return;
             }
 
-            states.top()->processEvent(event);
+            // seulement si l'événement ne s'est pas passé dans l'interface
+            // on le fait passer aux gestionnaires "normaux"
+            if (!isInsideGUI(event)) {
+                states.top()->processEvent(event);
+            }
         }
 
         // s'il n'y a plus d'état, on quitte
@@ -141,6 +145,42 @@ ResourceManager& Manager::getResourceManager() {
 
 void Manager::useGUIView() {
     window.setView(gui_view);
+}
+
+bool Manager::isInsideGUI(const sf::Event& event) {
+    sf::Vector2f check_point;
+    bool should_check_point = false;
+
+    if (event.type == sf::Event::MouseButtonPressed ||
+        event.type == sf::Event::MouseButtonReleased) {
+        check_point.x = event.mouseButton.x;
+        check_point.y = event.mouseButton.y;
+        should_check_point = true;
+    }
+
+    if (event.type == sf::Event::MouseMoved) {
+        check_point.x = event.mouseMove.x;
+        check_point.y = event.mouseMove.y;
+        should_check_point = true;
+    }
+
+    if (event.type == sf::Event::MouseWheelScrolled) {
+        check_point.x = event.mouseWheelScroll.x;
+        check_point.y = event.mouseWheelScroll.y;
+        should_check_point = true;
+    }
+
+    // si l'événement est de type souris, on regarde que
+    // le point en question ne se trouve pas dans un des widgets
+    if (should_check_point) {
+        for (auto const &widget : widgets) {
+            if (widget->GetAllocation().contains(check_point)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void Manager::addWidget(sfg::Widget::Ptr widget) {
