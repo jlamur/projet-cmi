@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <boost/filesystem.hpp>
 #include "states/state.hpp"
 #include "resource_manager.hpp"
 #include "manager.hpp"
@@ -26,6 +27,19 @@ Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
 
     // chargement du thème de l'interface
     desktop.LoadThemeFromFile("res/gui.theme");
+
+    // chargement des textures
+    ResourceManager& res = ResourceManager::get();
+
+    for (const auto &texture : res.getFiles(res.getTexturesPath())) {
+        res.getTexture(texture);
+
+        // on vide la file d'attente des événements pendant le
+        // chargement des textures pour éviter que le système
+        // pense que le programme a planté
+        sf::Event event;
+        while (window.pollEvent(event)) {}
+    }
 
     // création de la fenêtre du jeu
     window.create(
