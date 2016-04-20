@@ -1,20 +1,30 @@
+#include "manager.hpp"
 #include "resource_manager.hpp"
 #include "finish_block.hpp"
 #include "game.hpp"
 
 const unsigned int FinishBlock::TYPE_ID = 4;
 
-FinishBlock::FinishBlock() : Block() {}
+FinishBlock::FinishBlock() : Block() {
+    icon_sprite.setOrigin(sf::Vector2f(23, 41));
+    icon_sprite.setTexture(*ResourceManager::get().getTexture(
+        "objects/finish_block.tga"
+    ));
+}
+
 FinishBlock::~FinishBlock() {}
 
 Object::Ptr FinishBlock::clone() const {
     return Object::Ptr(new FinishBlock(*this));
 }
 
-void FinishBlock::prepareDraw() {
-    Block::prepareDraw();
-    sprite.setOrigin(sf::Vector2f(23, 41));
-    sprite.setTexture(*ResourceManager::get().getTexture("objects/finish_block.tga"), true);
+void FinishBlock::draw(Level& level) {
+    // on dessine le bloc normal
+    Block::draw(level);
+
+    // on dessine l'icône
+    icon_sprite.setPosition(getPosition());
+    level.getManager().getWindow().draw(icon_sprite);
 }
 
 void FinishBlock::activate(Game& game, Object::Ptr object) {

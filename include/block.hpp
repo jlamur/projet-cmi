@@ -18,20 +18,6 @@ class Block : public Object {
 public:
     typedef std::shared_ptr<Block> Ptr;
 
-private:
-    sf::Sprite select_sprite;
-
-protected:
-    mutable sf::Sprite sprite;
-    sf::FloatRect aabb;
-
-    /**
-     * Initialisation des propriétés du bloc donné
-     * depuis le fichier donné
-     */
-    static void init(std::ifstream& file, Object::Ptr object);
-
-public:
     /**
      * Identifiant unique du type "bloc"
      */
@@ -54,11 +40,6 @@ public:
      * Récupère le rayon du bloc
      */
     virtual float getRadius() const;
-
-    /**
-     * Prépare les textures avant le dessin du bloc
-     */
-    virtual void prepareDraw();
 
     /**
      * Dessin du bloc dans la fenêtre donnée
@@ -89,6 +70,17 @@ public:
      * Sauvegarde le bloc dans le fichier donné
      */
     virtual void save(std::ofstream& file) const;
+
+protected:
+    /**
+     * Initialisation des propriétés du bloc donné
+     * depuis le fichier donné
+     */
+    static void init(std::ifstream& file, Object::Ptr object);
+
+private:
+    sf::Sprite sprite;
+    sf::FloatRect aabb;
 };
 
 #endif

@@ -16,14 +16,6 @@ class FinishBlock : public Block {
 public:
     typedef std::shared_ptr<FinishBlock> Ptr;
 
-protected:
-    /**
-     * Initialisation des propriétés du bloc d'arrivée donné
-     * depuis le fichier donné
-     */
-    static void init(std::ifstream& file, Object::Ptr object);
-
-public:
     /**
      * Identifiant unique du type "bloc d'arrivée"
      */
@@ -38,9 +30,9 @@ public:
     virtual Object::Ptr clone() const;
 
     /**
-     * Prépare les textures avant le dessin du bloc
+     * Dessine le bloc
      */
-    virtual void prepareDraw();
+    virtual void draw(Level& level);
 
     /**
      * Appelé lorsque le bloc d'arrivée est activé par un objet
@@ -61,6 +53,16 @@ public:
      * Sauvegarde le bloc d'arrivée dans le fichier donné
      */
     virtual void save(std::ofstream& file) const;
+
+private:
+    sf::Sprite icon_sprite;
+
+protected:
+    /**
+     * Initialisation des propriétés du bloc d'arrivée donné
+     * depuis le fichier donné
+     */
+    static void init(std::ifstream& file, Object::Ptr object);
 };
 
 #endif

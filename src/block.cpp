@@ -9,8 +9,6 @@ const unsigned int Block::TYPE_ID = 2;
 
 Block::Block() : Object() {
     sprite.setOrigin(sf::Vector2f(23, 23));
-    select_sprite.setOrigin(sf::Vector2f(23, 23));
-
     aabb = sf::FloatRect(
         -Manager::GRID / 2,
         -Manager::GRID / 2,
@@ -41,21 +39,21 @@ void Block::save(std::ofstream& file) const {
     Object::save(file);
 }
 
-void Block::prepareDraw() {
-    std::string texture_name = "movable_block.tga";
+void Block::draw(Level& level) {
+    // récupération de la texture correspondant au type de bloc
+    std::string texture_name = "block.tga";
 
-    if (getMass() == 0) {
-        texture_name = "block.tga";
+    if (getMass() > 0) {
+        texture_name = "movable_" + texture_name;
     }
 
-    sprite.setTexture(*ResourceManager::get().getTexture("objects/" + texture_name));
-    select_sprite.setTexture(*ResourceManager::get().getTexture("objects/block_select.tga"));
-}
+    if (isSelected()) {
+        texture_name = "selected_" + texture_name;
+    }
 
-void Block::draw(Level& level) {
-    // utilisation de la texture
-    sf::RenderWindow& window = level.getManager().getWindow();
-    prepareDraw();
+    sprite.setTexture(*ResourceManager::get().getTexture(
+        "objects/" + texture_name
+    ));
 
     // coloration du bloc selon sa charge
     if (getCharge() > 0) {
@@ -67,12 +65,7 @@ void Block::draw(Level& level) {
     }
 
     sprite.setPosition(getPosition());
-    window.draw(sprite);
-
-    if (isSelected()) {
-        select_sprite.setPosition(getPosition());
-        window.draw(select_sprite);
-    }
+    level.getManager().getWindow().draw(sprite);
 }
 
 void Block::activate(Game& game, Object::Ptr object) {
