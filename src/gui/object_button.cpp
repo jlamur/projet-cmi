@@ -59,8 +59,8 @@ std::unique_ptr<sfg::RenderQueue> ObjectButton::InvalidateImpl() const {
         "Padding", shared_from_this()
     );
 
-    // si le bouton est sélectionné, on l'entoure
-    if (IsActive()) {
+    // si le bouton est actif ou a la souris dessus, on l'entoure
+    if (GetState() != sfg::Widget::State::NORMAL) {
         sf::Vector2f position;
         sf::Vector2f size;
 
@@ -69,18 +69,35 @@ std::unique_ptr<sfg::RenderQueue> ObjectButton::InvalidateImpl() const {
         size.x = std::min(GetAllocation().width, GetRequisition().x);
         size.y = std::min(GetAllocation().height, GetRequisition().y);
 
+        // si on est en train de cliquer, on décale le fond
+        if (GetState() == sfg::Widget::State::ACTIVE) {
+            position.x += 1;
+            position.y += 1;
+        }
+
 		queue->Add(sfg::Renderer::Get().CreatePane(
             position, size, 1.f,
             background_color, border_color, 0
         ));
     }
 
-    // demande à l'image de recalculer sa géométrie
-    GetChild()->SetAllocation(sf::FloatRect(
+    // positionnement de l'image du bouton selon l'état
+    sf::FloatRect allocation(
         padding, padding, GetAllocation().width - 2 * padding,
         GetAllocation().height - 2 * padding
-    ));
+    );
 
+    if (GetState() == sfg::Widget::State::ACTIVE) {
+        allocation.left += 1;
+        allocation.top += 1;
+    }
+
+    GetChild()->SetAllocation(allocation);
     GetChild()->Invalidate();
+
     return queue;
+}
+
+void ObjectButton::HandleStateChange(sfg::Widget::State old_state) {
+    Invalidate();
 }

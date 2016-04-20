@@ -53,6 +53,11 @@ protected:
      * Recalcule la place occupée par le widget
      */
     sf::Vector2f CalculateRequisition() override;
+
+    /**
+     * Recalcule la place occupée par le widget
+     */
+    void HandleStateChange(State old_state) override;
 };
 
 #endif

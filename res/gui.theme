@@ -48,6 +48,10 @@ ObjectButton {
     BackgroundColor: #D2D2D2ff;
 }
 
+ObjectButton:PRELIGHT {
+    BackgroundColor: #E6E6E6ff;
+}
+
 Button:PRELIGHT, ComboBox:PRELIGHT, ComboBox:ACTIVE {
     Color: #000000ff;
     BackgroundColor: #D2D2D2ff;
