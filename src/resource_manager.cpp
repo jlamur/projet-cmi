@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <utility>
 #include "resource_manager.hpp"
 
@@ -27,15 +28,14 @@ std::vector<fs::path> ResourceManager::getFiles(fs::path path) const {
     fs::recursive_directory_iterator dir(path), end;
     std::vector<fs::path> result;
 
-    // on boucle sur tous les fichiers du dossier
-    // et de ses sous-dossiers et on les garde en mémoire
-    while (dir != end) {
-        if (fs::is_regular_file(dir->path())) {
-            result.push_back(dir->path());
-        }
+    // récupération de la liste de tous les fichiers
+    // (et uniquement des fichiers, d'où le filtre)
+    std::copy_if(dir, end, std::back_inserter(result), [](fs::path path){
+        return fs::is_regular_file(path);
+    });
 
-        ++dir;
-    }
+    // tri par ordre alphabétique
+    std::sort(result.begin(), result.end());
 
     return result;
 }
