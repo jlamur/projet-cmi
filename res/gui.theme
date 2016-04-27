@@ -2,6 +2,9 @@
  * Feuille de style pour l'interface de Skizzle
  */
 
+
+/* styles généraux */
+
 * {
     FontName: overpass;
     FontSize: 14;
@@ -11,6 +14,9 @@
 Window {
     BackgroundColor: #FFFFFFff;
     BorderWidth: 0;
+
+    ShadowDistance: 3;
+    ShadowAlpha: 0;
 }
 
 ScrolledWindow {
@@ -64,4 +70,10 @@ Button:ACTIVE, Entry:ACTIVE {
 
 Separator {
     Color: #D2D2D2ff;
+}
+
+/* barre d'objets */
+
+Window#object_toolbar {
+    BackgroundColor: #EFEFEFff;
 }
