@@ -1,43 +1,22 @@
-#ifndef __SKIZZLE_TOOLBAR_HPP__
-#define __SKIZZLE_TOOLBAR_HPP__
+#ifndef __SKIZZLE_OBJECT_TOOLBAR_HPP__
+#define __SKIZZLE_OBJECT_TOOLBAR_HPP__
 
 #include <SFGUI/Widgets.hpp>
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <functional>
-#include "../objects/object.hpp"
 #include "../states/level.hpp"
+#include "../objects/object.hpp"
 #include "object_button.hpp"
 
-class Editor;
-
 /**
- * Barre d'outils pour l'éditeur
+ * Barre d'outils qui affiche une liste d'objets à choisir
  */
-class Toolbar {
+class ObjectToolbar {
 private:
-    Editor& editor;
-
     // widgets de la barre
     sfg::Window::Ptr toolbar_window;
     sfg::Box::Ptr toolbar_box;
-
-    // zones de texte pour les métadonnées
-    sfg::Entry::Ptr name_entry;
-    sfg::Entry::Ptr path_entry;
-
-    // listes de sélection pour le fond et la musique
-    sfg::ComboBox::Ptr background_combo;
-    sfg::ComboBox::Ptr music_combo;
-
-    /**
-     * Mise à jour de l'éditeur selon les modifications
-     * faites dans l'interface
-     */
-    void updateEditorName();
-    void updateEditorPath();
-    void updateEditorBackground();
-    void updateEditorMusic();
 
     // types d'objets de la barre d'outils
     sfg::RadioButtonGroup::Ptr creators_group;
@@ -67,7 +46,7 @@ private:
     Object::Ptr createGravityBlock(GravityDirection direction);
 
 public:
-    Toolbar(Editor& editor);
+    ObjectToolbar();
 
     /**
      * Crée un nouvel objet du type actuellement sélectionné
@@ -78,11 +57,6 @@ public:
      * Récupère la fenêtre de la barre d'outils
      */
     sfg::Window::Ptr getWindow();
-
-    /**
-     * Met à jour l'état de la toolbar selon l'état de l'éditeur
-     */
-    void update();
 
     /**
      * Récupère la taille désirée par la barre d'outils
