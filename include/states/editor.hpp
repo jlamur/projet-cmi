@@ -25,6 +25,7 @@ private:
 
     ActionToolbar action_toolbar;
     ObjectToolbar object_toolbar;
+    sfg::Button::Ptr mute_button;
 
     /**
      * Renvoie l'objet pointé à la position donnée

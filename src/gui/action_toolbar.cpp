@@ -12,7 +12,9 @@ ActionToolbar::ActionToolbar() {
     toolbar_window->SetId("action_toolbar");
 }
 
-void ActionToolbar::addButton(sf::Image image, std::function<void()> callback) {
+sfg::Button::Ptr ActionToolbar::addButton(
+    sf::Image image, std::function<void()> callback
+) {
     // création d'un bouton avec pour image l'image passée
     sfg::Button::Ptr button = sfg::Button::Create("");
     button->SetImage(sfg::Image::Create(image));
@@ -25,14 +27,18 @@ void ActionToolbar::addButton(sf::Image image, std::function<void()> callback) {
 
     // ajout du bouton à la barre
     toolbar_box->PackEnd(button, false, false);
+    return button;
 }
 
-void ActionToolbar::addSpacer(float width, bool expand, bool fill) {
+sfg::Alignment::Ptr ActionToolbar::addSpacer(
+    float width, bool expand, bool fill
+) {
     sfg::Alignment::Ptr spacer = sfg::Alignment::Create();
     spacer->SetRequisition(sf::Vector2f(width, 1.f));
 
     // ajout de l'espaceur à la barre
     toolbar_box->PackEnd(spacer, expand, fill);
+    return spacer;
 }
 
 sfg::Window::Ptr ActionToolbar::getWindow() {

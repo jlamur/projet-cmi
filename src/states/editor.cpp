@@ -41,7 +41,7 @@ Editor::Editor(Manager& manager) : Level(manager),
         std::bind(&Manager::popState, &getManager())
     );
 
-    action_toolbar.addButton(
+    mute_button = action_toolbar.addButton(
         *ResourceManager::get().getImage("toolbar/icon_music.tga"),
         []() {
             // on inverse le drapeau de muet
@@ -290,16 +290,11 @@ void Editor::processEvent(const sf::Event& event) {
 }
 
 void Editor::frame() {
-    // dessin de la frame
-    draw();
-
-    // màj du titre de la fenêtre
-    getManager().setTitle(sf::String(L"Édition de ") + getName());
-}
-
-void Editor::draw() {
     sf::RenderWindow& window = getManager().getWindow();
     sf::Vector2i window_size = (sf::Vector2i) window.getSize();
+
+    // dessin de la frame
+    draw();
 
     // scroll de la caméra lorsque la souris se situe sur les bords
     if (window.hasFocus()) {
@@ -319,6 +314,37 @@ void Editor::draw() {
 
         setCamera(camera);
     }
+
+    // mise à jour de l'icône du mute
+    sf::Image image;
+
+    if (ResourceManager::get().isMuted()) {
+        image = *ResourceManager::get().getImage("toolbar/icon_no_music.tga");
+    } else {
+        image = *ResourceManager::get().getImage("toolbar/icon_music.tga");
+    }
+
+    mute_button->SetImage(sfg::Image::Create(image));
+
+    // màj du titre de la fenêtre
+    getManager().setTitle(sf::String(L"Édition de ") + getName());
+
+    // positionnement des barres d'outils au bon endroit
+    action_toolbar.getWindow()->SetAllocation(sf::FloatRect(
+        0, 0, window_size.x,
+        action_toolbar.getHeight()
+    ));
+
+    object_toolbar.getWindow()->SetAllocation(sf::FloatRect(
+        window_size.x - object_toolbar.getWidth(),
+        action_toolbar.getHeight(),
+        object_toolbar.getWidth(),
+        window_size.y - action_toolbar.getHeight()
+    ));
+}
+
+void Editor::draw() {
+    sf::RenderWindow& window = getManager().getWindow();
 
     // dessin des objets du niveau
     Level::draw();
@@ -360,19 +386,6 @@ void Editor::draw() {
 
         window.draw(selection_rect);
     }
-
-    // on positionne les barres d'outils au bon endroit
-    action_toolbar.getWindow()->SetAllocation(sf::FloatRect(
-        0, 0, window_size.x,
-        action_toolbar.getHeight()
-    ));
-
-    object_toolbar.getWindow()->SetAllocation(sf::FloatRect(
-        window_size.x - object_toolbar.getWidth(),
-        action_toolbar.getHeight(),
-        object_toolbar.getWidth(),
-        window_size.y - action_toolbar.getHeight()
-    ));
 }
 
 Object::Ptr Editor::getObject(sf::Vector2f position) {

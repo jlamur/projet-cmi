@@ -21,7 +21,7 @@ public:
     /**
      * Ajoute un nouveau bouton d'action à la barre d'outils
      */
-    void addButton(
+    sfg::Button::Ptr addButton(
         sf::Image image,
         std::function<void()> callback = std::function<void()>()
     );
@@ -29,7 +29,9 @@ public:
     /**
      * Ajoute un nouvel espaceur
      */
-    void addSpacer(float width, bool expand, bool fill);
+    sfg::Alignment::Ptr addSpacer(
+        float width, bool expand, bool fill
+    );
 
     /**
      * Récupère la fenêtre de la barre d'outils
