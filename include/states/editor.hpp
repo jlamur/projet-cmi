@@ -1,7 +1,6 @@
 #ifndef __SKIZZLE_EDITOR_HPP__
 #define __SKIZZLE_EDITOR_HPP__
 
-#include "../gui/action_toolbar.hpp"
 #include "../gui/object_toolbar.hpp"
 #include "level.hpp"
 
@@ -22,10 +21,7 @@ private:
     sf::Vector2f *drag_control_point;
 
     DragMode drag_mode;
-
-    ActionToolbar action_toolbar;
     ObjectToolbar object_toolbar;
-    sfg::Button::Ptr mute_button;
 
     /**
      * Renvoie l'objet pointé à la position donnée
@@ -79,10 +75,15 @@ private:
 
 protected:
     /**
+     * Demande le dessin d'une frame
+     */
+    void frame() override;
+
+    /**
      * Dessine tous les objets, le fond et
      * l'interface de l'éditeur
      */
-    virtual void draw();
+    void draw() override;
 
 public:
     Editor(Manager& manager);
@@ -97,11 +98,6 @@ public:
      * Traite l'événement donné
      */
     void processEvent(const sf::Event& event) override;
-
-    /**
-     * Demande le dessin d'une frame
-     */
-    void frame() override;
 
     /**
      * Lance le test du niveau

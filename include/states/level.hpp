@@ -3,14 +3,13 @@
 
 #include <fstream>
 #include <vector>
+#include "../gui/action_toolbar.hpp"
+#include "../utility.hpp"
 #include "../objects/object.hpp"
 #include "../objects/player.hpp"
 #include "state.hpp"
 
 class Manager;
-
-// liste des directions de la gravité
-enum class GravityDirection {NORTH, EAST, SOUTH, WEST};
 
 /**
  * La classe Level est une abstraction des
@@ -21,7 +20,7 @@ class Level : public State {
 private:
     sf::View camera;
     float camera_angle;
-    GravityDirection gravity_direction;
+    Utility::Direction gravity_direction;
 
     sf::String name;
     std::string path;
@@ -36,7 +35,16 @@ private:
     std::vector<Player::Ptr> players;
     std::vector<sf::Vector2f> zone;
 
+    sfg::Button::Ptr mute_button;
+
 protected:
+    ActionToolbar action_toolbar;
+
+    /**
+     * Demande le dessin d'une frame
+     */
+    virtual void frame();
+
     /**
      * Dessine tous les objets et le fond à l'écran
      */
@@ -146,12 +154,12 @@ public:
     /**
      * Récupère la direction de la gravité
      */
-    GravityDirection getGravityDirection();
+    Utility::Direction getGravityDirection();
 
     /**
      * Modifie la direction de la gravité
      */
-    void setGravityDirection(GravityDirection set_gravity_direction);
+    void setGravityDirection(Utility::Direction set_gravity_direction);
 
     /**
      * Récupère la liste des objets

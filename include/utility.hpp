@@ -10,6 +10,11 @@ namespace Utility {
      * avec la vitesse donnée
      */
     float animateValue(float current, float speed, float goal);
+
+    /**
+     * Liste des directions
+     */
+    enum class Direction {NORTH, EAST, SOUTH, WEST};
 }
 
 #endif

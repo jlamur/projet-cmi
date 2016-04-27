@@ -3,10 +3,10 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "../utility.hpp"
 #include "block.hpp"
 
 class Game;
-enum class GravityDirection;
 
 /**
  * Le bloc de gravité est un bloc spécial qui change l'orientation
@@ -19,7 +19,7 @@ public:
     typedef std::shared_ptr<GravityBlock> Ptr;
 
 private:
-    GravityDirection gravity_direction;
+    Utility::Direction gravity_direction;
     sf::Sprite icon_sprite;
     float opacity;
     bool used;
@@ -73,12 +73,12 @@ public:
     /**
      * Récupère la direction de gravité du bloc changeur de gravité
      */
-    GravityDirection getGravityDirection() const;
+    Utility::Direction getGravityDirection() const;
 
     /**
      * Modifie la direction de gravité du bloc
      */
-    void setGravityDirection(GravityDirection set_gravity_direction);
+    void setGravityDirection(Utility::Direction set_gravity_direction);
 };
 
 #endif

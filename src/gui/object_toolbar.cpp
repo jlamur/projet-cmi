@@ -29,19 +29,19 @@ ObjectToolbar::ObjectToolbar() {
     addCreator("kill_block", std::bind(&ObjectToolbar::createKillBlock, this));
 
     addCreator("gravity_block_north", std::bind(
-        &ObjectToolbar::createGravityBlock, this, GravityDirection::NORTH
+        &ObjectToolbar::createGravityBlock, this, Utility::Direction::NORTH
     ));
 
     addCreator("gravity_block_east", std::bind(
-        &ObjectToolbar::createGravityBlock, this, GravityDirection::EAST
+        &ObjectToolbar::createGravityBlock, this, Utility::Direction::EAST
     ));
 
     addCreator("gravity_block_south", std::bind(
-        &ObjectToolbar::createGravityBlock, this, GravityDirection::SOUTH
+        &ObjectToolbar::createGravityBlock, this, Utility::Direction::SOUTH
     ));
 
     addCreator("gravity_block_west", std::bind(
-        &ObjectToolbar::createGravityBlock, this, GravityDirection::WEST
+        &ObjectToolbar::createGravityBlock, this, Utility::Direction::WEST
     ));
 
     // attachement de la liste des créateurs à l'interface
@@ -117,7 +117,7 @@ Object::Ptr ObjectToolbar::createKillBlock() {
     return Object::Ptr(new KillBlock);
 }
 
-Object::Ptr ObjectToolbar::createGravityBlock(GravityDirection direction) {
+Object::Ptr ObjectToolbar::createGravityBlock(Utility::Direction direction) {
     GravityBlock::Ptr gravity_block = GravityBlock::Ptr(new GravityBlock);
     gravity_block->setGravityDirection(direction);
     return std::dynamic_pointer_cast<Object>(gravity_block);

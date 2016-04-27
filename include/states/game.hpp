@@ -44,10 +44,15 @@ private:
 
 protected:
     /**
+     * Demande le dessin d'une frame
+     */
+    void frame() override;
+
+    /**
      * Dessine tous les objets, le fond et
      * l'interface de jeu
      */
-    virtual void draw();
+    void draw() override;
 
     /**
      * S'assure que la caméra est centrée sur les joueurs
@@ -61,17 +66,12 @@ public:
     /**
      * Active l'état
      */
-    virtual void enable();
+    void enable() override;
 
     /**
      * Traite l'événement donné
      */
-    virtual void processEvent(const sf::Event& event);
-
-    /**
-     * Demande le dessin d'une frame
-     */
-    virtual void frame();
+    void processEvent(const sf::Event& event) override;
 
     /**
      * Tue l'objet donné

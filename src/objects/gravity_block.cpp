@@ -53,7 +53,7 @@ void GravityBlock::init(std::ifstream& file, Object::Ptr object) {
     // lecture de la direction de la gravité
     char gravity_direction;
     file.read(&gravity_direction, 1);
-    gravity_block->setGravityDirection((GravityDirection) gravity_direction);
+    gravity_block->setGravityDirection((Utility::Direction) gravity_direction);
 
     // lecture des propriétés d'un bloc
     Block::init(file, object);
@@ -74,30 +74,30 @@ void GravityBlock::save(std::ofstream& file) const {
     Block::save(file);
 }
 
-GravityDirection GravityBlock::getGravityDirection() const {
+Utility::Direction GravityBlock::getGravityDirection() const {
     return gravity_direction;
 }
 
-void GravityBlock::setGravityDirection(GravityDirection set_gravity_direction) {
+void GravityBlock::setGravityDirection(Utility::Direction set_gravity_direction) {
     gravity_direction = set_gravity_direction;
 
     // sélectionne le sprite d'icône selon la direction
     std::string texture;
 
     switch (gravity_direction) {
-    case GravityDirection::NORTH:
+    case Utility::Direction::NORTH:
         texture = "north";
         break;
 
-    case GravityDirection::EAST:
+    case Utility::Direction::EAST:
         texture = "east";
         break;
 
-    case GravityDirection::SOUTH:
+    case Utility::Direction::SOUTH:
         texture = "south";
         break;
 
-    case GravityDirection::WEST:
+    case Utility::Direction::WEST:
         texture = "west";
         break;
     }

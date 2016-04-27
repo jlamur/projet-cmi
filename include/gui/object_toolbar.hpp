@@ -5,8 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <functional>
-#include "../states/level.hpp"
 #include "../objects/object.hpp"
+#include "../utility.hpp"
 #include "object_button.hpp"
 
 /**
@@ -43,7 +43,7 @@ private:
     Object::Ptr createSwitchBlock();
     Object::Ptr createFinishBlock();
     Object::Ptr createKillBlock();
-    Object::Ptr createGravityBlock(GravityDirection direction);
+    Object::Ptr createGravityBlock(Utility::Direction direction);
 
 public:
     ObjectToolbar();

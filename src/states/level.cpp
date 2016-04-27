@@ -48,8 +48,8 @@ namespace {
     };
 }
 
-Level::Level(Manager& manager) : State(manager) {
-    gravity_direction = GravityDirection::SOUTH;
+Level::Level(Manager& manager) : State(manager),
+    gravity_direction(Utility::Direction::SOUTH) {
 
     // métadonnées par défaut
     setName(sf::String("Nouveau niveau"));
@@ -67,9 +67,36 @@ Level::Level(Manager& manager) : State(manager) {
     // ressources par défaut
     setMusic("");
     setBackground("");
+
+    // ajout des boutons d'action de la barre d'action
+    action_toolbar.addButton(
+        *ResourceManager::get().getImage("toolbar/icon_back.tga"),
+        std::bind(&Manager::popState, &getManager())
+    );
+
+    mute_button = action_toolbar.addButton(
+        *ResourceManager::get().getImage("toolbar/icon_music.tga"),
+        []() {
+            // on inverse le drapeau de muet
+            ResourceManager::get().setMuted(
+                !ResourceManager::get().isMuted()
+            );
+        }
+    );
+
+    action_toolbar.addSpacer(5, true, false);
+
+    action_toolbar.addButton(
+        *ResourceManager::get().getImage("toolbar/icon_no_music.tga")
+    );
+
+    action_toolbar.addSpacer(5, true, false);
+    getManager().addWidget(action_toolbar.getWindow());
 }
 
-Level::~Level() {}
+Level::~Level() {
+    getManager().removeWidget(action_toolbar.getWindow());
+}
 
 void Level::enable() {
     // positionnement par défaut de la caméra
@@ -78,6 +105,9 @@ void Level::enable() {
     camera.setSize(window_size.x, window_size.y);
     camera.setCenter(0, 0);
     camera_angle = 180.f;
+
+    // on affiche la barre d'actions
+    action_toolbar.getWindow()->Show(true);
 }
 
 void Level::load() {
@@ -251,6 +281,27 @@ void Level::processEvent(const sf::Event& event) {
     }
 }
 
+void Level::frame() {
+    sf::Vector2i window_size = (sf::Vector2i) getManager().getWindow().getSize();
+
+    // mise à jour de l'icône du mute en fonction de l'état
+    sf::Image image;
+
+    if (ResourceManager::get().isMuted()) {
+        image = *ResourceManager::get().getImage("toolbar/icon_no_music.tga");
+    } else {
+        image = *ResourceManager::get().getImage("toolbar/icon_music.tga");
+    }
+
+    mute_button->SetImage(sfg::Image::Create(image));
+
+    // positionnement de la barre d'actions
+    action_toolbar.getWindow()->SetAllocation(sf::FloatRect(
+        0, 0, window_size.x,
+        action_toolbar.getHeight()
+    ));
+}
+
 void Level::draw() {
     sf::RenderWindow& window = getManager().getWindow();
     sf::Vector2u window_size = window.getSize();
@@ -375,16 +426,16 @@ void Level::setBackground(std::string set_background) {
 
 sf::Vector2f Level::getGravity() const {
     switch (gravity_direction) {
-    case GravityDirection::NORTH:
+    case Utility::Direction::NORTH:
         return sf::Vector2f(0, -GRAVITY);
 
-    case GravityDirection::EAST:
+    case Utility::Direction::EAST:
         return sf::Vector2f(GRAVITY, 0);
 
-    case GravityDirection::SOUTH:
+    case Utility::Direction::SOUTH:
         return sf::Vector2f(0, GRAVITY);
 
-    case GravityDirection::WEST:
+    case Utility::Direction::WEST:
         return sf::Vector2f(-GRAVITY, 0);
     }
 
@@ -393,16 +444,16 @@ sf::Vector2f Level::getGravity() const {
 
 sf::Vector2f Level::getLeftDirection() const {
     switch (gravity_direction) {
-    case GravityDirection::NORTH:
+    case Utility::Direction::NORTH:
         return sf::Vector2f(MOVE, 0);
 
-    case GravityDirection::EAST:
+    case Utility::Direction::EAST:
         return sf::Vector2f(0, MOVE);
 
-    case GravityDirection::SOUTH:
+    case Utility::Direction::SOUTH:
         return sf::Vector2f(-MOVE, 0);
 
-    case GravityDirection::WEST:
+    case Utility::Direction::WEST:
         return sf::Vector2f(0, -MOVE);
     }
 
@@ -413,11 +464,11 @@ sf::Vector2f Level::getRightDirection() const {
     return -1.f * getLeftDirection();
 }
 
-GravityDirection Level::getGravityDirection() {
+Utility::Direction Level::getGravityDirection() {
     return gravity_direction;
 }
 
-void Level::setGravityDirection(GravityDirection set_gravity_direction) {
+void Level::setGravityDirection(Utility::Direction set_gravity_direction) {
     gravity_direction = set_gravity_direction;
 }
 

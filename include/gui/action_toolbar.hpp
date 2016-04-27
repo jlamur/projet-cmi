@@ -4,7 +4,6 @@
 #include <SFGUI/Widgets.hpp>
 #include <SFML/Graphics.hpp>
 #include "../objects/object.hpp"
-#include "../states/level.hpp"
 
 /**
  * Barre d'outils pour les actions en jeu

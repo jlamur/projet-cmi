@@ -35,29 +35,10 @@ inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
 Editor::Editor(Manager& manager) : Level(manager),
     drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE) {
 
-    // ajout des boutons dans la barre d'action
+    // ajout des boutons d'action de la barre d'action
     action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_back.tga"),
-        std::bind(&Manager::popState, &getManager())
+        *ResourceManager::get().getImage("toolbar/icon_gear.tga")
     );
-
-    mute_button = action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_music.tga"),
-        []() {
-            // on inverse le drapeau de muet
-            ResourceManager::get().setMuted(
-                !ResourceManager::get().isMuted()
-            );
-        }
-    );
-
-    action_toolbar.addSpacer(20, true, false);
-
-    action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_no_music.tga")
-    );
-
-    action_toolbar.addSpacer(20, true, false);
 
     action_toolbar.addButton(
         *ResourceManager::get().getImage("toolbar/icon_save.tga"),
@@ -69,17 +50,11 @@ Editor::Editor(Manager& manager) : Level(manager),
         std::bind(&Editor::test, this)
     );
 
-    action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_gear.tga")
-    );
-
-    // signalement des sous-widgets
-    getManager().addWidget(action_toolbar.getWindow());
+    // ajout de la barre d'objets
     getManager().addWidget(object_toolbar.getWindow());
 }
 
 Editor::~Editor() {
-    getManager().removeWidget(action_toolbar.getWindow());
     getManager().removeWidget(object_toolbar.getWindow());
 }
 
@@ -93,8 +68,7 @@ void Editor::enable() {
     // joue la musique de l'éditeur
     ResourceManager::get().playMusic("editor.ogg");
 
-    // on affiche les barres d'outils
-    action_toolbar.getWindow()->Show(true);
+    // on affiche la barre d'objets
     object_toolbar.getWindow()->Show(true);
 }
 
@@ -293,6 +267,8 @@ void Editor::frame() {
     sf::RenderWindow& window = getManager().getWindow();
     sf::Vector2i window_size = (sf::Vector2i) window.getSize();
 
+    Level::frame();
+
     // dessin de la frame
     draw();
 
@@ -315,26 +291,10 @@ void Editor::frame() {
         setCamera(camera);
     }
 
-    // mise à jour de l'icône du mute
-    sf::Image image;
-
-    if (ResourceManager::get().isMuted()) {
-        image = *ResourceManager::get().getImage("toolbar/icon_no_music.tga");
-    } else {
-        image = *ResourceManager::get().getImage("toolbar/icon_music.tga");
-    }
-
-    mute_button->SetImage(sfg::Image::Create(image));
-
     // màj du titre de la fenêtre
     getManager().setTitle(sf::String(L"Édition de ") + getName());
 
-    // positionnement des barres d'outils au bon endroit
-    action_toolbar.getWindow()->SetAllocation(sf::FloatRect(
-        0, 0, window_size.x,
-        action_toolbar.getHeight()
-    ));
-
+    // positionnement de la barre d'objets
     object_toolbar.getWindow()->SetAllocation(sf::FloatRect(
         window_size.x - object_toolbar.getWidth(),
         action_toolbar.getHeight(),

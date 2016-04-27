@@ -61,6 +61,7 @@ void Game::processEvent(const sf::Event& event) {
 }
 
 void Game::frame() {
+    Level::frame();
     sf::Time current_time = getManager().getCurrentTime();
 
     if (current_time >= next_frame_time) {
