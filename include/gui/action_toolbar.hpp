@@ -5,7 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include "../objects/object.hpp"
 #include "../states/level.hpp"
-#include "object_button.hpp"
 
 /**
  * Barre d'outils pour les actions en jeu
@@ -26,6 +25,11 @@ public:
         sf::Image image,
         std::function<void()> callback = std::function<void()>()
     );
+
+    /**
+     * Ajoute un nouvel espaceur
+     */
+    void addSpacer(float width, bool expand, bool fill);
 
     /**
      * Récupère la fenêtre de la barre d'outils

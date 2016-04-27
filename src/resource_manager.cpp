@@ -10,7 +10,7 @@ ResourceManager& ResourceManager::get() {
     return manager;
 }
 
-ResourceManager::ResourceManager() : is_playing(false), music_volume(20) {
+ResourceManager::ResourceManager() : is_playing(false), is_muted(false) {
     // mise en mémoire des chemins vers les dossiers de ressources
     fs::path res_path = fs::current_path() / "res";
 
@@ -21,7 +21,7 @@ ResourceManager::ResourceManager() : is_playing(false), music_volume(20) {
 
     // initialisation de la musique en bouclage et au volume par défaut
     current_music.setLoop(true);
-    current_music.setVolume(music_volume);
+    current_music.setVolume(100);
 }
 
 std::vector<fs::path> ResourceManager::getFiles(fs::path path) const {
@@ -179,11 +179,16 @@ void ResourceManager::stopMusic() {
     current_music.stop();
 }
 
-float ResourceManager::getMusicVolume() const {
-    return music_volume;
+bool ResourceManager::isMuted() const {
+    return is_muted;
 }
 
-void ResourceManager::setMusicVolume(float set_music_volume) {
-    music_volume = set_music_volume;
-    current_music.setVolume(music_volume);
+void ResourceManager::setMuted(bool set_muted) {
+    is_muted = set_muted;
+
+    if (is_muted) {
+        current_music.setVolume(0);
+    } else {
+        current_music.setVolume(100);
+    }
 }

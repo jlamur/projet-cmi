@@ -14,9 +14,6 @@
 Window {
     BackgroundColor: #FFFFFFff;
     BorderWidth: 0;
-
-    ShadowDistance: 3;
-    ShadowAlpha: 0;
 }
 
 ScrolledWindow {
@@ -47,6 +44,10 @@ Entry {
 ComboBox {
     ArrowColor: #141414ff;
     HighlightedColor: #B4B4B4ff;
+}
+
+Button.notext {
+    BackgroundColor: #00000000;
 }
 
 ObjectButton {

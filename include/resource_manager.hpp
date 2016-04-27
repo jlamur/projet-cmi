@@ -36,7 +36,7 @@ private:
     boost::filesystem::path current_music_path;
     bool is_playing;
     sf::Music current_music;
-    float music_volume;
+    bool is_muted;
 
     /**
      * Construit le gestionnaire de ressources. Comme on ne
@@ -110,14 +110,14 @@ public:
     void stopMusic();
 
     /**
-     * Récupère le volume de la musique de fond
+     * Récupère si le volume est muet ou non
      */
-    float getMusicVolume() const;
+    bool isMuted() const;
 
     /**
-     * Modifie le volume de la musique de fond
+     * Modifie le drapeau pour le muet
      */
-    void setMusicVolume(float set_music_volume);
+    void setMuted(bool set_muted);
 };
 
 #endif

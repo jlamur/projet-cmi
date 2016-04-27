@@ -42,12 +42,22 @@ Editor::Editor(Manager& manager) : Level(manager),
     );
 
     action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_music.tga")
+        *ResourceManager::get().getImage("toolbar/icon_music.tga"),
+        []() {
+            // on inverse le drapeau de muet
+            ResourceManager::get().setMuted(
+                !ResourceManager::get().isMuted()
+            );
+        }
     );
+
+    action_toolbar.addSpacer(20, true, false);
 
     action_toolbar.addButton(
         *ResourceManager::get().getImage("toolbar/icon_no_music.tga")
     );
+
+    action_toolbar.addSpacer(20, true, false);
 
     action_toolbar.addButton(
         *ResourceManager::get().getImage("toolbar/icon_save.tga"),
