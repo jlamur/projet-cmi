@@ -1,7 +1,8 @@
 #ifndef __SKIZZLE_EDITOR_HPP__
 #define __SKIZZLE_EDITOR_HPP__
 
-#include "../gui/toolbar.hpp"
+#include "../gui/action_toolbar.hpp"
+#include "../gui/object_toolbar.hpp"
 #include "level.hpp"
 
 /**
@@ -22,7 +23,8 @@ private:
 
     DragMode drag_mode;
 
-    Toolbar toolbar;
+    ActionToolbar action_toolbar;
+    ObjectToolbar object_toolbar;
 
     /**
      * Renvoie l'objet pointé à la position donnée

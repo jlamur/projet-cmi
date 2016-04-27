@@ -33,13 +33,44 @@ inline sf::Vector2f roundVectorToGrid(sf::Vector2f input) {
 }
 
 Editor::Editor(Manager& manager) : Level(manager),
-    drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE),
-    toolbar(*this) {
-    getManager().addWidget(toolbar.getWindow());
+    drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE) {
+
+    // ajout des boutons dans la barre d'action
+    action_toolbar.addButton(
+        *ResourceManager::get().getImage("toolbar/icon_back.tga"),
+        std::bind(&Manager::popState, &getManager())
+    );
+
+    action_toolbar.addButton(
+        *ResourceManager::get().getImage("toolbar/icon_music.tga")
+    );
+
+    action_toolbar.addButton(
+        *ResourceManager::get().getImage("toolbar/icon_no_music.tga")
+    );
+
+    action_toolbar.addButton(
+        *ResourceManager::get().getImage("toolbar/icon_save.tga"),
+        std::bind(&Editor::save, this)
+    );
+
+    action_toolbar.addButton(
+        *ResourceManager::get().getImage("toolbar/icon_test.tga"),
+        std::bind(&Editor::test, this)
+    );
+
+    action_toolbar.addButton(
+        *ResourceManager::get().getImage("toolbar/icon_gear.tga")
+    );
+
+    // signalement des sous-widgets
+    getManager().addWidget(action_toolbar.getWindow());
+    getManager().addWidget(object_toolbar.getWindow());
 }
 
 Editor::~Editor() {
-    getManager().removeWidget(toolbar.getWindow());
+    getManager().removeWidget(action_toolbar.getWindow());
+    getManager().removeWidget(object_toolbar.getWindow());
 }
 
 void Editor::enable() {
@@ -52,9 +83,9 @@ void Editor::enable() {
     // joue la musique de l'éditeur
     ResourceManager::get().playMusic("editor.ogg");
 
-    // on affiche la toolbar de l'éditeur
-    toolbar.update();
-    toolbar.getWindow()->Show(true);
+    // on affiche les barres d'outils
+    action_toolbar.getWindow()->Show(true);
+    object_toolbar.getWindow()->Show(true);
 }
 
 void Editor::processEvent(const sf::Event& event) {
@@ -320,10 +351,17 @@ void Editor::draw() {
         window.draw(selection_rect);
     }
 
-    // on redimensionne la toolbar pour qu'elle occupe l'espace droite
-    toolbar.getWindow()->SetAllocation(sf::FloatRect(
-        window_size.x - toolbar.getWidth(), 0,
-        toolbar.getWidth(), window_size.y
+    // on positionne les barres d'outils au bon endroit
+    action_toolbar.getWindow()->SetAllocation(sf::FloatRect(
+        0, 0, window_size.x,
+        action_toolbar.getHeight()
+    ));
+
+    object_toolbar.getWindow()->SetAllocation(sf::FloatRect(
+        window_size.x - object_toolbar.getWidth(),
+        action_toolbar.getHeight(),
+        object_toolbar.getWidth(),
+        window_size.y - action_toolbar.getHeight()
     ));
 }
 
@@ -354,7 +392,7 @@ sf::Vector2f* Editor::getControlPoint(sf::Vector2f position) {
 Object::Ptr Editor::addObject(sf::Vector2f position) {
     // on arrondit à l'unité de grille la plus proche
     position = roundVectorToGrid(position);
-    Object::Ptr created_object = toolbar.createObject();
+    Object::Ptr created_object = object_toolbar.createObject();
 
     if (created_object == nullptr) {
         return nullptr;
