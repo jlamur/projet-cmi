@@ -181,10 +181,13 @@ void Level::load() {
     setMusic(read_music);
     setBackground(read_background);
 
-    // lecture des objets si une callback a été fournie
+    // lecture des objets
     int read_object_count;
     file.read(reinterpret_cast<char*>(&read_object_count), 4);
     read_object_count = ntohl(read_object_count);
+
+    objects.clear();
+    players.clear();
 
     for (int i = 0; i < read_object_count; i++) {
         char read_object_type;
@@ -281,7 +284,8 @@ void Level::processEvent(const sf::Event& event) {
 }
 
 void Level::frame() {
-    sf::Vector2i window_size = (sf::Vector2i) getManager().getWindow().getSize();
+    sf::RenderWindow& window = getManager().getWindow();
+    sf::Vector2i window_size = (sf::Vector2i) window.getSize();
 
     // mise à jour de l'icône du mute en fonction de l'état
     sf::Image image;
@@ -299,20 +303,27 @@ void Level::frame() {
         0, 0, window_size.x,
         action_toolbar.getHeight()
     ));
-}
 
-void Level::draw() {
-    sf::RenderWindow& window = getManager().getWindow();
-    sf::Vector2u window_size = window.getSize();
+    // animation du centre et de la rotation de la caméra
+    sf::Vector2f cur_center = camera.getCenter();
 
-    // animation de la rotation de la caméra
+    cur_center.x = Utility::animateValue(cur_center.x, 5, goal_center.x);
+    cur_center.y = Utility::animateValue(cur_center.y, 5, goal_center.y);
+
     camera_angle = Utility::animateValue(
         camera_angle, 5,
         std::fmod((float) gravity_direction * 90, 360)
     );
 
+    camera.setCenter(cur_center);
     camera.setRotation(camera_angle + 180);
+
     window.setView(camera);
+}
+
+void Level::draw() {
+    sf::RenderWindow& window = getManager().getWindow();
+    sf::Vector2u window_size = window.getSize();
 
     // efface la scène précédente
     window.clear(sf::Color(66, 165, 245));
@@ -533,6 +544,11 @@ sf::View Level::getCamera() const {
     return camera;
 }
 
+void Level::setCamera(sf::View set_camera) {
+    camera = set_camera;
+    goal_center = set_camera.getCenter();
+}
+
 sf::Vector2f Level::pixelToCoords(sf::Vector2i pixel) {
     sf::RenderWindow& window = getManager().getWindow();
     sf::View old_view = window.getView();
@@ -555,8 +571,12 @@ sf::Vector2i Level::coordsToPixel(sf::Vector2f coords) {
     return pixel;
 }
 
-void Level::setCamera(sf::View set_camera) {
-    camera = set_camera;
+sf::Vector2f Level::getCenterGoal() {
+    return goal_center;
+}
+
+void Level::setCenterGoal(sf::Vector2f set_center) {
+    goal_center = set_center;
 }
 
 sf::Vector2f Level::getPlayerCenter() {

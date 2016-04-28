@@ -43,6 +43,17 @@ private:
      */
     bool isInZone(Object::Ptr object);
 
+    /**
+     * Recommence le niveau depuis le début
+     */
+    void restart();
+
+    /**
+     * Échange entre le mode pause et le mode normal
+     * (si on est dans un autre mode, ne fait rien)
+     */
+    void switchPause();
+
 protected:
     /**
      * Demande le dessin d'une frame
@@ -54,11 +65,6 @@ protected:
      * l'interface de jeu
      */
     void draw() override;
-
-    /**
-     * S'assure que la caméra est centrée sur les joueurs
-     */
-    void ensureCentered();
 
 public:
     Game(Manager& manager, bool test = false);

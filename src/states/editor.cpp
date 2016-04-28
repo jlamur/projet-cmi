@@ -208,7 +208,7 @@ void Editor::processEvent(const sf::Event& event) {
 
         // sinon, on déplace la vue
         else {
-            sf::View camera = getCamera();
+            sf::Vector2f cur_center = getCenterGoal();
 
             // la molette est horizontale ssi. elle l'est vraiment ou
             // si on utilise la molette verticale et shift
@@ -219,18 +219,12 @@ void Editor::processEvent(const sf::Event& event) {
             );
 
             if (!horizontal) {
-                camera.move(
-                    sf::Vector2f(0, event.mouseWheelScroll.delta) *
-                    WHEEL_SCROLL_SPEED
-                );
+                cur_center.y += event.mouseWheelScroll.delta * WHEEL_SCROLL_SPEED;
             } else {
-                camera.move(
-                    sf::Vector2f(event.mouseWheelScroll.delta, 0) *
-                    WHEEL_SCROLL_SPEED
-                );
+                cur_center.x += event.mouseWheelScroll.delta * WHEEL_SCROLL_SPEED;
             }
 
-            setCamera(camera);
+            setCenterGoal(cur_center);
         }
     }
 
@@ -279,21 +273,21 @@ void Editor::frame() {
 
     // scroll de la caméra lorsque la souris se situe sur les bords
     if (window.hasFocus()) {
-        sf::View camera = getCamera();
+        sf::Vector2f cur_center = getCenterGoal();
         sf::Vector2i mouse = sf::Mouse::getPosition(window);
 
         // détection du dépassement sur un des 4 bords
         if (mouse.x < POINTER_SCROLL_PADDING && mouse.x >= -POINTER_SCROLL_PADDING) {
-            camera.move(sf::Vector2f(-POINTER_SCROLL_SPEED, 0));
+            cur_center.x -= POINTER_SCROLL_SPEED;
         } else if (mouse.x >= window_size.x - POINTER_SCROLL_PADDING && mouse.x < window_size.x + POINTER_SCROLL_PADDING) {
-            camera.move(sf::Vector2f(POINTER_SCROLL_SPEED, 0));
+            cur_center.x += POINTER_SCROLL_SPEED;
         } else if (mouse.y < POINTER_SCROLL_PADDING && mouse.y >= -POINTER_SCROLL_PADDING) {
-            camera.move(sf::Vector2f(0, -POINTER_SCROLL_SPEED));
+            cur_center.y -= POINTER_SCROLL_SPEED;
         } else if (mouse.y >= window_size.y - POINTER_SCROLL_PADDING && mouse.y < window_size.y + POINTER_SCROLL_PADDING) {
-            camera.move(sf::Vector2f(0, POINTER_SCROLL_SPEED));
+            cur_center.y += POINTER_SCROLL_SPEED;
         }
 
-        setCamera(camera);
+        setCenterGoal(cur_center);
     }
 
     // màj du titre de la fenêtre

@@ -7,7 +7,7 @@ float Utility::animateValue(float current, float speed, float goal) {
     float diff = gap * Manager::FRAME_TIME.asSeconds() * speed;
 
     // si on est très proches de la fin, on termine
-    if (std::abs(gap) < .05f) {
+    if (std::abs(gap) < .1f) {
         return goal;
     }
 

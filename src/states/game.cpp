@@ -20,7 +20,21 @@ Game::Game(Manager& manager, bool test) : Level(manager),
     mode(Game::Mode::NORMAL), test(test),
     next_frame_time(manager.getCurrentTime()),
     skipped_frames(0),
-    death_cause(Game::DeathCause::NONE) {}
+    death_cause(Game::DeathCause::NONE) {
+
+    // ajout des boutons d'action de la barre d'action
+    if (!isTest()) {
+        action_toolbar.addButton(
+            *ResourceManager::get().getImage("toolbar/icon_restart.tga"),
+            std::bind(&Game::restart, this)
+        );
+
+        action_toolbar.addButton(
+            *ResourceManager::get().getImage("toolbar/icon_pause.tga"),
+            std::bind(&Game::switchPause, this)
+        );
+    }
+}
 
 Game::~Game() {}
 
@@ -51,27 +65,29 @@ void Game::processEvent(const sf::Event& event) {
     Level::processEvent(event);
 
     if (event.type == sf::Event::KeyPressed) {
-        // en mode test, retour, échap et sortie pour revenir à l'éditeur
-        if (event.key.code == sf::Keyboard::Space ||
-            event.key.code == sf::Keyboard::Escape ||
-            event.key.code == sf::Keyboard::BackSpace) {
-            getManager().popState();
-            return;
-        }
-
-        // appui sur espace : échange entre le mode pause et normal
-        if (event.key.code == sf::Keyboard::Space) {
-            if (getMode() == Game::Mode::NORMAL) {
-                setMode(Game::Mode::PAUSED);
-            } else if (getMode() == Game::Mode::PAUSED) {
-                setMode(Game::Mode::NORMAL);
+        // en mode test, retour, échap et espace pour revenir à l'éditeur
+        if (isTest()) {
+            if (event.key.code == sf::Keyboard::Space ||
+                event.key.code == sf::Keyboard::Escape ||
+                event.key.code == sf::Keyboard::BackSpace) {
+                getManager().popState();
             }
-        }
+        } else {
+            // appui sur R : recommencer le niveau
+            if (event.key.code == sf::Keyboard::R) {
+                restart();
+            }
 
-        // appui sur retour ou échap : sortie
-        if (event.key.code == sf::Keyboard::Escape ||
-            event.key.code == sf::Keyboard::BackSpace) {
-            getManager().popState();
+            // appui sur espace : échange entre le mode pause et normal
+            if (event.key.code == sf::Keyboard::Space) {
+                switchPause();
+            }
+
+            // appui sur retour ou échap : sortie
+            if (event.key.code == sf::Keyboard::Escape ||
+                event.key.code == sf::Keyboard::BackSpace) {
+                getManager().popState();
+            }
         }
     }
 }
@@ -125,7 +141,7 @@ void Game::frame() {
         }
 
         // on s'assure que la caméra soit centrée sur nos joueurs
-        ensureCentered();
+        setCenterGoal(getPlayerCenter());
 
         // si on a encore suffisamment de temps, ou si on a sauté
         // trop de frames, on dessine
@@ -151,17 +167,20 @@ void Game::draw() {
     Level::draw();
 }
 
-void Game::ensureCentered() {
-    sf::View camera = getCamera();
-    sf::Vector2f previous_center = camera.getCenter();
-    sf::Vector2f new_center = getPlayerCenter();
+void Game::restart() {
+    load();
 
-    // on anime le centre vers le centre des joueurs
-    previous_center.x = Utility::animateValue(previous_center.x, 5, new_center.x);
-    previous_center.y = Utility::animateValue(previous_center.y, 5, new_center.y);
+    setGravityDirection(Utility::Direction::SOUTH);
+    setMode(Game::Mode::NORMAL);
+    setDeathCause(Game::DeathCause::NONE);
+}
 
-    camera.setCenter(previous_center);
-    setCamera(camera);
+void Game::switchPause() {
+    if (getMode() == Game::Mode::NORMAL) {
+        setMode(Game::Mode::PAUSED);
+    } else if (getMode() == Game::Mode::PAUSED) {
+        setMode(Game::Mode::NORMAL);
+    }
 }
 
 void Game::update() {

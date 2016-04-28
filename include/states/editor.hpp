@@ -74,6 +74,11 @@ private:
      */
     void selectAll();
 
+    /**
+     * Lance le test du niveau
+     */
+    void test();
+
 protected:
     /**
      * Demande le dessin d'une frame
@@ -99,11 +104,6 @@ public:
      * Traite l'événement donné
      */
     void processEvent(const sf::Event& event) override;
-
-    /**
-     * Lance le test du niveau
-     */
-    void test();
 };
 
 #endif

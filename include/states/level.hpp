@@ -20,6 +20,8 @@ class Level : public State {
 private:
     sf::View camera;
     float camera_angle;
+    sf::Vector2f goal_center;
+
     Utility::Direction gravity_direction;
 
     sf::String name;
@@ -213,6 +215,16 @@ public:
      * Modifie la caméra
      */
     void setCamera(sf::View set_camera);
+
+    /**
+     * Récupère la cible de l'animation de la caméra
+     */
+    sf::Vector2f getCenterGoal();
+
+    /**
+     * Modifie la cible de l'animation de la caméra
+     */
+    void setCenterGoal(sf::Vector2f set_center);
 
     /**
      * Récupère le centre de tous les joueurs ou
