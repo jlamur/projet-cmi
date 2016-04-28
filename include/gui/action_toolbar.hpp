@@ -14,10 +14,19 @@ private:
     // widgets de la barre
     sfg::Window::Ptr toolbar_window;
     sfg::Box::Ptr toolbar_box;
+
     sfg::Label::Ptr timer_label;
+    sfg::Box::Ptr timer_buttons_box;
+    sfg::Button::Ptr timer_button_up;
+    sfg::Button::Ptr timer_button_down;
 
     int left_buttons_count;
     int time;
+
+    /**
+     * Crée un bouton icône avec l'icône donnée
+     */
+    sfg::Button::Ptr createButton(std::string name);
 
 public:
     ActionToolbar();
@@ -50,6 +59,14 @@ public:
      * Modifie le temps restant
      */
     void setTime(int set_time);
+
+    /**
+     * Configure les boutons de modification du temps
+     */
+    void setTimeEditable(
+        std::function<void()> up_callback = std::function<void()>(),
+        std::function<void()> down_callback = std::function<void()>()
+    );
 };
 
 #endif

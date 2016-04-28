@@ -42,6 +42,11 @@ Button, ComboBox, Entry {
     Spacing: 10;
 }
 
+Button.icon {
+    FontSize: 0;
+    BackgroundColor: #00000000;
+}
+
 Entry {
     BackgroundColor: #D2D2D2ff;
 }
@@ -49,10 +54,6 @@ Entry {
 ComboBox {
     ArrowColor: #141414ff;
     HighlightedColor: #B4B4B4ff;
-}
-
-Button.notext {
-    BackgroundColor: #00000000;
 }
 
 ObjectButton {
@@ -69,9 +70,17 @@ Button:PRELIGHT, ComboBox:PRELIGHT, ComboBox:ACTIVE {
     BackgroundColor: #D2D2D2ff;
 }
 
+Button.icon:PRELIGHT {
+    BackgroundColor: #E6E6E6ff;
+}
+
 Button:ACTIVE, Entry:ACTIVE {
     Color: #000000ff;
     BackgroundColor: #B4B4B4ff;
+}
+
+Button.icon:ACTIVE {
+    BackgroundColor: #D2D2D2ff;
 }
 
 Separator {

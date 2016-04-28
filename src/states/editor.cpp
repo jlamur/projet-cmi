@@ -47,6 +47,12 @@ Editor::Editor(Manager& manager) : Level(manager),
         std::bind(&Editor::test, this)
     );
 
+    // affichage de l'interface d'édition du temps
+    action_toolbar.setTimeEditable(
+        [this]() { setTotalTime(getTotalTime() + 5); },
+        [this]() { setTotalTime(getTotalTime() - 5); }
+    );
+
     // ajout de la barre d'objets à l'écran
     getManager().addWidget(object_toolbar.getWindow());
 }
@@ -269,7 +275,7 @@ void Editor::frame() {
     draw();
 
     // màj du temps du timer
-    action_toolbar.setTime(total_time);
+    action_toolbar.setTime(getTotalTime());
 
     // scroll de la caméra lorsque la souris se situe sur les bords
     if (window.hasFocus()) {
