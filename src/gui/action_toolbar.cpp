@@ -39,9 +39,7 @@ sfg::Button::Ptr ActionToolbar::createButton(std::string name) {
     // création d'un bouton avec pour image l'image passée
     sfg::Button::Ptr button = sfg::Button::Create("");
     button->SetClass("icon");
-    button->SetImage(sfg::Image::Create(
-        *ResourceManager::get().getImage("toolbar/icon_" + name + ".tga")
-    ));
+    button->SetImage(ResourceManager::get().getImage(name + ".tga"));
 
     return button;
 }

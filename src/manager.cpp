@@ -11,6 +11,8 @@ const float Manager::GRID = 32;
 Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
     previous_state(nullptr) {
 
+    ResourceManager& res = ResourceManager::get();
+
     // ajout des polices dans le gestionnaire de ressources
     // de la librairie pour l'interface
     desktop.GetEngine().GetResourceManager().AddFont(
@@ -28,15 +30,22 @@ Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
     // chargement du thème de l'interface
     desktop.LoadThemeFromFile("res/gui.theme");
 
-    // chargement des textures
-    ResourceManager& res = ResourceManager::get();
-
+    // préchargement des textures dans le GPU
     for (const auto &texture : res.getFiles(res.getTexturesPath())) {
         res.getTexture(texture);
 
         // on vide la file d'attente des événements pendant le
         // chargement des textures pour éviter que le système
         // pense que le programme a planté
+        sf::Event event;
+        while (window.pollEvent(event)) {}
+    }
+
+    // préchargement des images dans la RAM
+    for (const auto &image : res.getFiles(res.getImagesPath())) {
+        res.getImage(image);
+
+        // mêmes raisons que ci-dessus
         sf::Event event;
         while (window.pollEvent(event)) {}
     }
