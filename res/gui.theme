@@ -19,6 +19,19 @@
 Window {
     BackgroundColor: #FFFFFFff;
     BorderWidth: 0;
+    TitleBackgroundColor: #00000000;
+}
+
+Window.modal {
+    BackgroundColor: #00000000;
+}
+
+Window.modal Window {
+    Gap: 20;
+}
+
+Window.modal .title {
+    FontSize: 24;
 }
 
 ScrolledWindow {

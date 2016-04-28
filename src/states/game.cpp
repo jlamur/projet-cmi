@@ -34,9 +34,35 @@ Game::Game(Manager& manager, bool test) : Level(manager),
             std::bind(&Game::switchPause, this)
         );
     }
+
+    // création des modales
+    pause_modal.setTitle("En pause");
+    pause_modal.addButton("Reprendre", std::bind(&Game::switchPause, this));
+    pause_modal.addButton("Recommencer", std::bind(&Game::restart, this));
+
+    won_modal.setTitle(L"Vous avez gagné !");
+    won_modal.addButton("Sortir", std::bind(&Manager::popState, &getManager()));
+    won_modal.addButton("Recommencer", std::bind(&Game::restart, this));
+
+    lost_modal.setTitle(L"Perdu…");
+    lost_modal.addButton("Sortir", std::bind(&Manager::popState, &getManager()));
+    lost_modal.addButton("Recommencer", std::bind(&Game::restart, this));
+
+    // ajout des modales
+    pause_modal.getWindow()->Show(false);
+    won_modal.getWindow()->Show(false);
+    lost_modal.getWindow()->Show(false);
+
+    getManager().addWidget(pause_modal.getWindow());
+    getManager().addWidget(won_modal.getWindow());
+    getManager().addWidget(lost_modal.getWindow());
 }
 
-Game::~Game() {}
+Game::~Game() {
+    getManager().removeWidget(pause_modal.getWindow());
+    getManager().removeWidget(won_modal.getWindow());
+    getManager().removeWidget(lost_modal.getWindow());
+}
 
 void Game::enable() {
     Level::enable();
@@ -96,6 +122,29 @@ void Game::frame() {
     Level::frame();
     sf::Time current_time = getManager().getCurrentTime();
 
+    // on affiche les modales correctes selon l'état du jeu
+    pause_modal.getWindow()->Show(false);
+    won_modal.getWindow()->Show(false);
+    lost_modal.getWindow()->Show(false);
+
+    switch (getMode()) {
+    case Game::Mode::NORMAL:
+        // rien à faire, le jeu suit son cours
+        break;
+    case Game::Mode::PAUSED:
+        pause_modal.resize(getManager().getWindow().getSize());
+        pause_modal.getWindow()->Show(true);
+        break;
+    case Game::Mode::WON:
+        won_modal.resize(getManager().getWindow().getSize());
+        won_modal.getWindow()->Show(true);
+        break;
+    case Game::Mode::LOST:
+        lost_modal.resize(getManager().getWindow().getSize());
+        lost_modal.getWindow()->Show(true);
+        break;
+    }
+
     if (current_time >= next_frame_time) {
         // si nous sommes en retard ou dans les temps
         // on replanifie la prochaine frame
@@ -105,39 +154,6 @@ void Game::frame() {
         // si on est en mode normal
         if (getMode() == Game::Mode::NORMAL) {
             update();
-        } else {
-            // TODO: pour le débogage affichage du mode actuel
-            switch (getMode()) {
-            case Game::Mode::NORMAL:
-                std::cout << "<< Reprise >>" << std::endl;
-                break;
-            case Game::Mode::PAUSED:
-                std::cout << "<< En pause >>" << std::endl;
-                break;
-            case Game::Mode::WON:
-                std::cout << "<< Gagné ! >>" << std::endl;
-                break;
-            case Game::Mode::LOST:
-                std::cout << "<< Perdu : ";
-
-                switch (getDeathCause()) {
-                case Game::DeathCause::OUT_OF_BOUNDS:
-                    std::cout << "sortie du cadre";
-                    break;
-                case Game::DeathCause::KILLED:
-                    std::cout << "tué par bloc";
-                    break;
-                case Game::DeathCause::TIME_OUT:
-                    std::cout << "temps écoulé";
-                    break;
-                case Game::DeathCause::NONE:
-                    std::cout << "sans aucune raison";
-                    break;
-                }
-
-                std::cout << " ! >>" << std::endl;
-                break;
-            }
         }
 
         // on s'assure que la caméra soit centrée sur nos joueurs
@@ -301,6 +317,22 @@ Game::Mode Game::getMode() {
 
 void Game::setDeathCause(Game::DeathCause set_death_cause) {
     death_cause = set_death_cause;
+
+    // mise à jour du label informant de la cause de la mort
+    switch (getDeathCause()) {
+    case Game::DeathCause::OUT_OF_BOUNDS:
+        lost_modal.setSubtitle(L"Vous êtes sorti de la zone de jeu");
+        break;
+    case Game::DeathCause::KILLED:
+        lost_modal.setSubtitle(L"Vous avez touché un bloc tueur");
+        break;
+    case Game::DeathCause::TIME_OUT:
+        lost_modal.setSubtitle(L"Le temps est écoulé !");
+        break;
+    case Game::DeathCause::NONE:
+        lost_modal.setSubtitle("");
+        break;
+    }
 }
 
 Game::DeathCause Game::getDeathCause() {

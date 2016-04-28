@@ -1,6 +1,7 @@
 #ifndef __SKIZZLE_GAME_HPP__
 #define __SKIZZLE_GAME_HPP__
 
+#include "../gui/modal.hpp"
 #include "level.hpp"
 
 /**
@@ -30,6 +31,11 @@ private:
     DeathCause death_cause;
 
     float time_left;
+
+    sfg::Label::Ptr death_message;
+    Modal pause_modal;
+    Modal won_modal;
+    Modal lost_modal;
 
     /**
      * Met à jour les objets du jeu pour
