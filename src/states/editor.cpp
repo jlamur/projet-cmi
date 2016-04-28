@@ -130,12 +130,6 @@ void Editor::processEvent(const sf::Event& event) {
         }
 
         if (event.mouseButton.button == sf::Mouse::Right) {
-            // clic droit sur un point de contrôle : suppression de ce point
-            if (control_point != nullptr) {
-                removeControlPoint(control_point);
-                return;
-            }
-
             // clic droit sur un objet : démarrage de la suppression en drag&drop
             if (pointed_object != nullptr) {
                 drag_start = mouse_position;
@@ -432,19 +426,6 @@ void Editor::removeObject(Object::Ptr object) {
             getPlayers()[i]->setPlayerNumber(i);
         }
     }
-}
-
-void Editor::removeControlPoint(sf::Vector2f* control_point) {
-    if (control_point == nullptr) {
-        return;
-    }
-
-    std::vector<sf::Vector2f>& zone = getZone();
-
-    // on supprime le point de la liste
-    zone.erase(std::remove(
-        zone.begin(), zone.end(), *control_point
-    ), zone.end());
 }
 
 void Editor::removeObject(sf::Vector2f position) {

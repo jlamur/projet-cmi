@@ -48,11 +48,6 @@ private:
     void removeObject(sf::Vector2f position);
 
     /**
-     * Supprime le point de contrôle passé par pointeur
-     */
-    void removeControlPoint(sf::Vector2f* control_point);
-
-    /**
      * Ajoute l'objet/les objets donné(s) (par position, entre deux
      * positions ou par pointeur) à la sélection
      *
