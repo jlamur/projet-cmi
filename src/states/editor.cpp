@@ -277,17 +277,28 @@ void Editor::frame() {
         sf::Vector2i mouse = sf::Mouse::getPosition(window);
 
         // détection du dépassement sur un des 4 bords
-        if (mouse.x < POINTER_SCROLL_PADDING && mouse.x >= -POINTER_SCROLL_PADDING) {
-            cur_center.x -= POINTER_SCROLL_SPEED;
-        } else if (mouse.x >= window_size.x - POINTER_SCROLL_PADDING && mouse.x < window_size.x + POINTER_SCROLL_PADDING) {
-            cur_center.x += POINTER_SCROLL_SPEED;
-        } else if (mouse.y < POINTER_SCROLL_PADDING && mouse.y >= -POINTER_SCROLL_PADDING) {
-            cur_center.y -= POINTER_SCROLL_SPEED;
-        } else if (mouse.y >= window_size.y - POINTER_SCROLL_PADDING && mouse.y < window_size.y + POINTER_SCROLL_PADDING) {
-            cur_center.y += POINTER_SCROLL_SPEED;
-        }
+        if (mouse.x >= -POINTER_SCROLL_PADDING &&
+            mouse.x < window_size.x + POINTER_SCROLL_PADDING &&
+            mouse.y >= -POINTER_SCROLL_PADDING &&
+            mouse.y < window_size.y + POINTER_SCROLL_PADDING) {
+            if (mouse.x < POINTER_SCROLL_PADDING) {
+                cur_center.x -= POINTER_SCROLL_SPEED;
+            }
 
-        setCenterGoal(cur_center);
+            if (mouse.x >= window_size.x - POINTER_SCROLL_PADDING) {
+                cur_center.x += POINTER_SCROLL_SPEED;
+            }
+
+            if (mouse.y < POINTER_SCROLL_PADDING) {
+                cur_center.y -= POINTER_SCROLL_SPEED;
+            }
+
+            if (mouse.y >= window_size.y - POINTER_SCROLL_PADDING) {
+                cur_center.y += POINTER_SCROLL_SPEED;
+            }
+
+            setCenterGoal(cur_center);
+        }
     }
 
     // màj du titre de la fenêtre
