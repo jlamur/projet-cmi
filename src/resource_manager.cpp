@@ -61,42 +61,33 @@ const fs::path& ResourceManager::getMusicsPath() const {
     return musics_path;
 }
 
-sfg::Image::Ptr ResourceManager::getImage(fs::path path) {
+std::shared_ptr<sf::Image> ResourceManager::getImage(fs::path path) {
     std::string path_str = path.string();
 
-    // si l'image a déjà été chargée, on retourne la
-    // version en cache mémoire
+    // si l'image a déjà été chargée, on renvoie la version en cache
     if (images_cache.count(path_str) > 0) {
-        // le cache d'images est constitué de pointeurs "faibles", càd
-        // que dès que la ressource n'est plus utilisée, le pointeur
-        // s'invalide. Ceci parce que SFGUI maintient son propre cache.
-        // on doit donc d'abord vérifier que le pointeur est toujours valide
-        if (!images_cache[path_str].expired()) {
-            return images_cache[path_str].lock();
-        }
+        return images_cache[path_str];
     }
 
     // on tente de charger l'image depuis son emplacement
-    sf::Image image;
+    auto image = std::shared_ptr<sf::Image>(new sf::Image);
 
-    if (!image.loadFromFile(path_str)) {
+    if (!image->loadFromFile(path_str)) {
         std::cerr << "Impossible de charger l'image :" << std::endl;
         std::cerr << path_str << std::endl << std::endl;
     }
 
-    // création d'une nouvelle image SFGUI avec les infos chargées
-    // et mise en cache du résultat
-    sfg::Image::Ptr sfg_image = sfg::Image::Create(image);
-    images_cache[path_str] = sfg_image;
-
-    return sfg_image;
+    // on met en cache l'image pour les requêtes suivantes
+    // puis on la renvoie
+    images_cache[path_str] = std::move(image);
+    return images_cache[path_str];
 }
 
-sfg::Image::Ptr ResourceManager::getImage(std::string name) {
+std::shared_ptr<sf::Image> ResourceManager::getImage(std::string name) {
     return getImage(images_path / name);
 }
 
-sfg::Image::Ptr ResourceManager::getImage(const char* name) {
+std::shared_ptr<sf::Image> ResourceManager::getImage(const char* name) {
     return getImage(std::string(name));
 }
 

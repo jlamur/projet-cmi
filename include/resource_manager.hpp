@@ -27,7 +27,7 @@ private:
 
     std::unordered_map<
         std::string,
-        std::weak_ptr<sfg::Image>
+        std::shared_ptr<sf::Image>
     > images_cache;
 
     std::unordered_map<
@@ -85,9 +85,9 @@ public:
     /**
      * Charge l'image dont le chemin est donné en paramètre
      */
-    sfg::Image::Ptr getImage(boost::filesystem::path path);
-    sfg::Image::Ptr getImage(std::string name);
-    sfg::Image::Ptr getImage(const char* name);
+    std::shared_ptr<sf::Image> getImage(boost::filesystem::path path);
+    std::shared_ptr<sf::Image> getImage(std::string name);
+    std::shared_ptr<sf::Image> getImage(const char* name);
 
     /**
      * Charge l'image dont le chemin est donné en paramètre
