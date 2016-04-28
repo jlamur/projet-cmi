@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFGUI/Image.hpp>
 #include <boost/filesystem.hpp>
 #include <unordered_map>
 #include <string>
@@ -18,6 +19,7 @@ private:
     /**
      * Chemins vers les différents dossiers de ressources
      */
+    boost::filesystem::path images_path;
     boost::filesystem::path textures_path;
     boost::filesystem::path fonts_path;
     boost::filesystem::path levels_path;
@@ -25,7 +27,7 @@ private:
 
     std::unordered_map<
         std::string,
-        std::shared_ptr<sf::Image>
+        std::weak_ptr<sfg::Image>
     > images_cache;
 
     std::unordered_map<
@@ -56,6 +58,11 @@ public:
     std::vector<boost::filesystem::path> getFiles(boost::filesystem::path path) const;
 
     /**
+     * Récupère le chemin vers le dossier des images
+     */
+    const boost::filesystem::path& getImagesPath() const;
+
+    /**
      * Récupère le chemin vers le dossier des textures
      */
     const boost::filesystem::path& getTexturesPath() const;
@@ -78,9 +85,9 @@ public:
     /**
      * Charge l'image dont le chemin est donné en paramètre
      */
-    std::shared_ptr<sf::Image> getImage(boost::filesystem::path path);
-    std::shared_ptr<sf::Image> getImage(std::string name);
-    std::shared_ptr<sf::Image> getImage(const char* name);
+    sfg::Image::Ptr getImage(boost::filesystem::path path);
+    sfg::Image::Ptr getImage(std::string name);
+    sfg::Image::Ptr getImage(const char* name);
 
     /**
      * Charge l'image dont le chemin est donné en paramètre

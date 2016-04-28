@@ -282,15 +282,15 @@ void Level::frame() {
     sf::Vector2i window_size = (sf::Vector2i) window.getSize();
 
     // mise à jour de l'icône du mute en fonction de l'état
-    sf::Image image;
+    sfg::Image::Ptr image;
 
     if (ResourceManager::get().isMuted()) {
-        image = *ResourceManager::get().getImage("toolbar/icon_no_music.tga");
+        image = ResourceManager::get().getImage("no_music.tga");
     } else {
-        image = *ResourceManager::get().getImage("toolbar/icon_music.tga");
+        image = ResourceManager::get().getImage("music.tga");
     }
 
-    mute_button->SetImage(sfg::Image::Create(image));
+    mute_button->SetImage(image);
 
     // positionnement de la barre d'actions
     action_toolbar.getWindow()->SetAllocation(sf::FloatRect(
