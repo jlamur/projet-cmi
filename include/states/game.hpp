@@ -21,6 +21,7 @@ public:
 
 private:
     Mode mode;
+    bool test;
 
     sf::Time next_frame_time;
     unsigned int skipped_frames;
@@ -60,7 +61,7 @@ protected:
     void ensureCentered();
 
 public:
-    Game(Manager& manager);
+    Game(Manager& manager, bool test = false);
     virtual ~Game();
 
     /**
@@ -94,6 +95,11 @@ public:
      * Modifie le temps total du niveau
      */
     virtual void setTotalTime(int set_total_time);
+
+    /**
+     * Récupère si on est en mode test
+     */
+    bool isTest();
 };
 
 #endif

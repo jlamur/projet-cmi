@@ -65,6 +65,11 @@ void Editor::enable() {
     getManager().setTitle(sf::String(L"Édition de ") + getName());
     getManager().getWindow().setFramerateLimit(Manager::FPS);
 
+    // on positionne la caméra au centre des joueurs
+    sf::View camera = getCamera();
+    camera.setCenter(getPlayerCenter());
+    setCamera(camera);
+
     // joue la musique de l'éditeur
     ResourceManager::get().playMusic("editor.ogg");
 
@@ -504,30 +509,31 @@ void Editor::selectAll() {
 }
 
 void Editor::test() {
-    auto game = std::unique_ptr<Game>(new Game(getManager()));
+    // création d'une partie en mode test
+    auto test_game = std::unique_ptr<Game>(new Game(getManager(), true));
     clearSelection();
 
     // copie des propriétés
-    game->setName(getName());
-    game->setTotalTime(getTotalTime());
-    game->setBackground(getBackground());
-    game->setMusic(getMusic());
+    test_game->setName(getName());
+    test_game->setTotalTime(getTotalTime());
+    test_game->setBackground(getBackground());
+    test_game->setMusic(getMusic());
+
+    test_game->getObjects().clear();
+    test_game->getZone().clear();
 
     // copie des objets du niveau vers le jeu
-    std::vector<Object::Ptr>& objects = getObjects();
-    game->getObjects().clear();
-
-    for (auto it = objects.begin(); it != objects.end(); it++) {
-        game->addObject((*it)->clone());
+    for (auto const &object : getObjects()) {
+        test_game->addObject(object->clone());
     }
 
     // copie de la zone de jeu
-    std::vector<sf::Vector2f>& zone = getZone();
-    game->getZone().clear();
-
-    for (auto it = zone.begin(); it != zone.end(); it++) {
-        game->getZone().push_back(*it);
+    for (auto const &point : getZone()) {
+        test_game->getZone().push_back(point);
     }
 
-    getManager().pushState(std::move(game));
+    // repositionnement de la caméra
+    test_game->setCamera(getCamera());
+
+    getManager().pushState(std::move(test_game));
 }

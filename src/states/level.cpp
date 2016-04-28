@@ -103,7 +103,6 @@ void Level::enable() {
     sf::Vector2u window_size = getManager().getWindow().getSize();
 
     camera.setSize(window_size.x, window_size.y);
-    camera.setCenter(0, 0);
     camera_angle = 180.f;
 
     // on affiche la barre d'actions
@@ -558,4 +557,18 @@ sf::Vector2i Level::coordsToPixel(sf::Vector2f coords) {
 
 void Level::setCamera(sf::View set_camera) {
     camera = set_camera;
+}
+
+sf::Vector2f Level::getPlayerCenter() {
+    sf::Vector2f sum;
+
+    for (auto const &player : getPlayers()) {
+        sum += player->getPosition();
+    }
+
+    if (getPlayers().size() == 0) {
+        return sf::Vector2f(0, 0);
+    }
+
+    return sum / (float) getPlayers().size();
 }

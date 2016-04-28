@@ -213,6 +213,12 @@ public:
      * Modifie la caméra
      */
     void setCamera(sf::View set_camera);
+
+    /**
+     * Récupère le centre de tous les joueurs ou
+     * zéro si aucun joueur
+     */
+    sf::Vector2f getPlayerCenter();
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include "../gui/object_toolbar.hpp"
 #include "level.hpp"
+#include "game.hpp"
 
 /**
  * La classe Editor permet l'édition de

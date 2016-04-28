@@ -16,8 +16,8 @@ namespace {
     const unsigned int MAX_FRAME_SKIP = 5;
 }
 
-Game::Game(Manager& manager) : Level(manager),
-    mode(Game::Mode::NORMAL),
+Game::Game(Manager& manager, bool test) : Level(manager),
+    mode(Game::Mode::NORMAL), test(test),
     next_frame_time(manager.getCurrentTime()),
     skipped_frames(0),
     death_cause(Game::DeathCause::NONE) {}
@@ -31,6 +31,14 @@ void Game::enable() {
     getManager().setTitle(getName());
     getManager().getWindow().setFramerateLimit(0);
 
+    // en dehors du mode test, on positionne la caméra directement
+    // au centre des joueurs
+    if (!isTest()) {
+        sf::View camera = getCamera();
+        camera.setCenter(getPlayerCenter());
+        setCamera(camera);
+    }
+
     // si musique il y a, on la joue
     if (getMusic() != "") {
         ResourceManager::get().playMusic("levels/" + getMusic());
@@ -43,19 +51,27 @@ void Game::processEvent(const sf::Event& event) {
     Level::processEvent(event);
 
     if (event.type == sf::Event::KeyPressed) {
-        // appui sur espace : retour
-        if (event.key.code == sf::Keyboard::Space) {
+        // en mode test, retour, échap et sortie pour revenir à l'éditeur
+        if (event.key.code == sf::Keyboard::Space ||
+            event.key.code == sf::Keyboard::Escape ||
+            event.key.code == sf::Keyboard::BackSpace) {
             getManager().popState();
+            return;
         }
 
-        // appui sur retour échap : échange entre le mode pause et normal
-        if (event.key.code == sf::Keyboard::Escape ||
-            event.key.code == sf::Keyboard::BackSpace) {
+        // appui sur espace : échange entre le mode pause et normal
+        if (event.key.code == sf::Keyboard::Space) {
             if (getMode() == Game::Mode::NORMAL) {
                 setMode(Game::Mode::PAUSED);
             } else if (getMode() == Game::Mode::PAUSED) {
                 setMode(Game::Mode::NORMAL);
             }
+        }
+
+        // appui sur retour ou échap : sortie
+        if (event.key.code == sf::Keyboard::Escape ||
+            event.key.code == sf::Keyboard::BackSpace) {
+            getManager().popState();
         }
     }
 }
@@ -136,28 +152,13 @@ void Game::draw() {
 }
 
 void Game::ensureCentered() {
-    std::vector<Player::Ptr>& players = getPlayers();
-    unsigned int player_count = players.size();
-
     sf::View camera = getCamera();
     sf::Vector2f previous_center = camera.getCenter();
-    sf::Vector2f position_sum, goal_center;
+    sf::Vector2f new_center = getPlayerCenter();
 
-    for (unsigned int i = 0; i < player_count; i++) {
-        position_sum += players[i]->getPosition();
-    }
-
-    if (player_count == 0) {
-        // on évite la division par zéro
-        goal_center = sf::Vector2f(0, 0);
-    } else {
-        // on place la caméra à la position médiane de tous les joueurs
-        goal_center = position_sum / (float) player_count;
-    }
-
-    // on anime le centre vers la nouvelle position
-    previous_center.x = Utility::animateValue(previous_center.x, 5, goal_center.x);
-    previous_center.y = Utility::animateValue(previous_center.y, 5, goal_center.y);
+    // on anime le centre vers le centre des joueurs
+    previous_center.x = Utility::animateValue(previous_center.x, 5, new_center.x);
+    previous_center.y = Utility::animateValue(previous_center.y, 5, new_center.y);
 
     camera.setCenter(previous_center);
     setCamera(camera);
@@ -292,4 +293,8 @@ void Game::setMode(Game::Mode set_mode) {
 void Game::setTotalTime(int set_total_time) {
     Level::setTotalTime(set_total_time);
     time_left = getTotalTime();
+}
+
+bool Game::isTest() {
+    return test;
 }
