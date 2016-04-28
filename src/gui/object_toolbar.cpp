@@ -36,12 +36,12 @@ ObjectToolbar::ObjectToolbar() {
         &ObjectToolbar::createGravityBlock, this, Utility::Direction::EAST
     ));
 
-    addCreator("gravity_block_south", std::bind(
-        &ObjectToolbar::createGravityBlock, this, Utility::Direction::SOUTH
-    ));
-
     addCreator("gravity_block_west", std::bind(
         &ObjectToolbar::createGravityBlock, this, Utility::Direction::WEST
+    ));
+
+    addCreator("gravity_block_south", std::bind(
+        &ObjectToolbar::createGravityBlock, this, Utility::Direction::SOUTH
     ));
 
     // attachement de la liste des créateurs à l'interface

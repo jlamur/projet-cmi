@@ -36,21 +36,18 @@ Editor::Editor(Manager& manager) : Level(manager),
     drag_control_point(nullptr), drag_mode(Editor::DragMode::NONE) {
 
     // ajout des boutons d'action de la barre d'action
+    action_toolbar.addButton("gear", Utility::Direction::WEST, 0);
     action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_gear.tga")
-    );
-
-    action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_save.tga"),
+        "save", Utility::Direction::WEST, 1,
         std::bind(&Editor::save, this)
     );
 
     action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_test.tga"),
+        "test", Utility::Direction::WEST, 2,
         std::bind(&Editor::test, this)
     );
 
-    // ajout de la barre d'objets
+    // ajout de la barre d'objets à l'écran
     getManager().addWidget(object_toolbar.getWindow());
 }
 
@@ -270,6 +267,9 @@ void Editor::frame() {
 
     // dessin de la frame
     draw();
+
+    // màj du temps du timer
+    action_toolbar.setTime(total_time);
 
     // scroll de la caméra lorsque la souris se situe sur les bords
     if (window.hasFocus()) {

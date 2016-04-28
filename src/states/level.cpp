@@ -70,27 +70,21 @@ Level::Level(Manager& manager) : State(manager),
 
     // ajout des boutons d'action de la barre d'action
     action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_back.tga"),
+        "back", Utility::Direction::EAST, 0,
         std::bind(&Manager::popState, &getManager())
     );
 
     mute_button = action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_music.tga"),
+        "music", Utility::Direction::EAST, 1,
         []() {
-            // on inverse le drapeau de muet
+            // on inverse l'état muet ou non
             ResourceManager::get().setMuted(
                 !ResourceManager::get().isMuted()
             );
         }
     );
 
-    action_toolbar.addSpacer(5, true, false);
-
-    action_toolbar.addButton(
-        *ResourceManager::get().getImage("toolbar/icon_no_music.tga")
-    );
-
-    action_toolbar.addSpacer(5, true, false);
+    // ajout de la barre d'objets à l'écran
     getManager().addWidget(action_toolbar.getWindow());
 }
 

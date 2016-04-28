@@ -25,12 +25,12 @@ Game::Game(Manager& manager, bool test) : Level(manager),
     // ajout des boutons d'action de la barre d'action
     if (!isTest()) {
         action_toolbar.addButton(
-            *ResourceManager::get().getImage("toolbar/icon_restart.tga"),
+            "restart", Utility::Direction::WEST, 0,
             std::bind(&Game::restart, this)
         );
 
         action_toolbar.addButton(
-            *ResourceManager::get().getImage("toolbar/icon_pause.tga"),
+            "pause", Utility::Direction::WEST, 1,
             std::bind(&Game::switchPause, this)
         );
     }
@@ -196,6 +196,8 @@ void Game::update() {
     } else {
         time_left -= Manager::FRAME_TIME.asSeconds();
     }
+
+    action_toolbar.setTime(std::ceil(time_left));
 
     // on tue les objets qui étaient déjà planifiés pour mourir
     for (auto it = pending_kill.begin(); it != pending_kill.end(); it++) {

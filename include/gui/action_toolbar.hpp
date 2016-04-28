@@ -4,32 +4,31 @@
 #include <SFGUI/Widgets.hpp>
 #include <SFML/Graphics.hpp>
 #include "../objects/object.hpp"
+#include "../utility.hpp"
 
 /**
- * Barre d'outils pour les actions en jeu
+ * Barre d'outils pour les boutons d'actions en jeu
  */
 class ActionToolbar {
 private:
     // widgets de la barre
     sfg::Window::Ptr toolbar_window;
     sfg::Box::Ptr toolbar_box;
+    sfg::Label::Ptr timer_label;
+
+    int left_buttons_count;
+    int time;
 
 public:
     ActionToolbar();
 
     /**
-     * Ajoute un nouveau bouton d'action à la barre d'outils
+     * Ajoute un nouveau bouton d'action à gauche ou
+     * à droite de la barre d'action d'outils
      */
     sfg::Button::Ptr addButton(
-        sf::Image image,
-        std::function<void()> callback = std::function<void()>()
-    );
-
-    /**
-     * Ajoute un nouvel espaceur
-     */
-    sfg::Alignment::Ptr addSpacer(
-        float width, bool expand, bool fill
+        std::string name, Utility::Direction direction,
+        int position, std::function<void()> callback = std::function<void()>()
     );
 
     /**
@@ -41,6 +40,16 @@ public:
      * Récupère la taille désirée par la barre d'outils
      */
     float getHeight();
+
+    /**
+     * Récupère le temps restant
+     */
+    int getTime();
+
+    /**
+     * Modifie le temps restant
+     */
+    void setTime(int set_time);
 };
 
 #endif

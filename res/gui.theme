@@ -11,6 +11,11 @@
     Color: #141414ff;
 }
 
+.timer {
+    FontName: monoid;
+    FontSize: 18;
+}
+
 Window {
     BackgroundColor: #FFFFFFff;
     BorderWidth: 0;
