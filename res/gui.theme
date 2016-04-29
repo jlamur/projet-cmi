@@ -60,7 +60,8 @@ Button.icon {
     BackgroundColor: #00000000;
 }
 
-Entry {
+Entry, IconRadioButton {
+    BorderWidth: 0;
     BackgroundColor: #D2D2D2ff;
 }
 
@@ -69,12 +70,7 @@ ComboBox {
     HighlightedColor: #B4B4B4ff;
 }
 
-ObjectButton {
-    BorderColor: #B4B4B4ff;
-    BackgroundColor: #D2D2D2ff;
-}
-
-ObjectButton:PRELIGHT {
+IconRadioButton:PRELIGHT {
     BackgroundColor: #E6E6E6ff;
 }
 

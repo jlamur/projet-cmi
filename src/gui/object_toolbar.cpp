@@ -68,9 +68,10 @@ ObjectToolbar::ObjectToolbar() {
 
 void ObjectToolbar::addCreator(std::string path, std::function<Object::Ptr()> creator) {
     // on crée un bouton d'objet correspondant au créateur donné
-    ObjectButton::Ptr button = ObjectButton::Create(sfg::Image::Create(
-        *ResourceManager::get().getImage(path + ".tga")
-    ));
+    IconRadioButton::Ptr button = IconRadioButton::Create(
+        sfg::Image::Create(*ResourceManager::get().getImage(path + ".tga")),
+        creators_group
+    );
 
     creators[button] = creator;
 

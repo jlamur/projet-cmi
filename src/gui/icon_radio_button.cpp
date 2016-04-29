@@ -3,13 +3,13 @@
 #include <SFGUI/Renderer.hpp>
 #include <SFGUI/RenderQueue.hpp>
 #include <cmath>
-#include "gui/object_button.hpp"
+#include "gui/icon_radio_button.hpp"
 
-ObjectButton::Ptr ObjectButton::Create(
+IconRadioButton::Ptr IconRadioButton::Create(
     sfg::Image::Ptr image,
     std::shared_ptr<sfg::RadioButtonGroup> group
 ) {
-    auto ptr = Ptr(new ObjectButton);
+    auto ptr = Ptr(new IconRadioButton);
     ptr->SetImage(image);
     ptr->SetLabel(L"");
 
@@ -24,12 +24,12 @@ ObjectButton::Ptr ObjectButton::Create(
     return ptr;
 }
 
-const std::string& ObjectButton::GetName() const {
-    static const std::string name = "ObjectButton";
+const std::string& IconRadioButton::GetName() const {
+    static const std::string name = "IconRadioButton";
     return name;
 }
 
-sf::Vector2f ObjectButton::CalculateRequisition() {
+sf::Vector2f IconRadioButton::CalculateRequisition() {
     float padding = sfg::Context::Get().GetEngine().GetProperty<float>(
         "Padding", shared_from_this()
     );
@@ -44,8 +44,12 @@ sf::Vector2f ObjectButton::CalculateRequisition() {
     return child_req;
 }
 
-std::unique_ptr<sfg::RenderQueue> ObjectButton::InvalidateImpl() const {
+std::unique_ptr<sfg::RenderQueue> IconRadioButton::InvalidateImpl() const {
     auto queue = std::unique_ptr<sfg::RenderQueue>(new sfg::RenderQueue);
+
+    auto border_width = sfg::Context::Get().GetEngine().GetProperty<float>(
+        "BorderWidth", shared_from_this()
+    );
 
     auto border_color = sfg::Context::Get().GetEngine().GetProperty<sf::Color>(
         "BorderColor", shared_from_this()
@@ -76,7 +80,7 @@ std::unique_ptr<sfg::RenderQueue> ObjectButton::InvalidateImpl() const {
         }
 
 		queue->Add(sfg::Renderer::Get().CreatePane(
-            position, size, 1.f,
+            position, size, border_width,
             background_color, border_color, 0
         ));
     }
@@ -98,6 +102,6 @@ std::unique_ptr<sfg::RenderQueue> ObjectButton::InvalidateImpl() const {
     return queue;
 }
 
-void ObjectButton::HandleStateChange(sfg::Widget::State old_state) {
+void IconRadioButton::HandleStateChange(sfg::Widget::State old_state) {
     Invalidate();
 }

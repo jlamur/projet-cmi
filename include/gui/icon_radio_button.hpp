@@ -1,5 +1,5 @@
-#ifndef __SKIZZLE_OBJECT_BUTTON_HPP__
-#define __SKIZZLE_OBJECT_BUTTON_HPP__
+#ifndef __SKIZZLE_ICON_RADIO_BUTTON_HPP__
+#define __SKIZZLE_ICON_RADIO_BUTTON_HPP__
 
 #include <SFGUI/Image.hpp>
 #include <SFGUI/RadioButton.hpp>
@@ -16,10 +16,10 @@
  * (note: cette classe suit les conventions de nommage de SFGUI, pas
  * celles de Skizzle, pour plus de cohérence)
  */
-class ObjectButton : public sfg::RadioButton {
+class IconRadioButton : public sfg::RadioButton {
 public:
-    typedef std::shared_ptr<ObjectButton> Ptr;
-    typedef std::shared_ptr<const ObjectButton> PtrConst;
+    typedef std::shared_ptr<IconRadioButton> Ptr;
+    typedef std::shared_ptr<const IconRadioButton> PtrConst;
 
     /**
      * Crée un nouveau bouton d'objet. La convention pour les widgets
@@ -42,7 +42,7 @@ protected:
      * On utilise le constructeur par défaut, mais on est obligés de le
      * déclarer explicitement pour qu'il soit protégé
      */
-    ObjectButton() = default;
+    IconRadioButton() = default;
 
     /**
      * Recalcule la géométrie du widget

@@ -7,7 +7,7 @@
 #include <functional>
 #include "../objects/object.hpp"
 #include "../utility.hpp"
-#include "object_button.hpp"
+#include "icon_radio_button.hpp"
 
 /**
  * Barre d'outils qui affiche une liste d'objets à choisir
@@ -21,7 +21,7 @@ private:
     // types d'objets de la barre d'outils
     sfg::RadioButtonGroup::Ptr creators_group;
     sfg::Table::Ptr creators_table;
-    std::map<ObjectButton::Ptr, std::function<Object::Ptr()>> creators;
+    std::map<IconRadioButton::Ptr, std::function<Object::Ptr()>> creators;
 
     int creators_table_pos_x, creators_table_pos_y;
 
