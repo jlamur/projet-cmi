@@ -49,7 +49,8 @@ namespace {
 }
 
 Level::Level(Manager& manager) : State(manager),
-    gravity_direction(Utility::Direction::SOUTH) {
+    gravity_direction(Utility::Direction::SOUTH),
+    previously_muted_state(!ResourceManager::get().isMuted()) {
 
     // métadonnées par défaut
     setName(sf::String("Nouveau niveau"));
@@ -282,12 +283,18 @@ void Level::frame() {
     sf::Vector2i window_size = (sf::Vector2i) window.getSize();
 
     // mise à jour de l'icône du mute en fonction de l'état
-    if (ResourceManager::get().isMuted()) {
-        std::static_pointer_cast<sfg::Image>(mute_button->GetChild())
-            ->SetImage(*ResourceManager::get().getImage("no_music.tga"));
-    } else {
-        std::static_pointer_cast<sfg::Image>(mute_button->GetChild())
-            ->SetImage(*ResourceManager::get().getImage("music.tga"));
+    if (previously_muted_state != ResourceManager::get().isMuted()) {
+        if (ResourceManager::get().isMuted()) {
+            previously_muted_state = true;
+            mute_button->SetImage(sfg::Image::Create(
+                *ResourceManager::get().getImage("no_music.tga")
+            ));
+        } else {
+            previously_muted_state = false;
+            mute_button->SetImage(sfg::Image::Create(
+                *ResourceManager::get().getImage("music.tga")
+            ));
+        }
     }
 
     // positionnement de la barre d'actions

@@ -38,6 +38,7 @@ private:
     std::vector<sf::Vector2f> zone;
 
     sfg::Button::Ptr mute_button;
+    bool previously_muted_state;
 
 protected:
     ActionToolbar action_toolbar;
