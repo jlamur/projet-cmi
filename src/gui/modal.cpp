@@ -3,10 +3,8 @@
 
 Modal::Modal() {
     // création des fenêtres
-    modal_main_window = sfg::Window::Create(sfg::Window::Style::BACKGROUND);
-    modal_inner_window = sfg::Window::Create(sfg::Window::Style::BACKGROUND);
-
-    modal_main_window->SetClass("modal");
+    modal_window = sfg::Window::Create(sfg::Window::Style::BACKGROUND);
+    modal_window->SetClass("modal");
 
     // la fenêtre interne est alignée au centre de la principale
     sfg::Alignment::Ptr inner_alignment = sfg::Alignment::Create();
@@ -27,14 +25,11 @@ Modal::Modal() {
     layout_box->PackEnd(subtitle_label);
     layout_box->PackEnd(spacer);
     layout_box->PackEnd(buttons_box);
-    modal_inner_window->Add(layout_box);
-
-    inner_alignment->Add(modal_inner_window);
-    modal_main_window->Add(inner_alignment);
+    modal_window->Add(layout_box);
 }
 
 sfg::Window::Ptr Modal::getWindow() {
-    return modal_main_window;
+    return modal_window;
 }
 
 sfg::Box::Ptr Modal::getLayoutBox() {
@@ -62,7 +57,8 @@ void Modal::setSubtitle(sf::String label) {
 }
 
 void Modal::resize(sf::Vector2u size) {
-    modal_main_window->SetAllocation(sf::FloatRect(
-        0, 0, size.x, size.y
+    modal_window->SetAllocation(sf::FloatRect(
+        (sf::Vector2f) size / 2.f - modal_window->GetRequisition() / 2.f,
+        modal_window->GetRequisition() / 2.f
     ));
 }

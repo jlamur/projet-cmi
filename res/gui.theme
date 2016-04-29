@@ -23,10 +23,6 @@ Window {
 }
 
 Window.modal {
-    BackgroundColor: #00000000;
-}
-
-Window.modal Window {
     Gap: 20;
 }
 

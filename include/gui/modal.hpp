@@ -6,13 +6,11 @@
 #include <functional>
 
 /**
- * Classe de base pour les fenêtres modales
- * qui bloquent l'accès aux autres éléments du jeu
+ * Classe pour les dialogues d'information du jeu
  */
 class Modal {
 protected:
-    sfg::Window::Ptr modal_main_window;
-    sfg::Window::Ptr modal_inner_window;
+    sfg::Window::Ptr modal_window;
 
     sfg::Box::Ptr layout_box;
     sfg::Box::Ptr buttons_box;
