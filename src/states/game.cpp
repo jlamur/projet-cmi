@@ -68,7 +68,8 @@ void Game::enable() {
     Level::enable();
 
     // attributs de la fenêtre
-    getManager().setTitle(getName());
+    sf::String prefix = isTest() ? sf::String(L"Test de ") : sf::String("");
+    getManager().setTitle(prefix + getName());
     getManager().getWindow().setFramerateLimit(0);
 
     // en dehors du mode test, on positionne la caméra directement
