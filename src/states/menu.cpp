@@ -19,12 +19,12 @@ namespace {
         // pour ce faire, on crée une instance temporaire de
         // Game que l'on charge avec le chemin donné puis on
         // extrait son nom
-        Game temporary_game(manager);
+        Level temporary_level(manager);
 
-        temporary_game.setPath(path);
-        temporary_game.load();
+        temporary_level.setPath(path);
+        temporary_level.load();
 
-        return temporary_game.getName();
+        return temporary_level.getName();
     }
 }
 
