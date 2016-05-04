@@ -31,22 +31,22 @@ placez vous dans un dossier ne contenant pas de données importantes
 comme votre dossier de téléchargements pour effectuer ces commandes.
 
 ```sh
-wget -O SFGUI.tar.gz $(curl -s https://api.github.com/repos/TankOs/SFGUI/releases | grep tarball_url | head -n 1 | cut -d '"' -f 4)
-mkdir SFGUI
-tar -zxf SFGUI.tar.gz -C SFGUI --strip-components=1
-cd SFGUI
-cmake .
-make
-sudo make install
+$ wget -O SFGUI.tar.gz $(curl -s https://api.github.com/repos/TankOs/SFGUI/releases | grep tarball_url | head -n 1 | cut -d '"' -f 4)
+$ mkdir SFGUI
+$ tar -zxf SFGUI.tar.gz -C SFGUI --strip-components=1
+$ cd SFGUI
+$ cmake .
+$ make
+$ sudo make install
 ```
 
 Vous pouvez supprimer l'archive `SFGUI.tar.gz` et le dossier `SFGUI`
 si vous n'en avez plus besoin.
 
 ```sh
-rm -r SFGUI.tar.gz SFGUI
-
+$ rm -r SFGUI.tar.gz SFGUI
 ```
+
 ### Installation de Boost
 
 Comme nous n'avons besoin que d'une petite partie de Boost, et vu
@@ -59,19 +59,19 @@ placez vous dans un dossier ne contenant pas de données importantes
 comme votre dossier de téléchargements pour effectuer ces commandes.
 
 ```sh
-wget -O boost.tar.bz2 https://sourceforge.net/projects/boost/files/latest/download
-mkdir boost
-tar -jxf boost.tar.bz2 -C boost --strip-components=1
-cd boost
-./bootstrap.sh --with-libraries=system,filesystem
-sudo ./b2 install
+$ wget -O boost.tar.bz2 https://sourceforge.net/projects/boost/files/latest/download
+$ mkdir boost
+$ tar -jxf boost.tar.bz2 -C boost --strip-components=1
+$ cd boost
+$ ./bootstrap.sh --with-libraries=system,filesystem
+$ sudo ./b2 install
 ```
 
 Vous pouvez supprimer l'archive `boost.tar.bz2` et le dossier `boost`
 si vous n'en avez plus besoin.
 
 ```sh
-rm -r boost.tar.bz2 boost
+$ rm -r boost.tar.bz2 boost
 ```
 
 ### Compilation du projet
@@ -81,13 +81,13 @@ pouvez maintenant télécharger le code source du projet et
 le compiler.
 
 ```sh
-wget -O skizzle.tar.gz https://github.com/matteodelabre/projet-cmi/archive/master.tar.gz
-mkdir skizzle
-tar -zxf skizzle.tar.gz -C skizzle --strip-components=1
-cd skizzle
-cmake .
-make
-./skizzle
+$ wget -O skizzle.tar.gz https://github.com/matteodelabre/projet-cmi/archive/master.tar.gz
+$ mkdir skizzle
+$ tar -zxf skizzle.tar.gz -C skizzle --strip-components=1
+$ cd skizzle
+$ cmake .
+$ make
+$ ./skizzle
 ```
 
 Et voilà ! :smiley:
