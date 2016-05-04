@@ -14,19 +14,17 @@ annuel pour l'Université de Montpellier. Vous pouvez lire
 les différents rapports de suivi du projet dans le dossier
 `docs/rapports/`.
 
-## Compilation
+## Installation et utilisation
 
-Le jeu est codé en C++, utilise des fonctionnalités du
-standard C++11 et requiert donc un compilateur récent.
-Les librairies suivantes sont nécessaires :
+Le jeu est compatible avec la plupart des systèmes d'exploitation
+courants, notamment Windows, Mac OS X et Linux. Comme
+le jeu n'est pas encore arrivé à une version stable, nous ne
+fournissons pas de version précompilée.
 
-* [SFML](http://www.sfml-dev.org/download.php) ;
-* [SFGUI](http://sfgui.sfml-dev.de/download/) ;
-* [Boost Filesystem](http://www.boost.org/doc/libs/1_60_0/more/getting_started/index.html).
+Pour compiler manuellement le jeu, des instructions détaillées
+sont disponibles.
 
-Une fois les librairies installées, exécuter CMake dans
-le dossier du projet pour générer les fichiers de projet,
-puis effectuer la compilation.
+* [Guide pour Linux.](docs/guides/compilation-linux.md)
 
 ## Licence
 
