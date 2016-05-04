@@ -16,8 +16,8 @@ $ sudo apt-get install build-essential cmake
 ### Installation de SFML
 
 La librairie SFML est déjà packagée pour la plupart des systèmes dérivés
-de Debian, notamment Ubuntu. Si la version est trop vieille (< \ 2.3.2), vous
-devrez la compiler vous mêmes.
+de Debian, notamment Ubuntu. Si la version est trop vieille (≤ 2.3.2), vous
+devrez la compiler vous-même.
 
 ```sh
 $ sudo apt-get install libsfml-dev
@@ -27,8 +27,8 @@ $ sudo apt-get install libsfml-dev
 
 Il n'existe pas de paquet SFGUI déjà préparé, il faut donc télécharger
 les sources et les compiler. *Conseil :* pour éviter de fausses manipulations,
-placez vous dans un dossier ne contenant pas de données importantes
-comme votre dossier de téléchargements pour effectuer ces commandes.
+placez-vous dans un dossier ne contenant pas de données importantes,
+comme votre dossier de téléchargements, pour effectuer ces commandes.
 
 ```sh
 $ wget -O SFGUI.tar.gz $(curl -s https://api.github.com/repos/TankOs/SFGUI/releases | grep tarball_url | head -n 1 | cut -d '"' -f 4)
@@ -55,8 +55,8 @@ l'installer manuellement pour pouvoir spécifier les parties qui
 nous sont nécessaires. Si vous avez déjà installé les librairies
 `system` et `filesystem` de Boost sur votre machine, vous pouvez
 sauter cette étape. *Conseil :* pour éviter de fausses manipulations,
-placez vous dans un dossier ne contenant pas de données importantes
-comme votre dossier de téléchargements pour effectuer ces commandes.
+placez-vous dans un dossier ne contenant pas de données importantes,
+comme votre dossier de téléchargements, pour effectuer ces commandes.
 
 ```sh
 $ wget -O boost.tar.bz2 https://sourceforge.net/projects/boost/files/latest/download
