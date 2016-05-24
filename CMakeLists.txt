@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+﻿cmake_minimum_required(VERSION 2.8)
 project(skizzle)
 
 # Inclusion des fichiers d'en-tête et de source
@@ -38,7 +38,7 @@ find_package(SFML 2.3.2 REQUIRED system window graphics network audio)
 find_package(Boost 1.60.0 COMPONENTS system filesystem)
 find_package(SFGUI 0.2.3 REQUIRED)
 
-include_directories(${SFML_INCLUDE_DIRS})
+include_directories(${SFML_INCLUDE_DIR})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${SFGUI_INCLUDE_DIR})
 
