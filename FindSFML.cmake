@@ -64,6 +64,8 @@ endif()
 set(FIND_SFML_PATHS
     ${SFML_ROOT}
     $ENV{SFML_ROOT}
+    C:\\Program\ Files\ \(x86\)\\SFML
+    C:\\Program\ Files\\SFML
     ~/Library/Frameworks
     /Library/Frameworks
     /usr/local

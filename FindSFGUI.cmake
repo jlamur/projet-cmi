@@ -68,6 +68,8 @@ set(
 	SFGUI_SEARCH_PATHS
 	"${SFGUI_ROOT}"
 	"$ENV{SFGUI_ROOT}"
+	C:\\Program\ Files\ \(x86\)\\SFGUI
+	C:\\Program\ Files\\SFGUI
 	~/Library/Frameworks
 	/Library/Frameworks
 	/usr/local
