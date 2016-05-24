@@ -1,5 +1,4 @@
-#include <boost/filesystem.hpp>
-#include <arpa/inet.h>
+﻿#include <boost/filesystem.hpp>
 #include <cstring>
 #include <functional>
 #include "manager.hpp"
@@ -12,6 +11,12 @@
 #include "objects/finish_block.hpp"
 #include "objects/kill_block.hpp"
 #include "states/level.hpp"
+
+#ifdef _WIN32
+#include <winsock2.h>
+#else
+#include <arpa/inet.h>
+#endif
 
 /**
  * Définition des variables et fonctions globales internes
