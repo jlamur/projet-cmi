@@ -1,4 +1,4 @@
-![Skizzle](docs/images/logo_text.png)
+  <img src="docs/images/logo_text.png" alt="Skizzle" height="100" />
 
 **Skizzle est un jeu inspiré des jeux de plateformes,** des jeux
 de réflexion et de coopération. Deux joueurs font évoluer leur
