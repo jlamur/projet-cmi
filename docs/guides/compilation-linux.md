@@ -23,6 +23,16 @@ devrez la compiler vous-même.
 $ sudo apt-get install libsfml-dev
 ```
 
+### Installation de Boost
+
+La librairie Boost est déjà packagée pour la plupart des systèmes dérivés
+de Debian, notamment Ubuntu. Si la version est trop vieille (< 1.58.0), vous
+devrez la compilez vous-même.
+
+```sh
+sudo apt-get install libboost-dev libboost-system-dev libboost-filesystem-dev
+```
+
 ### Installation de SFGUI
 
 Il n'existe pas de paquet SFGUI déjà préparé, il faut donc télécharger
@@ -47,33 +57,6 @@ si vous n'en avez plus besoin.
 $ rm -r SFGUI.tar.gz SFGUI
 ```
 
-### Installation de Boost
-
-Comme nous n'avons besoin que d'une petite partie de Boost, et vu
-la taille de la librairie Boost entière, il est plus sage de
-l'installer manuellement pour pouvoir spécifier les parties qui
-nous sont nécessaires. Si vous avez déjà installé les librairies
-`system` et `filesystem` de Boost sur votre machine, vous pouvez
-sauter cette étape. *Conseil :* pour éviter de fausses manipulations,
-placez-vous dans un dossier ne contenant pas de données importantes,
-comme votre dossier de téléchargements, pour effectuer ces commandes.
-
-```sh
-$ wget -O boost.tar.bz2 https://sourceforge.net/projects/boost/files/latest/download
-$ mkdir boost
-$ tar -jxf boost.tar.bz2 -C boost --strip-components=1
-$ cd boost
-$ ./bootstrap.sh --with-libraries=system,filesystem
-$ sudo ./b2 install
-```
-
-Vous pouvez supprimer l'archive `boost.tar.bz2` et le dossier `boost`
-si vous n'en avez plus besoin.
-
-```sh
-$ rm -r boost.tar.bz2 boost
-```
-
 ### Compilation du projet
 
 Toutes les dépendances nécessaires étant installées, vous
@@ -91,4 +74,3 @@ $ ./skizzle
 ```
 
 Et voilà ! :smiley:
-
