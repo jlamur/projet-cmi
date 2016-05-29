@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Skizzle
+GenericName=Jeu de plateformes coopératif
+Comment=Skizzle est un jeu inspiré des jeux de plateformes, des jeux de réflexion et de coopération
+Exec=skizzle
+Icon=skizzle
+Terminal=false
+Type=Application
+Categories=Game;LogicGame;ActionGame;
+Keywords=skizzle;ball;block;gravity;physics;
