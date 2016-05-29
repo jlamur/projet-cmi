@@ -3,8 +3,15 @@
 CMakeFiles
 CMakeCache.txt
 Makefile
-skizzle
 cmake_install.cmake
+
+CPackConfig.cmake
+CPackSourceConfig.cmake
+install_manifest.txt
+_CPack_Packages
+
+skizzle
+*.deb
 
 *.aux
 *.bbl
