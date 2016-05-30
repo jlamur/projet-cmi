@@ -1,5 +1,7 @@
 ﻿cmake_minimum_required(VERSION 2.8)
-project(skizzle)
+cmake_policy(SET CMP0048 NEW)
+
+project(skizzle VERSION 0.1.0 LANGUAGES CXX)
 
 # Inclusion des fichiers d'en-tête et de source
 include_directories(include)
@@ -7,16 +9,12 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 # Affichage de tous les avertisements
 if(MSVC)
-    if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
-        string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-    endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall -Wno-long-long -pedantic")
 endif()
 
-# Activation du standard C++11 sur GCC
+# Activation du standard C++11 sur le compilateur
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     include(CheckCXXCompilerFlag)
     CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -30,6 +28,12 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
         message(STATUS "Votre version de gcc ne supporte pas C++11. \
         Le projet ne compilera probablement pas. Les versions de gcc \
         compatibles sont 4.6 et supérieures.")
+    endif()
+elseif(MSVC)
+    if(MSVC_VERSION LESS 1800)
+        message(STATUS "Votre version de Visual Studio ne supporte \
+        pas C++11. Le projet ne compilera probablement pas. Les versions \
+        de Visual Studio compatibles sont 2012 et supérieures.")
     endif()
 endif()
 
@@ -50,13 +54,16 @@ target_link_libraries(${CMAKE_PROJECT_NAME} ${Boost_LIBRARIES})
 target_link_libraries(${CMAKE_PROJECT_NAME} ${SFGUI_LIBRARY})
 
 # Informations pour la création des packages
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 set(CPACK_PACKAGE_CONTACT "Maëlle Beuret, Rémi Cérès, Mattéo Delabre")
+set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/cmake/${CMAKE_PROJECT_NAME}-128.png")
+set(CPACK_MONOLITHIC_INSTALL YES)
+set(CPACK_PACKAGE_EXECUTABLES "skizzle;Skizzle")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Skizzle est un jeu inspiré des jeux de \
 plateformes, des jeux de réflexion et de coopération.")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS)
-set(CPACK_PACKAGE_VERSION_MAJOR "0")
-set(CPACK_PACKAGE_VERSION_MINOR "1")
-set(CPACK_PACKAGE_VERSION_PATCH "0")
 
 # Création des packages en fonction du système actuel
 if(WIN32)
@@ -79,25 +86,19 @@ elseif(UNIX AND NOT APPLE)
 
     # Installation des icônes
     install(FILES cmake/${CMAKE_PROJECT_NAME}.svg DESTINATION share/pixmaps)
-    install(
-        FILES cmake/${CMAKE_PROJECT_NAME}-128.png
+    install(FILES ${CPACK_PACKAGE_ICON}
         RENAME ${CMAKE_PROJECT_NAME}.png
-        DESTINATION share/pixmaps
-    )
+        DESTINATION share/pixmaps)
 
     foreach(ICON_SIZE 16 32 48 64 128 256 512)
-        install(
-            FILES cmake/${CMAKE_PROJECT_NAME}-${ICON_SIZE}.png
+        install(FILES cmake/${CMAKE_PROJECT_NAME}-${ICON_SIZE}.png
             RENAME ${CMAKE_PROJECT_NAME}.png
-            DESTINATION share/icons/hicolor/${ICON_SIZE}x${ICON_SIZE}/apps
-        )
+            DESTINATION share/icons/hicolor/${ICON_SIZE}x${ICON_SIZE}/apps)
     endforeach(ICON_SIZE)
 
     # Installation du fichier d'application
-    install(
-        FILES cmake/${CMAKE_PROJECT_NAME}.desktop
-        DESTINATION share/applications
-    )
+    install(FILES cmake/${CMAKE_PROJECT_NAME}.desktop
+        DESTINATION share/applications)
 else()
     message(STATUS "Votre plateforme n'a pas été configurée pour produire \
     des packages. La commande 'make package' ne fonctionnera pas, mais le \
