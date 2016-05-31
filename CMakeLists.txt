@@ -43,6 +43,7 @@ add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
 find_package(SFML 2.3.2 REQUIRED system window graphics network audio)
 find_package(Boost 1.58.0 COMPONENTS system filesystem)
+set(SFGUI_STATIC_LIBRARIES YES)
 find_package(SFGUI 0.2.3 REQUIRED)
 
 include_directories(${SFML_INCLUDE_DIR})
@@ -51,7 +52,7 @@ include_directories(${SFGUI_INCLUDE_DIR})
 
 target_link_libraries(${CMAKE_PROJECT_NAME} ${SFML_LIBRARIES})
 target_link_libraries(${CMAKE_PROJECT_NAME} ${Boost_LIBRARIES})
-target_link_libraries(${CMAKE_PROJECT_NAME} ${SFGUI_LIBRARY})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${SFGUI_LIBRARY} ${SFGUI_DEPENDENCIES})
 
 # Informations pour la création des packages
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})

@@ -45,11 +45,13 @@ $ wget -O SFGUI.tar.gz $(curl -s https://api.github.com/repos/TankOs/SFGUI/relea
 $ mkdir SFGUI
 $ tar -zxf SFGUI.tar.gz -C SFGUI --strip-components=1
 $ cd SFGUI
-$ cmake .
+$ cmake -DSFGUI_BUILD_SHARED_LIBS=NO .
 $ make
 $ sudo make install
 ```
 
+Ceci a pour effet de compiler SFGUI en version statique et d'installer
+les librairies produites dans `/usr/local/lib`.
 Vous pouvez supprimer l'archive `SFGUI.tar.gz` et le dossier `SFGUI`
 si vous n'en avez plus besoin.
 
