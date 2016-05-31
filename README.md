@@ -7,6 +7,8 @@ doivent parvenir jusqu'à la ligne d'arrivée en exploitant les
 différents mécanismes physiques et objets particuliers qu'ils
 peuvent rencontrer.
 
+[![Vidéo de présentation de Skizzle](docs/images/video.png)](https://www.youtube.com/watch?v=uzZbkB3dXCU)
+
 ## Cadre
 
 Le jeu a été développé dans le cadre du projet C.M.I. informatique
