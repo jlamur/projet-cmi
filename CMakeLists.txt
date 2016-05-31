@@ -76,6 +76,10 @@ if(WIN32)
 elseif(UNIX AND NOT APPLE)
     set(CPACK_GENERATOR "DEB")
     set(CPACK_DEBIAN_PACKAGE_SECTION "games")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-system2.3v5 (>= 2.3.2), \
+    libsfml-window2.3v5 (>= 2.3.2), libsfml-graphics2.3v5 (>= 2.3.2), \
+    libsfml-audio2.3v5 (>= 2.3.2), libboost-system1.58.0 (>= 1.58.0), \
+    libboost-filesystem1.58.0 (>= 1.58.0)")
 
     # Installation de l'exécutable
     install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION games)
