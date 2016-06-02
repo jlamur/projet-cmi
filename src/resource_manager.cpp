@@ -11,14 +11,16 @@ ResourceManager& ResourceManager::get() {
 }
 
 ResourceManager::ResourceManager() : is_playing(false), is_muted(false) {
-    // mise en mémoire des chemins vers les dossiers de ressources
-    fs::path res_path = fs::current_path() / "res";
+    // le dossier des ressources peut se trouver dans le même dossier
+    // que l'exécutable (en mode portable), ou bien dans un dossier
+    // du système (en mode installé)
 
-    images_path = res_path / "images";
-    textures_path = res_path / "textures";
-    fonts_path = res_path / "fonts";
-    levels_path = res_path / "levels";
-    musics_path = res_path / "musics";
+    // détection du dossier de stockage des ressources
+    if (fs::exists(fs::current_path() / "res")) {
+        resources_path = fs::current_path() / "res";
+    } else {
+        resources_path = fs::path("/usr/share/skizzle/res");
+    }
 
     // initialisation de la musique en bouclage et au volume par défaut
     current_music.setLoop(true);
@@ -42,23 +44,19 @@ std::vector<fs::path> ResourceManager::getFiles(fs::path path) const {
 }
 
 const fs::path& ResourceManager::getImagesPath() const {
-    return images_path;
+    return resources_path / "images";
 }
 
 const fs::path& ResourceManager::getTexturesPath() const {
-    return textures_path;
+    return resources_path / "textures";
 }
 
 const fs::path& ResourceManager::getFontsPath() const {
-    return fonts_path;
-}
-
-const fs::path& ResourceManager::getLevelsPath() const {
-    return levels_path;
+    return resources_path / "fonts";
 }
 
 const fs::path& ResourceManager::getMusicsPath() const {
-    return musics_path;
+    return resources_path / "musics";
 }
 
 std::shared_ptr<sf::Image> ResourceManager::getImage(fs::path path) {
@@ -83,6 +81,8 @@ std::shared_ptr<sf::Image> ResourceManager::getImage(fs::path path) {
     return images_cache[path_str];
 }
 
+// surcharges prenant en charge des types d'arguments
+// plus traditionnels (chaînes de caractères du C/C++)
 std::shared_ptr<sf::Image> ResourceManager::getImage(std::string name) {
     return getImage(images_path / name);
 }
@@ -145,8 +145,8 @@ std::shared_ptr<sf::Font> ResourceManager::getFont(const char* name) {
 }
 
 void ResourceManager::playMusic(fs::path path) {
-    // si la musique est déjà chargée, on la relance si elle
-    // est en pause, sinon on ne fait rien
+    // si la musique est déjà chargée, on la relance
+    // si elle est en pause, sinon on ne fait rien
     if (current_music_path == path) {
         if (!is_playing) {
             is_playing = true;
@@ -156,7 +156,7 @@ void ResourceManager::playMusic(fs::path path) {
         return;
     }
 
-    // tente de charger la musique depuis le dossier "res/musics"
+    // tente de charger la musique depuis le dossier des musiques
     if (!current_music.openFromFile(path.string())) {
         std::cerr << "Impossible de lire la musique :" << std::endl;
         std::cerr << path.string() << std::endl << std::endl;

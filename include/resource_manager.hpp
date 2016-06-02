@@ -17,19 +17,23 @@
 class ResourceManager {
 private:
     /**
-     * Chemins vers les différents dossiers de ressources
+     * Stockage du chemin vers le dossier des ressources qui
+     * peut se trouver à différents endroits du système
      */
-    boost::filesystem::path images_path;
-    boost::filesystem::path textures_path;
-    boost::filesystem::path fonts_path;
-    boost::filesystem::path levels_path;
-    boost::filesystem::path musics_path;
+    boost::filesystem::path resources_path;
 
+    /**
+     * Mise en cache des images utilisées dans le jeu
+     */
     std::unordered_map<
         std::string,
         std::shared_ptr<sf::Image>
     > images_cache;
 
+    /**
+     * Mise en cache des textures (images chargées dans le GPU)
+     * utilisées dans le jeu
+     */
     std::unordered_map<
         std::string,
         std::shared_ptr<sf::Texture>
@@ -58,28 +62,12 @@ public:
     std::vector<boost::filesystem::path> getFiles(boost::filesystem::path path) const;
 
     /**
-     * Récupère le chemin vers le dossier des images
+     * Récupère le chemin vers les différents sous-dossiers
+     * de ressources
      */
     const boost::filesystem::path& getImagesPath() const;
-
-    /**
-     * Récupère le chemin vers le dossier des textures
-     */
     const boost::filesystem::path& getTexturesPath() const;
-
-    /**
-     * Récupère le chemin vers le dossier des polices
-     */
     const boost::filesystem::path& getFontsPath() const;
-
-    /**
-     * Récupère le chemin vers le dossier des niveaux
-     */
-    const boost::filesystem::path& getLevelsPath() const;
-
-    /**
-     * Récupère le chemin vers le dossier des musiques
-     */
     const boost::filesystem::path& getMusicsPath() const;
 
     /**
@@ -111,19 +99,8 @@ public:
     void playMusic(std::string name);
     void playMusic(const char* name);
 
-    /**
-     * Arrête la musique de fond
-     */
     void stopMusic();
-
-    /**
-     * Récupère si le volume est muet ou non
-     */
     bool isMuted() const;
-
-    /**
-     * Modifie le drapeau pour le muet
-     */
     void setMuted(bool set_muted);
 };
 
