@@ -16,7 +16,9 @@ Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
     std::string fonts[] = {"overpass", "overpass-bold", "monoid"};
 
     for (std::string &font : fonts) {
-        desktop.GetEngine().GetResourceManager().AddFont(font, res.getFont(font));
+        desktop.GetEngine().GetResourceManager().AddFont(
+            font, res.getFont(font + ".ttf")
+        );
     }
 
     // chargement du thème de l'interface
