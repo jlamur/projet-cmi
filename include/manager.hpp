@@ -11,16 +11,25 @@ class State;
 
 /**
  * Gestionnaire principal de tous les états, vues et
- * ressources du jeu
+ * ressources du jeu. Cette classe agit comme un point
+ * d'entrée dans le jeu
  */
 class Manager {
 private:
+    /**
+     * Titre de la fenêtre. Le setter de cette propriété
+     * met à jour l'interface. Ce titre ne doit pas contenir
+     * le préfixe "Skizzle -", qui est automatiquement ajouté
+     */
     sf::String title;
     sf::RenderWindow window;
 
-    sf::Clock clock;
-    sf::Time previous_time;
-
+    /**
+     * Centralisation des éléments du GUI. Le tableau des
+     * widgets contient tous les widgets actuellement instanciés,
+     * ce qui permet de cacher les widgets de la vue précédente
+     * lors du changement de vue
+     */
     sfg::SFGUI sfgui;
     sfg::Desktop desktop;
     std::vector<sfg::Widget::Ptr> widgets;
@@ -31,31 +40,49 @@ private:
      */
     bool isInsideGUI(const sf::Event& event);
 
-    // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci
-    sf::View gui_view;
-    //////////////////////////////
+    /**
+     * Chronométrage des temps écoulés entre
+     * les frames
+     */
+    sf::Clock clock;
+    sf::Time previous_time;
 
+    /**
+     * Gestionnaire d'états. Chaque état modélise un "écran" du
+     * jeu. Les états sont empilés par d'autres états lorsqu'ils
+     * souhaitent effectuer une transition vers un autre écran,
+     * et dépilés pour revenir à l'écran précédent.
+     */
     State* previous_state;
     std::stack<std::unique_ptr<State>> states;
 
+    ////////////////////////////////////////////////////////////////
+    // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci //
+    sf::View gui_view;                                            //
+    ////////////////////////////////////////////////////////////////
+
 public:
     /**
-     * Énumération des modificateurs
-     */
-    enum class Modifier {CONTROL, ALT, SHIFT, SYSTEM};
-
-    /**
-     * Taux maximal de frames par seconde
+     * Taux idéal de frames par seconde. Cette
+     * constante permet de définir "l'objectif" de FPS
+     * à atteindre. Ceci évite un FPS trop important qui
+     * consommerait trop de ressources
      */
     static const unsigned int FPS;
 
     /**
-     * Temps idéal entre deux frames
+     * Temps idéal entre deux frames. Cette
+     * constante contient le temps qui devrait idéalement
+     * séparer deux frames du jeu. C'est l'inverse de
+     * la constande FPS (raccourci)
      */
     static const sf::Time FRAME_TIME;
 
     /**
-     * Taille d'une case de la grille du jeu
+     * Taille d'une case de la grille du jeu. Les éléments
+     * du jeu peuvent se trouver sur n'importe quel pixel
+     * mais sont idéalement alignés (au moins pour les blocs)
+     * sur une grille dont le pas est défini par cette constante
      */
     static const float GRID;
 
@@ -63,31 +90,31 @@ public:
     ~Manager();
 
     /**
-     * Démarre la boucle principale du jeu
+     * Démarre la boucle principale du jeu. Cette fonction
+     * est appelée une fois que le jeu est totalement
+     * initialisé. Elle initialise la pile d'états et
+     * commence le dessin des frames
      */
     void start();
 
     /**
-     * Empile l'état donné
+     * Empile l'état donné. Ceci a pour effet de passer
+     * à "l'écran" dessiné par l'état donné en paramètre.
+     * L'état précédent est gardé en mémoire et il suffit
+     * de dépiler l'état pour y revenir.
      */
     void pushState(std::unique_ptr<State> set_state);
 
     /**
-     * Dépile l'état actuel
+     * Dépile l'état actuel. Ceci a pour effet de revenir
+     * à "l'écran" précédent
      */
     void popState();
 
     /**
-     * /!\ DÉPRÉCIÉ : UTILISER LA LIBRAIRIE SFGUI À LA PLACE
-     * @deprecated
-     *
-     * Passage en vue de l'interface
-     * (coin en haut à gauche, zoom 1:1)
-     */
-    void useGUIView();
-
-    /**
-     * Renvoie le temps actuel du jeu
+     * Renvoie le temps écoulé depuis le démarrage du jeu.
+     * Ce temps est utilisé comme référentiel absolu pour
+     * calibrer les animations par exemple
      */
     sf::Time getCurrentTime() const;
 
@@ -97,36 +124,24 @@ public:
     sf::RenderWindow& getWindow();
 
     /**
-     * Ajoute un nouveau widget à l'interface
+     * Ajoute ou supprime un nouveau widget de l'interface.
+     * Cet appel est délégué à SFGUI, mais permet de remplir
+     * le tableau des widgets du Manager
      */
     void addWidget(sfg::Widget::Ptr widget);
-
-    /**
-     * Supprime un widget de l'interface
-     */
     void removeWidget(sfg::Widget::Ptr widget);
 
-    /**
-     * Récupère le titre du jeu
-     */
     sf::String getTitle();
-
-    /**
-     * Modifie le titre du jeu
-     */
     void setTitle(sf::String set_title);
 
     /**
-     * Renvoie un booléen attestant de l'appui sur la
-     * touche donnée ou non
+     * /!\ DÉPRÉCIÉ : UTILISER LA LIBRAIRIE SFGUI À LA PLACE
+     * @deprecated
+     *
+     * Passage en vue de l'interface
+     * (coin en haut à gauche, zoom 1:1)
      */
-    bool isKeyPressed(sf::Keyboard::Key key) const;
-
-    /**
-     * Renvoie un booléen attestant de l'appui sur le
-     * modificateur
-     */
-    bool isKeyPressed(Modifier modifier) const;
+    void useGUIView();
 };
 
 #endif

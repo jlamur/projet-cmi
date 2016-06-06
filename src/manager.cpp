@@ -10,25 +10,17 @@ const float Manager::GRID = 32;
 
 Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
     previous_state(nullptr) {
-
     ResourceManager& res = ResourceManager::get();
 
-    // ajout des polices dans le gestionnaire de ressources
-    // de la librairie pour l'interface
-    desktop.GetEngine().GetResourceManager().AddFont(
-        "overpass", ResourceManager::get().getFont("overpass.ttf")
-    );
+    // ajout des polices dans le gestionnaire de ressources de SFGUI
+    std::string fonts[] = {"overpass", "overpass-bold", "monoid"};
 
-    desktop.GetEngine().GetResourceManager().AddFont(
-        "overpass-bold", ResourceManager::get().getFont("overpass-bold.ttf")
-    );
-
-    desktop.GetEngine().GetResourceManager().AddFont(
-        "monoid", ResourceManager::get().getFont("monoid.ttf")
-    );
+    for (std::string &font : fonts) {
+        desktop.GetEngine().GetResourceManager().AddFont(font, res.getFont(font));
+    }
 
     // chargement du thème de l'interface
-    desktop.LoadThemeFromFile("res/gui.theme");
+    desktop.LoadThemeFromFile(res.getResourcesPath() / "gui.theme");
 
     // préchargement des textures dans le GPU
     for (const auto &texture : res.getFiles(res.getTexturesPath())) {
@@ -56,9 +48,11 @@ Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
         sf::ContextSettings(0, 0, 1)
     );
 
-    // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci
-    // récupération de la vue par défaut comme vue du gui
-    gui_view = window.getDefaultView();
+    ////////////////////////////////////////////////////////////////
+    // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci //
+    // récupération de la vue par défaut comme vue du gui         //
+    gui_view = window.getDefaultView();                           //
+    ////////////////////////////////////////////////////////////////
 }
 
 Manager::~Manager() {
@@ -79,14 +73,15 @@ void Manager::start() {
                 }
             }
 
-            // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci
-            // redimensionnement de la vue par défaut
-            if (event.type == sf::Event::Resized) {
-                gui_view = sf::View(sf::FloatRect(
-                    0, 0, event.size.width, event.size.height
-                ));
-            }
-            ///////////////////////////
+            ////////////////////////////////////////////////////////////////
+            // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci //
+            // redimensionnement de la vue par défaut                     //
+            if (event.type == sf::Event::Resized) {                       //
+                gui_view = sf::View(sf::FloatRect(                        //
+                    0, 0, event.size.width, event.size.height             //
+                ));                                                       //
+            }                                                             //
+            ////////////////////////////////////////////////////////////////
 
             // événements de l'interface
             desktop.HandleEvent(event);
@@ -108,9 +103,8 @@ void Manager::start() {
             return;
         }
 
-        // si l'état que l'on va utiliser n'est pas le même que précédemment,
-        // on l'active. Ceci permet un partage plus facile des ressources
-        // globales (vue, musique)
+        // il y a eu un changement dans l'état actif, on signale donc
+        // au nouvel état actif qu'il doit se préparer à être affiché
         if (previous_state != states.top().get()) {
             previous_state = states.top().get();
 
@@ -192,12 +186,6 @@ sf::RenderWindow& Manager::getWindow() {
     return window;
 }
 
-// FIXME: à supprimer après avoir supprimé ::useGUIView()
-void Manager::useGUIView() {
-    window.setView(gui_view);
-}
-///////////////////////////
-
 void Manager::addWidget(sfg::Widget::Ptr widget) {
     widgets.push_back(widget);
     desktop.Add(widget);
@@ -227,24 +215,9 @@ void Manager::setTitle(sf::String set_title) {
     }
 }
 
-bool Manager::isKeyPressed(sf::Keyboard::Key key) const {
-    return sf::Keyboard::isKeyPressed(key) && window.hasFocus();
-}
-
-bool Manager::isKeyPressed(Manager::Modifier modifier) const {
-    switch (modifier) {
-    case Manager::Modifier::CONTROL:
-        return isKeyPressed(sf::Keyboard::LControl) || isKeyPressed(sf::Keyboard::RControl);
-
-    case Manager::Modifier::ALT:
-        return isKeyPressed(sf::Keyboard::LAlt) || isKeyPressed(sf::Keyboard::RAlt);
-
-    case Manager::Modifier::SYSTEM:
-        return isKeyPressed(sf::Keyboard::LSystem) || isKeyPressed(sf::Keyboard::RSystem);
-
-    case Manager::Modifier::SHIFT:
-        return isKeyPressed(sf::Keyboard::LShift) || isKeyPressed(sf::Keyboard::RShift);
-    }
-
-    return false;
-}
+////////////////////////////////////////////////////////////
+// FIXME: à supprimer après avoir supprimé ::useGUIView() //
+void Manager::useGUIView() {                              //
+    window.setView(gui_view);                             //
+}                                                         //
+////////////////////////////////////////////////////////////
