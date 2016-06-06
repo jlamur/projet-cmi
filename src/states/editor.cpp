@@ -1,5 +1,6 @@
 #include <cmath>
 #include <algorithm>
+#include "utility.hpp"
 #include "manager.hpp"
 #include "resource_manager.hpp"
 #include "states/game.hpp"
@@ -99,7 +100,7 @@ void Editor::processEvent(const sf::Event& event) {
             }
 
             // clic + shift : sélection par rectangle de sélection
-            if (getManager().isKeyPressed(Manager::Modifier::SHIFT)) {
+            if (Utility::isKeyPressed(Utility::Modifier::SHIFT)) {
                 drag_start = mouse_position;
                 drag_end = mouse_position;
                 drag_mode = Editor::DragMode::SELECT_RECT;
@@ -108,7 +109,7 @@ void Editor::processEvent(const sf::Event& event) {
 
             // clic sur un objet : démarrage de la sélection libre
             if (pointed_object != nullptr) {
-                if (getManager().isKeyPressed(Manager::Modifier::CONTROL)) {
+                if (Utility::isKeyPressed(Utility::Modifier::CONTROL)) {
                     drag_start = mouse_position;
                     drag_end = mouse_position;
                     drag_mode = Editor::DragMode::SELECT_BULK;
@@ -186,7 +187,7 @@ void Editor::processEvent(const sf::Event& event) {
     // lorsqu'on scrolle on déplace la vue ou change la polarité
     if (event.type == sf::Event::MouseWheelScrolled) {
         // si on a Ctrl appuyé, on change la polarité
-        if (getManager().isKeyPressed(Manager::Modifier::CONTROL)) {
+        if (Utility::isKeyPressed(Utility::Modifier::CONTROL)) {
             sf::Vector2i mouse_position(event.mouseWheelScroll.x, event.mouseWheelScroll.y);
             sf::Vector2f position = pixelToCoords(mouse_position);
             Object::Ptr pointed_object = getObject(position);
@@ -212,7 +213,7 @@ void Editor::processEvent(const sf::Event& event) {
             bool horizontal = (
                 event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel ||
                 (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel &&
-                getManager().isKeyPressed(Manager::Modifier::SHIFT))
+                Utility::isKeyPressed(Utility::Modifier::SHIFT))
             );
 
             if (!horizontal) {
