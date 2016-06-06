@@ -20,7 +20,7 @@ Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
     }
 
     // chargement du thème de l'interface
-    desktop.LoadThemeFromFile(res.getResourcesPath() / "gui.theme");
+    desktop.LoadThemeFromFile((res.getResourcesPath() / "gui.theme").string());
 
     // préchargement des textures dans le GPU
     for (const auto &texture : res.getFiles(res.getTexturesPath())) {
