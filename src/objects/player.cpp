@@ -1,3 +1,4 @@
+#include "utility.hpp"
 #include "manager.hpp"
 #include "resource_manager.hpp"
 #include "states/game.hpp"
@@ -38,23 +39,25 @@ sf::Vector2f Player::getForces(const Game& game) const {
     sf::Vector2f forces = Object::getForces(game);
 
     // déplacement de la balle après appui sur les touches de direction
-    if (getPlayerNumber() == 0) {
-        if (game.getManager().isKeyPressed(sf::Keyboard::Left)) {
-            forces += game.getLeftDirection();
+    if (getManager().getWindow().hasFocus()) {
+        if (getPlayerNumber() == 0) {
+            if (Utility::isKeyPressed(sf::Keyboard::Left)) {
+                forces += game.getLeftDirection();
+            }
+
+            if (Utility::isKeyPressed(sf::Keyboard::Right)) {
+                forces += game.getRightDirection();
+            }
         }
 
-        if (game.getManager().isKeyPressed(sf::Keyboard::Right)) {
-            forces += game.getRightDirection();
-        }
-    }
+        if (getPlayerNumber() == 1) {
+            if (Utility::isKeyPressed(sf::Keyboard::Q)) {
+                forces += game.getLeftDirection();
+            }
 
-    if (getPlayerNumber() == 1) {
-        if (game.getManager().isKeyPressed(sf::Keyboard::Q)) {
-            forces += game.getLeftDirection();
-        }
-
-        if (game.getManager().isKeyPressed(sf::Keyboard::D)) {
-            forces += game.getRightDirection();
+            if (Utility::isKeyPressed(sf::Keyboard::D)) {
+                forces += game.getRightDirection();
+            }
         }
     }
 
