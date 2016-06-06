@@ -75,11 +75,11 @@ public:
      * Récupère le chemin vers les différents sous-dossiers
      * de ressources
      */
-    const boost::filesystem::path& getResourcesPath() const;
-    const boost::filesystem::path& getImagesPath() const;
-    const boost::filesystem::path& getTexturesPath() const;
-    const boost::filesystem::path& getFontsPath() const;
-    const boost::filesystem::path& getMusicsPath() const;
+    boost::filesystem::path getResourcesPath() const;
+    boost::filesystem::path getImagesPath() const;
+    boost::filesystem::path getTexturesPath() const;
+    boost::filesystem::path getFontsPath() const;
+    boost::filesystem::path getMusicsPath() const;
 
     /**
      * Charge l'image dont le chemin est donné en paramètre

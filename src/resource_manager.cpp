@@ -68,7 +68,7 @@ std::vector<fs::path> ResourceManager::getFiles(fs::path path) const {
     return result;
 }
 
-std::vector<fs::path> ResourceManager::getLevels(bool only_home) {
+std::vector<fs::path> ResourceManager::getLevels(bool only_home) const {
     // les niveaux peuvent se trouver dans le répertoire du jeu
     // (niveaux par défaut) ou dans le répertoire de l'utilisateur
     // (niveaux personnels)
@@ -79,36 +79,41 @@ std::vector<fs::path> ResourceManager::getLevels(bool only_home) {
     std::vector<fs::path> list;
 
     // récupération de la liste de tous les fichiers se trouvant dans
-    // les dossiers utilisateur et racine
+    // les dossiers utilisateur et racine (en prenant soin de ne garder
+    // que les vrais fichiers)
+    std::function<bool(fs::path)> filter(
+        (bool(*)(const fs::path&)) fs::is_regular_file
+    );
+
     if (!only_home) {
-        std::copy_if(root_levels, end, list.end(), fs::is_regular_file);
+        std::copy_if(root_levels, end, list.end(), filter);
         std::sort(list.begin(), list.end());
     }
 
     std::vector<fs::path>::iterator home_boundary = list.end();
-    std::copy_if(home_levels, end, list.end(), fs::is_regular_file);
+    std::copy_if(home_levels, end, list.end(), filter);
     std::sort(home_boundary, list.end());
 
     return list;
 }
 
-const fs::path& ResourceManager::getResourcesPath() const {
+fs::path ResourceManager::getResourcesPath() const {
     return resources_path;
 }
 
-const fs::path& ResourceManager::getImagesPath() const {
+fs::path ResourceManager::getImagesPath() const {
     return resources_path / "images";
 }
 
-const fs::path& ResourceManager::getTexturesPath() const {
+fs::path ResourceManager::getTexturesPath() const {
     return resources_path / "textures";
 }
 
-const fs::path& ResourceManager::getFontsPath() const {
+fs::path ResourceManager::getFontsPath() const {
     return resources_path / "fonts";
 }
 
-const fs::path& ResourceManager::getMusicsPath() const {
+fs::path ResourceManager::getMusicsPath() const {
     return resources_path / "musics";
 }
 
@@ -137,7 +142,7 @@ std::shared_ptr<sf::Image> ResourceManager::getImage(fs::path path) {
 // surcharges prenant en charge des types d'arguments
 // plus traditionnels (chaînes de caractères du C/C++)
 std::shared_ptr<sf::Image> ResourceManager::getImage(std::string name) {
-    return getImage(images_path / name);
+    return getImage(getImagesPath() / name);
 }
 
 std::shared_ptr<sf::Image> ResourceManager::getImage(const char* name) {
@@ -168,7 +173,7 @@ std::shared_ptr<sf::Texture> ResourceManager::getTexture(fs::path path) {
 }
 
 std::shared_ptr<sf::Texture> ResourceManager::getTexture(std::string name) {
-    return getTexture(textures_path / name);
+    return getTexture(getTexturesPath() / name);
 }
 
 std::shared_ptr<sf::Texture> ResourceManager::getTexture(const char* name) {
@@ -190,7 +195,7 @@ std::shared_ptr<sf::Font> ResourceManager::getFont(fs::path path) {
 }
 
 std::shared_ptr<sf::Font> ResourceManager::getFont(std::string name) {
-    return getFont(fonts_path / name);
+    return getFont(getFontsPath() / name);
 }
 
 std::shared_ptr<sf::Font> ResourceManager::getFont(const char* name) {
@@ -221,7 +226,7 @@ void ResourceManager::playMusic(fs::path path) {
 }
 
 void ResourceManager::playMusic(std::string name) {
-    playMusic(musics_path / name);
+    playMusic(getMusicsPath() / name);
 }
 
 void ResourceManager::playMusic(const char* name) {
