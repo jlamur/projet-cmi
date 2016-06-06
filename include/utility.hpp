@@ -1,20 +1,29 @@
 #ifndef __SKIZZLE_UTILITY_HPP__
 #define __SKIZZLE_UTILITY_HPP__
 
+#include <SFML/Window.hpp>
+
 /**
  * Fonctions utilitaires aux autres classes du jeu
  */
 namespace Utility {
+    enum class Direction {NORTH, EAST, SOUTH, WEST};
+    enum class Modifier {CONTROL, ALT, SHIFT, SYSTEM};
+
     /**
-     * Permet d'animer la valeur donnée vers la valeur cible
-     * avec la vitesse donnée
+     * Permet d'animer la valeur donnée (current) vers la valeur
+     * cible (goal) avec la vitesse donnée (speed)
      */
     float animateValue(float current, float speed, float goal);
 
     /**
-     * Liste des directions
+     * Vérifie si la touche donnée en paramètre est actuellement
+     * pressée. Si un modificateur est passé en paramètre, vérifie
+     * si le modifcateur de gauche OU de droite est pressé.
+     * Renvoie toujours faux si la fenêtre n'a pas le focus
      */
-    enum class Direction {NORTH, EAST, SOUTH, WEST};
+    bool isKeyPressed(sf::Keyboard::Key key);
+    bool isKeyPressed(Manager::Modifier modifier);
 }
 
 #endif
