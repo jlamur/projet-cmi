@@ -43,6 +43,10 @@ std::vector<fs::path> ResourceManager::getFiles(fs::path path) const {
     return result;
 }
 
+const fs::path& ResourceManager::getResourcesPath() const {
+    return resources_path;
+}
+
 const fs::path& ResourceManager::getImagesPath() const {
     return resources_path / "images";
 }

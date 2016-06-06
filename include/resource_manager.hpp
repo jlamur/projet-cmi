@@ -65,6 +65,7 @@ public:
      * Récupère le chemin vers les différents sous-dossiers
      * de ressources
      */
+    const boost::filesystem::path& getResourcesPath() const;
     const boost::filesystem::path& getImagesPath() const;
     const boost::filesystem::path& getTexturesPath() const;
     const boost::filesystem::path& getFontsPath() const;
