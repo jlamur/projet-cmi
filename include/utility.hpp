@@ -23,7 +23,7 @@ namespace Utility {
      * Renvoie toujours faux si la fenêtre n'a pas le focus
      */
     bool isKeyPressed(sf::Keyboard::Key key);
-    bool isKeyPressed(Manager::Modifier modifier);
+    bool isKeyPressed(Modifier modifier);
 }
 
 #endif
