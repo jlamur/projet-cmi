@@ -18,18 +18,18 @@ bool Utility::isKeyPressed(sf::Keyboard::Key key) {
     return sf::Keyboard::isKeyPressed(key);
 }
 
-bool Utility::isKeyPressed(Manager::Modifier modifier) {
+bool Utility::isKeyPressed(Utility::Modifier modifier) {
     switch (modifier) {
-    case Manager::Modifier::CONTROL:
+    case Utility::Modifier::CONTROL:
         return isKeyPressed(sf::Keyboard::LControl) || isKeyPressed(sf::Keyboard::RControl);
 
-    case Manager::Modifier::ALT:
+    case Utility::Modifier::ALT:
         return isKeyPressed(sf::Keyboard::LAlt) || isKeyPressed(sf::Keyboard::RAlt);
 
-    case Manager::Modifier::SYSTEM:
+    case Utility::Modifier::SYSTEM:
         return isKeyPressed(sf::Keyboard::LSystem) || isKeyPressed(sf::Keyboard::RSystem);
 
-    case Manager::Modifier::SHIFT:
+    case Utility::Modifier::SHIFT:
         return isKeyPressed(sf::Keyboard::LShift) || isKeyPressed(sf::Keyboard::RShift);
     }
 
