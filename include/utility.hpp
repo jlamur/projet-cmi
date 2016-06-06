@@ -19,8 +19,7 @@ namespace Utility {
     /**
      * Vérifie si la touche donnée en paramètre est actuellement
      * pressée. Si un modificateur est passé en paramètre, vérifie
-     * si le modifcateur de gauche OU de droite est pressé.
-     * Renvoie toujours faux si la fenêtre n'a pas le focus
+     * si le modifcateur de gauche OU de droite est pressé
      */
     bool isKeyPressed(sf::Keyboard::Key key);
     bool isKeyPressed(Modifier modifier);

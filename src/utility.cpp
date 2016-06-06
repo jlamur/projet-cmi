@@ -15,7 +15,7 @@ float Utility::animateValue(float current, float speed, float goal) {
 }
 
 bool Utility::isKeyPressed(sf::Keyboard::Key key) {
-    return sf::Keyboard::isKeyPressed(key) && window.hasFocus();
+    return sf::Keyboard::isKeyPressed(key);
 }
 
 bool Utility::isKeyPressed(Manager::Modifier modifier) {
