@@ -186,6 +186,10 @@ sf::RenderWindow& Manager::getWindow() {
     return window;
 }
 
+const sf::RenderWindow& Manager::getWindow() const {
+    return window;
+}
+
 void Manager::addWidget(sfg::Widget::Ptr widget) {
     widgets.push_back(widget);
     desktop.Add(widget);

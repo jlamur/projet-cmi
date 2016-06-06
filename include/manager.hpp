@@ -122,6 +122,7 @@ public:
      * Renvoie la fenêtre actuellement utilisée pour le dessin
      */
     sf::RenderWindow& getWindow();
+    const sf::RenderWindow& getWindow() const;
 
     /**
      * Ajoute ou supprime un nouveau widget de l'interface.
