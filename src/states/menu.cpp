@@ -194,8 +194,7 @@ void Menu::loadLevelMenu() {
     actions.clear();
     selection = 0;
 
-    std::vector<boost::filesystem::path> path_list =
-        ResourceManager::get().getFiles(ResourceManager::get().getLevelsPath());
+    std::vector<boost::filesystem::path> path_list = ResourceManager::get().getLevels();
 
     for (auto it = path_list.begin(); it != path_list.end(); it++) {
         choices.push_back(getLevelName(getManager(), boost::filesystem::canonical(*it).string()));
@@ -211,8 +210,7 @@ void Menu::loadEditorMenu() {
     actions.clear();
     selection = 0;
 
-    std::vector<boost::filesystem::path> path_list =
-        ResourceManager::get().getFiles(ResourceManager::get().getLevelsPath());
+    std::vector<boost::filesystem::path> path_list = ResourceManager::get().getLevels(true);
 
     choices.push_back(L"Créer un nouveau niveau");
     actions.push_back(std::bind(&Menu::launchEditor, this, ""));

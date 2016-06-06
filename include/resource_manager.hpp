@@ -62,6 +62,16 @@ public:
     std::vector<boost::filesystem::path> getFiles(boost::filesystem::path path) const;
 
     /**
+     * Récupère la liste des niveaux pouvant être joués.
+     * Si le paramètre only_home est passé à true, seuls les
+     * niveaux créés par l'utilisateur sont renvoyés. Le résultat
+     * est trié dans l'ordre alphanumérique des noms de fichiers,
+     * en gardant les niveaux par défaut en haut de liste et
+     * les niveaux de l'utilisateur à la suite
+     */
+    std::vector<boost::filesystem::path> getLevels(bool only_home = false) const;
+
+    /**
      * Récupère le chemin vers les différents sous-dossiers
      * de ressources
      */

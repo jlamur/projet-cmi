@@ -5,6 +5,31 @@
 
 namespace fs = boost::filesystem;
 
+/**
+ * Définition des variables et fonctions globales internes
+ * (accessibles uniquement dans ce fichier)
+ */
+namespace {
+    /**
+     * Récupère le chemin vers le dossier utilisateur
+     */
+    fs::path getHomePath() {
+        const char* home = getenv("HOME");
+
+        if (home == NULL) {
+            home = getenv("USERPROFILE");
+        }
+
+        if (home == NULL) {
+            std::cerr << "Impossible de récupérer le chemin ";
+            std::cerr << "vers le dossier utilisateur." << std::endl;
+            return fs::path();
+        }
+
+        return fs::path(home);
+    }
+}
+
 ResourceManager& ResourceManager::get() {
     static ResourceManager manager;
     return manager;
@@ -41,6 +66,30 @@ std::vector<fs::path> ResourceManager::getFiles(fs::path path) const {
     std::sort(result.begin(), result.end());
 
     return result;
+}
+
+std::vector<fs::path> ResourceManager::getLevels(bool only_home) {
+    // les niveaux peuvent se trouver dans le répertoire du jeu
+    // (niveaux par défaut) ou dans le répertoire de l'utilisateur
+    // (niveaux personnels)
+    fs::recursive_directory_iterator end,
+        root_levels(getResourcesPath()),
+        home_levels(getHomePath() / ".skizzle/levels");
+
+    std::vector<fs::path> list;
+
+    // récupération de la liste de tous les fichiers se trouvant dans
+    // les dossiers utilisateur et racine
+    if (!only_home) {
+        std::copy_if(root_levels, end, list.end(), fs::is_regular_file);
+        std::sort(list.begin(), list.end());
+    }
+
+    std::vector<fs::path>::iterator home_boundary = list.end();
+    std::copy_if(home_levels, end, list.end(), fs::is_regular_file);
+    std::sort(home_boundary, list.end());
+
+    return list;
 }
 
 const fs::path& ResourceManager::getResourcesPath() const {
