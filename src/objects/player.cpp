@@ -39,7 +39,7 @@ sf::Vector2f Player::getForces(const Game& game) const {
     sf::Vector2f forces = Object::getForces(game);
 
     // déplacement de la balle après appui sur les touches de direction
-    if (getManager().getWindow().hasFocus()) {
+    if (game.getManager().getWindow().hasFocus()) {
         if (getPlayerNumber() == 0) {
             if (Utility::isKeyPressed(sf::Keyboard::Left)) {
                 forces += game.getLeftDirection();
