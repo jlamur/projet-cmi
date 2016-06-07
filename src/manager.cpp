@@ -24,25 +24,13 @@ Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
     // chargement du thème de l'interface
     desktop.LoadThemeFromFile(res.getThemePath().string());
 
-    // préchargement des textures dans le GPU
-    for (const auto &texture : res.getFiles(res.getTexturesPath())) {
-        res.getTexture(texture);
-
-        // on vide la file d'attente des événements pendant le
-        // chargement des textures pour éviter que le système
-        // pense que le programme a planté
+    // pendant le préchargement des ressources, on vide la file
+    // d'attente des événements pour éviter que le système
+    // pense que le programme a planté
+    res.preload([this](){
         sf::Event event;
         while (window.pollEvent(event)) {}
-    }
-
-    // préchargement des images dans la RAM
-    for (const auto &image : res.getFiles(res.getImagesPath())) {
-        res.getImage(image);
-
-        // mêmes raisons que ci-dessus
-        sf::Event event;
-        while (window.pollEvent(event)) {}
-    }
+    });
 
     // création de la fenêtre du jeu
     window.create(

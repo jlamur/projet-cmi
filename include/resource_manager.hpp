@@ -64,13 +64,13 @@ public:
 
     /**
      * Récupère la liste des niveaux pouvant être joués.
-     * Si le paramètre only_home est passé à true, seuls les
+     * Si le paramètre only_user est passé à true, seuls les
      * niveaux créés par l'utilisateur sont renvoyés. Le résultat
      * est trié dans l'ordre alphanumérique des noms de fichiers,
      * en gardant les niveaux par défaut en haut de liste et
      * les niveaux de l'utilisateur à la suite
      */
-    std::vector<boost::filesystem::path> getLevels(bool only_home = false) const;
+    std::vector<boost::filesystem::path> getLevels(bool only_user = false) const;
 
     /**
      * Récupère le chemin vers les différents éléments
@@ -105,15 +105,24 @@ public:
     std::shared_ptr<sf::Font> getFont(const char* name);
 
     /**
-     * Joue la musique de fond donnée en paramètre
+     * Contrôle la lecture, l'arrêt et le volume des
+     * musiques de fond
      */
     void playMusic(boost::filesystem::path path);
     void playMusic(std::string name);
     void playMusic(const char* name);
-
     void stopMusic();
+
     bool isMuted() const;
     void setMuted(bool set_muted);
+
+    /**
+     * Précharge toutes les images et textures du jeu en mémoire
+     * en appelant l'optionnelle callback après chaque chargement
+     * (qui peut être utilisé pour vider la queue des événements sur
+     * une fenêtre et éviter les messages du type "ne répond pas")
+     */
+    void preload(std::function<void()> callback = std::function<void()>());
 };
 
 #endif

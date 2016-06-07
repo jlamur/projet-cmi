@@ -253,3 +253,24 @@ void ResourceManager::setMuted(bool set_muted) {
         current_music.setVolume(100);
     }
 }
+
+void ResourceManager::preload(std::function<void()> callback) {
+    // préchargement des textures dans le GPU. Les textures
+    // sont mises en cache dès l'appel à getTexture()
+    for (const auto &texture : getFiles(getTexturesPath())) {
+        getTexture(texture);
+
+        if (callback) {
+            callback();
+        }
+    }
+
+    // préchargement des images dans la RAM
+    for (const auto &image : getFiles(getImagesPath())) {
+        getImage(image);
+
+        if (callback) {
+            callback();
+        }
+    }
+}
