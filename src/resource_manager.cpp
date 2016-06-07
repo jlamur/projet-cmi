@@ -5,31 +5,6 @@
 
 namespace fs = boost::filesystem;
 
-/**
- * Définition des variables et fonctions globales internes
- * (accessibles uniquement dans ce fichier)
- */
-namespace {
-    /**
-     * Récupère le chemin vers le dossier utilisateur
-     */
-    fs::path getHomePath() {
-        const char* home = getenv("HOME");
-
-        if (home == NULL) {
-            home = getenv("USERPROFILE");
-        }
-
-        if (home == NULL) {
-            std::cerr << "Impossible de récupérer le chemin ";
-            std::cerr << "vers le dossier utilisateur." << std::endl;
-            return fs::path();
-        }
-
-        return fs::path(home);
-    }
-}
-
 ResourceManager& ResourceManager::get() {
     static ResourceManager manager;
     return manager;
@@ -40,11 +15,38 @@ ResourceManager::ResourceManager() : is_playing(false), is_muted(false) {
     // que l'exécutable (en mode portable), ou bien dans un dossier
     // du système (en mode installé)
 
-    // détection du dossier de stockage des ressources
+    // détection du dossier de stockage des ressources par défaut
     if (fs::exists(fs::current_path() / "res")) {
         resources_path = fs::current_path() / "res";
     } else {
         resources_path = fs::path("/usr/share/skizzle/res");
+    }
+
+    // détection du dossier utilisateur
+    const char* home = getenv("HOME");
+
+    if (home == NULL) {
+        home = getenv("USERPROFILE");
+    }
+
+    if (home == NULL) {
+        std::cerr << "Impossible de récupérer le chemin ";
+        std::cerr << "vers le dossier utilisateur." << std::endl;
+    }
+
+    // dossier des ressources du jeu appartenant à l'utilisateur
+    // (si ce dossier n'existe pas, on le crée. On s'assure également
+    // que les sous-dossiers soient correctement créés)
+    user_path = fs::path(home) / ".skizzle";
+
+    if (!fs::exists(user_path) && !fs::create_directory(user_path)) {
+        std::cerr << "Impossible de créer le dossier .skizzle ";
+        std::cerr << "dans le dossier utilisateur." << std::endl;
+    }
+
+    if (!fs::exists(user_path / "levels") && !fs::create_directory(user_path / "levels")) {
+        std::cerr << "Impossible de créer le dossier .skizzle/levels ";
+        std::cerr << "dans le dossier utilisateur. " << std::endl;
     }
 
     // initialisation de la musique en bouclage et au volume par défaut
@@ -68,37 +70,37 @@ std::vector<fs::path> ResourceManager::getFiles(fs::path path) const {
     return result;
 }
 
-std::vector<fs::path> ResourceManager::getLevels(bool only_home) const {
+std::vector<fs::path> ResourceManager::getLevels(bool only_user) const {
     // les niveaux peuvent se trouver dans le répertoire du jeu
     // (niveaux par défaut) ou dans le répertoire de l'utilisateur
     // (niveaux personnels)
     fs::recursive_directory_iterator end,
-        root_levels(getResourcesPath()),
-        home_levels(getHomePath() / ".skizzle/levels");
+        default_levels(resources_path / "levels"),
+        user_levels(user_path / "levels");
 
     std::vector<fs::path> list;
 
-    // récupération de la liste de tous les fichiers se trouvant dans
-    // les dossiers utilisateur et racine (en prenant soin de ne garder
+    // récupération de la liste de tous les niveaux se trouvant dans
+    // les dossiers utilisateur et par défaut (en prenant soin de ne garder
     // que les vrais fichiers)
     std::function<bool(fs::path)> filter(
         (bool(*)(const fs::path&)) fs::is_regular_file
     );
 
-    if (!only_home) {
-        std::copy_if(root_levels, end, list.end(), filter);
+    if (!only_user) {
+        std::copy_if(default_levels, end, std::back_inserter(list), filter);
         std::sort(list.begin(), list.end());
     }
 
-    std::vector<fs::path>::iterator home_boundary = list.end();
-    std::copy_if(home_levels, end, list.end(), filter);
-    std::sort(home_boundary, list.end());
+    std::vector<fs::path>::iterator user_boundary = list.end();
+    std::copy_if(user_levels, end, std::back_inserter(list), filter);
+    std::sort(user_boundary, list.end());
 
     return list;
 }
 
-fs::path ResourceManager::getResourcesPath() const {
-    return resources_path;
+fs::path ResourceManager::getThemePath() const {
+    return resources_path / "gui.theme";
 }
 
 fs::path ResourceManager::getImagesPath() const {

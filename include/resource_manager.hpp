@@ -17,10 +17,11 @@
 class ResourceManager {
 private:
     /**
-     * Stockage du chemin vers le dossier des ressources qui
-     * peut se trouver à différents endroits du système
+     * Stockage du chemin vers les dossiers contenant
+     * des ressources du jeu
      */
     boost::filesystem::path resources_path;
+    boost::filesystem::path user_path;
 
     /**
      * Mise en cache des images utilisées dans le jeu
@@ -72,10 +73,10 @@ public:
     std::vector<boost::filesystem::path> getLevels(bool only_home = false) const;
 
     /**
-     * Récupère le chemin vers les différents sous-dossiers
+     * Récupère le chemin vers les différents éléments
      * de ressources
      */
-    boost::filesystem::path getResourcesPath() const;
+    boost::filesystem::path getThemePath() const;
     boost::filesystem::path getImagesPath() const;
     boost::filesystem::path getTexturesPath() const;
     boost::filesystem::path getFontsPath() const;
