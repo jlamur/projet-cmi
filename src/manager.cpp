@@ -37,12 +37,6 @@ Manager::Manager() : title(sf::String(L"")), previous_time(sf::seconds(0)),
         sf::VideoMode(704, 480), "Skizzle", sf::Style::Default,
         sf::ContextSettings(0, 0, 1)
     );
-
-    ////////////////////////////////////////////////////////////////
-    // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci //
-    // récupération de la vue par défaut comme vue du gui         //
-    gui_view = window.getDefaultView();                           //
-    ////////////////////////////////////////////////////////////////
 }
 
 Manager::~Manager() {
@@ -62,16 +56,6 @@ void Manager::start() {
                     states.pop();
                 }
             }
-
-            ////////////////////////////////////////////////////////////////
-            // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci //
-            // redimensionnement de la vue par défaut                     //
-            if (event.type == sf::Event::Resized) {                       //
-                gui_view = sf::View(sf::FloatRect(                        //
-                    0, 0, event.size.width, event.size.height             //
-                ));                                                       //
-            }                                                             //
-            ////////////////////////////////////////////////////////////////
 
             // événements de l'interface
             desktop.HandleEvent(event);
@@ -209,9 +193,8 @@ void Manager::setTitle(sf::String set_title) {
     }
 }
 
-////////////////////////////////////////////////////////////
-// FIXME: à supprimer après avoir supprimé ::useGUIView() //
-void Manager::useGUIView() {                              //
-    window.setView(gui_view);                             //
-}                                                         //
-////////////////////////////////////////////////////////////
+sf::View Manager::getCanonicalView() {
+    sf::View canonical = window.getDefaultView();
+    canonical.setSize((sf::Vector2f) window.getSize());
+    return canonical;
+}

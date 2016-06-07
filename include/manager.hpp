@@ -56,11 +56,6 @@ private:
     State* previous_state;
     std::stack<std::unique_ptr<State>> states;
 
-    ////////////////////////////////////////////////////////////////
-    // FIXME: après avoir supprimé ::useGUIView(), supprimer ceci //
-    sf::View gui_view;                                            //
-    ////////////////////////////////////////////////////////////////
-
 public:
     /**
      * Taux idéal de frames par seconde. Cette
@@ -136,13 +131,10 @@ public:
     void setTitle(sf::String set_title);
 
     /**
-     * /!\ DÉPRÉCIÉ : UTILISER LA LIBRAIRIE SFGUI À LA PLACE
-     * @deprecated
-     *
-     * Passage en vue de l'interface
-     * (coin en haut à gauche, zoom 1:1)
+     * Retourne une vue positionnée telle que le coin supérieur
+     * gauche se trouve à (0, 0) et que le zoom est en 1:1
      */
-    void useGUIView();
+    sf::View getCanonicalView();
 };
 
 #endif

@@ -109,8 +109,8 @@ void Menu::frame() {
     sf::RenderWindow& window = getManager().getWindow();
     sf::Vector2f size = (sf::Vector2f) window.getSize();
 
-    // on s'assure d'être dans la vue par défaut (pas de zoom, 0x0 en haut gauche)
-    getManager().useGUIView();
+    // on s'assure d'être dans la vue canonique
+    window.setView(getManager().getCanonicalView());
 
     // dessin du fond
     window.clear(sf::Color::White);
