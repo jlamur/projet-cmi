@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_EDITOR_HPP__
-#define __SKIZZLE_EDITOR_HPP__
-
+#pragma once
 #include "../gui/object_toolbar.hpp"
 #include "level.hpp"
 #include "game.hpp"
@@ -100,5 +98,3 @@ public:
      */
     void processEvent(const sf::Event& event) override;
 };
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_ACTION_TOOLBAR_HPP__
-#define __SKIZZLE_ACTION_TOOLBAR_HPP__
-
+#pragma once
 #include <SFGUI/Widgets.hpp>
 #include <SFML/Graphics.hpp>
 #include "../objects/object.hpp"
@@ -68,5 +66,3 @@ public:
         std::function<void()> down_callback = std::function<void()>()
     );
 };
-
-#endif

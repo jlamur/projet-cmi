@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_SWITCH_BLOCK_HPP__
-#define __SKIZZLE_SWITCH_BLOCK_HPP__
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "block.hpp"
@@ -66,5 +64,3 @@ private:
     float opacity;
     bool used;
 };
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_LEVEL_HPP__
-#define __SKIZZLE_LEVEL_HPP__
-
+#pragma once
 #include <fstream>
 #include <vector>
 #include "../gui/action_toolbar.hpp"
@@ -233,5 +231,3 @@ public:
      */
     sf::Vector2f getPlayerCenter();
 };
-
-#endif

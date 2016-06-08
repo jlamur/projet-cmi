@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_GRAVITY_BLOCK_HPP__
-#define __SKIZZLE_GRAVITY_BLOCK_HPP__
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "../utility.hpp"
@@ -80,5 +78,3 @@ public:
      */
     void setGravityDirection(Utility::Direction set_gravity_direction);
 };
-
-#endif

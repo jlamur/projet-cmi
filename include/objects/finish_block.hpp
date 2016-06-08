@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_FINISH_BLOCK_HPP__
-#define __SKIZZLE_FINISH_BLOCK_HPP__
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "block.hpp"
@@ -64,5 +62,3 @@ protected:
      */
     static void init(std::ifstream& file, Object::Ptr object);
 };
-
-#endif

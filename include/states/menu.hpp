@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_MENU_HPP__
-#define __SKIZZLE_MENU_HPP__
-
+#pragma once
 #include <functional>
 #include <vector>
 #include <memory>
@@ -81,6 +79,3 @@ public:
      */
     virtual void frame();
 };
-
-
-#endif

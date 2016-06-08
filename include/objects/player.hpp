@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_PLAYER_HPP__
-#define __SKIZZLE_PLAYER_HPP__
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "object.hpp"
@@ -97,5 +95,3 @@ public:
      */
     void setPlayerNumber(unsigned int set_number);
 };
-
-#endif

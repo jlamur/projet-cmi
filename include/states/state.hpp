@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_STATE_HPP__
-#define __SKIZZLE_STATE_HPP__
-
+#pragma once
 #include <SFML/Graphics.hpp>
 
 class Manager;
@@ -41,5 +39,3 @@ public:
      */
     const Manager& getManager() const;
 };
-
-#endif

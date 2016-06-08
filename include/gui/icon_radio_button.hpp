@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_ICON_RADIO_BUTTON_HPP__
-#define __SKIZZLE_ICON_RADIO_BUTTON_HPP__
-
+#pragma once
 #include <SFGUI/Image.hpp>
 #include <SFGUI/RadioButton.hpp>
 #include <SFGUI/RadioButtonGroup.hpp>
@@ -59,5 +57,3 @@ protected:
      */
     void HandleStateChange(State old_state) override;
 };
-
-#endif

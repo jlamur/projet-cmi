@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_UTILITY_HPP__
-#define __SKIZZLE_UTILITY_HPP__
-
+#pragma once
 #include <SFML/Window.hpp>
 
 /**
@@ -24,5 +22,3 @@ namespace Utility {
     bool isKeyPressed(sf::Keyboard::Key key);
     bool isKeyPressed(Modifier modifier);
 }
-
-#endif

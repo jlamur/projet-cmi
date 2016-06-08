@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_RULES_HPP__
-#define __SKIZZLE_RULES_HPP__
-
+#pragma once
 #include "state.hpp"
 
 class Manager;
@@ -31,5 +29,3 @@ public:
      */
     virtual void frame();
 };
-
-#endif

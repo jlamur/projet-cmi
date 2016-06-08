@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_RESOURCE_MANAGER_HPP__
-#define __SKIZZLE_RESOURCE_MANAGER_HPP__
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFGUI/Image.hpp>
@@ -124,5 +122,3 @@ public:
      */
     void preload(std::function<void()> callback = std::function<void()>());
 };
-
-#endif

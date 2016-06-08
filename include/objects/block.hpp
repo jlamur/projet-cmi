@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_BLOCK_HPP__
-#define __SKIZZLE_BLOCK_HPP__
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "object.hpp"
@@ -82,5 +80,3 @@ private:
     sf::Sprite sprite;
     sf::FloatRect aabb;
 };
-
-#endif

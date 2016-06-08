@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_MANAGER_HPP__
-#define __SKIZZLE_MANAGER_HPP__
-
+#pragma once
 #include <SFGUI/SFGUI.hpp>
 #include <SFGUI/Widgets.hpp>
 #include <SFML/Graphics.hpp>
@@ -136,5 +134,3 @@ public:
      */
     sf::View getCanonicalView();
 };
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_GAME_HPP__
-#define __SKIZZLE_GAME_HPP__
-
+#pragma once
 #include "../gui/modal.hpp"
 #include "level.hpp"
 
@@ -113,5 +111,3 @@ public:
      */
     bool isTest();
 };
-
-#endif

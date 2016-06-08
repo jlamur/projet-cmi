@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_OBJECT_TOOLBAR_HPP__
-#define __SKIZZLE_OBJECT_TOOLBAR_HPP__
-
+#pragma once
 #include <SFGUI/Widgets.hpp>
 #include <SFML/Graphics.hpp>
 #include <map>
@@ -63,5 +61,3 @@ public:
      */
     float getWidth();
 };
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_OBJECT_HPP__
-#define __SKIZZLE_OBJECT_HPP__
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <fstream>
 #include <memory>
@@ -239,5 +237,3 @@ public:
 struct ObjectCompare {
 	bool operator()(Object::Ptr const &t1, Object::Ptr const &t2) const;
 };
-
-#endif

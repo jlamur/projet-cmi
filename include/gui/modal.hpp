@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_MODAL_HPP__
-#define __SKIZZLE_MODAL_HPP__
-
+#pragma once
 #include <SFGUI/Widgets.hpp>
 #include <SFML/Graphics.hpp>
 #include <functional>
@@ -54,5 +52,3 @@ public:
      */
     void resize(sf::Vector2u size);
 };
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef __SKIZZLE_COLLISION_HPP__
-#define __SKIZZLE_COLLISION_HPP__
-
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
 
@@ -30,5 +28,3 @@ struct CollisionData {
  * ces informations dans data
  */
 bool getCollisionData(CollisionData& data);
-
-#endif
