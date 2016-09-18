@@ -6,55 +6,43 @@
 
 const unsigned int KillBlock::TYPE_ID = 5;
 
-KillBlock::KillBlock() : Block() {
+LevelData::ObjectPtr KillBlock::load(std::ifstream& file) {
+    auto object = std::shared_ptr<KillBlock>(new KillBlock);
+    object->read(file);
+    return object;
+}
+
+KillBlock::KillBlock(sf::Vector2f position) : Block(position) {
     icon_sprite.setOrigin(sf::Vector2f(23, 23));
     icon_sprite.setTexture(*ResourceManager::get().getTexture(
         "objects/kill_block.tga"
     ));
 }
 
-KillBlock::~KillBlock() {}
-
-Object::Ptr KillBlock::clone() const {
-    return Object::Ptr(new KillBlock(*this));
+LevelData::ObjectPtr KillBlock::clone() const {
+    return LevelData::ObjectPtr(new KillBlock(*this));
 }
 
-void KillBlock::draw(Level& level) {
+void KillBlock::draw(sf::RenderWindow& window) {
     // on dessine le bloc normal
-    Block::draw(level);
+    Block::draw(window);
 
     // on dessine l'icône
     icon_sprite.setPosition(getPosition());
-    level.getManager().getWindow().draw(icon_sprite);
-}
-
-void KillBlock::activate(Game& game, Object::Ptr object) {
-    Block::activate(game, object);
-
-    // si un joueur touche un bloc de mort, on le tue
-    if (object->getTypeId() == Player::TYPE_ID) {
-        game.kill(object);
-        game.setMode(Game::Mode::LOST);
-        game.setDeathCause(Game::DeathCause::KILLED);
-    }
+    window.draw(icon_sprite);
 }
 
 unsigned int KillBlock::getTypeId() const {
     return TYPE_ID;
 }
 
-void KillBlock::init(std::ifstream& file, Object::Ptr object) {
-    // lecture des propriétés d'un bloc
-    Block::init(file, object);
-}
+void KillBlock::activate(Game& game, Object& object) {
+    Block::activate(game, object);
 
-Object::Ptr KillBlock::load(std::ifstream& file) {
-    Object::Ptr object = Object::Ptr(new KillBlock);
-    KillBlock::init(file, object);
-    return object;
-}
-
-void KillBlock::save(std::ofstream& file) const {
-    // écriture des propriétés d'un bloc
-    Block::save(file);
+    // si un joueur touche un bloc de mort, on le tue
+    if (object.getTypeId() == Player::TYPE_ID) {
+        game.kill(object);
+        game.setMode(Game::Mode::LOST);
+        game.setDeathCause(Game::DeathCause::KILLED);
+    }
 }

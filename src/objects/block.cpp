@@ -1,44 +1,27 @@
 #include "manager.hpp"
 #include "resource_manager.hpp"
 #include "states/game.hpp"
+#include "objects/geometry.hpp"
 #include "objects/player.hpp"
 #include "objects/block.hpp"
 
 const unsigned int Block::TYPE_ID = 2;
 
-Block::Block() : Object() {
-    sprite.setOrigin(sf::Vector2f(23, 23));
-    aabb = sf::FloatRect(
-        -Manager::GRID / 2,
-        -Manager::GRID / 2,
-        Manager::GRID,
-        Manager::GRID
-    );
-}
-
-Block::~Block() {}
-
-Object::Ptr Block::clone() const {
-    return Object::Ptr(new Block(*this));
-}
-
-void Block::init(std::ifstream& file, Object::Ptr object) {
-    // lecture des propriétés communes des objets
-    Object::init(file, object);
-}
-
-Object::Ptr Block::load(std::ifstream& file) {
-    Object::Ptr object = Object::Ptr(new Block);
-    Block::init(file, object);
+LevelData::ObjectPtr Block::load(std::ifstream& file) {
+    auto object = std::shared_ptr<Block>(new Block);
+    object->read(file);
     return object;
 }
 
-void Block::save(std::ofstream& file) const {
-    // écriture des propriétés communes
-    Object::save(file);
+Block::Block(sf::Vector2f position) : Object(position) {
+    sprite.setOrigin(sf::Vector2f(23, 23));
 }
 
-void Block::draw(Level& level) {
+LevelData::ObjectPtr Block::clone() const {
+    return LevelData::ObjectPtr(new Block(*this));
+}
+
+void Block::draw(sf::RenderWindow& window) {
     // récupération de la texture correspondant au type de bloc
     std::string texture_name = "block.tga";
 
@@ -64,31 +47,18 @@ void Block::draw(Level& level) {
     }
 
     sprite.setPosition(getPosition());
-    level.getManager().getWindow().draw(sprite);
-}
-
-void Block::activate(Game& game, Object::Ptr object) {
-    // ne rien faire si le bloc est activé.
-    // Ceci est un bloc de base qui n'a pas a réagir
-    // aux activations
-}
-
-sf::FloatRect Block::getAABB() const {
-    sf::FloatRect transl_aabb = aabb;
-    transl_aabb.left += getPosition().x;
-    transl_aabb.top += getPosition().y;
-
-    return transl_aabb;
-}
-
-float Block::getRadius() const {
-    return Manager::GRID / 2;
+    window.draw(sprite);
 }
 
 unsigned int Block::getTypeId() const {
-    return TYPE_ID;
+    return Block::TYPE_ID;
 }
 
-CollisionType Block::getCollisionType() const {
-    return CollisionType::AABB;
+Geometry Block::getGeometry() const {
+    return Geometry(getPosition(), sf::Vector2f(LevelData::GRID, LevelData::GRID));
+}
+
+void Block::activate(Game& game, Object& object) {
+    // aucune action en cas d'activation du bloc
+    // les classes filles peuvent définir leur propre action
 }

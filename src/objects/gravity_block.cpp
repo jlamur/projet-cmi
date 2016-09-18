@@ -6,19 +6,28 @@
 
 const unsigned int GravityBlock::TYPE_ID = 3;
 
-GravityBlock::GravityBlock() : Block(), opacity(255), used(false) {
+// propriété indiquant la direction dans laquelle le bloc change la gravité
+const unsigned int PROP_GRAVITY_DIRECTION = 30;
+const Utility::Direction DEFAULT_GRAVITY_DIRECTION = Utility::Direction::NORTH;
+
+LevelData::ObjectPtr GravityBlock::load(std::ifstream& file) {
+    auto object = std::shared_ptr<GravityBlock>(new GravityBlock);
+    object->read(file);
+    return object;
+}
+
+GravityBlock::GravityBlock(sf::Vector2f position) : Block(position),
+    gravity_direction(DEFAULT_GRAVITY_DIRECTION), opacity(255), used(false) {
     icon_sprite.setOrigin(sf::Vector2f(23, 23));
 }
 
-GravityBlock::~GravityBlock() {}
-
-Object::Ptr GravityBlock::clone() const {
-    return Object::Ptr(new GravityBlock(*this));
+LevelData::ObjectPtr GravityBlock::clone() const {
+    return LevelData::ObjectPtr(new GravityBlock(*this));
 }
 
-void GravityBlock::draw(Level& level) {
+void GravityBlock::draw(sf::RenderWindow& window) {
     // on dessine le bloc normal
-    Block::draw(level);
+    Block::draw(window);
 
     // on anime l'opacité de l'icône
     opacity = Utility::animateValue(opacity, 5, used ? 0 : 255);
@@ -26,10 +35,14 @@ void GravityBlock::draw(Level& level) {
 
     // on dessine l'icône
     icon_sprite.setPosition(getPosition());
-    level.getManager().getWindow().draw(icon_sprite);
+    window.draw(icon_sprite);
 }
 
-void GravityBlock::activate(Game& game, Object::Ptr object) {
+unsigned int GravityBlock::getTypeId() const {
+    return TYPE_ID;
+}
+
+void GravityBlock::activate(Game& game, Object& object) {
     // on ne peut utiliser le bloc qu'une seule fois
     if (used) {
         return;
@@ -43,43 +56,32 @@ void GravityBlock::activate(Game& game, Object::Ptr object) {
     used = true;
 }
 
-unsigned int GravityBlock::getTypeId() const {
-    return TYPE_ID;
+bool GravityBlock::readProperty(unsigned int prop_type, std::ifstream& file) {
+    if (prop_type == PROP_GRAVITY_DIRECTION) {
+        char gravity_direction;
+        file.read(&gravity_direction, 1);
+        setGravityDirection((Utility::Direction) gravity_direction);
+        return true;
+    }
+
+    return false;
 }
 
-void GravityBlock::init(std::ifstream& file, Object::Ptr object) {
-    GravityBlock::Ptr gravity_block = std::dynamic_pointer_cast<GravityBlock>(object);
-
-    // lecture de la direction de la gravité
-    char gravity_direction;
-    file.read(&gravity_direction, 1);
-    gravity_block->setGravityDirection((Utility::Direction) gravity_direction);
-
-    // lecture des propriétés d'un bloc
-    Block::init(file, object);
-}
-
-Object::Ptr GravityBlock::load(std::ifstream& file) {
-    Object::Ptr object = Object::Ptr(new GravityBlock);
-    GravityBlock::init(file, object);
-    return object;
-}
-
-void GravityBlock::save(std::ofstream& file) const {
-    // écriture de la direction de la gravité
-    char write_gravity_direction = (char) gravity_direction;
-    file.write(&write_gravity_direction, 1);
-
-    // écriture des propriétés d'un bloc
-    Block::save(file);
+void GravityBlock::writeProperties(std::ofstream& file) const {
+    if (gravity_direction != DEFAULT_GRAVITY_DIRECTION) {
+        char prop_type = PROP_GRAVITY_DIRECTION;
+        char value = (char) gravity_direction;
+        file.write(&prop_type, 1);
+        file.write(&value, 1);
+    }
 }
 
 Utility::Direction GravityBlock::getGravityDirection() const {
     return gravity_direction;
 }
 
-void GravityBlock::setGravityDirection(Utility::Direction set_gravity_direction) {
-    gravity_direction = set_gravity_direction;
+void GravityBlock::setGravityDirection(Utility::Direction gravity_direction) {
+    this->gravity_direction = gravity_direction;
 
     // sélectionne le sprite d'icône selon la direction
     std::string texture;

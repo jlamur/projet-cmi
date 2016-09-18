@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <memory>
+#include "../level_data.hpp"
 #include "block.hpp"
 
 class Game;
@@ -12,52 +12,24 @@ class Game;
  */
 class SwitchBlock : public Block {
 public:
-    typedef std::shared_ptr<SwitchBlock> Ptr;
-
     /**
      * Identifiant unique du type "bloc changeur"
      */
     static const unsigned int TYPE_ID;
 
-    SwitchBlock();
-    virtual ~SwitchBlock();
-
     /**
-     * Clone ce bloc changeur en un bloc changeur avec les mêmes propriétés
+     * Charge un bloc changeur depuis le fichier donné et retourne
+     * un pointeur vers cet objet
      */
-    virtual Object::Ptr clone() const;
+    static LevelData::ObjectPtr load(std::ifstream& file);
 
-    /**
-     * Dessine le bloc
-     */
-    virtual void draw(Level& level);
-
-    /**
-     * Appelé lorsque le bloc changeur est activé par un objet
-     */
-    virtual void activate(Game& game, Object::Ptr object);
-
-    /**
-     * Récupère l'identifiant de type des blocs changeurs
-     */
-    virtual unsigned int getTypeId() const;
-
-    /**
-     * Chargement d'un bloc changeur depuis le fichier donné
-     */
-    static Object::Ptr load(std::ifstream& file);
-
-    /**
-     * Sauvegarde le bloc changeur dans le fichier donné
-     */
-    virtual void save(std::ofstream& file) const;
+    SwitchBlock(sf::Vector2f position = sf::Vector2f());
+    virtual LevelData::ObjectPtr clone() const override;
+    virtual void draw(sf::RenderWindow&) override;
+    virtual unsigned int getTypeId() const override;
 
 protected:
-    /**
-     * Initialisation des propriétés du bloc changeur donné
-     * depuis le fichier donné
-     */
-    static void init(std::ifstream& file, Object::Ptr object);
+    virtual void activate(Game& game, Object& object) override;
 
 private:
     sf::Sprite icon_sprite;

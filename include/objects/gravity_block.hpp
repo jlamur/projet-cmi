@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <memory>
+#include "../level_data.hpp"
 #include "../utility.hpp"
 #include "block.hpp"
 
@@ -14,67 +14,40 @@ class Game;
  */
 class GravityBlock : public Block {
 public:
-    typedef std::shared_ptr<GravityBlock> Ptr;
+    /**
+     * Identifiant unique du type "bloc de gravité"
+     */
+    static const unsigned int TYPE_ID;
+
+    /**
+     * Charge un bloc de gravité depuis le fichier donné et retourne
+     * un pointeur vers cet objet
+     */
+    static LevelData::ObjectPtr load(std::ifstream& file);
+
+    GravityBlock(sf::Vector2f position = sf::Vector2f());
+    virtual LevelData::ObjectPtr clone() const override;
+    virtual void draw(sf::RenderWindow&) override;
+    virtual unsigned int getTypeId() const override;
+
+protected:
+    virtual void activate(Game& game, Object& object) override;
+    virtual bool readProperty(unsigned int, std::ifstream& file) override;
+    virtual void writeProperties(std::ofstream& file) const override;
+
+    /**
+     * La direction de gravité du bloc détermine dans quelle direction
+     * se trouvera la gravité du jeu après son activation par un joueur
+     * ou un objet
+     *
+     * (Lecture et écriture.)
+     */
+    Utility::Direction getGravityDirection() const;
+    void setGravityDirection(Utility::Direction);
 
 private:
     Utility::Direction gravity_direction;
     sf::Sprite icon_sprite;
     float opacity;
     bool used;
-
-protected:
-    /**
-     * Initialisation des propriétés du bloc de gravité donné
-     * depuis le fichier donné
-     */
-    static void init(std::ifstream& file, Object::Ptr object);
-
-public:
-    /**
-     * Identifiant unique du type "bloc de gravité"
-     */
-    static const unsigned int TYPE_ID;
-
-    GravityBlock();
-    virtual ~GravityBlock();
-
-    /**
-     * Clone ce bloc de gravité en un bloc de gravité avec les mêmes propriétés
-     */
-    virtual Object::Ptr clone() const;
-
-    /**
-     * Dessin du bloc dans la fenêtre donnée
-     */
-    virtual void draw(Level& level);
-
-    /**
-     * Appelé lorsque le bloc de gravité est activé par un objet
-     */
-    virtual void activate(Game& game, Object::Ptr object);
-
-    /**
-     * Récupère l'identifiant de type des blocs de gravité
-     */
-    virtual unsigned int getTypeId() const;
-
-    /**
-     * Chargement d'un bloc de gravité depuis le fichier donné
-     */
-    static Object::Ptr load(std::ifstream& file);
-
-    /**
-     * Sauvegarde le bloc de gravité dans le fichier donné
-     */
-    virtual void save(std::ofstream& file) const;
-
-    /**
-     * Récupère la direction de gravité du bloc changeur de gravité
-     */
-    Utility::Direction getGravityDirection() const;
-
-    /**
-     * Modifie la direction de gravité du bloc
-     */
-    void setGravityDirection(Utility::Direction set_gravity_direction);
 };
