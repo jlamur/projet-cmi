@@ -12,7 +12,7 @@ set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 
 # Contact des mainteneurs·ses du projet
-set(CPACK_PACKAGE_CONTACT "Maëlle Beuret <maelle.beuret@etu.umontpellier.fr>" "Rémi Cérès <remi.ceres@etu.umontpellier.fr>" "Mattéo Delabre <matteo.delabre@etu.umontpellier.fr>")
+set(CPACK_PACKAGE_CONTACT "Maëlle Beuret <maelle.beuret@etu.umontpellier.fr>, Rémi Cérès <remi.ceres@etu.umontpellier.fr>, Mattéo Delabre <matteo.delabre@etu.umontpellier.fr>")
 
 # Liste des exécutables du projet
 set(CPACK_PACKAGE_EXECUTABLES "skizzle;Skizzle")
@@ -127,7 +127,7 @@ endif()
 # Installation de l'exécutable
 install(
     TARGETS ${CMAKE_PROJECT_NAME}
-    DIRECTORY_PERMISSIONS OWNER_EXECUTE OWNER_READ OWNER_WRITE
+    PERMISSIONS OWNER_EXECUTE OWNER_READ OWNER_WRITE
                 GROUP_EXECUTE GROUP_READ
                 WORLD_EXECUTE WORLD_READ
     RUNTIME DESTINATION games
