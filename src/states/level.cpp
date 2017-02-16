@@ -1,6 +1,7 @@
 ﻿#include <boost/filesystem.hpp>
 #include <cstring>
 #include <functional>
+#include <cmath>
 #include "manager.hpp"
 #include "resource_manager.hpp"
 #include "utility.hpp"
